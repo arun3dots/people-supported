@@ -45,10 +45,10 @@ export function useWingColumns({
                 {w.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex flex-col min-w-0">
-                <Text size="sm" weight="regular" className="text-slate-900 truncate">
+                <Text size="md" weight="regular" className="text-slate-900 truncate">
                   {w.name}
                 </Text>
-                <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                <Text size="md" weight="regular" className="text-slate-500 truncate">
                   {w.branch?.name ? `Branch: ${w.branch.name}` : w.description || "Care Wing"}
                 </Text>
               </div>

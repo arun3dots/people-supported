@@ -102,7 +102,7 @@ export function UserPreviewModal({
 
                   return (
                     <div key={field.id} className="space-y-1">
-                      <p className="text-[11px] font-semibold text-slate-500">
+                      <p className="text-md font-semibold text-slate-500">
                         {field.label}
                       </p>
                       <p className="text-md font-medium text-slate-900 break-words bg-white px-3 py-2 rounded-xl border border-slate-200/70 shadow-2xs">

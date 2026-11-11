@@ -714,7 +714,7 @@ export function BodyMapCanvas({
             <button
               type="button"
               onClick={() => onSelectNode(null)}
-              className="px-3 py-1 text-sm font-semibold rounded-lg bg-white text-slate-900 hover:text-emerald-800 shadow-2xs transition-all cursor-pointer"
+              className="px-3 py-1 text-md font-semibold rounded-lg bg-white text-slate-900 hover:text-emerald-800 shadow-2xs transition-all cursor-pointer"
               title="Return to full body view"
             >
               <span>Full Body</span>
@@ -731,7 +731,7 @@ export function BodyMapCanvas({
                 onViewChange("Front");
               }}
               className={cn(
-                "px-3 py-1 text-sm rounded-lg transition-all cursor-pointer",
+                "px-3 py-1 text-md rounded-lg transition-all cursor-pointer",
                 view === "Front"
                   ? "bg-white text-slate-900 shadow-2xs font-semibold"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium",
@@ -746,7 +746,7 @@ export function BodyMapCanvas({
                 onViewChange("Back");
               }}
               className={cn(
-                "px-3 py-1 text-sm rounded-lg transition-all cursor-pointer",
+                "px-3 py-1 text-md rounded-lg transition-all cursor-pointer",
                 view === "Back"
                   ? "bg-white text-slate-900 shadow-2xs font-semibold"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium",
@@ -770,7 +770,7 @@ export function BodyMapCanvas({
             {/* Header: Sub-part label */}
             <div className="flex items-center gap-1.5 min-w-0 pb-1.5 border-b border-slate-100">
               <MapPin className="size-3.5 text-blue-600 shrink-0" />
-              <span className="text-sm font-bold text-slate-900 truncate">
+              <span className="text-md font-bold text-slate-900 truncate">
                 {buildLocationLabel(selectedNode.id)}
               </span>
             </div>
@@ -780,7 +780,7 @@ export function BodyMapCanvas({
               <Button
                 size="sm"
                 variant="outline"
-                className="h-7 px-2 text-sm font-medium text-rose-600 border-rose-200 bg-white hover:bg-rose-50 hover:text-rose-700 flex-1 cursor-pointer"
+                className="h-7 px-2 text-md font-medium text-rose-600 border-rose-200 bg-white hover:bg-rose-50 hover:text-rose-700 flex-1 cursor-pointer"
                 onClick={() => {
                   onClearPin?.();
                   onSelectExactPoint?.(selectedNode, null);
@@ -794,7 +794,7 @@ export function BodyMapCanvas({
               <Button
                 size="sm"
                 variant="default"
-                className="h-7 px-2 text-sm font-semibold gap-1 shadow-2xs flex-1 cursor-pointer"
+                className="h-7 px-2 text-md font-semibold gap-1 shadow-2xs flex-1 cursor-pointer"
                 onClick={() => onOpenAddFinding?.(selectedNode, activeExactPoint)}
                 disabled={!canEdit}
                 title={!canEdit ? "Discharged residents cannot have new findings" : "Document finding"}

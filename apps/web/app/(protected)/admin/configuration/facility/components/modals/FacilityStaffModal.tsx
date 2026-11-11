@@ -78,10 +78,10 @@ export function FacilityStaffModal({
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-surface-primary-light flex items-center justify-center text-primary text-sm font-medium">
+                          <div className="w-8 h-8 rounded-full bg-surface-primary-light flex items-center justify-center text-primary text-md font-medium">
                             {member.fullName.charAt(0)}
                           </div>
-                          <span className="font-medium text-sm text-slate-800">
+                          <span className="font-medium text-md text-slate-800">
                             {member.fullName}
                           </span>
                         </div>

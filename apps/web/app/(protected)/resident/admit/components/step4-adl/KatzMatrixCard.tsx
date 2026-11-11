@@ -35,13 +35,13 @@ export function KatzMatrixCard({
         <table className="w-full min-w-[900px] text-left border-collapse">
           <thead>
             <tr className="border-b border-slate-200/80 bg-slate-50">
-              <Text as="th" size="sm" weight="bold" className="p-3.5 text-left">Activity</Text>
+              <Text as="th" size="md" weight="bold" className="p-3.5 text-left">Activity</Text>
               {KATZ_LEVELS.map((lvl) => (
-                <Text as="th" key={lvl} size="sm" weight="semibold" className="p-3.5 text-center text-slate-600">
+                <Text as="th" key={lvl} size="md" weight="semibold" className="p-3.5 text-center text-slate-600">
                   {lvl}
                 </Text>
               ))}
-              <Text as="th" size="sm" weight="semibold" className="p-3.5 text-left text-slate-600">
+              <Text as="th" size="md" weight="semibold" className="p-3.5 text-left text-slate-600">
                 Comments and notes
               </Text>
             </tr>
@@ -52,7 +52,7 @@ export function KatzMatrixCard({
               const currentLvl = activity?.assistanceLevel;
               return (
                 <tr key={domain.key} className="hover:bg-slate-50/60 transition-colors">
-                  <Text as="td" size="sm" weight="semibold" className="p-3.5 text-slate-800">
+                  <Text as="td" size="md" weight="semibold" className="p-3.5 text-slate-800">
                     {domain.label}
                   </Text>
                   {KATZ_LEVELS.map((lvl) => {

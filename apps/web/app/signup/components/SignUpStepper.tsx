@@ -30,7 +30,7 @@ export function SignUpStepper({ currentStep }: SignUpStepperProps) {
                 {/* Circle Indicator */}
                 <div
                   className={cn(
-                    "size-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-200 z-10 border",
+                    "size-9 rounded-full flex items-center justify-center font-bold text-md transition-all duration-200 z-10 border",
                     isCompleted
                       ? "bg-emerald-800 text-white border-emerald-800 shadow-sm"
                       : isActive
@@ -48,7 +48,7 @@ export function SignUpStepper({ currentStep }: SignUpStepperProps) {
                 {/* Step Label */}
                 <span
                   className={cn(
-                    "mt-2 text-center text-sm tracking-tight transition-colors duration-150 whitespace-nowrap",
+                    "mt-2 text-center text-md tracking-tight transition-colors duration-150 whitespace-nowrap",
                     isActive
                       ? "text-emerald-900 font-bold"
                       : isCompleted

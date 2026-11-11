@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import {
   CareTaskDayQuerySchema,
+  CareTaskBoardQuerySchema,
   CreateCareTaskSchema,
   CreateNeedCarePlanSchema,
   CreateShiftNoteSchema,
@@ -24,6 +25,8 @@ import {
   type AssessmentRecordDTO,
   type CareTaskDayDTO,
   type CareTaskDayQueryDTO,
+  type CareTaskBoardDTO,
+  type CareTaskBoardQueryDTO,
   type CareTaskDefinitionDTO,
   type CreateCareTaskDTO,
   type CreateNeedCarePlanDTO,
@@ -154,6 +157,16 @@ export class CareJourneyController {
     @Req() req: AuthenticatedRequest,
   ): Promise<CareTaskDefinitionDTO[]> {
     return this.tasks.listDefinitions(id, req.user);
+  }
+
+  @Get('care-tasks/board')
+  @Roles(...CLINICAL)
+  getCareTaskBoard(
+    @Req() req: AuthenticatedRequest,
+    @Query(new ZodValidationPipe(CareTaskBoardQuerySchema))
+    query: CareTaskBoardQueryDTO,
+  ): Promise<CareTaskBoardDTO> {
+    return this.taskDay.getBoard(query, req.user);
   }
 
   @Post(':id/need-care-plans/:planId/tasks')

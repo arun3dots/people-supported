@@ -160,7 +160,7 @@ export function ResidentMarTab({ resident }: ResidentMarTabProps): React.JSX.Ele
     return (
       <div className="py-20 flex flex-col items-center justify-center font-sans">
         <Loader2 className="size-8 animate-spin text-primary mb-3" />
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Loading medication administration records…
         </Text>
       </div>

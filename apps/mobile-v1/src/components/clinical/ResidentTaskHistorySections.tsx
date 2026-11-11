@@ -123,7 +123,7 @@ export function ResidentTaskHistorySections({ residentId }: Props) {
       {/* 1. Header Title & Subtitle */}
       <Text className="text-lg font-bold text-text-primary">Task History</Text>
       <Text className="text-xs text-text-secondary mt-0.5 mb-3">
-        View and track all assigned tasks for this resident.
+        View and track all assigned tasks for this person supported.
       </Text>
 
       {/* 2. Search & Filter Controls */}

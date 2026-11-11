@@ -173,7 +173,7 @@ export function AddSchemeModal({
               <Building2 className="size-3.5" />
               <Text
                 as="span"
-                size="xs"
+                size="md"
                 weight="medium"
                 variant="primary"
                 className="uppercase tracking-wider"
@@ -184,7 +184,7 @@ export function AddSchemeModal({
             <DialogTitle className="text-lg font-semibold text-slate-900">
               {isEdit ? "Edit Scheme" : "Add Scheme"}
             </DialogTitle>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Configure a supported living scheme, commissioning local authority,
               commissioned hours, and linked properties.
             </Text>

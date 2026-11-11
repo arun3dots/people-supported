@@ -31,19 +31,19 @@ export function HandoverBriefingCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-emerald-900">
         <div className="flex items-center gap-2">
           <ClipboardList className="size-4 shrink-0 text-emerald-800" />
-          <Text size="sm" weight="bold" className="text-emerald-950">
+          <Text size="md" weight="bold" className="text-emerald-950">
             Incoming Shift Briefing · from {previousShiftHandover.shiftName || "Previous Shift"}
           </Text>
         </div>
         {handoverTime && (
-          <span className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium">
+          <span className="flex items-center gap-1.5 text-md text-emerald-700 font-medium">
             <Clock className="size-3.5" />
             Handed over {handoverTime}
           </span>
         )}
       </div>
 
-      <div className="bg-white/90 p-4 rounded-xl border border-emerald-100 text-sm text-slate-700 leading-relaxed space-y-1">
+      <div className="bg-white/90 p-4 rounded-xl border border-emerald-100 text-md text-slate-700 leading-relaxed space-y-1">
         <div className="flex items-center gap-1.5 text-emerald-900 font-semibold mb-1">
           <AlertCircle className="size-3.5 text-emerald-700" />
           <span>Clinical & Operational Notes</span>

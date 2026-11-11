@@ -91,10 +91,10 @@ export function ReviewStep({
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" />
           <div className="space-y-1">
-            <Text size="sm" weight="bold">
+            <Text size="md" weight="bold">
               Complete these before submitting
             </Text>
-            <ul className="text-sm space-y-0.5">
+            <ul className="text-md space-y-0.5">
               {issues.map((i) => (
                 <li key={`${i.part}.${i.field}`}>
                   <button
@@ -112,7 +112,7 @@ export function ReviewStep({
       )}
 
       {decided && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-900 text-sm">
+        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-900 text-md">
           <span className="font-bold">Manager decision: {decided.decision}. </span>
           {decided.rationale} Signed {decided.signedByName}, {decided.signedRole}
           {decided.signedAt ? `, ${decided.signedAt.slice(0, 10)}` : ""}.
@@ -171,7 +171,7 @@ export function ReviewStep({
       {status === "Accepted" && (
         <div className="flex flex-col items-end gap-2">
           {!hasBed && (
-            <Text size="sm" className="text-amber-700">
+            <Text size="md" className="text-amber-700">
               Choose a room and bed in the Room step before admitting.
             </Text>
           )}
@@ -190,7 +190,7 @@ export function ReviewStep({
       )}
 
       {status === "Declined" && (
-        <Text size="sm" className="text-slate-700">
+        <Text size="md" className="text-slate-700">
           This pre-admission was declined. Editing any step starts a new version.
         </Text>
       )}

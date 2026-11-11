@@ -75,7 +75,7 @@ export function AddRoleStep1({ form }: AddRoleStep1Props) {
           <h3 className="text-[14px] font-medium leading-[18px] text-[#141F1E]">
             Basic Information
           </h3>
-          <p className="text-[10px] font-normal leading-[13px] text-[#5D5D5D]">
+          <p className="text-md font-normal leading-[13px] text-[#5D5D5D]">
             Enter the basic details of the new role.
           </p>
         </div>
@@ -83,16 +83,16 @@ export function AddRoleStep1({ form }: AddRoleStep1Props) {
 
       {/* Role Name Section (Frame 1126) */}
       <div className="flex flex-col gap-[6px]">
-        <label className="text-[10px] font-medium leading-[13px] text-[#141F1E]">
+        <label className="text-md font-medium leading-[13px] text-[#141F1E]">
           Role Name <span className="text-red-500">*</span>
         </label>
         <Input
           placeholder="Enter role name"
-          className="h-[36px] bg-white border-[#BCD3CD] border-[0.5px] rounded-xl px-[10px] text-[12px] font-normal text-[#141F1E] placeholder:text-[#5D5D5D] focus-visible:ring-1 focus-visible:ring-[#4A706A]"
+          className="h-[36px] bg-white border-[#BCD3CD] border-[0.5px] rounded-xl px-[10px] text-md font-normal text-[#141F1E] placeholder:text-[#5D5D5D] focus-visible:ring-1 focus-visible:ring-[#4A706A]"
           {...register("name", { required: true })}
         />
         {formState.errors.name?.message && (
-          <p className="text-sm font-medium text-red-600">
+          <p className="text-md font-medium text-red-600">
             {String(formState.errors.name.message)}
           </p>
         )}
@@ -121,10 +121,10 @@ export function AddRoleStep1({ form }: AddRoleStep1Props) {
 
               {/* Title & Description */}
               <div className="flex flex-col items-center gap-[2px] w-full">
-                <h4 className="text-[12px] font-normal leading-[15px] text-[#141F1E]">
+                <h4 className="text-md font-normal leading-[15px] text-[#141F1E]">
                   {opt.title}
                 </h4>
-                <p className="text-[8px] font-normal leading-[10px] text-[#5D5D5D] max-w-[100px] line-clamp-2">
+                <p className="text-md font-normal leading-[10px] text-[#5D5D5D] max-w-[100px] line-clamp-2">
                   {opt.desc}
                 </p>
               </div>
@@ -135,13 +135,13 @@ export function AddRoleStep1({ form }: AddRoleStep1Props) {
 
       {/* Description Section (Frame 1775) */}
       <div className="flex flex-col gap-[7px]">
-        <label className="text-[10px] font-medium leading-[13px] text-[#141F1E]">
+        <label className="text-md font-medium leading-[13px] text-[#141F1E]">
           Description
         </label>
         <textarea
           rows={2}
           placeholder="Add any additional notes about this room.."
-          className="w-full h-[43px] rounded-xl bg-white border border-[#BCD3CD] border-[0.5px] p-[10px] text-[10px] font-normal text-[#141F1E] placeholder:text-[#5D5D5D] focus:outline-none focus:border-[#4A706A] resize-none leading-[13px]"
+          className="w-full h-[43px] rounded-xl bg-white border border-[#BCD3CD] border-[0.5px] p-[10px] text-md font-normal text-[#141F1E] placeholder:text-[#5D5D5D] focus:outline-none focus:border-[#4A706A] resize-none leading-[13px]"
           {...register("description")}
         />
       </div>

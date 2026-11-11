@@ -6,17 +6,17 @@ export default function DpaPage() {
       <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12 space-y-8">
         <header className="border-b border-slate-200 pb-6 space-y-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+            <p className="text-md font-bold uppercase tracking-wider text-emerald-800">
               UK GDPR Article 28 Contract &amp; Care Home Privacy Pack (A-02 / A-04)
             </p>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 border border-emerald-200">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-md font-semibold text-emerald-800 border border-emerald-200">
               Version v1.0-2026-10 • Effective 29 October 2026
             </span>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
             Data Processing Agreement (UK GDPR Article 28)
           </h1>
-          <p className="text-sm text-slate-600">
+          <p className="text-md text-slate-600">
             This Data Processing Agreement (&ldquo;DPA&rdquo;) forms part of the Terms of
             Service between the CQC-registered Care Home Provider (&ldquo;Controller&rdquo;)
             and CantraCare Ltd (&ldquo;Processor&rdquo;) in compliance with Article 28(3)
@@ -25,11 +25,11 @@ export default function DpaPage() {
           </p>
         </header>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             1. Subject Matter, Duration, Nature &amp; Purpose of Processing
           </h2>
-          <ul className="list-disc pl-5 space-y-1.5 text-sm">
+          <ul className="list-disc pl-5 space-y-1.5 text-md">
             <li>
               <strong>Subject Matter:</strong> Provision of the CantraCare cloud care
               management platform for adult social care and nursing homes.
@@ -51,11 +51,11 @@ export default function DpaPage() {
           </ul>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             2. Mandatory UK GDPR Article 28(3)(a)–(h) Processor Obligations
           </h2>
-          <ol className="list-decimal pl-5 space-y-2 text-sm">
+          <ol className="list-decimal pl-5 space-y-2 text-md">
             <li>
               <strong>Documented Instructions — Art 28(3)(a):</strong> CantraCare shall
               process Personal Data only on documented instructions from the Controller,
@@ -118,12 +118,12 @@ export default function DpaPage() {
           </ol>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             Schedule 1: Authorised Sub-Processors
           </h2>
           <div className="overflow-x-auto rounded-xl border border-slate-200">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-md">
               <thead className="bg-slate-100 text-slate-800 font-bold">
                 <tr>
                   <th className="p-3">Sub-Processor</th>
@@ -157,15 +157,15 @@ export default function DpaPage() {
           </div>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             Schedule 2: Model Care Home Resident &amp; Staff Privacy Notice Template (A-04)
           </h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-md text-slate-600">
             Care Home Controllers may adapt the template below for their Resident
             Admission Packs and Staff Handbooks to satisfy UK GDPR Articles 13 &amp; 14:
           </p>
-          <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm font-mono space-y-2 text-slate-800">
+          <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-md font-mono space-y-2 text-slate-800">
             <p className="font-bold">
               [CARE HOME NAME] — PRIVACY NOTICE FOR RESIDENTS, RELATIVES &amp; STAFF
             </p>
@@ -194,7 +194,7 @@ export default function DpaPage() {
           </div>
         </section>
 
-        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500">
+        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-md text-slate-500">
           <div className="flex items-center gap-4">
             <Link href="/privacy-policy" className="font-semibold text-emerald-800 hover:underline">
               Privacy Notice

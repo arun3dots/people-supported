@@ -58,7 +58,7 @@ export function CareNoteDetailDialog({
                 <DialogTitle className="text-md font-bold text-slate-900 truncate">
                   {note.author}
                 </DialogTitle>
-                <Text size="sm" weight="medium" className="text-slate-500 truncate">
+                <Text size="md" weight="medium" className="text-slate-500 truncate">
                   {note.role}
                 </Text>
               </div>
@@ -74,7 +74,7 @@ export function CareNoteDetailDialog({
             {note.content}
           </div>
 
-          <div className="flex items-center gap-2 text-slate-500 text-sm">
+          <div className="flex items-center gap-2 text-slate-500 text-md">
             <Clock className="size-4 text-slate-400 shrink-0" />
             <span>
               Recorded on {note.date} at {note.time}
@@ -210,7 +210,7 @@ export function CareNoteFormDialog({
               </SelectContent>
             </Select>
             {errors.category && (
-              <p className="text-sm text-text-error font-medium leading-tight mt-1">
+              <p className="text-md text-text-error font-medium leading-tight mt-1">
                 {errors.category}
               </p>
             )}

@@ -46,7 +46,7 @@ export function RolesSidebar({
             <Text size="md" weight="bold" className="text-slate-900">
               Roles ({filteredRoles?.length ?? 0})
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+            <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
               Select a role to view assigned permissions and users.
             </Text>
           </div>
@@ -81,7 +81,7 @@ export function RolesSidebar({
             ))
           ) : filteredRoles.length === 0 ? (
             <div className="p-6 text-center">
-              <Text size="sm" weight="regular" className="text-slate-400 italic">
+              <Text size="md" weight="regular" className="text-slate-400 italic">
                 No access roles found.
               </Text>
             </div>
@@ -106,10 +106,10 @@ export function RolesSidebar({
                       <ShieldCheck className="size-5 text-icon-primary" />
                     </div>
                     <div className="flex flex-col min-w-0 gap-0.5">
-                      <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                      <Text size="md" weight="medium" className="text-slate-900 truncate">
                         {role.name}
                       </Text>
-                      <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                      <Text size="md" weight="regular" className="text-slate-500 truncate">
                         {role.userCount ?? 0} {role.userCount === 1 ? "User" : "Users"} assigned
                       </Text>
                     </div>
@@ -133,7 +133,7 @@ export function RolesSidebar({
         </div>
 
         {/* Footer count */}
-        <Text size="sm" weight="regular" className="text-slate-400">
+        <Text size="md" weight="regular" className="text-slate-400">
           Showing {filteredRoles?.length ?? 0} {filteredRoles?.length === 1 ? "role" : "roles"}
         </Text>
       </div>

@@ -28,7 +28,7 @@ export function RepeatableList<T>({
   return (
     <div className="space-y-3">
       {items.length === 0 && emptyText && (
-        <Text size="sm" className="text-slate-600">
+        <Text size="md" className="text-slate-600">
           {emptyText}
         </Text>
       )}

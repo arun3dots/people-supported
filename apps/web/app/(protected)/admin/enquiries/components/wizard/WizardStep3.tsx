@@ -41,7 +41,7 @@ export function WizardStep3({
     <div className="space-y-4 pt-1">
       {/* Admission Target & Room Preferences Card */}
       <Card className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4 shadow-none">
-        <Text size="sm" weight="semibold" className="text-slate-900 tracking-wider">
+        <Text size="md" weight="semibold" className="text-slate-900 tracking-wider">
           Admission Target & Room Preferences
         </Text>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -110,7 +110,7 @@ export function WizardStep3({
             <UserCheck className="size-4 text-emerald-300" />
             Ready to Admit Resident?
           </div>
-          <Text size="sm" className="text-emerald-100">
+          <Text size="md" className="text-emerald-100">
             Transition this prospect directly into the official 5-step resident admission flow with pre-filled details.
           </Text>
         </div>

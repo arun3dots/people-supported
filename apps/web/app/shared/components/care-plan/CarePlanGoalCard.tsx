@@ -92,35 +92,35 @@ export function CarePlanGoalCard({
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1.5 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="secondary" state="inactive" className="text-sm font-semibold px-2 py-0.5">
+            <Badge variant="secondary" state="inactive" className="text-md font-semibold px-2 py-0.5">
               {goal.category}
             </Badge>
             <Badge
               variant="secondary"
               state={getGoalStatusBadgeState(goal.status)}
-              className="text-sm font-semibold px-2 py-0.5"
+              className="text-md font-semibold px-2 py-0.5"
             >
               {goal.status}
             </Badge>
 
             {/* Category-Specific Target Pill */}
             {isWeightGoal && (
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+              <span className="inline-flex items-center gap-1 text-md font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
                 <Scale className="size-3 text-emerald-700" /> Target Metric
               </span>
             )}
             {isFluidGoal && (
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-sky-800 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg">
+              <span className="inline-flex items-center gap-1 text-md font-semibold text-sky-800 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg">
                 <Droplets className="size-3 text-sky-600" /> Hydration Goal
               </span>
             )}
 
-            <Text size="sm" weight="bold" className="text-slate-900">
+            <Text size="md" weight="bold" className="text-slate-900">
               {goal.title}
             </Text>
           </div>
 
-          <Text size="sm" className="text-slate-600 leading-relaxed">
+          <Text size="md" className="text-slate-600 leading-relaxed">
             {goal.targetDescription}
           </Text>
 
@@ -190,18 +190,18 @@ export function CarePlanGoalCard({
             <Badge
               variant="secondary"
               state={todayCompleted === todayTotal ? "success" : "inactive"}
-              className="text-sm font-semibold gap-1 px-2.5 py-1"
+              className="text-md font-semibold gap-1 px-2.5 py-1"
             >
               <CheckCircle2 className="size-3 text-emerald-700" />
               Routines: {todayCompleted}/{todayTotal} Done Today
             </Badge>
           ) : (
-            <span className="text-sm text-slate-400">
+            <span className="text-md text-slate-400">
               {goalTasks.length} linked routine{goalTasks.length === 1 ? "" : "s"}
             </span>
           )}
 
-          <span className="text-sm text-slate-400">
+          <span className="text-md text-slate-400">
             Reviewed {(goal.reviewFrequency || "weekly").toLowerCase()}
           </span>
         </div>
@@ -212,7 +212,7 @@ export function CarePlanGoalCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <ListTodo className="size-3.5 text-emerald-800" />
-            <Text size="sm" weight="semibold" className="text-slate-800">
+            <Text size="md" weight="semibold" className="text-slate-800">
               Assigned Care Routines &amp; Interventions ({goalTasks.length})
             </Text>
           </div>

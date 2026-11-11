@@ -68,7 +68,7 @@ export function AddCareNoteModal({ visible, onClose, residentId }: Props) {
       void queryClient.invalidateQueries({ queryKey: ['resident-care-notes', residentId] });
       setContent('');
       onClose();
-      Alert.alert('Care Note Saved', 'Your note has been recorded on the resident timeline.');
+      Alert.alert('Care Note Saved', 'Your note has been recorded on the timeline.');
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Failed to save care note';

@@ -81,14 +81,14 @@ export function PartCMedicinesSection({
                 {m.prn ? (
                   <Badge
                     variant="outline"
-                    className="px-2.5 py-0.5 text-sm bg-purple-50 text-purple-700 border-purple-200 font-bold"
+                    className="px-2.5 py-0.5 text-md bg-purple-50 text-purple-700 border-purple-200 font-bold"
                   >
                     PRN · When needed
                   </Badge>
                 ) : (
                   <Badge
                     variant="outline"
-                    className="px-2.5 py-0.5 text-sm bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold"
+                    className="px-2.5 py-0.5 text-md bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold"
                   >
                     Regular
                   </Badge>
@@ -96,7 +96,7 @@ export function PartCMedicinesSection({
                 {(m.form || m.route) && (
                   <Badge
                     variant="secondary"
-                    className="px-2.5 py-0.5 text-sm bg-slate-100 text-slate-700 font-medium"
+                    className="px-2.5 py-0.5 text-md bg-slate-100 text-slate-700 font-medium"
                   >
                     {m.form ?? m.route}
                   </Badge>
@@ -129,7 +129,7 @@ export function PartCMedicinesSection({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-slate-600 pt-1 border-t border-slate-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-md text-slate-600 pt-1 border-t border-slate-100">
               {(m.dose || m.frequency) && (
                 <div className="flex items-center gap-2">
                   <Clock className="size-4 text-slate-400 shrink-0" />

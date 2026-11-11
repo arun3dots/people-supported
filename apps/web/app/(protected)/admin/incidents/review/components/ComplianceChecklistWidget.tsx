@@ -61,13 +61,13 @@ export function ComplianceChecklistWidget({
                 ) : (
                   <Circle className="size-4 text-amber-500 shrink-0 stroke-[2]" />
                 )}
-                <Text size={'xs'} weight={'medium'} className="text-slate-800 truncate">
+                <Text size={'md'} weight={'medium'} className="text-slate-800 truncate">
                   {item.title}
                 </Text>
               </div>
 
               {isDone ? (
-                <Text size={'xs'} weight={'regular'} className="text-slate-400 shrink-0 pl-2">
+                <Text size={'md'} weight={'regular'} className="text-slate-400 shrink-0 pl-2">
                   {item.timestamp}
                 </Text>
               ) : (

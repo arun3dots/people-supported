@@ -153,7 +153,7 @@ export function ProfileContactDialog({
         >
           {/* 1. General Information */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-slate-800">General Information</h4>
+            <h4 className="text-md font-semibold text-slate-800">General Information</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5">
                 <Label>First Name</Label>
@@ -230,7 +230,7 @@ export function ProfileContactDialog({
                     />
                   )}
                 />
-                {errors.startDate && <p className="text-sm text-red-500">{errors.startDate.message}</p>}
+                {errors.startDate && <p className="text-md text-red-500">{errors.startDate.message}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label>Preferred Language</Label>
@@ -261,7 +261,7 @@ export function ProfileContactDialog({
 
           {/* 2. Contact Information */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-slate-800">Contact Information</h4>
+            <h4 className="text-md font-semibold text-slate-800">Contact Information</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Email Address</Label>
@@ -288,7 +288,7 @@ export function ProfileContactDialog({
 
           {/* 3. Location & Address */}
           <div className="space-y-4">
-            <h4 className="text-sm font-semibold text-slate-800">Address Details</h4>
+            <h4 className="text-md font-semibold text-slate-800">Address Details</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Address Line 1</Label>

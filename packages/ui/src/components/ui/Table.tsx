@@ -11,7 +11,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("w-full caption-bottom text-md", className)}
         {...props}
       />
     </div>
@@ -23,7 +23,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
     <thead
       data-slot="table-header"
       className={cn(
-        "sticky top-0 z-10 bg-transparent text-sm",
+        "sticky top-0 z-10 bg-transparent text-md",
         className,
       )}
       {...props}
@@ -72,7 +72,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-11 px-3 py-2 text-left align-middle text-sm xl:text-md font-semibold text-text-description whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        "h-11 px-3 py-2 text-left align-middle text-md font-semibold text-text-description whitespace-nowrap [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -85,7 +85,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "py-3.5 px-3 align-middle text-xs lg:text-sm text-text-body [&:has([role=checkbox])]:pr-0",
+        "py-3.5 px-3 align-middle text-md text-text-body [&:has([role=checkbox])]:pr-0",
         className,
       )}
       {...props}
@@ -100,7 +100,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-xs sm:text-sm text-text-description", className)}
+      className={cn("mt-4 text-md text-text-description", className)}
       {...props}
     />
   );

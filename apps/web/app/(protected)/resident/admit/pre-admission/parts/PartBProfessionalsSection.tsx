@@ -91,7 +91,7 @@ export function PartBProfessionalsSection({
                   </div>
                   <p className="text-md font-bold text-slate-800 truncate">{p.name || "Unnamed provider"}</p>
                   {p.type && (
-                    <Badge variant="secondary" className="px-2.5 py-0.5 text-sm bg-teal-50 text-teal-800 border border-teal-200 font-medium">
+                    <Badge variant="secondary" className="px-2.5 py-0.5 text-md bg-teal-50 text-teal-800 border border-teal-200 font-medium">
                       {p.type}
                     </Badge>
                   )}
@@ -124,7 +124,7 @@ export function PartBProfessionalsSection({
               </div>
 
               {p.phone && (
-                <div className="flex items-center gap-2 text-sm text-slate-600 pt-1 border-t border-slate-100">
+                <div className="flex items-center gap-2 text-md text-slate-600 pt-1 border-t border-slate-100">
                   <Phone className="size-4 text-slate-400 shrink-0" />
                   <span className="font-medium text-slate-700">{p.phone}</span>
                 </div>
@@ -153,7 +153,7 @@ export function PartBProfessionalsSection({
                 />
               </FieldGrid>
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/60">
-                <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-sm">
+                <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-md">
                   Cancel
                 </Button>
                 <Button
@@ -162,7 +162,7 @@ export function PartBProfessionalsSection({
                   size="sm"
                   onClick={onSave}
                   disabled={!p.name?.trim() && !p.type?.trim()}
-                  className="rounded-xl font-semibold text-sm shadow-none"
+                  className="rounded-xl font-semibold text-md shadow-none"
                 >
                   {isNew ? "Add provider" : "Save changes"}
                 </Button>

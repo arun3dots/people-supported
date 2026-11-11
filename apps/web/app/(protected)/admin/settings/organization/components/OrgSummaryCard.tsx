@@ -34,7 +34,7 @@ export function OrgSummaryCard({
         <Text size={'base'} weight={'bold'} className="text-slate-900">
           Organisation Summary
         </Text>
-        <Text size={'xs'} weight={'regular'} className="text-slate-500">
+        <Text size={'md'} weight={'regular'} className="text-slate-500">
           Account status and subscription details
         </Text>
       </div>
@@ -45,11 +45,11 @@ export function OrgSummaryCard({
         <div className="flex items-center justify-between py-2.5">
           <div className="flex items-center gap-2">
             <Contact className="size-4 text-emerald-800 shrink-0 stroke-[1.5]" />
-            <Text size="sm" weight="medium" className="text-slate-600">
+            <Text size="md" weight="medium" className="text-slate-600">
               Organisation ID
             </Text>
           </div>
-          <Text size="sm" weight="semibold" className="text-slate-900 font-mono">
+          <Text size="md" weight="semibold" className="text-slate-900 font-mono">
             {formattedId}
           </Text>
         </div>
@@ -58,11 +58,11 @@ export function OrgSummaryCard({
         <div className="flex items-center justify-between py-2.5">
           <div className="flex items-center gap-2">
             <Layers className="size-4 text-emerald-800 shrink-0 stroke-[1.5]" />
-            <Text size="sm" weight="medium" className="text-slate-600">
+            <Text size="md" weight="medium" className="text-slate-600">
               Subscription Plan
             </Text>
           </div>
-          <Text size="sm" weight="medium" className="text-slate-900">
+          <Text size="md" weight="medium" className="text-slate-900">
             Enterprise
           </Text>
         </div>
@@ -71,11 +71,11 @@ export function OrgSummaryCard({
         <div className="flex items-center justify-between py-2.5">
           <div className="flex items-center gap-2">
             <Calendar className="size-4 text-emerald-800 shrink-0 stroke-[1.5]" />
-            <Text size="sm" weight="medium" className="text-slate-600">
+            <Text size="md" weight="medium" className="text-slate-600">
               Member Since
             </Text>
           </div>
-          <Text size="sm" weight="medium" className="text-slate-900">
+          <Text size="md" weight="medium" className="text-slate-900">
             {formattedDate}
           </Text>
         </div>
@@ -84,7 +84,7 @@ export function OrgSummaryCard({
         <div className="flex items-center justify-between py-2.5">
           <div className="flex items-center gap-2">
             <Disc className="size-4 text-emerald-800 shrink-0 stroke-[1.5]" />
-            <Text size="sm" weight="medium" className="text-slate-600">
+            <Text size="md" weight="medium" className="text-slate-600">
               Status
             </Text>
           </div>

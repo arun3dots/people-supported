@@ -165,17 +165,17 @@ export function NeedsAssessmentModal({
                 <ClipboardCheck className="size-5 text-surface-primary shrink-0" />
                 <span className="truncate">Pre-Admission Needs Assessment</span>
               </DialogTitle>
-              <Text size="sm" variant="muted" className="mt-1 break-words">
+              <Text size="md" variant="muted" className="mt-1 break-words">
                 Candidate:{" "}
-                <Text as="span" size="sm" weight="semibold" className="text-text-body">
+                <Text as="span" size="md" weight="semibold" className="text-text-body">
                   {enquiry.firstName} {enquiry.lastName}
                 </Text>{" "}
                 • Category:{" "}
-                <Text as="span" size="sm" weight="semibold" className="text-text-body">
+                <Text as="span" size="md" weight="semibold" className="text-text-body">
                   {enquiry.careCategory}
                 </Text>{" "}
                 • Stage:{" "}
-                <Text as="span" size="sm" weight="semibold" className="text-text-body">
+                <Text as="span" size="md" weight="semibold" className="text-text-body">
                   {enquiry.status}
                 </Text>
               </Text>

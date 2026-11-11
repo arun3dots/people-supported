@@ -23,7 +23,7 @@ export function RatingPill({
   return (
     <Badge
       state={RATING_STATE[rating]}
-      className={cn("px-2.5 py-0.5 text-sm", className)}
+      className={cn("px-2.5 py-0.5 text-md", className)}
     >
       {children}
     </Badge>

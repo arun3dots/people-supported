@@ -121,7 +121,7 @@ export function ShiftRecurringEngine({
                   placeholder="Select start date"
                 />
                 {fieldState.error && (
-                  <Text size="sm" className="text-rose-600 font-medium">
+                  <Text size="md" className="text-rose-600 font-medium">
                     {fieldState.error.message}
                   </Text>
                 )}
@@ -165,7 +165,7 @@ export function ShiftRecurringEngine({
                     placeholder="Select repeat until date"
                   />
                   {fieldState.error && (
-                    <Text size="sm" className="text-rose-600 font-medium">
+                    <Text size="md" className="text-rose-600 font-medium">
                       {fieldState.error.message}
                     </Text>
                   )}

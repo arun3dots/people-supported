@@ -64,7 +64,7 @@ export default function EmergencyDirectoryScreen() {
 
     return [
       { key: 'assigned' as const, title: `Assigned to you (${assigned.length})`, data: assigned },
-      { key: 'others' as const, title: `All other residents (${others.length})`, data: others },
+      { key: 'others' as const, title: `All other people supported (${others.length})`, data: others },
     ].filter((section) => section.data.length > 0);
   }, [data, query, shift, assignedResidents]);
 
@@ -91,7 +91,7 @@ export default function EmergencyDirectoryScreen() {
         <View className="flex-1">
           <Text className="text-md font-bold text-foreground">Read-only emergency access</Text>
           <Text className="text-xs text-muted-foreground mt-0.5">
-            Every resident record you open here is logged with your name and the time.
+            Every person supported record you open here is logged with your name and the time.
           </Text>
         </View>
       </View>
@@ -107,7 +107,7 @@ export default function EmergencyDirectoryScreen() {
           autoCorrect={false}
           autoCapitalize="none"
           returnKeyType="search"
-          accessibilityLabel="Search residents"
+          accessibilityLabel="Search people supported"
           className="pl-10 pr-10"
         />
         {searchQuery.length > 0 && (
@@ -123,7 +123,7 @@ export default function EmergencyDirectoryScreen() {
 
       {data && (
         <Text className="text-xs text-slate-500 mb-1">
-          {data.total} active {data.total === 1 ? 'resident' : 'residents'} in your home
+          {data.total} active {data.total === 1 ? 'person supported' : 'people supported'} in your service
         </Text>
       )}
     </View>
@@ -134,7 +134,7 @@ export default function EmergencyDirectoryScreen() {
     emptyState = (
       <View className="items-center py-16">
         <ActivityIndicator size="large" color="#4A706A" />
-        <Text className="text-sm text-slate-500 mt-3">Loading residents...</Text>
+        <Text className="text-sm text-slate-500 mt-3">Loading people supported...</Text>
       </View>
     );
   } else if (error) {
@@ -158,10 +158,10 @@ export default function EmergencyDirectoryScreen() {
           <Users size={24} color="#64748B" />
         </View>
         <Text className="text-base font-bold text-slate-900 text-center mb-1">
-          {query ? 'No matching residents' : 'No residents found'}
+          {query ? 'No matching people supported' : 'No people supported found'}
         </Text>
         <Text className="text-sm text-slate-500 text-center">
-          {query ? 'Try a different name, room or bed.' : 'There are no active residents to show.'}
+          {query ? 'Try a different name, room or bed.' : 'There are no active people supported to show.'}
         </Text>
       </View>
     );

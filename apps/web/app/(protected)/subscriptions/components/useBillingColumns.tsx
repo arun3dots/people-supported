@@ -81,12 +81,12 @@ export function useBillingColumns({
             payment.status === "failed" || payment.status === "cancelled";
           return (
             <div className="flex flex-col min-w-0 gap-0.5 max-w-56">
-              <Text size="sm" weight="regular" className="text-slate-900 truncate">
+              <Text size="md" weight="regular" className="text-slate-900 truncate">
                 {payment.packageName ?? "Care Home Subscription"}
                 {payment.isRenewal ? " · Renewal" : ""}
               </Text>
               {failed && payment.failureReason && (
-                <Text size="sm" weight="regular" className="text-red-500 truncate">
+                <Text size="md" weight="regular" className="text-red-500 truncate">
                   {payment.failureReason}
                 </Text>
               )}

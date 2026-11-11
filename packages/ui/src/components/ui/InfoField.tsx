@@ -87,7 +87,7 @@ export function InfoField({
             variant="base"
             className={cn(multiline ? "break-words" : "truncate", valueClassName)}
             title={typeof value === "string" ? value : undefined}
-            size="sm"
+            size="md"
             weight="regular"
             subdued={false}
           >
@@ -97,7 +97,7 @@ export function InfoField({
             <Text
               className={cn(multiline ? "break-words" : "truncate", subValueClassName)}
               title={typeof subValue === "string" ? subValue : undefined}
-              size="xs"
+              size="md"
               weight="regular"
               subdued={false}
             >

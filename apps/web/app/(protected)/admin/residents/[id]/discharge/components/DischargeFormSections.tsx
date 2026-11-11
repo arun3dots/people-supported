@@ -96,7 +96,7 @@ export function DischargeFormSections({
                 clearError("reason");
               }}
               errorMessage={errors.reason}
-              className="h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium"
+              className="h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium"
             />
           </div>
 
@@ -110,7 +110,7 @@ export function DischargeFormSections({
                 clearError("dischargeType");
               }}
             >
-              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium", errors.dischargeType && "border-red-500")}>
+              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium", errors.dischargeType && "border-red-500")}>
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -123,7 +123,7 @@ export function DischargeFormSections({
               </SelectContent>
             </Select>
             {errors.dischargeType && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.dischargeType}
               </p>
             )}
@@ -161,7 +161,7 @@ export function DischargeFormSections({
                   clearError("dischargeTime");
                 }}
                 errorMessage={errors.dischargeTime}
-                className="h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium pr-8"
+                className="h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium pr-8"
               />
               <Clock className="size-4 text-slate-400 absolute right-3 top-3.5 pointer-events-none" />
             </div>
@@ -185,7 +185,7 @@ export function DischargeFormSections({
                 clearError("carePlanReview");
               }}
             >
-              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium", errors.carePlanReview && "border-red-500")}>
+              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium", errors.carePlanReview && "border-red-500")}>
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -196,7 +196,7 @@ export function DischargeFormSections({
               </SelectContent>
             </Select>
             {errors.carePlanReview && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.carePlanReview}
               </p>
             )}
@@ -212,7 +212,7 @@ export function DischargeFormSections({
                 clearError("riskAssessment");
               }}
             >
-              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium", errors.riskAssessment && "border-red-500")}>
+              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium", errors.riskAssessment && "border-red-500")}>
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -223,7 +223,7 @@ export function DischargeFormSections({
               </SelectContent>
             </Select>
             {errors.riskAssessment && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.riskAssessment}
               </p>
             )}
@@ -239,7 +239,7 @@ export function DischargeFormSections({
                 clearError("medicationReview");
               }}
             >
-              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md sm:text-md font-medium", errors.medicationReview && "border-red-500")}>
+              <SelectTrigger className={cn("h-11 bg-white border-slate-200 text-slate-900 rounded-xl text-md font-medium", errors.medicationReview && "border-red-500")}>
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -249,7 +249,7 @@ export function DischargeFormSections({
               </SelectContent>
             </Select>
             {errors.medicationReview && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.medicationReview}
               </p>
             )}
@@ -264,7 +264,7 @@ export function DischargeFormSections({
         </h3>
         <div className="flex flex-wrap items-center gap-8">
           <div className="space-y-1.5">
-            <p className="text-sm font-medium text-slate-500">Care Plan Review</p>
+            <p className="text-md font-medium text-slate-500">Care Plan Review</p>
             <button
               type="button"
               onClick={() =>
@@ -283,7 +283,7 @@ export function DischargeFormSections({
           </div>
 
           <div className="space-y-1.5">
-            <p className="text-sm font-medium text-slate-500">Risk Assessment</p>
+            <p className="text-md font-medium text-slate-500">Risk Assessment</p>
             <button
               type="button"
               onClick={() =>

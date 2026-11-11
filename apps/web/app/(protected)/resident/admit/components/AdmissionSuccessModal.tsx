@@ -48,7 +48,7 @@ export function AdmissionSuccessScreen({
           <Text as="h2" size="xl" weight="bold" className="text-slate-900 tracking-tight">
             Admission Confirmed
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Resident record activated and downstream tasks scheduled.
           </Text>
         </div>
@@ -65,7 +65,7 @@ export function AdmissionSuccessScreen({
         <Text as="h3" size="2xl" weight="bold" className="text-slate-900">
           ✓ {residentName} has been admitted
         </Text>
-        <Text size="sm" weight="semibold" className="text-emerald-800">
+        <Text size="md" weight="semibold" className="text-emerald-800">
           Resident ID: {residentId} &nbsp;•&nbsp; Room {roomNumber} &nbsp;•&nbsp; Admitted {admissionDate}
         </Text>
       </div>
@@ -86,7 +86,7 @@ export function AdmissionSuccessScreen({
               key={idx}
               className="p-3.5 rounded-xl border border-slate-200/70 bg-white flex items-center justify-between shadow-xs gap-3"
             >
-              <Text as="span" size="sm" weight="medium" className="text-slate-800">
+              <Text as="span" size="md" weight="medium" className="text-slate-800">
                 {action}
               </Text>
               <Badge state="success" className="px-2.5 py-0.5 rounded-full shrink-0">

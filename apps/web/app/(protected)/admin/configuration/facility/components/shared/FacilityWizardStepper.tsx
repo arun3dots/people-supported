@@ -55,7 +55,7 @@ export function FacilityWizardStepper({
               {/* Label text below circle */}
               <span
                 className={cn(
-                  "mt-2 text-[11px] sm:text-[13px] text-center font-medium font-outfit leading-tight text-white transition-colors tracking-tight whitespace-nowrap"
+                  "mt-2 text-md text-center font-medium font-outfit leading-tight text-white transition-colors tracking-tight whitespace-nowrap"
                 )}
               >
                 {s.label}

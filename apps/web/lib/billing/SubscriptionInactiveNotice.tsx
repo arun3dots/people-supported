@@ -23,7 +23,7 @@ export function SubscriptionInactiveNotice({
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
           Subscription inactive
         </h2>
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-md text-muted-foreground">
           Your organisation&apos;s subscription is not active yet. Please contact
           your administrator to complete the subscription payment. Access will
           unlock automatically once it&apos;s done.

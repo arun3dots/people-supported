@@ -34,7 +34,7 @@ export function BodyMapBreadcrumb({
   return (
     <div className="flex items-center justify-between gap-3 w-full bg-slate-50/70 border border-slate-200/80 rounded-xl px-3.5 py-2">
       <Breadcrumb>
-        <BreadcrumbList className="text-sm sm:gap-1.5 flex-wrap">
+        <BreadcrumbList className="text-md sm:gap-1.5 flex-wrap">
           <BreadcrumbItem>
             <BreadcrumbLink
               asChild

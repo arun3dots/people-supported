@@ -20,7 +20,7 @@ export function AllergiesCard({
           <Text as="h3" size="md" weight="bold">
             Allergies &amp; Adverse Reactions
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Key dietary and medication sensitivities.
           </Text>
         </div>

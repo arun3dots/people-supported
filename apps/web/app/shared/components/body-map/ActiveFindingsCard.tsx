@@ -90,11 +90,11 @@ export function ActiveFindingsCard({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between mb-3">
           <CardTitle>
-            <Text size="sm" weight="semibold">
+            <Text size="md" weight="semibold">
               Findings ({effectiveAllFindings.length})
             </Text>
           </CardTitle>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Total: {totalFindings ?? effectiveAllFindings.length}
           </Text>
         </div>
@@ -108,28 +108,28 @@ export function ActiveFindingsCard({
           <TabsList className="bg-slate-100 border border-slate-200/80 p-1 rounded-xl h-auto grid grid-cols-3 gap-1 w-full">
             <TabsTrigger
               value="all"
-              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-sm font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
             >
               <span>All Findings</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-slate-200/80 text-slate-700">
+              <span className="text-md font-bold px-1.5 py-0.2 rounded-full bg-slate-200/80 text-slate-700">
                 {effectiveAllFindings.length}
               </span>
             </TabsTrigger>
             <TabsTrigger
               value="active"
-              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-sm font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
             >
               <span>Active Findings</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800">
+              <span className="text-md font-bold px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800">
                 {activeFindings.length}
               </span>
             </TabsTrigger>
             <TabsTrigger
               value="resolved"
-              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-sm font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+              className="flex items-center justify-center px-2 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-600 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
             >
               <span>Resolved Findings</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800">
+              <span className="text-md font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800">
                 {resolvedFindings.length}
               </span>
             </TabsTrigger>
@@ -141,10 +141,10 @@ export function ActiveFindingsCard({
         {displayedFindings.length === 0 ? (
           <div className="text-center py-6">
             <emptyStateConfig.icon className="size-7 text-slate-300 mx-auto mb-1.5" />
-            <Text size="sm" weight="medium" variant="subdued">
+            <Text size="md" weight="medium" variant="subdued">
               {emptyStateConfig.title}
             </Text>
-            <Text size="sm" variant="muted" className="mt-0.5">
+            <Text size="md" variant="muted" className="mt-0.5">
               {emptyStateConfig.subtitle}
             </Text>
           </div>
@@ -168,20 +168,20 @@ export function ActiveFindingsCard({
                         <Badge variant="secondary" state="inactive" className="font-mono">
                           {finding.trackingId}
                         </Badge>
-                        <Text size="sm" weight="semibold">
+                        <Text size="md" weight="semibold">
                           {finding.findingType}
                         </Text>
                         {isResolved ? (
-                          <Badge variant="secondary" state="success" className="text-[10px] py-0 px-1.5">
+                          <Badge variant="secondary" state="success" className="text-md py-0 px-1.5">
                             Resolved
                           </Badge>
                         ) : selectedTab === "all" ? (
-                          <Badge variant="secondary" state="inactive" className="text-[10px] py-0 px-1.5">
+                          <Badge variant="secondary" state="inactive" className="text-md py-0 px-1.5">
                             Active
                           </Badge>
                         ) : null}
                       </div>
-                      <Text size="sm" variant="subdued" className="mt-0.5 truncate">
+                      <Text size="md" variant="subdued" className="mt-0.5 truncate">
                         {finding.locationLabel}
                       </Text>
                     </div>

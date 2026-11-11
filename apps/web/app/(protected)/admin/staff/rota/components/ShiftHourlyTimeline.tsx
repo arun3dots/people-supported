@@ -61,19 +61,19 @@ function ShiftBlock({ shift }: { shift: Shift }) {
         {(shift.assignments ?? []).slice(0, 4).map((assignment: { user?: { fullName?: string } }, i: number) => (
           <div
             key={i}
-            className="inline-block size-7 rounded-full ring-2 ring-white overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-xs font-bold shrink-0"
+            className="inline-block size-7 rounded-full ring-2 ring-white overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-md font-bold shrink-0"
           >
             {assignment.user?.fullName ? getInitials(assignment.user.fullName) : "?"}
           </div>
         ))}
         {(shift.assignments?.length ?? 0) > 4 && (
-          <div className="inline-block size-7 rounded-full ring-2 ring-white bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+          <div className="inline-block size-7 rounded-full ring-2 ring-white bg-slate-200 flex items-center justify-center text-md font-bold text-slate-600 shrink-0">
             +{(shift.assignments?.length ?? 0) - 4}
           </div>
         )}
       </div>
       {(shift.assignments?.length ?? 0) === 0 && (
-        <span className="text-xs text-slate-400 font-medium">No staff</span>
+        <span className="text-md text-slate-400 font-medium">No staff</span>
       )}
     </div>
   );
@@ -102,7 +102,7 @@ export function ShiftHourlyTimeline({ onAddShift, shifts = [] }: ShiftHourlyTime
         <div className={`grid border-b border-gray-100 pb-3`} style={{ gridTemplateColumns: `140px repeat(${TOTAL_HOUR_COLS}, 1fr)` }}>
           <div className="text-md font-bold text-foreground">Shift</div>
           {HOURS.map((hour) => (
-            <div key={hour} className="text-xs font-medium text-muted-foreground text-center">
+            <div key={hour} className="text-md font-medium text-muted-foreground text-center">
               {hour}
             </div>
           ))}
@@ -130,7 +130,7 @@ export function ShiftHourlyTimeline({ onAddShift, shifts = [] }: ShiftHourlyTime
                   {rowShifts.length === 0 && (
                     <div
                       onClick={() => onAddShift?.()}
-                      className="absolute inset-0 flex items-center justify-center text-sm text-slate-400 font-medium border border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-primary/50 hover:text-primary transition-all"
+                      className="absolute inset-0 flex items-center justify-center text-md text-slate-400 font-medium border border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-primary/50 hover:text-primary transition-all"
                     >
                       + Add shift
                     </div>

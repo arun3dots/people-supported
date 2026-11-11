@@ -55,7 +55,7 @@ export function AddRoleStep4({ formData, onGoToStep }: AddRoleStep4Props) {
             <h3 className="text-[14px] font-medium leading-[18px] text-[#141F1E]">
               Review & Confirm
             </h3>
-            <p className="text-[10px] font-normal leading-[13px] text-[#5D5D5D]">
+            <p className="text-md font-normal leading-[13px] text-[#5D5D5D]">
               Set specific permissions for this module.
             </p>
           </div>
@@ -78,20 +78,20 @@ export function AddRoleStep4({ formData, onGoToStep }: AddRoleStep4Props) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
               <User className="size-[14px] text-[#4A706A]" />
-              <span className="text-[12px] font-medium text-[#141F1E]">
+              <span className="text-md font-medium text-[#141F1E]">
                 Role Information
               </span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(1)}
-              className="px-[8px] py-[3px] border border-[#BCD3CD] rounded-lg text-[10px] text-[#141F1E] flex items-center gap-[4px] bg-white hover:bg-gray-50"
+              className="px-[8px] py-[3px] border border-[#BCD3CD] rounded-lg text-md text-[#141F1E] flex items-center gap-[4px] bg-white hover:bg-gray-50"
             >
               <Edit3 className="size-[10px]" /> Edit
             </button>
           </div>
 
-          <div className="flex flex-col gap-[8px] text-[12px]">
+          <div className="flex flex-col gap-[8px] text-md">
             <div className="flex justify-between items-center pb-[6px] border-b border-[#BCD3CD]/40">
               <span className="text-[#141F1E]">Role Name</span>
               <span className="text-[#5D5D5D]">{roleName}</span>
@@ -116,20 +116,20 @@ export function AddRoleStep4({ formData, onGoToStep }: AddRoleStep4Props) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
               <ListFilter className="size-[14px] text-[#4A706A]" />
-              <span className="text-[12px] font-medium text-[#141F1E]">
+              <span className="text-md font-medium text-[#141F1E]">
                 Module Summary
               </span>
             </div>
             <button
               type="button"
               onClick={() => onGoToStep(2)}
-              className="px-[8px] py-[3px] border border-[#BCD3CD] rounded-lg text-[10px] text-[#141F1E] flex items-center gap-[4px] bg-white hover:bg-gray-50"
+              className="px-[8px] py-[3px] border border-[#BCD3CD] rounded-lg text-md text-[#141F1E] flex items-center gap-[4px] bg-white hover:bg-gray-50"
             >
               <Edit3 className="size-[10px]" /> Edit
             </button>
           </div>
 
-          <div className="flex flex-col gap-[8px] text-[12px]">
+          <div className="flex flex-col gap-[8px] text-md">
             <div className="flex justify-between items-center pb-[6px] border-b border-[#BCD3CD]/40">
               <span className="text-[#141F1E]">Full Access</span>
               <span className="text-[#5D5D5D]">{String(fullAccessCount).padStart(2, "0")}</span>
@@ -161,7 +161,7 @@ export function AddRoleStep4({ formData, onGoToStep }: AddRoleStep4Props) {
                   <div className="size-[28px] rounded-lg bg-[#DEE9E6]/60 flex items-center justify-center shrink-0">
                     {MODULE_ICONS[mod.id] || <Building2 className="size-[14px] text-[#4A706A]" />}
                   </div>
-                  <span className="text-[12px] font-medium text-[#141F1E]">
+                  <span className="text-md font-medium text-[#141F1E]">
                     {mod.label}
                   </span>
                 </div>

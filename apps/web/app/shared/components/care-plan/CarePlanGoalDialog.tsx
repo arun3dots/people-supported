@@ -175,7 +175,7 @@ export function CarePlanGoalDialog({
             <Target className="size-5 text-emerald-800" />
             {initialData ? "Edit Clinical Care Goal" : "Define New Care Goal"}
           </DialogTitle>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Establish measurable outcomes, category tracking metrics, and evaluation frequency.
           </Text>
         </DialogHeader>
@@ -193,7 +193,7 @@ export function CarePlanGoalDialog({
                     key={p.id}
                     type="button"
                     onClick={() => handleApplyPreset(p)}
-                    className="px-2.5 py-1 bg-white hover:bg-emerald-800 hover:text-white border border-emerald-200 text-slate-700 text-sm font-semibold rounded-xl transition-colors cursor-pointer shadow-2xs"
+                    className="px-2.5 py-1 bg-white hover:bg-emerald-800 hover:text-white border border-emerald-200 text-slate-700 text-md font-semibold rounded-xl transition-colors cursor-pointer shadow-2xs"
                   >
                     {p.name}
                   </button>

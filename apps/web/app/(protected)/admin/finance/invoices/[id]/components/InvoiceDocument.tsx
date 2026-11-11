@@ -119,7 +119,7 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
                 <Text size="xl" weight="bold" className="text-emerald-800 tracking-tight block">
                   Cantra
                 </Text>
-                <Text size="sm" weight="medium" className="text-slate-400 block leading-none">
+                <Text size="md" weight="medium" className="text-slate-400 block leading-none">
                   Care &amp; Support Home
                 </Text>
               </div>
@@ -135,19 +135,19 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pt-2">
             {/* Care Home Sender Info */}
             <div className="space-y-1 text-md text-slate-600">
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 Cantra Care Home
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-600 block">
+              <Text size="md" weight="regular" className="text-slate-600 block">
                 221b Baker Street, London, NW16XE, United Kingdom.
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-600 block pt-1">
+              <Text size="md" weight="regular" className="text-slate-600 block pt-1">
                 Tel: +44 20794 67809
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-600 block">
+              <Text size="md" weight="regular" className="text-slate-600 block">
                 Email: accounts@cantra.co.uk
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-600 block">
+              <Text size="md" weight="regular" className="text-slate-600 block">
                 VAT No: GB123 4567 89
               </Text>
             </div>
@@ -155,27 +155,27 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
             {/* Invoice Meta Grid */}
             <div className="space-y-1.5 text-md text-right md:min-w-60">
               <div className="flex justify-between md:justify-end gap-6">
-                <Text size="sm" weight="medium" className="text-slate-500">Invoice No.</Text>
-                <Text size="sm" weight="bold" className="text-slate-900">{invoice.invoiceNumber}</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Invoice No.</Text>
+                <Text size="md" weight="bold" className="text-slate-900">{invoice.invoiceNumber}</Text>
               </div>
               <div className="flex justify-between md:justify-end gap-6">
-                <Text size="sm" weight="medium" className="text-slate-500">Issue Date</Text>
-                <Text size="sm" weight="medium" className="text-slate-900">{formatDate(invoice.issuedDate)}</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Issue Date</Text>
+                <Text size="md" weight="medium" className="text-slate-900">{formatDate(invoice.issuedDate)}</Text>
               </div>
               <div className="flex justify-between md:justify-end gap-6">
-                <Text size="sm" weight="medium" className="text-slate-500">Due Date</Text>
-                <Text size="sm" weight="medium" className="text-slate-900">{formatDate(invoice.dueDate)}</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Due Date</Text>
+                <Text size="md" weight="medium" className="text-slate-900">{formatDate(invoice.dueDate)}</Text>
               </div>
               <div className="flex justify-between md:justify-end gap-6">
-                <Text size="sm" weight="medium" className="text-slate-500">Invoice Type</Text>
-                <Text size="sm" weight="medium" className="text-slate-900">{invoice.invoiceType || "Residential Fees"}</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Invoice Type</Text>
+                <Text size="md" weight="medium" className="text-slate-900">{invoice.invoiceType || "Residential Fees"}</Text>
               </div>
             </div>
           </div>
 
           {/* Section 2: Bill To */}
           <div className="pt-4 border-t border-slate-100">
-            <Text size="sm" weight="semibold" className="text-slate-500 tracking-wider mb-2 block">
+            <Text size="md" weight="semibold" className="text-slate-500 tracking-wider mb-2 block">
               BILL TO
             </Text>
             <div className="flex flex-col md:flex-row justify-between gap-6">
@@ -184,29 +184,29 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
                 <Text size="xl" weight="bold" className="text-slate-900 block">
                   {resident?.fullName || "Devon Lane"}
                 </Text>
-                <Text size="sm" weight="medium" className="text-slate-500 block">
+                <Text size="md" weight="medium" className="text-slate-500 block">
                   Resident ID: {resident?.id ? resident.id.slice(0, 8) : "0005"}
                 </Text>
                 <div className="pt-2 space-y-0.5">
-                  <Text size="sm" weight="semibold" className="text-slate-800 block">Address:</Text>
-                  <Text size="sm" weight="regular" className="text-slate-600 block">{residentAddress}</Text>
+                  <Text size="md" weight="semibold" className="text-slate-800 block">Address:</Text>
+                  <Text size="md" weight="regular" className="text-slate-600 block">{residentAddress}</Text>
                 </div>
               </div>
 
               {/* Payer / Billing Contact */}
               <div className="space-y-1.5 md:text-right">
-                <Text size="sm" weight="bold" className="text-slate-500 tracking-wider block">
+                <Text size="md" weight="bold" className="text-slate-500 tracking-wider block">
                   PAYER / BILLING CONTACT
                 </Text>
-                <Text size="sm" weight="bold" className="text-slate-900 block">{payerName}</Text>
+                <Text size="md" weight="bold" className="text-slate-900 block">{payerName}</Text>
                 <div className="space-y-1 flex flex-col md:items-end">
                   <div className="flex items-center gap-1.5 text-md text-slate-600">
                     <Phone className="size-3.5 text-slate-400" />
-                    <Text size="sm" weight="regular">{payerPhone}</Text>
+                    <Text size="md" weight="regular">{payerPhone}</Text>
                   </div>
                   <div className="flex items-center gap-1.5 text-md text-slate-600">
                     <Mail className="size-3.5 text-slate-400" />
-                    <Text size="sm" weight="regular">{payerEmail}</Text>
+                    <Text size="md" weight="regular">{payerEmail}</Text>
                   </div>
                 </div>
               </div>
@@ -230,35 +230,35 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
                 {items.map((item: InvoiceItemResponse, idx: number) => (
                   <TableRow key={item.id || idx}>
                     <TableCell className="py-3.5 pr-3 text-left">
-                      <Text size="sm" weight="semibold" className="text-slate-900 block">
+                      <Text size="md" weight="semibold" className="text-slate-900 block">
                         {item.description}
                       </Text>
-                      <Text size="sm" weight="regular" className="text-slate-400 block mt-0.5">
+                      <Text size="md" weight="regular" className="text-slate-400 block mt-0.5">
                         ({formatDate(invoice.issuedDate)} - {formatDate(invoice.dueDate)})
                       </Text>
                     </TableCell>
                     <TableCell className="py-3.5 pr-3 text-left">
-                      <Text size="sm" weight="medium" className="text-slate-600">
+                      <Text size="md" weight="medium" className="text-slate-600">
                         {item.category || "Residential Fees"}
                       </Text>
                     </TableCell>
                     <TableCell className="py-3.5 px-3 text-center">
-                      <Text size="sm" weight="medium" className="text-slate-700">
+                      <Text size="md" weight="medium" className="text-slate-700">
                         {item.quantity}
                       </Text>
                     </TableCell>
                     <TableCell className="py-3.5 px-3 text-right">
-                      <Text size="sm" weight="medium" className="text-slate-700">
+                      <Text size="md" weight="medium" className="text-slate-700">
                         {formatCurrency(item.unitPrice)}
                       </Text>
                     </TableCell>
                     <TableCell className="py-3.5 px-3 text-right">
-                      <Text size="sm" weight="medium" className="text-slate-700">
+                      <Text size="md" weight="medium" className="text-slate-700">
                         {item.vatRate || 0}%
                       </Text>
                     </TableCell>
                     <TableCell className="py-3.5 pl-3 text-right">
-                      <Text size="sm" weight="semibold" className="text-slate-900">
+                      <Text size="md" weight="semibold" className="text-slate-900">
                         {formatCurrency(item.total)}
                       </Text>
                     </TableCell>
@@ -281,20 +281,20 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
           <div className="pt-4 space-y-4">
             <div className="flex flex-col items-end space-y-2 text-md">
               <div className="w-72 flex justify-between text-slate-600">
-                <Text size="sm" weight="medium">Subtotal</Text>
-                <Text size="sm" weight="semibold" className="text-slate-900">{formatCurrency(subtotal)}</Text>
+                <Text size="md" weight="medium">Subtotal</Text>
+                <Text size="md" weight="semibold" className="text-slate-900">{formatCurrency(subtotal)}</Text>
               </div>
               <div className="w-72 flex justify-between text-slate-600">
-                <Text size="sm" weight="medium">Discount</Text>
-                <Text size="sm" weight="semibold" className="text-slate-900">{formatCurrency(discount)}</Text>
+                <Text size="md" weight="medium">Discount</Text>
+                <Text size="md" weight="semibold" className="text-slate-900">{formatCurrency(discount)}</Text>
               </div>
               <div className="w-72 flex justify-between text-slate-600">
-                <Text size="sm" weight="medium">VAT (0%)</Text>
-                <Text size="sm" weight="semibold" className="text-slate-900">{formatCurrency(vatTotal)}</Text>
+                <Text size="md" weight="medium">VAT (0%)</Text>
+                <Text size="md" weight="semibold" className="text-slate-900">{formatCurrency(vatTotal)}</Text>
               </div>
               <div className="w-72 pt-2 border-t border-slate-200 flex justify-between">
-                <Text size="sm" weight="bold" className="text-emerald-800">TOTAL AMOUNT</Text>
-                <Text size="sm" weight="bold" className="text-emerald-800">{formatCurrency(totalAmount)}</Text>
+                <Text size="md" weight="bold" className="text-emerald-800">TOTAL AMOUNT</Text>
+                <Text size="md" weight="bold" className="text-emerald-800">{formatCurrency(totalAmount)}</Text>
               </div>
 
               {/* Recorded Payments List */}
@@ -307,9 +307,9 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
                     >
                       <div className="flex items-center gap-1.5 text-slate-600 font-medium">
                         <AlertCircle className="size-3.5 text-slate-400 shrink-0" />
-                        <Text size="sm" weight="medium">Paid on {formatDate(pmt.paymentDate)}</Text>
+                        <Text size="md" weight="medium">Paid on {formatDate(pmt.paymentDate)}</Text>
                       </div>
-                      <Text size="sm" weight="bold" className="text-slate-900">
+                      <Text size="md" weight="bold" className="text-slate-900">
                         {formatCurrency(pmt.amountPaid)}
                       </Text>
                     </div>
@@ -320,7 +320,7 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
 
             {/* Highlight Banner: Amount Due */}
             <div className="bg-emerald-50/90 border border-emerald-200/80 rounded-xl p-4 flex items-center justify-between">
-              <Text size="sm" weight="bold" className="tracking-wider text-emerald-950">
+              <Text size="md" weight="bold" className="tracking-wider text-emerald-950">
                 {amountDue <= 0 ? "STATUS: PAID" : "AMOUNT DUE"}
               </Text>
               <Text size="lg" weight="bold" className="text-emerald-950">

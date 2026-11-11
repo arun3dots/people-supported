@@ -175,7 +175,7 @@ export function PaginationComponent({
       )}
     >
       {/* Summary Text */}
-      <div className="text-[12px] sm:text-[13px] font-normal text-[#141F1E] shrink-0">
+      <div className="text-md font-normal text-[#141F1E] shrink-0">
         Showing {startItem} to {endItem} of {totalRecords} {entityName}
       </div>
 
@@ -201,7 +201,7 @@ export function PaginationComponent({
                   key={index}
                   disabled={disabled}
                   onClick={() => onPageChange(item)}
-                  className={`w-8 h-8 rounded-lg text-[12px] sm:text-[13px] font-medium flex items-center justify-center transition-all shrink-0 cursor-pointer border-0 ${
+                  className={`w-8 h-8 rounded-lg text-md font-medium flex items-center justify-center transition-all shrink-0 cursor-pointer border-0 ${
                     isActive
                       ? "bg-[#4A706A] text-white"
                       : "bg-white text-[#141F1E] hover:bg-gray-100"
@@ -214,7 +214,7 @@ export function PaginationComponent({
             return (
               <span
                 key={index}
-                className="w-6 sm:w-8 h-8 text-[12px] sm:text-[13px] font-normal text-[#5D5D5D] flex items-center justify-center shrink-0"
+                className="w-6 sm:w-8 h-8 text-md font-normal text-[#5D5D5D] flex items-center justify-center shrink-0"
               >
                 ...
               </span>
@@ -236,7 +236,7 @@ export function PaginationComponent({
       {/* Rows Per Page Selector (Conditional) */}
       {showLimitSelector && (
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <span className="text-[12px] sm:text-[13px] leading-[16px] font-normal text-[#5D5D5D]">
+          <span className="text-md leading-[16px] font-normal text-[#5D5D5D]">
             Rows <span className="hidden xs:inline">per page</span>
           </span>
           <div className="relative w-[60px] sm:w-[65px] h-[36px]">
@@ -244,7 +244,7 @@ export function PaginationComponent({
               value={limit}
               disabled={disabled}
               onChange={(e) => onLimitChange(e.target.value)}
-              className="w-full h-full bg-white border border-[#E0E0E0] rounded-xl pl-2.5 sm:pl-3 pr-6 sm:pr-7 text-[12px] sm:text-[13px] font-medium text-[#141F1E] appearance-none focus:outline-none cursor-pointer"
+              className="w-full h-full bg-white border border-[#E0E0E0] rounded-xl pl-2.5 sm:pl-3 pr-6 sm:pr-7 text-md font-medium text-[#141F1E] appearance-none focus:outline-none cursor-pointer"
             >
               {[5, 8, 10, 20, 50, 100].map((num) => (
                 <option key={num} value={String(num)}>

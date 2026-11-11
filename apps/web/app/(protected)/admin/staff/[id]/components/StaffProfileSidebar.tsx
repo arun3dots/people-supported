@@ -142,7 +142,7 @@ export function StaffProfileSidebar({ className }: StaffProfileSidebarProps = {}
           </Card>
 
           {/* Allowed File Formats & Max Size Hint */}
-          <p className="mt-2 text-sm text-slate-500 font-normal">
+          <p className="mt-2 text-md text-slate-500 font-normal">
             JPG, PNG, WEBP · Max 5MB
           </p>
 
@@ -152,7 +152,7 @@ export function StaffProfileSidebar({ className }: StaffProfileSidebarProps = {}
 
           <div className="flex items-center gap-1.5 mt-1 text-muted-foreground">
             <ShieldCheck className="w-4 h-4 text-primary/70" />
-            <Text size="sm" weight="medium" className="text-muted-foreground">
+            <Text size="md" weight="medium" className="text-muted-foreground">
               {staff.role?.name || "No Role Assigned"}
             </Text>
           </div>

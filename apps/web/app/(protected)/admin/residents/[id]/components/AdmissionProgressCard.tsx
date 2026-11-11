@@ -243,7 +243,7 @@ export function AdmissionProgressCard({ resident }: AdmissionProgressCardProps) 
         <Button
           type="button"
           onClick={() => handleGoToStep(firstIncompleteStep)}
-          className="bg-primary hover:bg-primary-dark text-white font-medium rounded-lg text-md sm:text-md px-4 py-2 flex items-center justify-center gap-2 transition-colors cursor-pointer shrink-0 shadow-xs"
+          className="bg-primary hover:bg-primary-dark text-white font-medium rounded-lg text-md px-4 py-2 flex items-center justify-center gap-2 transition-colors cursor-pointer shrink-0 shadow-xs"
         >
           <span>Resume Admission Wizard</span>
           <ArrowRight className="size-3.5" />
@@ -300,7 +300,7 @@ export function AdmissionProgressCard({ resident }: AdmissionProgressCardProps) 
 
                 <span
                   className={cn(
-                    "text-md sm:text-md font-medium truncate",
+                    "text-md font-medium truncate",
                     isLocked ? "text-text-description" : "text-text-primary"
                   )}
                 >
@@ -312,7 +312,7 @@ export function AdmissionProgressCard({ resident }: AdmissionProgressCardProps) 
               <div className="shrink-0">
                 <span
                   className={cn(
-                    "px-3 py-1 rounded-full text-sm font-semibold border inline-flex items-center gap-1",
+                    "px-3 py-1 rounded-full text-md font-semibold border inline-flex items-center gap-1",
                     isComplete && "border-emerald-600/40 text-emerald-700 bg-emerald-50/40",
                     isWarning && !isComplete && "border-amber-600/50 text-amber-800 bg-amber-50/60",
                     isError && "border-rose-600/50 text-rose-800 bg-rose-50/60",

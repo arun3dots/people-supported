@@ -39,14 +39,14 @@ export function DayTimelineView({
         {/* Header Row */}
         <div className="flex border-b border-slate-200 bg-slate-50/70 sticky top-0 z-20">
           <div className="w-[240px] p-4 shrink-0 border-r border-slate-200 bg-slate-50/70 sticky left-0 z-30">
-            <Text size="sm" weight="bold" className="text-slate-700">
+            <Text size="md" weight="bold" className="text-slate-700">
               {viewMode === "staff" ? "Staff Member" : "Area / Level"}
             </Text>
           </div>
           <div className="flex-1 grid grid-cols-24 divide-x divide-slate-200/80">
             {HOURS.map((h) => (
               <div key={h} className="py-3 text-center">
-                <Text size="sm" weight="semibold" className="text-sm text-slate-500">
+                <Text size="md" weight="semibold" className="text-md text-slate-500">
                   {String(h).padStart(2, "0")}:00
                 </Text>
               </div>
@@ -120,7 +120,7 @@ export function DayTimelineView({
                       </AvatarFallback>
                     </Avatar>
                   )}
-                  <Text size="sm" weight="semibold" className="text-slate-900 truncate">
+                  <Text size="md" weight="semibold" className="text-slate-900 truncate">
                     {row.name}
                   </Text>
                 </div>
@@ -175,27 +175,27 @@ export function DayTimelineView({
                         className="absolute rounded-lg border-l-3 border shadow-xs px-2 py-0.5 text-slate-900 transition-all hover:scale-[1.01] hover:shadow-sm cursor-pointer overflow-hidden z-10 flex items-center justify-between gap-1.5"
                       >
                         <div className="flex items-center gap-1.5 truncate">
-                          <Text size="sm" weight="bold" className="text-sm text-slate-900 truncate">
+                          <Text size="md" weight="bold" className="text-md text-slate-900 truncate">
                             {shift.type?.name || "Custom"}
                           </Text>
-                          <Text size="sm" weight="semibold" className="text-sm text-slate-600 shrink-0">
+                          <Text size="md" weight="semibold" className="text-md text-slate-600 shrink-0">
                             ({formatUkTime(sTime)}-{formatUkTime(eTime)})
                           </Text>
                         </div>
 
                         <div className="flex items-center gap-1 shrink-0">
                           {shift.status === "Draft" && (
-                            <Badge className="bg-amber-100 text-amber-800 text-sm px-1.5 py-0 border-0 h-4 font-bold">
+                            <Badge className="bg-amber-100 text-amber-800 text-md px-1.5 py-0 border-0 h-4 font-bold">
                               Draft
                             </Badge>
                           )}
                           {shift.status === "Cancelled" && (
-                            <Badge className="bg-rose-100 text-rose-800 text-sm px-1.5 py-0 border-0 h-4 font-bold">
+                            <Badge className="bg-rose-100 text-rose-800 text-md px-1.5 py-0 border-0 h-4 font-bold">
                               Cancelled
                             </Badge>
                           )}
                           {(!shift.assignments || shift.assignments.length === 0) && (
-                            <Badge className="bg-rose-100 text-rose-700 text-sm px-1.5 py-0 border-0 h-4 font-bold">
+                            <Badge className="bg-rose-100 text-rose-700 text-md px-1.5 py-0 border-0 h-4 font-bold">
                               Unassigned
                             </Badge>
                           )}

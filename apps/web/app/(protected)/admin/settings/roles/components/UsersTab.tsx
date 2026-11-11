@@ -408,7 +408,7 @@ export function UsersTab({ openAddUser = false, onFilterClick, setOpenAddUser }:
                           <span className="font-medium text-[#141F1E] text-md leading-4">
                             {u.fullName}
                           </span>
-                          <span className="text-[10px] text-[#7A7A7A] font-normal leading-3">
+                          <span className="text-md text-[#7A7A7A] font-normal leading-3">
                             {u.email}
                           </span>
                         </div>

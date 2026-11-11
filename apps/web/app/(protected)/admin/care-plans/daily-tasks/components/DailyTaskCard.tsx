@@ -1,41 +1,17 @@
 "use client";
 
 
-import { Clock, CheckCircle2, XCircle, User } from "lucide-react";
+import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import { Card, Badge, Button, Text } from "@repo/ui/components/ui";
+import type { CareTaskBoardItemDTO } from "@repo/schema";
 
-export interface TaskItem {
-  id: string;
-  title: string;
-  status: string;
-  timeSlot?: string;
-  priority?: string;
-  targetTime?: string;
-  instructions?: string;
-  precautions?: string;
-  skipReason?: string;
-  resident?: {
-    id: string;
-    fullName: string;
-  };
-  assignedStaff?: {
-    id: string;
-    fullName: string;
-  };
-  carePlanTask?: {
-    priority?: string;
-    timeOfDay?: string[];
-    instructions?: string;
-    precautions?: string;
-    targetTime?: string;
-  };
-}
+export type TaskItem = CareTaskBoardItemDTO;
 
 interface DailyTaskCardProps {
   task: TaskItem;
   showActions?: boolean;
-  onComplete: (id: string) => void;
-  onSkip: (id: string, title: string) => void;
+  onComplete: (task: TaskItem) => void;
+  onSkip: (task: TaskItem) => void;
 }
 
 export function DailyTaskCard({
@@ -44,88 +20,54 @@ export function DailyTaskCard({
   onComplete,
   onSkip,
 }: DailyTaskCardProps) {
-  const instructions = task.instructions || task.carePlanTask?.instructions;
-  const precautions = task.precautions || task.carePlanTask?.precautions;
-  const priority = task.priority || task.carePlanTask?.priority || "Medium";
-  const targetTime = task.targetTime || task.carePlanTask?.targetTime;
-
-  const getPriorityBadge = (p?: string) => {
-    const norm = (p || "Medium").toLowerCase();
-    if (norm === "critical") {
-      return (
-        <Badge variant="secondary" state="danger" className="px-2 py-0.5 shadow-none">
-          Critical
-        </Badge>
-      );
-    }
-    if (norm === "high") {
-      return (
-        <Badge variant="secondary" state="warning" className="px-2 py-0.5 shadow-none">
-          High
-        </Badge>
-      );
-    }
-    return (
-      <Badge variant="secondary" state="inactive" className="px-2 py-0.5 shadow-none">
-        Med
-      </Badge>
-    );
-  };
+  const shiftState = task.timeSlot === "Night" ? "inactive" : "success";
+  const roleState = task.role === "Nurse" ? "warning" : "inactive";
 
   return (
     <Card
       className="p-4 space-y-2.5 bg-white border border-slate-200 rounded-2xl shadow-none hover:shadow-xs transition-all font-['Outfit',sans-serif]"
     >
       <div className="flex items-start justify-between gap-1.5">
-        <Text size="sm" weight="bold" className="text-slate-900 leading-snug">
+        <Text size="md" weight="bold" className="text-slate-900 leading-snug">
           {task.title}
         </Text>
         <div className="flex items-center gap-1 shrink-0">
-          {getPriorityBadge(priority)}
-          <Badge variant="secondary" state="inactive" className="px-1.5 py-0.5 shadow-none">
-            {task.timeSlot || "Anytime"}
+          <Badge variant="secondary" state={shiftState} className="px-1.5 py-0.5 shadow-none">
+            {task.timeSlot} shift
+          </Badge>
+          <Badge variant="secondary" state={roleState} className="px-1.5 py-0.5 shadow-none">
+            {task.role}
           </Badge>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
-        <Text size="sm" weight="regular" className="text-slate-500">
-          Resident: <span className="font-semibold text-slate-800">{task.resident?.fullName || "Resident"}</span>
+        <Text size="md" weight="regular" className="text-slate-500">
+          Resident: <span className="font-semibold text-slate-800">{task.resident.fullName}</span>
         </Text>
-        {targetTime && (
+        {task.targetTime && (
           <div className="flex items-center gap-1">
             <Clock className="size-3 text-slate-400" />
-            <Text size="sm" weight="regular" className="text-slate-500">{targetTime}</Text>
+            <Text size="md" weight="regular" className="text-slate-500">{task.targetTime}</Text>
           </div>
         )}
       </div>
 
-      {task.assignedStaff && (
-        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-xl">
-          <User className="size-3 text-slate-400" />
-          <Text size="sm" weight="regular" className="text-slate-500">Assigned: {task.assignedStaff.fullName}</Text>
-        </div>
-      )}
+      <Text size="md" weight="medium" className="text-emerald-800">
+        Care plan: {task.carePlan.area}
+      </Text>
 
-      {instructions && (
+      {task.instructions && (
         <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-          <Text size="sm" weight="regular" className="text-slate-500 line-clamp-2 leading-relaxed">
-            <span className="font-semibold text-slate-700">Instr:</span> {instructions}
-          </Text>
-        </div>
-      )}
-
-      {precautions && (
-        <div className="bg-amber-50/70 p-2 rounded-xl border border-amber-200/60">
-          <Text size="sm" className="text-amber-900 font-medium">
-            <span className="font-semibold">Note:</span> {precautions}
+          <Text size="md" weight="regular" className="text-slate-500 line-clamp-2 leading-relaxed">
+            <span className="font-semibold text-slate-700">Instructions:</span> {task.instructions}
           </Text>
         </div>
       )}
 
       {task.skipReason && (
         <div className="bg-rose-50 p-2 rounded-xl border border-rose-100">
-          <Text size="sm" className="text-red-700 font-medium">
+          <Text size="md" className="text-red-700 font-medium">
             Skipped reason: {task.skipReason}
           </Text>
         </div>
@@ -136,7 +78,7 @@ export function DailyTaskCard({
           <Button
             variant="primary"
             size="sm"
-            onClick={() => onComplete(task.id)}
+            onClick={() => onComplete(task)}
             className="flex-1 h-8 rounded-xl shadow-none cursor-pointer gap-1"
           >
             <CheckCircle2 className="size-3.5" /> Done
@@ -144,7 +86,7 @@ export function DailyTaskCard({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => onSkip(task.id, task.title)}
+            onClick={() => onSkip(task)}
             className="h-8 text-red-600 border-red-200 hover:bg-red-50 shadow-none rounded-xl cursor-pointer gap-1"
           >
             <XCircle className="size-3.5" /> Skip

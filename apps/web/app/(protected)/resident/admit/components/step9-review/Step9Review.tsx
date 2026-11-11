@@ -293,7 +293,7 @@ export function Step9Review({
                 updateFormData({ staffDeclarationSigned: checked === true })
               }
             />
-            <Text size="sm" variant="subdued" className="leading-relaxed">
+            <Text size="md" variant="subdued" className="leading-relaxed">
               I confirm all mandatory admission information has been collected
               and verified according to statutory care regulations.
             </Text>

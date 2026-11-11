@@ -123,7 +123,7 @@ export function DateRangePicker({
             id={id}
             disabled={disabled}
             className={cn(
-              "flex h-[44px] w-full items-center justify-between rounded-xl border border-border-secondary bg-surface-neutral px-3 py-2 text-sm text-text-body transition-colors",
+              "flex h-[44px] w-full items-center justify-between rounded-xl border border-border-secondary bg-surface-neutral px-3 py-2 text-md text-text-body transition-colors",
               "hover:border-surface-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-primary/20",
               disabled && "cursor-not-allowed opacity-50 bg-surface-card-grey",
               errorMessage && "border-border-error bg-surface-error",
@@ -160,7 +160,7 @@ export function DateRangePicker({
           {/* Quick Presets Sidebar */}
           {showPresets && (
             <div className="w-full md:w-36 border-b md:border-b-0 md:border-r border-border-secondary p-2 bg-surface-card-grey flex flex-row md:flex-col gap-1 overflow-x-auto">
-              <div className="hidden md:block text-[11px] font-semibold text-text-description mb-1 px-2 uppercase tracking-wider">
+              <div className="hidden md:block text-md font-semibold text-text-description mb-1 px-2 uppercase tracking-wider">
                 Presets
               </div>
               {presets.map((p) => (
@@ -168,7 +168,7 @@ export function DateRangePicker({
                   key={p.label}
                   type="button"
                   onClick={() => applyPreset(p.range)}
-                  className="px-2.5 py-1.5 rounded-lg text-sm font-medium text-left text-text-body hover:bg-surface-primary-light hover:text-surface-primary transition-colors whitespace-nowrap"
+                  className="px-2.5 py-1.5 rounded-lg text-md font-medium text-left text-text-body hover:bg-surface-primary-light hover:text-surface-primary transition-colors whitespace-nowrap"
                 >
                   {p.label}
                 </button>
@@ -191,17 +191,17 @@ export function DateRangePicker({
               classNames={{
                 months: "flex flex-col md:flex-row gap-4",
                 month: "space-y-2",
-                month_caption: "flex justify-center items-center h-8 font-semibold text-sm text-text-heading",
+                month_caption: "flex justify-center items-center h-8 font-semibold text-md text-text-heading",
                 nav: "flex justify-between items-center absolute inset-x-3 top-3 pointer-events-none",
                 button_previous: "pointer-events-auto p-1 rounded-lg hover:bg-surface-card-grey text-text-description cursor-pointer",
                 button_next: "pointer-events-auto p-1 rounded-lg hover:bg-surface-card-grey text-text-description cursor-pointer",
                 table: "w-full border-collapse",
                 weekdays: "flex justify-between mb-1",
-                weekday: "w-9 text-center text-sm font-medium text-text-description",
+                weekday: "w-9 text-center text-md font-medium text-text-description",
                 week: "flex justify-between w-full mt-1",
-                day: "p-0 text-center text-sm focus-within:relative focus-within:z-20",
+                day: "p-0 text-center text-md focus-within:relative focus-within:z-20",
                 day_button: cn(
-                  "size-9 p-0 flex items-center justify-center text-sm transition-colors font-medium text-text-body",
+                  "size-9 p-0 flex items-center justify-center text-md transition-colors font-medium text-text-body",
                   "cursor-pointer select-none pointer-events-auto hover:bg-surface-primary-light hover:text-surface-primary focus:outline-none"
                 ),
                 range_start: "[&_button]:rounded-l-xl [&_button]:!bg-surface-primary [&_button]:!text-white [&_button]:!font-bold",
@@ -215,7 +215,7 @@ export function DateRangePicker({
 
             {/* Footer */}
             {range?.from && (
-              <div className="mt-3 pt-2 border-t border-border-secondary flex items-center justify-between text-sm px-1">
+              <div className="mt-3 pt-2 border-t border-border-secondary flex items-center justify-between text-md px-1">
                 <span className="text-text-description font-medium">
                   Selected: <strong className="text-text-heading">{formatted}</strong>
                 </span>
@@ -233,7 +233,7 @@ export function DateRangePicker({
       </Popover>
 
       {errorMessage && (
-        <span className="text-sm text-text-error mt-0.5">{errorMessage}</span>
+        <span className="text-md text-text-error mt-0.5">{errorMessage}</span>
       )}
     </div>
   );

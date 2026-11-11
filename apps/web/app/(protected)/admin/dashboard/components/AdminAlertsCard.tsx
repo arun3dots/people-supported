@@ -103,7 +103,7 @@ export function AdminAlertsCard({ alerts, isLoading }: AdminAlertsCardProps) {
           </Text>
           <Link
             href="/admin/escalations"
-            className="flex items-center gap-1 text-sm font-medium text-emerald-700 hover:text-emerald-800"
+            className="flex items-center gap-1 text-md font-medium text-emerald-700 hover:text-emerald-800"
           >
             See All
             <ArrowRight className="size-4" />
@@ -132,13 +132,13 @@ export function AdminAlertsCard({ alerts, isLoading }: AdminAlertsCardProps) {
                 {/* Top Bar: Badge & Timestamp */}
                 <div className="flex items-center justify-between w-full">
                   <div
-                    className={`px-2 py-0.5 rounded-md flex items-center justify-center font-bold text-[10px]  tracking-wider ${alert.badgeStyle}`}
+                    className={`px-2 py-0.5 rounded-md flex items-center justify-center font-bold text-md  tracking-wider ${alert.badgeStyle}`}
                   >
                     {alert.level}
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <Text size="sm" variant="muted" weight="medium">
+                    <Text size="md" variant="muted" weight="medium">
                       {alert.time}
                     </Text>
                     <div
@@ -149,10 +149,10 @@ export function AdminAlertsCard({ alerts, isLoading }: AdminAlertsCardProps) {
 
                 {/* Title & Subtitle */}
                 <div className="flex flex-col">
-                  <Text size="sm" className="truncate">
+                  <Text size="md" className="truncate">
                     {alert.title}
                   </Text>
-                  <Text size="sm" variant="muted" className="truncate">
+                  <Text size="md" variant="muted" className="truncate">
                     {alert.subtitle}
                   </Text>
                 </div>

@@ -50,15 +50,15 @@ export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
                   <Scale className="size-4" />
                 </div>
                 <p className="text-md font-bold text-slate-800 truncate">{l.holderName}</p>
-                <Badge variant="secondary" className="px-2.5 py-0.5 text-sm bg-blue-50 text-blue-800 border border-blue-200 font-medium">
+                <Badge variant="secondary" className="px-2.5 py-0.5 text-md bg-blue-50 text-blue-800 border border-blue-200 font-medium">
                   {l.type}
                 </Badge>
                 {l.copySeen ? (
-                  <Badge variant="secondary" className="px-2 py-0.5 text-sm bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
+                  <Badge variant="secondary" className="px-2 py-0.5 text-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
                     Copy seen
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="px-2 py-0.5 text-sm bg-slate-100 text-slate-600 font-medium">
+                  <Badge variant="secondary" className="px-2 py-0.5 text-md bg-slate-100 text-slate-600 font-medium">
                     Copy not seen
                   </Badge>
                 )}
@@ -91,7 +91,7 @@ export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
             </div>
 
             {(l.holderPhone || l.registeredYear) && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-600 pt-1 border-t border-slate-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-md text-slate-600 pt-1 border-t border-slate-100">
                 {l.holderPhone && (
                   <div className="flex items-center gap-2">
                     <Phone className="size-4 text-slate-400 shrink-0" />
@@ -108,7 +108,7 @@ export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
             )}
 
             {l.document?.gcsPath && (
-              <div className="flex items-center gap-2 text-sm text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
+              <div className="flex items-center gap-2 text-md text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
                 <FileText className="size-4 text-emerald-700 shrink-0" />
                 <span className="font-semibold text-slate-700">Attached copy:</span>
                 <span className="text-slate-600 truncate">{l.document.name || "LPA document"}</span>
@@ -159,7 +159,7 @@ export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
               onChange={(url) => update({ document: doc(`LPA ${l.type}`, url) })}
             />
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/60">
-              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-sm">
+              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-md">
                 Cancel
               </Button>
               <Button
@@ -168,7 +168,7 @@ export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
                 size="sm"
                 onClick={onSave}
                 disabled={!l.holderName?.trim() || !l.type}
-                className="rounded-xl font-semibold text-sm shadow-none"
+                className="rounded-xl font-semibold text-md shadow-none"
               >
                 {isNew ? "Add LPA" : "Save changes"}
               </Button>

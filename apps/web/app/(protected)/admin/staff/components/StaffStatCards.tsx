@@ -1,78 +1,90 @@
 "use client";
 
 import React from "react";
-import { Users, UserCheck, Clock, Award, ShieldAlert } from "lucide-react";
-import { StaffMember } from "../../../../../lib/types/staff";
+import { Users, UserCheck, Clock, ShieldAlert } from "lucide-react";
+import {
+  SummaryCardsGrid,
+  type SummaryCardItem,
+} from "@repo/ui/components/ui/SummaryCard";
+import type { StaffMember } from "../../../../../lib/types/staff";
 
 interface StaffStatCardsProps {
   staff?: StaffMember[];
 }
 
-export function StaffStatCards({ staff = [] }: StaffStatCardsProps) {
-  const totalStaffCount = staff.length || 15;
-  const onLeaveStaffCount = staff.filter((s) => s.isOnLeave).length || 1;
-  const activeStaffCount = staff.filter((s) => s.isActive && !s.isOnLeave).length || 12;
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-  const cards = [
+export function StaffStatCards({ staff = [] }: StaffStatCardsProps) {
+  const totalStaffCount = staff.length;
+  const onLeaveStaffCount = staff.filter((s) => s.isOnLeave).length;
+  const activeStaffCount = staff.filter((s) => s.isActive && !s.isOnLeave).length;
+
+  const nowMs = Date.now();
+  const dbsDueCount = staff.filter((s) => {
+    if (!s.dbsExpiryDate) return false;
+    const expiryMs = new Date(s.dbsExpiryDate).getTime();
+    if (!Number.isFinite(expiryMs)) return false;
+    return (expiryMs - nowMs) / MS_PER_DAY <= 30;
+  }).length;
+
+  const activeShareText =
+    totalStaffCount > 0
+      ? `${Math.round((activeStaffCount / totalStaffCount) * 100)}% of workforce`
+      : "No active staff yet";
+
+  const cards: SummaryCardItem[] = [
     {
       title: "Total Staff",
       value: totalStaffCount,
-      icon: Users,
-      cardBg: "bg-white border-slate-200/80",
-      iconColor: "text-slate-700",
-      valueColor: "text-slate-900",
+      subtitle: "Registered staff members",
+      icon: <Users className="size-5 text-primary" />,
+      iconClassName: "bg-surface-primary-light",
     },
     {
       title: "Active Staff",
       value: activeStaffCount,
-      icon: UserCheck,
-      cardBg: "bg-emerald-50/70 border-emerald-200/80",
-      iconColor: "text-emerald-700",
-      valueColor: "text-emerald-800",
+      subtitle: activeShareText,
+      subtitleColor:
+        activeStaffCount > 0 ? "text-emerald-700 font-medium" : "text-slate-500",
+      icon: <UserCheck className="size-5 text-emerald-700" />,
+      iconClassName: "bg-emerald-50",
     },
     {
       title: "On Leave",
       value: onLeaveStaffCount,
-      icon: Clock,
-      cardBg: "bg-amber-50/70 border-amber-200/80",
-      iconColor: "text-amber-700",
-      valueColor: "text-amber-800",
+      subtitle:
+        onLeaveStaffCount > 0
+          ? "Currently on approved leave"
+          : "No staff on leave",
+      subtitleColor:
+        onLeaveStaffCount > 0 ? "text-amber-700 font-medium" : "text-slate-500",
+      icon: <Clock className="size-5 text-amber-600" />,
+      iconClassName: "bg-amber-50",
     },
     {
-      title: "In Training",
-      value: 1,
-      icon: Award,
-      cardBg: "bg-slate-50 border-slate-200/80",
-      iconColor: "text-slate-600",
-      valueColor: "text-slate-900",
-    },
-    {
-      title: "Compliance Due",
-      value: 6,
-      icon: ShieldAlert,
-      cardBg: "bg-red-50/60 border-red-200/80",
-      iconColor: "text-red-700",
-      valueColor: "text-red-800",
+      title: "DBS Renewal Due",
+      value: dbsDueCount,
+      subtitle:
+        totalStaffCount === 0
+          ? "No staff records yet"
+          : dbsDueCount > 0
+            ? "Expired or due within 30 days"
+            : "All recorded DBS checks valid",
+      subtitleColor:
+        dbsDueCount > 0 ? "text-rose-700 font-medium" : "text-slate-500",
+      icon: (
+        <ShieldAlert
+          className={dbsDueCount > 0 ? "size-5 text-rose-600" : "size-5 text-slate-600"}
+        />
+      ),
+      iconClassName: dbsDueCount > 0 ? "bg-rose-50" : "bg-slate-100",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 font-sans">
-      {cards.map((c) => {
-        const Icon = c.icon;
-        return (
-          <div
-            key={c.title}
-            className={`${c.cardBg} border rounded-2xl p-4 sm:p-5 space-y-1 shadow-2xs transition-all`}
-          >
-            <div className="flex items-center gap-2">
-              <Icon className={`size-4 ${c.iconColor}`} />
-              <span className="text-md font-bold text-slate-700">{c.title}</span>
-            </div>
-            <div className={`text-2xl font-extrabold ${c.valueColor}`}>{c.value}</div>
-          </div>
-        );
-      })}
-    </div>
+    <SummaryCardsGrid
+      cards={cards}
+      className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 font-sans"
+    />
   );
 }

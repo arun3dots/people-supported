@@ -186,7 +186,7 @@ export function ProfileHeaderCard({
               <div className="size-4 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                 <Heart className="size-2.5 text-white fill-white" />
               </div>
-              <Text size="sm" weight="medium" className="text-white/90">
+              <Text size="md" weight="medium" className="text-white/90">
                 {department}
               </Text>
             </div>
@@ -196,12 +196,12 @@ export function ProfileHeaderCard({
 
       {/* Right — Last Login Pill */}
       <div className="flex flex-col items-center md:items-end justify-center gap-1.5 text-center md:text-right shrink-0 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/15 z-10">
-        <Text size="sm" weight="medium" className="text-emerald-100/90 uppercase tracking-wider text-sm">
+        <Text size="md" weight="medium" className="text-emerald-100/90 uppercase tracking-wider text-md">
           Last Login
         </Text>
         <div className="flex items-center gap-2">
           <div className="size-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
-          <Text size="sm" weight="semibold" className="text-white whitespace-nowrap">
+          <Text size="md" weight="semibold" className="text-white whitespace-nowrap">
             Today, {format(new Date(), "HH:mm")}
           </Text>
         </div>

@@ -44,7 +44,7 @@ export function PartBContactSection({
                 </div>
                 <p className="text-md font-bold text-slate-800 truncate">{c.name}</p>
                 {c.relationship && (
-                  <Badge variant="secondary" className="px-2.5 py-0.5 text-sm bg-slate-100 text-slate-700 font-medium">
+                  <Badge variant="secondary" className="px-2.5 py-0.5 text-md bg-slate-100 text-slate-700 font-medium">
                     {c.relationship}
                   </Badge>
                 )}
@@ -77,7 +77,7 @@ export function PartBContactSection({
             </div>
 
             {(c.phone || c.email) && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-600 pt-1 border-t border-slate-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-md text-slate-600 pt-1 border-t border-slate-100">
                 {c.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="size-4 text-slate-400 shrink-0" />
@@ -94,7 +94,7 @@ export function PartBContactSection({
             )}
 
             {c.availabilityNote && (
-              <div className="flex items-start gap-2 text-sm text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
+              <div className="flex items-start gap-2 text-md text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
                 <Clock className="size-4 text-slate-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold text-slate-700">When to call: </span>
@@ -141,7 +141,7 @@ export function PartBContactSection({
               />
             </FieldGrid>
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/60">
-              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-sm">
+              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-md">
                 Cancel
               </Button>
               <Button
@@ -150,7 +150,7 @@ export function PartBContactSection({
                 size="sm"
                 onClick={onSave}
                 disabled={!c.name?.trim()}
-                className="rounded-xl font-semibold text-sm shadow-none"
+                className="rounded-xl font-semibold text-md shadow-none"
               >
                 {isNew ? "Save" : "Save changes"}
               </Button>

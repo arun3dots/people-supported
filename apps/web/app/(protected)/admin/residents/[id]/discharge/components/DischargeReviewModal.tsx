@@ -135,7 +135,7 @@ export function DischargeReviewModal({
                 <Building2 className="size-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Room Number</p>
+                <p className="text-md font-medium text-slate-500">Room Number</p>
                 <p className="text-md font-bold text-slate-900">{roomNumberStr}</p>
               </div>
             </div>
@@ -145,7 +145,7 @@ export function DischargeReviewModal({
                 <BedIcon className="size-4" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-500">Bed Number</p>
+                <p className="text-md font-medium text-slate-500">Bed Number</p>
                 <p className="text-md font-bold text-slate-900">{bedNumberStr}</p>
               </div>
             </div>
@@ -157,7 +157,7 @@ export function DischargeReviewModal({
           {rows.map((row, idx) => (
             <div
               key={idx}
-              className="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 text-md sm:text-md"
+              className="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-4 text-md"
             >
               <span className="sm:col-span-5 font-semibold text-slate-900">
                 {row.label}
@@ -176,7 +176,7 @@ export function DischargeReviewModal({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
-            className="h-11 px-7 bg-white border border-slate-300 text-slate-900 font-bold rounded-xl text-md sm:text-md hover:bg-slate-50 cursor-pointer"
+            className="h-11 px-7 bg-white border border-slate-300 text-slate-900 font-bold rounded-xl text-md hover:bg-slate-50 cursor-pointer"
           >
             Back
           </Button>
@@ -184,7 +184,7 @@ export function DischargeReviewModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="h-11 px-7 bg-[#3D5C57] hover:bg-[#2D4541] text-white font-bold rounded-xl text-md sm:text-md shadow-xs transition-colors cursor-pointer"
+            className="h-11 px-7 bg-[#3D5C57] hover:bg-[#2D4541] text-white font-bold rounded-xl text-md shadow-xs transition-colors cursor-pointer"
           >
             {isLoading ? (
               <>

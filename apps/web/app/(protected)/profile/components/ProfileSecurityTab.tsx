@@ -131,7 +131,7 @@ export function ProfileSecurityTab({
           <Text size={'lg'} weight={'bold'} className="text-slate-900">
             {score}%
           </Text>
-          <Text size={'xs'} weight={'semibold'} className="text-emerald-800">
+          <Text size={'md'} weight={'semibold'} className="text-emerald-800">
             {scoreLabel}
           </Text>
         </div>
@@ -153,7 +153,7 @@ export function ProfileSecurityTab({
                     <RefreshCw className="size-3 text-amber-500 stroke-[2.5]" />
                   </div>
                 )}
-                <Text size="sm" weight="medium" className="text-slate-700 truncate">
+                <Text size="md" weight="medium" className="text-slate-700 truncate">
                   {item.label}
                 </Text>
               </div>

@@ -80,7 +80,7 @@ export function ResidentCarePlanTab({ resident }: ResidentCarePlanTabProps): Rea
     return (
       <Card variant="surface" className="p-12 text-center font-sans">
         <Loader2 className="size-7 animate-spin text-emerald-800 mx-auto mb-2" />
-        <Text size="sm" weight="medium" variant="muted">Loading care plan details...</Text>
+        <Text size="md" weight="medium" variant="muted">Loading care plan details...</Text>
       </Card>
     );
   }
@@ -96,7 +96,7 @@ export function ResidentCarePlanTab({ resident }: ResidentCarePlanTabProps): Rea
           <Text as="h3" size="md" weight="bold" className="text-slate-900">
             No Care Plan Created Yet
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             This resident does not have a registered care plan. Create a master
             care plan to define clinical goals, intervention tasks, and assign care teams.
           </Text>
@@ -131,19 +131,19 @@ export function ResidentCarePlanTab({ resident }: ResidentCarePlanTabProps): Rea
         variant="surface"
         className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:px-4 gap-3"
       >
-        <div className="flex items-center gap-2 flex-wrap text-sm">
-          <Text size="sm" weight="bold" className="font-mono text-slate-800">
+        <div className="flex items-center gap-2 flex-wrap text-md">
+          <Text size="md" weight="bold" className="font-mono text-slate-800">
             {p.versionNumber ? `CP-${String(p.versionNumber).padStart(4, "0")}` : "CP-0001"}
           </Text>
           <Badge
             variant="secondary"
             state={p.status === "Active" ? "success" : isChangesRequested ? "danger" : "warning"}
-            className="font-semibold px-2 py-0.5 text-sm"
+            className="font-semibold px-2 py-0.5 text-md"
           >
             {p.status || "Draft"}
           </Badge>
-          <Text size="sm" variant="muted">·</Text>
-          <Text size="sm" variant="muted" className="text-slate-600">
+          <Text size="md" variant="muted">·</Text>
+          <Text size="md" variant="muted" className="text-slate-600">
             {p.status === "Active"
               ? `Approved version v${p.versionNumber || 1} · Active`
               : `Working revision rev ${p.versionNumber || 1} · not yet approved`}
@@ -189,7 +189,7 @@ export function ResidentCarePlanTab({ resident }: ResidentCarePlanTabProps): Rea
 
       {/* Return notice / revision banner - only show if changes were requested */}
       {isChangesRequested && (
-        <Text variant="muted" weight="medium" size="sm" className="p-3 sm:px-4 rounded-xl bg-amber-50/90 border border-amber-200 text-sm text-amber-900 leading-relaxed font-medium">
+        <Text variant="muted" weight="medium" size="md" className="p-3 sm:px-4 rounded-xl bg-amber-50/90 border border-amber-200 text-md text-amber-900 leading-relaxed font-medium">
           {p?.description || "Changes requested by reviewer. Please update the necessary sections and resubmit for approval."}
         </Text>
       )}

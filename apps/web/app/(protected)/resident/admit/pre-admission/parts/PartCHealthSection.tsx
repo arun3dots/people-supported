@@ -52,7 +52,7 @@ export function PartCHealthSection({
   return (
     <PartCard title="C · Health and medical history">
       {(errors?.primaryDiagnosis || errors?.diagnoses) && (
-        <p className="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5 mb-3">
+        <p className="text-md font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5 mb-3">
           {errors.primaryDiagnosis || errors.diagnoses}
         </p>
       )}

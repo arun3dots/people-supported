@@ -235,7 +235,7 @@ export function RoleDialog({
               <DialogTitle className="text-[20px] font-semibold text-[#141F1E] text-left">
                 {initialData ? `Edit Role: ${initialData.name}` : "Add New Role"}
               </DialogTitle>
-              <p className="text-[12px] text-[#5D5D5D] text-left">
+              <p className="text-md text-[#5D5D5D] text-left">
                 Define the role details and module access permissions.
               </p>
             </DialogHeader>
@@ -272,7 +272,7 @@ export function RoleDialog({
                     >
                       <div
                         className={cn(
-                          "size-[32px] rounded-full flex items-center justify-center text-[12px] font-semibold transition-all",
+                          "size-[32px] rounded-full flex items-center justify-center text-md font-semibold transition-all",
                           isDone
                             ? "bg-[#4A706A] text-white"
                             : isActive
@@ -284,7 +284,7 @@ export function RoleDialog({
                       </div>
                       <span
                         className={cn(
-                          "text-[12px] font-semibold transition-colors",
+                          "text-md font-semibold transition-colors",
                           isActive || isDone ? "text-[#141F1E]" : "text-[#A0AEC0]"
                         )}
                       >

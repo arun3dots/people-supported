@@ -82,17 +82,17 @@ export function CarePlanResidentProfileBadge({
               {name}
             </Text>
             {roomNumber ? (
-              <Badge variant="secondary" state="inactive" className="gap-1 px-2.5 py-0.5 text-sm font-semibold shadow-none">
+              <Badge variant="secondary" state="inactive" className="gap-1 px-2.5 py-0.5 text-md font-semibold shadow-none">
                 <BedDouble className="size-3 text-slate-500" />
                 Room {roomNumber}
               </Badge>
             ) : (
-              <Badge variant="secondary" state="inactive" className="px-2 py-0.5 text-sm text-slate-400 shadow-none">
+              <Badge variant="secondary" state="inactive" className="px-2 py-0.5 text-md text-slate-400 shadow-none">
                 No Room
               </Badge>
             )}
             {ageText && (
-              <Text size="sm" weight="medium" className="text-slate-500 hidden md:inline">
+              <Text size="md" weight="medium" className="text-slate-500 hidden md:inline">
                 {ageText}
               </Text>
             )}

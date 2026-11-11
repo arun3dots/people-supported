@@ -27,10 +27,10 @@ export function CapacityAssessmentsSection({
     return (
       <div className="text-center py-10 bg-white border border-dashed border-slate-200 rounded-2xl space-y-2 font-['Outfit',sans-serif]">
         <Brain className="w-8 h-8 text-slate-300 mx-auto" />
-        <Text size="sm" weight="semibold" className="text-slate-700">
+        <Text size="md" weight="semibold" className="text-slate-700">
           No Mental Capacity Assessments on Record
         </Text>
-        <Text size="sm" variant="muted" className="max-w-md mx-auto">
+        <Text size="md" variant="muted" className="max-w-md mx-auto">
           Under CQC Regulation 11, restrictive interventions (e.g. bed rails, sensor mats,
           covert medication) require a decision-specific statutory assessment.
         </Text>
@@ -54,14 +54,14 @@ export function CapacityAssessmentsSection({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="secondary" state="inactive" className="text-sm font-semibold">
+                  <Badge variant="secondary" state="inactive" className="text-md font-semibold">
                     {a.decisionType}
                   </Badge>
                   <span className="text-md font-semibold text-slate-900">
                     {a.specificDecision}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
+                <div className="flex items-center gap-2 text-md text-slate-500 mt-1">
                   <Calendar className="size-3" />
                   <span>Assessed: {new Date(a.assessedAt).toLocaleDateString("en-GB")}</span>
                   <span>•</span>
@@ -71,11 +71,11 @@ export function CapacityAssessmentsSection({
 
               <div>
                 {a.hasCapacity ? (
-                  <Badge variant="secondary" state="success" className="gap-1 text-sm font-semibold">
+                  <Badge variant="secondary" state="success" className="gap-1 text-md font-semibold">
                     <CheckCircle2 className="size-3" /> Has Capacity
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" state="warning" className="gap-1 text-sm font-semibold">
+                  <Badge variant="secondary" state="warning" className="gap-1 text-md font-semibold">
                     <XCircle className="size-3" /> Lacks Capacity (Best Interests)
                   </Badge>
                 )}
@@ -83,7 +83,7 @@ export function CapacityAssessmentsSection({
             </div>
 
             {/* 4 Functional Stages */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-md">
               <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-slate-400 block font-medium">Understand:</span>
                 <span className={a.canUnderstandInfo ? "text-emerald-700 font-semibold" : "text-rose-600 font-semibold"}>
@@ -119,7 +119,7 @@ export function CapacityAssessmentsSection({
 
             {/* Consulted Persons if Best Interests */}
             {a.consultedPersons && Array.isArray(a.consultedPersons) && a.consultedPersons.length > 0 && (
-              <div className="text-sm text-slate-600 space-y-1 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/60">
+              <div className="text-md text-slate-600 space-y-1 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/60">
                 <div className="flex items-center gap-1 font-semibold text-amber-900">
                   <Users className="size-3 text-amber-700" />
                   <span>Best Interests Consultations (Section 4):</span>

@@ -40,35 +40,35 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
   return (
     <Card
       variant="surface"
-      className="w-full lg:w-72 xl:w-80 shrink-0 p-4 sm:p-5 gap-4 self-start font-sans text-sm"
+      className="w-full lg:w-72 xl:w-80 shrink-0 p-4 sm:p-5 gap-4 self-start font-sans text-md"
     >
       {/* Top Header */}
       <div>
         <Text as="h3" size="md" weight="bold" className="text-slate-900 tracking-tight">
           From the resident record
         </Text>
-        <Text size="sm" variant="muted" className="mt-0.5 leading-snug">
+        <Text size="md" variant="muted" className="mt-0.5 leading-snug">
           Read-only references to {residentIdentifier}. Edit these in the profile; they are never copied into the plan.
         </Text>
       </div>
 
       {/* Allergies Box */}
       <div className="space-y-1">
-        <Text size="sm" weight="bold" className="text-slate-700">
+        <Text size="md" weight="bold" className="text-slate-700">
           Allergies
         </Text>
-        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 font-mono text-sm text-slate-800">
+        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 font-mono text-md text-slate-800">
           ALLERGIES: {allAllergies.length > 0 ? allAllergies.join(", ") : "NKDA"}
         </div>
       </div>
 
       {/* DNACPR Box */}
       <div className="space-y-1">
-        <Text size="sm" weight="bold" className="text-slate-700">
+        <Text size="md" weight="bold" className="text-slate-700">
           DNACPR
         </Text>
         <div className={cn(
-          "p-2 rounded-xl border text-sm font-mono",
+          "p-2 rounded-xl border text-md font-mono",
           resident?.dnarStatus
             ? "border-amber-400 bg-amber-50 text-amber-900"
             : "border-dashed border-rose-300 bg-rose-50/50 text-rose-800"
@@ -79,21 +79,21 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
 
       {/* Legal Status */}
       <div className="space-y-1">
-        <Text size="sm" weight="bold" className="text-slate-700">
+        <Text size="md" weight="bold" className="text-slate-700">
           Legal status
         </Text>
-        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-sm">
+        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-md">
           {resident?.admission?.legalStatus || resident?.profile?.legalStatus || "— None recorded"}
         </div>
       </div>
 
       {/* Risk Flags */}
       <div className="space-y-1">
-        <Text size="sm" weight="bold" className="text-slate-700">
+        <Text size="md" weight="bold" className="text-slate-700">
           Risk flags
         </Text>
         {riskFactors.length > 0 ? (
-          <div className="p-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-sm font-semibold space-y-1">
+          <div className="p-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-md font-semibold space-y-1">
             {riskFactors.slice(0, 3).map((rf: string, idx: number) => (
               <div key={idx}>
                 <span className="font-bold">RISK:</span> {rf}
@@ -101,7 +101,7 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
             ))}
           </div>
         ) : (
-          <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-sm">
+          <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-md">
             — None recorded
           </div>
         )}
@@ -109,10 +109,10 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
 
       {/* Medication Alerts */}
       <div className="space-y-1">
-        <Text size="sm" weight="bold" className="text-slate-700">
+        <Text size="md" weight="bold" className="text-slate-700">
           Medication alerts
         </Text>
-        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-sm">
+        <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-md">
           {resident?.careProfile?.medicationAllergies?.length
             ? `Allergy: ${resident.careProfile.medicationAllergies.join(", ")}`
             : "— None recorded"}
@@ -121,11 +121,11 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
 
       {/* Plan Details Group */}
       <div className="pt-3 border-t border-slate-100 space-y-2.5">
-        <Text as="h4" size="sm" weight="bold" className="text-slate-900">
+        <Text as="h4" size="md" weight="bold" className="text-slate-900">
           Plan details
         </Text>
 
-        <div className="space-y-1.5 text-sm">
+        <div className="space-y-1.5 text-md">
           <div className="flex justify-between items-baseline">
             <span className="text-slate-500">Plan ID</span>
             <span className="font-mono font-medium text-slate-800">{planId}</span>
@@ -165,17 +165,17 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
 
         {/* Responsible Person Field */}
         <div className="pt-1 space-y-1">
-          <Text size="sm" weight="medium" className="text-slate-700 text-sm">
+          <Text size="md" weight="medium" className="text-slate-700 text-md">
             Responsible person
           </Text>
-          <div className="p-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-sm">
+          <div className="p-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-md">
             {authorName} (RN)
           </div>
         </div>
 
         {/* Review Interval Toggle Group */}
         <div className="space-y-1.5 pt-1">
-          <Text size="sm" weight="medium" className="text-slate-700 text-sm">
+          <Text size="md" weight="medium" className="text-slate-700 text-md">
             Review interval
           </Text>
           <div className="grid grid-cols-5 gap-1 bg-slate-100/80 p-1 rounded-xl">
@@ -187,7 +187,7 @@ export function CarePlanRecordSidebar({ resident, plan }: CarePlanRecordSidebarP
                 size="sm"
                 onClick={() => setSelectedInterval(intv)}
                 className={cn(
-                  "h-7 py-1 px-1 text-sm font-semibold rounded-lg cursor-pointer text-center",
+                  "h-7 py-1 px-1 text-md font-semibold rounded-lg cursor-pointer text-center",
                   selectedInterval === intv
                     ? "shadow-xs"
                     : "text-slate-600 hover:text-slate-900",

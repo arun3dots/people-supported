@@ -138,7 +138,7 @@ export function RaiseEscalationDialog({
           <DialogTitle className="text-lg font-bold text-slate-900">
             Raise Clinical Alert to Nurse on Duty
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-md text-slate-500">
             Instantly dispatches an in-app urgent alert and logs an SBAR triage requirement.
           </DialogDescription>
         </DialogHeader>
@@ -147,17 +147,17 @@ export function RaiseEscalationDialog({
           {errorMsg && (
             <Alert className="border-rose-200 bg-rose-50 text-rose-800">
               <AlertTitle className="font-semibold">Action Required</AlertTitle>
-              <AlertDescription className="text-sm">{errorMsg}</AlertDescription>
+              <AlertDescription className="text-md">{errorMsg}</AlertDescription>
             </Alert>
           )}
 
           {/* Resident Selection */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-800">Resident</label>
+            <label className="text-md font-semibold text-slate-800">Resident</label>
             {presetResidentId ? (
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-900 flex items-center justify-between">
                 <span>{presetResidentName || "Selected Resident"}</span>
-                <span className="text-sm text-slate-400 font-normal">Locked to Task</span>
+                <span className="text-md text-slate-400 font-normal">Locked to Task</span>
               </div>
             ) : (
               <Select value={residentId} onValueChange={setResidentId}>
@@ -177,13 +177,13 @@ export function RaiseEscalationDialog({
 
           {/* Urgency / Severity Level */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-800">Urgency Severity</label>
+            <label className="text-md font-semibold text-slate-800">Urgency Severity</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <button
                 type="button"
                 onClick={() => setSeverity("Medium")}
                 className={cn(
-                  "flex items-center justify-center h-10 px-3 rounded-xl text-sm sm:text-md font-semibold transition-all border cursor-pointer",
+                  "flex items-center justify-center h-10 px-3 rounded-xl text-md font-semibold transition-all border cursor-pointer",
                   severity === "Medium"
                     ? "bg-amber-600 text-white border-amber-600 shadow-sm"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300",
@@ -195,7 +195,7 @@ export function RaiseEscalationDialog({
                 type="button"
                 onClick={() => setSeverity("High")}
                 className={cn(
-                  "flex items-center justify-center h-10 px-3 rounded-xl text-sm sm:text-md font-semibold transition-all border cursor-pointer",
+                  "flex items-center justify-center h-10 px-3 rounded-xl text-md font-semibold transition-all border cursor-pointer",
                   severity === "High"
                     ? "bg-rose-600 text-white border-rose-600 shadow-sm"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300",
@@ -207,7 +207,7 @@ export function RaiseEscalationDialog({
                 type="button"
                 onClick={() => setSeverity("Critical")}
                 className={cn(
-                  "flex items-center justify-center h-10 px-3 rounded-xl text-sm sm:text-md font-semibold transition-all border cursor-pointer",
+                  "flex items-center justify-center h-10 px-3 rounded-xl text-md font-semibold transition-all border cursor-pointer",
                   severity === "Critical"
                     ? "bg-red-700 text-white border-red-700 shadow-sm ring-2 ring-red-400/50"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300",
@@ -220,7 +220,7 @@ export function RaiseEscalationDialog({
 
           {/* Clinical Trigger Reason */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-800">Trigger Category</label>
+            <label className="text-md font-semibold text-slate-800">Trigger Category</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {reasonsList.map((item) => {
                 const Icon = item.icon;
@@ -231,7 +231,7 @@ export function RaiseEscalationDialog({
                     type="button"
                     onClick={() => setReason(item.id)}
                     className={cn(
-                      "flex items-center justify-start gap-2.5 min-h-[44px] py-2 px-3.5 rounded-xl text-sm sm:text-md font-medium transition-all border text-left cursor-pointer",
+                      "flex items-center justify-start gap-2.5 min-h-[44px] py-2 px-3.5 rounded-xl text-md font-medium transition-all border text-left cursor-pointer",
                       isSelected
                         ? "bg-primary text-white border-primary shadow-sm"
                         : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300",
@@ -247,7 +247,7 @@ export function RaiseEscalationDialog({
 
           {/* Clinical Notes */}
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-800">
+            <label className="text-md font-semibold text-slate-800">
               Clinical Observation Notes &amp; Symptoms
             </label>
             <Textarea
@@ -255,7 +255,7 @@ export function RaiseEscalationDialog({
               value={initialNotes}
               onChange={(e) => setInitialNotes(e.target.value)}
               placeholder="Describe symptoms, vital signs noticed, resident statements, or reasons for concern..."
-              className="rounded-xl border-slate-200 text-sm focus:border-primary"
+              className="rounded-xl border-slate-200 text-md focus:border-primary"
             />
           </div>
 
@@ -264,7 +264,7 @@ export function RaiseEscalationDialog({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="h-10 px-4 rounded-xl text-sm font-semibold"
+              className="h-10 px-4 rounded-xl text-md font-semibold"
             >
               Cancel
             </Button>
@@ -272,7 +272,7 @@ export function RaiseEscalationDialog({
               type="submit"
               variant="primary"
               disabled={createEscalation.isPending}
-              className="h-10 px-5 rounded-xl text-sm font-semibold"
+              className="h-10 px-5 rounded-xl text-md font-semibold"
             >
               <Flame className="size-4 mr-2" />
               {createEscalation.isPending ? "Dispatching..." : "Dispatch Clinical Alert"}

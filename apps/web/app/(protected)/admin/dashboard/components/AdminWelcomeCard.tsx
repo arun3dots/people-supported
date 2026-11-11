@@ -37,7 +37,7 @@ export function AdminWelcomeCard({
 
         <div className="flex gap-16 pt-4">
           <div>
-            <p className="text-white/40 text-[10px] font-semibold  tracking-[0.3em]">
+            <p className="text-white/40 text-md font-semibold  tracking-[0.3em]">
               Residents
             </p>
             <p className="font-semibold mt-1 leading-none tracking-tighter text-6xl xl:text-7xl">
@@ -45,7 +45,7 @@ export function AdminWelcomeCard({
             </p>
           </div>
           <div>
-            <p className="text-white/40 text-[10px] font-semibold  tracking-[0.3em]">
+            <p className="text-white/40 text-md font-semibold  tracking-[0.3em]">
               Staff
             </p>
             <p className="font-semibold mt-1 leading-none tracking-tighter text-6xl xl:text-7xl">

@@ -125,7 +125,7 @@ export function RotaHeader({
 
           {/* View By Tabs Toggle */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <Text size="sm" weight="medium" className="text-slate-500 px-1 shrink-0">
+            <Text size="md" weight="medium" className="text-slate-500 px-1 shrink-0">
               View By:
             </Text>
             <Tabs

@@ -26,7 +26,7 @@ export function LegalRepCard({
   return (
     <div className="bg-surface-card-grey rounded-2xl p-6 space-y-4 shadow-none border-none font-sans">
       <div className="pb-3 border-b border-slate-200/80">
-        <Text as="h3" size="sm" weight="bold" className="text-slate-900  tracking-wider">
+        <Text as="h3" size="md" weight="bold" className="text-slate-900  tracking-wider">
           Legal Representative &amp; POA
         </Text>
       </div>

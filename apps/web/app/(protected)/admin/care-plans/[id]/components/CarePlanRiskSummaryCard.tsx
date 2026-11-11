@@ -23,20 +23,20 @@ export function CarePlanRiskSummaryCard({
     const l = (level || "medium").toLowerCase();
     if (l === "high" || l === "critical") {
       return (
-        <Badge variant="destructive" className="text-sm font-bold px-2 py-0.5">
+        <Badge variant="destructive" className="text-md font-bold px-2 py-0.5">
           HIGH
         </Badge>
       );
     }
     if (l === "low") {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-sm font-semibold bg-emerald-100 text-emerald-800">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-md font-semibold bg-emerald-100 text-emerald-800">
           LOW
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-sm font-semibold bg-amber-100 text-amber-800">
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-md font-semibold bg-amber-100 text-amber-800">
         MEDIUM
       </span>
     );
@@ -64,10 +64,10 @@ export function CarePlanRiskSummaryCard({
             <AlertTriangle className="size-4" />
           </div>
           <div>
-            <Text size="sm" weight="bold" className="text-slate-900">
+            <Text size="md" weight="bold" className="text-slate-900">
               Live Clinical Risk Matrix (CQC Safe &amp; Responsive)
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Active risk assessments and review schedules for this resident
             </Text>
           </div>
@@ -91,10 +91,10 @@ export function CarePlanRiskSummaryCard({
       ) : !riskAssessments || riskAssessments.length === 0 ? (
         <div className="p-6 text-center rounded-xl bg-slate-50/60 border border-dashed border-slate-200">
           <ShieldCheck className="size-6 text-slate-400 mx-auto mb-1.5" />
-          <Text size="sm" weight="medium" className="text-slate-600">
+          <Text size="md" weight="medium" className="text-slate-600">
             No active risk assessments on record.
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Assessments logged in the Risk module automatically populate this table and the exported Care Plan.
           </Text>
         </div>
@@ -136,7 +136,7 @@ export function CarePlanRiskSummaryCard({
                       >
                         {formatDate(ra.nextReviewDate)}
                         {overdue && (
-                          <span className="text-sm bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-sm">
+                          <span className="text-md bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded-sm">
                             Overdue
                           </span>
                         )}

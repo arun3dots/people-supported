@@ -114,6 +114,7 @@ function useRefreshPlans(residentId: string) {
     queryClient.invalidateQueries({
       queryKey: careJourneyKeys.definitions(residentId),
     });
+    queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll });
     queryClient.invalidateQueries({
       queryKey: careJourneyKeys.dayAll(residentId),
     });
@@ -239,10 +240,41 @@ export function useRecordCareTaskMutation(residentId: string) {
         { id: residentId, taskId },
       ),
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: careJourneyKeys.dayAll(residentId),
-      }),
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: careJourneyKeys.dayAll(residentId),
+        }),
+        queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll }),
+      ]),
     onError: failure("Could not record", "Please try again"),
+  });
+}
+
+export function useRecordCareTaskFromBoardMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      residentId,
+      taskId,
+      data,
+    }: {
+      residentId: string;
+      taskId: string;
+      data: RecordCareTaskDTO;
+    }) =>
+      makeAPICall<unknown>(
+        RECORD_CARE_TASK,
+        asPayload(data),
+        {},
+        { id: residentId, taskId },
+      ),
+    onSuccess: (_result, variables) => {
+      queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll });
+      queryClient.invalidateQueries({
+        queryKey: careJourneyKeys.dayAll(variables.residentId),
+      });
+    },
+    onError: failure("Could not record the task", "Please try again"),
   });
 }
 
@@ -252,9 +284,12 @@ export function useUndoCareTaskMutation(residentId: string) {
     mutationFn: (taskId: string) =>
       makeAPICall<unknown>(UNDO_CARE_TASK, {}, {}, { id: residentId, taskId }),
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: careJourneyKeys.dayAll(residentId),
-      }),
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: careJourneyKeys.dayAll(residentId),
+        }),
+        queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll }),
+      ]),
     onError: failure("Could not undo", "Please try again"),
   });
 }

@@ -260,7 +260,7 @@ export function PersonalDetailsTab() {
                 ))}
               </div>
             ) : (
-              <Text size="sm" weight="regular" className="text-[#5D5D5D] italic">
+              <Text size="md" weight="regular" className="text-[#5D5D5D] italic">
                 No Next of Kin / Contact Person recorded.
               </Text>
             )}

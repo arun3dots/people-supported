@@ -46,7 +46,7 @@ export function StaffAllocationTable({
         <Text as="h2" size="md" weight="semibold" className="text-slate-900">
           Staff Allocation ({filteredStaff.length} shown of {totalStaffCount})
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Manage primary, secondary and night cover allocations across homes
         </Text>
       </div>
@@ -109,14 +109,14 @@ export function StaffAllocationTable({
                   <TableCell className="pl-3 text-slate-500">{idx + 1}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2.5">
-                      <div className="size-8 rounded-full bg-surface-primary-light text-primary font-medium text-xs flex items-center justify-center shrink-0">
+                      <div className="size-8 rounded-full bg-surface-primary-light text-primary font-medium text-md flex items-center justify-center shrink-0">
                         {initials}
                       </div>
                       <div>
-                        <Text size="sm" weight="medium" className="text-slate-900">
+                        <Text size="md" weight="medium" className="text-slate-900">
                           {m.fullName}
                         </Text>
-                        <Text size="xs" variant="muted">
+                        <Text size="md" variant="muted">
                           {m.email}
                         </Text>
                       </div>
@@ -150,7 +150,7 @@ export function StaffAllocationTable({
                   <TableCell>
                     <Text
                       as="span"
-                      size="sm"
+                      size="md"
                       weight="medium"
                       variant={
                         availabilityLabel === "Available" ? "primary" : "muted"

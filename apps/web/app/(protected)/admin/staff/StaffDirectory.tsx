@@ -27,6 +27,7 @@ import { StaffFilterSection } from "./components/StaffFilterSection";
 import { useStaffColumns } from "./components/useStaffColumns";
 import { StaffCard } from "./components/StaffCardGrid";
 import { AddStaffMemberModal } from "./components/AddStaffMemberModal";
+import { resolveStaffLocation } from "./components/staffUtils";
 
 const STAFF_FILTERS = {
   role: "All Roles",
@@ -65,8 +66,14 @@ export function StaffDirectory() {
   const { data: schemesData } = useGetSchemesQuery();
   const { data: propertiesData } = useGetPropertiesQuery();
 
-  const schemes = Array.isArray(schemesData) ? schemesData : [];
-  const properties = Array.isArray(propertiesData) ? propertiesData : [];
+  const schemes = useMemo(
+    () => (Array.isArray(schemesData) ? schemesData : []),
+    [schemesData],
+  );
+  const properties = useMemo(
+    () => (Array.isArray(propertiesData) ? propertiesData : []),
+    [propertiesData],
+  );
 
   const {
     data: paginatedResponse,
@@ -120,9 +127,22 @@ export function StaffDirectory() {
     };
   }, [allStaff]);
 
+  const selectedScheme = filterParams.scheme;
+  const selectedProperty = filterParams.property;
+
   const displayStaffList = useMemo(() => {
-    if (activeTab === "all") return rawStaffList;
     return rawStaffList.filter((m) => {
+      if (selectedScheme && selectedScheme !== STAFF_FILTERS.scheme) {
+        const { schemeId } = resolveStaffLocation(m, schemes, properties);
+        if (schemeId !== selectedScheme) return false;
+      }
+
+      if (selectedProperty && selectedProperty !== STAFF_FILTERS.property) {
+        const { propertyId } = resolveStaffLocation(m, schemes, properties);
+        if (propertyId !== selectedProperty) return false;
+      }
+
+      if (activeTab === "all") return true;
       const r = m.role?.name?.toLowerCase() || "";
       if (activeTab === "support") {
         return (
@@ -146,7 +166,7 @@ export function StaffDirectory() {
       }
       return true;
     });
-  }, [rawStaffList, activeTab]);
+  }, [rawStaffList, activeTab, selectedScheme, selectedProperty, schemes, properties]);
 
   const statusMutation = useUpdateStaffStatusMutationQuery({
     onSuccess: () => {
@@ -195,6 +215,8 @@ export function StaffDirectory() {
   const columns = useStaffColumns({
     onToggleStatus: toggleStatus,
     onDelete: setDeleteId,
+    schemes,
+    properties,
   });
 
   const roleTabs = [
@@ -214,10 +236,10 @@ export function StaffDirectory() {
         storageKey="staff_directory_view_mode"
         headerActions={
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => window.print()}
-            className="h-10 px-3.5 rounded-xl border-slate-200 text-md font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-none"
+            className="h-10 px-3.5 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-md font-medium text-slate-700 flex items-center gap-1.5 shadow-none"
           >
             <Download className="size-3.5" />
             Export
@@ -246,7 +268,7 @@ export function StaffDirectory() {
               onReset={resetFilters}
             />
 
-            <div className="flex items-center gap-6 border-b border-slate-200/80 text-md overflow-x-auto pb-px">
+            <div className="flex items-center gap-6 border-b border-slate-200/70 text-md overflow-x-auto pb-px">
               {roleTabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -255,7 +277,7 @@ export function StaffDirectory() {
                   className={cn(
                     "pb-2.5 transition-colors whitespace-nowrap cursor-pointer",
                     activeTab === tab.key
-                      ? "border-b-2 border-emerald-800 text-emerald-900 font-bold"
+                      ? "border-b-2 border-primary text-primary font-semibold"
                       : "text-slate-500 hover:text-slate-800 font-medium",
                   )}
                 >
@@ -275,6 +297,8 @@ export function StaffDirectory() {
           <StaffCard
             key={member.id}
             member={member}
+            schemes={schemes}
+            properties={properties}
             showRightDivider={
               idx % 3 !== 2 && idx !== displayStaffList.length - 1
             }

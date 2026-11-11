@@ -189,7 +189,7 @@ export function AnatomySearchBar({
           }}
           onKeyDown={handleKeyDown}
           placeholder="Search anatomy (e.g. nail, knee, forehead)..."
-          className="w-full h-full bg-transparent border-none text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 p-0"
+          className="w-full h-full bg-transparent border-none text-md text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 p-0"
         />
         {searchQuery && (
           <button
@@ -212,7 +212,7 @@ export function AnatomySearchBar({
         <div className="absolute top-[48px] left-0 w-full bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden z-50 animate-in fade-in-50 slide-in-from-top-2 duration-150">
           <div className="max-h-[360px] overflow-y-auto divide-y divide-slate-100">
             {flatResults.length === 0 ? (
-              <div className="p-6 text-center text-slate-500 text-sm font-medium">
+              <div className="p-6 text-center text-slate-500 text-md font-medium">
                 No matching anatomical structure found for &quot;
                 <span className="text-slate-800 font-semibold">{searchQuery}</span>
                 &quot;
@@ -225,12 +225,12 @@ export function AnatomySearchBar({
                   <div key={regionKey}>
                     {/* Section Header */}
                     <div className="px-4 py-2 bg-slate-50/80 flex items-center justify-between border-b border-slate-100">
-                      <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
+                      <span className="text-md font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
                         <Icon className={`w-3.5 h-3.5 ${config.headerIconColor}`} />
                         {config.label}
                       </span>
                       <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${config.countBadge}`}
+                        className={`text-md font-semibold px-2 py-0.5 rounded-full ${config.countBadge}`}
                       >
                         {items.length}
                       </span>
@@ -255,26 +255,26 @@ export function AnatomySearchBar({
                         >
                           <div className="flex items-center gap-3 min-w-0">
                             <div
-                              className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0 border ${config.avatarBg}`}
+                              className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-md shrink-0 border ${config.avatarBg}`}
                             >
                               {node.label.charAt(0).toUpperCase()}
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className="text-sm font-semibold text-slate-900 truncate">
+                                <p className="text-md font-semibold text-slate-900 truncate">
                                   {node.label}
                                 </p>
-                                <span className="text-[9px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded capitalize">
+                                <span className="text-md font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded capitalize">
                                   {node.level}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                              <p className="text-md text-slate-500 truncate mt-0.5">
                                 {buildLocationLabel(node.id)}
                               </p>
                             </div>
                           </div>
                           <span
-                            className={`text-[10px] font-medium border px-2 py-0.5 rounded-md shrink-0 ml-2 ${config.matchedBadge}`}
+                            className={`text-md font-medium border px-2 py-0.5 rounded-md shrink-0 ml-2 ${config.matchedBadge}`}
                           >
                             Matched by Name
                           </span>

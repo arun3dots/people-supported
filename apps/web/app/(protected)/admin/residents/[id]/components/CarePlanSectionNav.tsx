@@ -60,7 +60,7 @@ export function CarePlanSectionNav({
               {/* Left Details */}
               <div className="flex flex-col min-w-0 gap-0.5">
                 <Text
-                  size="sm"
+                  size="md"
                   weight={isActive ? "semibold" : "medium"}
                   className={cn("truncate", isActive ? "text-emerald-950" : "text-slate-900")}
                 >
@@ -70,7 +70,7 @@ export function CarePlanSectionNav({
                   <Badge
                     variant="secondary"
                     state={sec.isComplete ? "success" : "warning"}
-                    className="px-1.5 py-0 text-sm shadow-none"
+                    className="px-1.5 py-0 text-md shadow-none"
                   >
                     {sec.status}
                   </Badge>
@@ -90,7 +90,7 @@ export function CarePlanSectionNav({
       </div>
 
       <div className="pt-2 px-2 border-t border-slate-200/80">
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           {missingCount > 0
             ? `${missingCount} required item${missingCount > 1 ? "s" : ""} missing across ${missingCount} section${missingCount > 1 ? "s" : ""}.`
             : "All required sections completed."}

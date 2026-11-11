@@ -127,7 +127,7 @@ export function CollapsedSidebarStrip({
                     )}
                   >
                     <item.icon className="size-4 shrink-0" strokeWidth={1.5} />
-                    <span className="text-[13px] leading-[17px] font-normal">
+                    <span className="text-md leading-[17px] font-normal">
                       {item.title}
                     </span>
                   </Link>

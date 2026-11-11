@@ -61,7 +61,7 @@ export function ClinicalCalculatorsModal({
             <Activity className="size-5 text-emerald-800" />
             NHS &amp; NICE Clinical Screening Calculators
           </DialogTitle>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Validated assessment tools for {residentName} (CQC Reg 12 Safe Care)
           </Text>
         </DialogHeader>
@@ -132,7 +132,7 @@ export function ClinicalCalculatorsModal({
                 />
                 <span>Acute Disease Effect (+2 Score)</span>
               </label>
-              <p className="text-sm text-slate-500 pl-6">
+              <p className="text-md text-slate-500 pl-6">
                 Check if the resident is acutely ill and there has been or is likely to be no nutritional intake for &gt; 5 days.
               </p>
             </div>
@@ -193,12 +193,12 @@ export function ClinicalCalculatorsModal({
                 <Badge
                   variant="secondary"
                   state={mustResult.riskCategory === "High" ? "danger" : mustResult.riskCategory === "Medium" ? "warning" : "success"}
-                  className="font-semibold text-sm"
+                  className="font-semibold text-md"
                 >
                   {mustResult.riskCategory} Malnutrition Risk
                 </Badge>
               </div>
-              <p className="text-sm">
+              <p className="text-md">
                 {mustResult.riskCategory === "High"
                   ? "Action Required: Refer to Dietitian / GP. Initiate daily food intake charting and fluid balance monitoring. Consider fortified meals and prescribed supplements."
                   : mustResult.riskCategory === "Medium"

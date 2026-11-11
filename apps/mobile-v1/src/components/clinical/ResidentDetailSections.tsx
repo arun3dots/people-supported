@@ -82,7 +82,7 @@ export function ResidentDetailSections({
           <View className="w-7 h-7 rounded-full bg-primary-light items-center justify-center">
             <UserCheck size={14} color="#4A706A" />
           </View>
-          <Text className="text-lg font-bold text-foreground">Resident Contact Details</Text>
+          <Text className="text-lg font-bold text-foreground">Contact Details</Text>
         </View>
 
         <Card className="p-4">

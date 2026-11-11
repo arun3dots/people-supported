@@ -176,30 +176,30 @@ export function ResidentHeroBanner({
 
               {/* Row 1: Ref, DOB, Age, NHS */}
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1">
-                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
+                <Text size="md" variant="subdued" className="inline-flex items-center gap-1">
                   <CreditCard className="size-3.5 text-slate-400" />
                   Ref:{" "}
-                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                  <Text as="span" size="md" weight="medium" className="text-slate-800">
                     {refCode}
                   </Text>
                 </Text>
-                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
+                <Text size="md" variant="subdued" className="inline-flex items-center gap-1">
                   <Calendar className="size-3.5 text-slate-400" />
                   DOB:{" "}
-                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                  <Text as="span" size="md" weight="medium" className="text-slate-800">
                     {dobFormatted}
                   </Text>
                 </Text>
-                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
+                <Text size="md" variant="subdued" className="inline-flex items-center gap-1">
                   <User className="size-3.5 text-slate-400" />
                   Age:{" "}
-                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                  <Text as="span" size="md" weight="medium" className="text-slate-800">
                     {ageVal ?? 41}
                   </Text>
                 </Text>
-                <Text size="sm" variant="subdued">
+                <Text size="md" variant="subdued">
                   NHS{" "}
-                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                  <Text as="span" size="md" weight="medium" className="text-slate-800">
                     {resident.nhsNumber ||
                       resident.profile?.nationalId ||
                       "485 777 3456"}
@@ -208,9 +208,9 @@ export function ResidentHeroBanner({
               </div>
 
               {/* Row 2: Key worker · support hrs/wk · Funded by */}
-              <Text size="sm" variant="subdued">
+              <Text size="md" variant="subdued">
                 Key worker{" "}
-                <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                <Text as="span" size="md" weight="medium" className="text-slate-800">
                   {resident.keyworker?.fullName || "Deborah Lee"}
                 </Text>{" "}
                 · {supportHours} support hrs/wk · Funded by {fundedBy}
@@ -240,7 +240,7 @@ export function ResidentHeroBanner({
 
           {/* Right: Property / Scheme Box */}
           <Card variant="white" border="secondary" className="p-4 min-w-64 shrink-0 gap-2">
-            <Text size="sm" weight="medium" variant="subdued">
+            <Text size="md" weight="medium" variant="subdued">
               Property / Scheme
             </Text>
             <div className="flex items-start gap-2.5">
@@ -251,7 +251,7 @@ export function ResidentHeroBanner({
                 <Text size="md" weight="medium" className="text-slate-900 leading-tight">
                   {propertyName}
                 </Text>
-                <Text size="sm" variant="subdued">
+                <Text size="md" variant="subdued">
                   {roomNum} · {schemeName}
                 </Text>
                 <Link
@@ -260,7 +260,7 @@ export function ResidentHeroBanner({
                       ? `/admin/configuration/facility?tab=properties&propertyId=${propertyId}`
                       : "/admin/configuration/facility?tab=properties"
                   }
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline pt-0.5"
+                  className="inline-flex items-center gap-1 text-md font-medium text-primary hover:underline pt-0.5"
                 >
                   <span>View property</span>
                   <ArrowRight className="size-3" />

@@ -99,7 +99,7 @@ export function RiskAssessmentDialog(props: Props) {
               </SelectContent>
             </Select>
             {errors.category && (
-              <p className="text-sm text-red-600 mt-1 font-medium">
+              <p className="text-md text-red-600 mt-1 font-medium">
                 {errors.category}
               </p>
             )}
@@ -208,7 +208,7 @@ export function RiskAssessmentDialog(props: Props) {
               caption="Select likelihood and severity"
             />
             {errors.inherent && (
-              <p className="text-sm text-red-600 mt-1 font-medium">
+              <p className="text-md text-red-600 mt-1 font-medium">
                 {errors.inherent}
               </p>
             )}

@@ -58,7 +58,7 @@ export function CarerDashboardClient() {
           <Text size="xl" weight="bold" className="tracking-tight">
             Carer Dashboard
           </Text>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Real-time daily schedule, assigned residents, and shift updates.
           </Text>
         </div>
@@ -70,7 +70,7 @@ export function CarerDashboardClient() {
       </div>
 
       {!isShiftStarted && (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Clock className="size-4 shrink-0 text-amber-700" />
             <span className="font-medium">
@@ -105,7 +105,7 @@ export function CarerDashboardClient() {
               <p className="text-md font-semibold text-slate-800">
                 Tasks locked until shift start
               </p>
-              <p className="text-sm text-slate-600">
+              <p className="text-md text-slate-600">
                 Clock in to view scheduled care tasks for your assigned residents.
               </p>
             </div>

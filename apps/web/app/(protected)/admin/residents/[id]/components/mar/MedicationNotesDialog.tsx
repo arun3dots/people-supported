@@ -180,7 +180,7 @@ export function MedicationNotesDialog({
                 <DialogTitle className="text-base font-semibold text-slate-900">
                   Medication Notes &amp; Guidelines
                 </DialogTitle>
-                <DialogDescription className="text-[12px] text-slate-500">
+                <DialogDescription className="text-md text-slate-500">
                   Special instructions, administration precautions, and medication notes.
                 </DialogDescription>
               </div>
@@ -191,7 +191,7 @@ export function MedicationNotesDialog({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsAdding(true)}
-                className="gap-1.5 text-[12px] border-emerald-300 text-emerald-800 hover:bg-emerald-50 h-8 rounded-xl"
+                className="gap-1.5 text-md border-emerald-300 text-emerald-800 hover:bg-emerald-50 h-8 rounded-xl"
               >
                 <Plus className="size-3.5" />
                 Add Note
@@ -205,10 +205,10 @@ export function MedicationNotesDialog({
           {isAdding && (
             <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40 space-y-2.5 animate-in fade-in-50">
               <div className="flex items-center justify-between">
-                <Label className="text-[12px] font-semibold text-emerald-900">
+                <Label className="text-md font-semibold text-emerald-900">
                   New Medication Note / Guideline
                 </Label>
-                <Badge variant="outline" className="text-[10px] bg-white text-emerald-800 border-emerald-300">
+                <Badge variant="outline" className="text-md bg-white text-emerald-800 border-emerald-300">
                   MAR Note
                 </Badge>
               </div>
@@ -220,7 +220,7 @@ export function MedicationNotesDialog({
                   if (noteError) setNoteError(null);
                 }}
                 placeholder="Enter administration guidelines, food/water instructions, crushing notes, or precautions..."
-                className="bg-white border-slate-200 text-[12px] text-slate-900 placeholder:text-slate-400"
+                className="bg-white border-slate-200 text-md text-slate-900 placeholder:text-slate-400"
                 errorMessage={noteError || undefined}
                 autoFocus
               />
@@ -235,7 +235,7 @@ export function MedicationNotesDialog({
                     setNoteError(null);
                   }}
                   disabled={createNoteMutation.isPending}
-                  className="text-[12px]"
+                  className="text-md"
                 >
                   Cancel
                 </Button>
@@ -245,7 +245,7 @@ export function MedicationNotesDialog({
                   size="sm"
                   onClick={handleSaveNote}
                   disabled={createNoteMutation.isPending}
-                  className="gap-1.5 text-[12px]"
+                  className="gap-1.5 text-md"
                 >
                   {createNoteMutation.isPending ? (
                     <>
@@ -262,11 +262,11 @@ export function MedicationNotesDialog({
           {/* Care Profile Special Requirements */}
           {specialRequirements && (
             <div className="bg-amber-50/60 border border-amber-200/90 rounded-xl p-3.5 space-y-1">
-              <div className="flex items-center gap-1.5 text-[12px] font-semibold text-amber-900">
+              <div className="flex items-center gap-1.5 text-md font-semibold text-amber-900">
                 <Sparkles className="size-3.5 text-amber-700" />
                 <span>Care Profile Special Requirements</span>
               </div>
-              <p className="text-[12px] text-slate-700 whitespace-pre-wrap break-words leading-relaxed pl-5">
+              <p className="text-md text-slate-700 whitespace-pre-wrap break-words leading-relaxed pl-5">
                 {specialRequirements}
               </p>
             </div>
@@ -275,7 +275,7 @@ export function MedicationNotesDialog({
           {/* Notes List */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <Text as="span" weight="semibold" className="text-slate-700 font-semibold text-[12px]">
+              <Text as="span" weight="semibold" className="text-slate-700 font-semibold text-md">
                 Recorded Notes ({allNotes.length})
               </Text>
             </div>
@@ -283,13 +283,13 @@ export function MedicationNotesDialog({
             {isLoading ? (
               <div className="py-8 flex flex-col items-center justify-center text-slate-400">
                 <Loader2 className="size-5 animate-spin mb-1 text-emerald-800" />
-                <Text size="sm">Loading notes...</Text>
+                <Text size="md">Loading notes...</Text>
               </div>
             ) : allNotes.length === 0 ? (
               <div className="py-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
                 <FileText className="size-6 mx-auto mb-1 opacity-50" />
-                <Text size="sm" weight="medium">No medication notes recorded yet</Text>
-                <Text size="sm" className="text-slate-400 mt-0.5">
+                <Text size="md" weight="medium">No medication notes recorded yet</Text>
+                <Text size="md" className="text-slate-400 mt-0.5">
                   Click &ldquo;Add Note&rdquo; above to record administration guidelines or instructions.
                 </Text>
               </div>
@@ -315,7 +315,7 @@ export function MedicationNotesDialog({
             variant="outline"
             size="sm"
             onClick={() => onOpenChange(false)}
-            className="text-[12px] h-8"
+            className="text-md h-8"
           >
             Close
           </Button>

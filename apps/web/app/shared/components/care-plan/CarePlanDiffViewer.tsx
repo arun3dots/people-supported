@@ -139,7 +139,7 @@ export function CarePlanDiffViewer({
                         <span className="text-md font-semibold text-slate-900">
                           {g.title}
                         </span>
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                        <Badge variant="secondary" className="text-md px-1.5 py-0">
                           {g.category}
                         </Badge>
                       </div>
@@ -169,7 +169,7 @@ export function CarePlanDiffViewer({
                         <span className="text-md font-semibold text-slate-900">
                           {t.title}
                         </span>
-                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                        <Badge variant="secondary" className="text-md px-1.5 py-0">
                           {t.category}
                         </Badge>
                       </div>

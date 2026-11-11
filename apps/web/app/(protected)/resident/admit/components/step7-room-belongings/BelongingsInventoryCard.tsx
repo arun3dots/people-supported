@@ -40,7 +40,7 @@ export function BelongingsInventoryCard({
           <Text as="h3" size="md" weight="bold">
             Personal Belongings Inventory
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Record possessions and labelled personal items brought upon admission. (Uploads: {ADMISSION_UPLOAD_LIMITS.DOCUMENT.hint})
           </Text>
         </div>
@@ -138,7 +138,7 @@ export function BelongingsInventoryCard({
               updateFormData({ liabilityWaiverSigned: checked === true })
             }
           />
-          <Text size="sm" variant="subdued">
+          <Text size="md" variant="subdued">
             Family / resident acknowledges liability waiver for unlisted or unlabelled personal items.
           </Text>
         </div>

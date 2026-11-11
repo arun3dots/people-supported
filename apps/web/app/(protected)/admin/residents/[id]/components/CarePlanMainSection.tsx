@@ -78,7 +78,7 @@ export function CarePlanMainSection({
           <Text as="h2" size="md" weight="bold" className="text-slate-900 tracking-tight">
             {currentMeta.title}
           </Text>
-          <Text size="sm" variant="muted" className="mt-0.5">
+          <Text size="md" variant="muted" className="mt-0.5">
             {currentMeta.desc}
           </Text>
         </div>
@@ -127,33 +127,33 @@ export function CarePlanMainSection({
               <Text size="md" weight="bold" className="text-slate-900">
                 {resident?.careProfile?.primaryCareNeed || "Assisted Daily Living & Support"}
               </Text>
-              <Badge variant="secondary" state="success" className="text-sm font-semibold px-2 py-0.5 shadow-none">
+              <Badge variant="secondary" state="success" className="text-md font-semibold px-2 py-0.5 shadow-none">
                 Assessed
               </Badge>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-md">
               <div className="flex items-center gap-1.5">
-                <Text size="sm" variant="muted">Care domain:</Text>
-                <Text size="sm" weight="medium" className="text-slate-800">
+                <Text size="md" variant="muted">Care domain:</Text>
+                <Text size="md" weight="medium" className="text-slate-800">
                   {resident?.careProfile?.careCategory || "Personal Care & Clinical Support"}
                 </Text>
               </div>
               <div className="flex items-center gap-1.5">
-                <Text size="sm" variant="muted">Assessed need:</Text>
-                <Text size="sm" className="text-slate-800">
+                <Text size="md" variant="muted">Assessed need:</Text>
+                <Text size="md" className="text-slate-800">
                   {resident?.careProfile?.primaryDiagnosis || "Routine daily living supervision"}
                 </Text>
               </div>
               <div className="flex items-center gap-1.5">
-                <Text size="sm" variant="muted">Support required:</Text>
-                <Text size="sm" className="text-slate-800">
+                <Text size="md" variant="muted">Support required:</Text>
+                <Text size="md" className="text-slate-800">
                   {resident?.careProfile?.feedingAssistanceNeed || "Assistance and routine monitoring"}
                 </Text>
               </div>
               <div className="flex items-center gap-1.5">
-                <Text size="sm" variant="muted">Linked risk flag:</Text>
-                <Text size="sm" weight="semibold" className="text-amber-900">
+                <Text size="md" variant="muted">Linked risk flag:</Text>
+                <Text size="md" weight="semibold" className="text-amber-900">
                   {resident?.careProfile?.chronicConditions?.[0] || "None"}
                 </Text>
               </div>
@@ -195,17 +195,17 @@ export function CarePlanMainSection({
       {activeSection === "tasks" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <Text size="sm" weight="bold" className="text-slate-800 uppercase tracking-wider">
+            <Text size="md" weight="bold" className="text-slate-800 uppercase tracking-wider">
               All Scheduled Care Tasks ({tasks.length})
             </Text>
           </div>
 
           {tasks.length === 0 ? (
             <div className="p-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200 space-y-2">
-              <Text size="sm" weight="semibold" className="text-slate-700">
+              <Text size="md" weight="semibold" className="text-slate-700">
                 No care tasks created yet
               </Text>
-              <Text size="sm" variant="muted" className="max-w-md mx-auto">
+              <Text size="md" variant="muted" className="max-w-md mx-auto">
                 No scheduled routine tasks exist for this resident. Create routine interventions to assign care staff and generate daily shift executions.
               </Text>
               {isEditable && (
@@ -213,7 +213,7 @@ export function CarePlanMainSection({
                   variant="outline"
                   size="sm"
                   onClick={() => onAddTaskToGoal(null)}
-                  className="rounded-xl h-8 px-3 text-sm font-semibold gap-1.5 mt-2"
+                  className="rounded-xl h-8 px-3 text-md font-semibold gap-1.5 mt-2"
                 >
                   <Plus className="size-3.5" /> Create Care Task
                 </Button>
@@ -239,7 +239,7 @@ export function CarePlanMainSection({
       {activeSection === "risk" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <Text size="sm" weight="bold" className="text-slate-800 uppercase tracking-wider">
+            <Text size="md" weight="bold" className="text-slate-800 uppercase tracking-wider">
               Identified Clinical &amp; Environmental Risks
             </Text>
           </div>
@@ -249,13 +249,13 @@ export function CarePlanMainSection({
               {resident.riskAssessments.map((ra: any, idx: number) => (
                 <div key={idx} className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/60 space-y-1">
                   <div className="flex items-center justify-between">
-                    <Text size="sm" weight="bold" className="text-amber-900">{ra.type || ra.title || "Clinical Risk"}</Text>
-                    <Badge variant="secondary" state="warning" className="text-sm font-semibold px-2 py-0.5 shadow-none">
+                    <Text size="md" weight="bold" className="text-amber-900">{ra.type || ra.title || "Clinical Risk"}</Text>
+                    <Badge variant="secondary" state="warning" className="text-md font-semibold px-2 py-0.5 shadow-none">
                       {ra.overallRisk || ra.score || "Monitored"}
                     </Badge>
                   </div>
                   {ra.summary && (
-                    <Text size="sm" className="text-slate-700 leading-relaxed">
+                    <Text size="md" className="text-slate-700 leading-relaxed">
                       {ra.summary}
                     </Text>
                   )}
@@ -264,7 +264,7 @@ export function CarePlanMainSection({
             </div>
           ) : (
             <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 {resident?.careProfile?.chronicConditions?.length
                   ? `Chronic condition alerts monitored: ${resident.careProfile.chronicConditions.join(", ")}.`
                   : "No active risk assessments flagged."}

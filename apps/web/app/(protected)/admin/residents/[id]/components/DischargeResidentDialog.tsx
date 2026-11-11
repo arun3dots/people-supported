@@ -184,7 +184,7 @@ export function DischargeResidentDialog({
                   </SelectContent>
                 </Select>
                 {errors.dischargeType && (
-                  <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">{errors.dischargeType}</p>
+                  <p className="text-md text-text-error font-medium min-h-[18px] mt-1">{errors.dischargeType}</p>
                 )}
               </div>
 

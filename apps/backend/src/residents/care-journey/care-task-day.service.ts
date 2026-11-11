@@ -8,6 +8,9 @@ import {
 import { prisma, Prisma, type ResidentCareTaskRecord } from '@repo/db';
 import {
   type AssessmentAreaKey,
+  type CareTaskBoardDTO,
+  type CareTaskBoardItemDTO,
+  type CareTaskBoardQueryDTO,
   type CareTaskDayDTO,
   type CareTaskListItemDTO,
   type CareTaskRecurrenceDTO,
@@ -37,6 +40,76 @@ export class CareTaskDayService {
     private readonly access: ResidentAccessService,
     private readonly auditService: AuditService,
   ) {}
+
+  async getBoard(
+    query: CareTaskBoardQueryDTO,
+    user: AuthenticatedUser,
+  ): Promise<CareTaskBoardDTO> {
+    const tenantId = requireTenant(user);
+    const date = query.date ?? todayLocal();
+    const day = asDate(date);
+    const tasks = await prisma.residentCareTask.findMany({
+      where: {
+        tenantId,
+        isActive: true,
+        carePlan: { isCurrent: true, agreedAt: { not: null } },
+        AND: [
+          { OR: [{ startsOn: null }, { startsOn: { lte: day } }] },
+          { OR: [{ endsOn: null }, { endsOn: { gte: day } }] },
+        ],
+      },
+      include: {
+        carePlan: { select: { id: true, area: true } },
+        resident: { select: { id: true, fullName: true } },
+      },
+    });
+    const due = tasks.filter((task) =>
+      runsOn(task.recurrence as CareTaskRecurrenceDTO | null, date),
+    );
+    const records = due.length
+      ? await prisma.residentCareTaskRecord.findMany({
+          where: {
+            tenantId,
+            date: day,
+            undoneAt: null,
+            taskId: { in: due.map((task) => task.id) },
+          },
+        })
+      : [];
+    const recordByTask = new Map(records.map((record) => [record.taskId, record]));
+
+    const items: CareTaskBoardItemDTO[] = due.map((task) => {
+      const record = recordByTask.get(task.id);
+      return {
+        taskId: task.id,
+        residentId: task.residentId,
+        title: task.title,
+        status: !record
+          ? 'Pending'
+          : record.outcome === 'Done'
+            ? 'Completed'
+            : 'Skipped',
+        timeSlot: task.shift as CareTaskBoardItemDTO['timeSlot'],
+        targetTime: task.time || null,
+        role: task.role as CareTaskBoardItemDTO['role'],
+        instructions: task.description,
+        skipReason: record?.outcome === 'Declined' ? record.note : null,
+        resident: task.resident,
+        carePlan: task.carePlan,
+      };
+    });
+
+    items.sort((a, b) => {
+      const shiftOrder = a.timeSlot.localeCompare(b.timeSlot);
+      if (shiftOrder !== 0) return shiftOrder;
+      if (!a.targetTime) return b.targetTime ? 1 : 0;
+      if (!b.targetTime) return -1;
+      return a.targetTime.localeCompare(b.targetTime);
+    });
+
+    return { date, items };
+  }
+
   async getDay(
     residentId: string,
     query: { date?: string; shift?: CareTaskShift },

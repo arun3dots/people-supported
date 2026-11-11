@@ -139,15 +139,15 @@ export function ShiftTimingDetails({
                   <div className="flex items-center justify-between">
                     <Label required>Shift Status</Label>
                     {isPastShift ? (
-                      <span className="text-sm text-amber-700 font-medium">
+                      <span className="text-md text-amber-700 font-medium">
                         Completed shift — status locked
                       </span>
                     ) : isCancelled ? (
-                      <span className="text-sm text-rose-600 font-medium">
+                      <span className="text-md text-rose-600 font-medium">
                         Cancelled shift — status locked
                       </span>
                     ) : isAlreadyPublished ? (
-                      <span className="text-sm text-primary font-medium">
+                      <span className="text-md text-primary font-medium">
                         Published shift — cannot revert to Draft
                       </span>
                     ) : null}
@@ -200,7 +200,7 @@ export function ShiftTimingDetails({
                   }}
                 />
                 {fieldState.error && (
-                  <Text size="sm" className="text-rose-600 font-medium">
+                  <Text size="md" className="text-rose-600 font-medium">
                     {fieldState.error.message}
                   </Text>
                 )}
@@ -230,7 +230,7 @@ export function ShiftTimingDetails({
                   }}
                 />
                 {fieldState.error && (
-                  <Text size="sm" className="text-rose-600 font-medium">
+                  <Text size="md" className="text-rose-600 font-medium">
                     {fieldState.error.message}
                   </Text>
                 )}

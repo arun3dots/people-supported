@@ -111,35 +111,35 @@ export function AuditLogDetailModal({
     >
       {/* ================= Before vs After Comparison ================= */}
       <div className="pt-1 min-w-0 w-full">
-        <Text size="sm" weight="bold" className="text-slate-900 mb-3 block">
+        <Text size="md" weight="bold" className="text-slate-900 mb-3 block">
           State Comparison (Before & After)
         </Text>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-w-0 w-full">
           <div className="flex flex-col rounded-xl border border-rose-100 bg-rose-50/50 p-4 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between mb-2 pb-2 border-b border-rose-100">
-              <Text size="sm" weight="bold" className="text-rose-800">
+              <Text size="md" weight="bold" className="text-rose-800">
                 Before Change
               </Text>
-              <span className="text-[10px] font-medium text-rose-600 bg-rose-100/70 px-2 py-0.5 rounded-full">
+              <span className="text-md font-medium text-rose-600 bg-rose-100/70 px-2 py-0.5 rounded-full">
                 Prior State
               </span>
             </div>
-            <div className="text-sm text-slate-800 leading-relaxed font-normal min-h-[48px] whitespace-pre-wrap break-words break-all [overflow-wrap:anywhere] min-w-0">
+            <div className="text-md text-slate-800 leading-relaxed font-normal min-h-[48px] whitespace-pre-wrap break-words break-all [overflow-wrap:anywhere] min-w-0">
               {beforeText || "—"}
             </div>
           </div>
 
           <div className="flex flex-col rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between mb-2 pb-2 border-b border-emerald-100">
-              <Text size="sm" weight="bold" className="text-emerald-800">
+              <Text size="md" weight="bold" className="text-emerald-800">
                 After Change
               </Text>
-              <span className="text-[10px] font-medium text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
+              <span className="text-md font-medium text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
                 Updated State
               </span>
             </div>
-            <div className="text-sm text-slate-900 leading-relaxed font-medium min-h-[48px] whitespace-pre-wrap break-words break-all [overflow-wrap:anywhere] min-w-0">
+            <div className="text-md text-slate-900 leading-relaxed font-medium min-h-[48px] whitespace-pre-wrap break-words break-all [overflow-wrap:anywhere] min-w-0">
               {afterText || "—"}
             </div>
           </div>

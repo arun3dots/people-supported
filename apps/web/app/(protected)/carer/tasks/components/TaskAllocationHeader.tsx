@@ -40,7 +40,7 @@ export function TaskAllocationHeader({
         <Text as="h1" size="2xl" weight="bold" className="text-text-heading">
           {canAllocate ? "Task allocation" : "Today's shift"}
         </Text>
-        <Text size="sm" variant="muted" className="mt-1">
+        <Text size="md" variant="muted" className="mt-1">
           {taskCount} tasks on the {selectedShift} shift ·{" "}
           {canAllocate
             ? "Staff come from the published rota; only staff on duty can be allocated."
@@ -56,7 +56,7 @@ export function TaskAllocationHeader({
             variant={selectedShift === "Day" ? "primary" : "ghost"}
             size="sm"
             onClick={() => onShiftChange("Day")}
-            className="h-8 px-3 rounded-lg text-sm font-semibold cursor-pointer"
+            className="h-8 px-3 rounded-lg text-md font-semibold cursor-pointer"
           >
             Day 07:45–20:15
           </Button>
@@ -65,7 +65,7 @@ export function TaskAllocationHeader({
             variant={selectedShift === "Night" ? "primary" : "ghost"}
             size="sm"
             onClick={() => onShiftChange("Night")}
-            className="h-8 px-3 rounded-lg text-sm font-semibold cursor-pointer"
+            className="h-8 px-3 rounded-lg text-md font-semibold cursor-pointer"
           >
             Night 19:45–08:15
           </Button>
@@ -74,9 +74,9 @@ export function TaskAllocationHeader({
         {/* Carer Shift Clock Actions */}
         {!canAllocate && activeShift && (
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-sm text-text-description mr-1">
+            <div className="flex items-center gap-1.5 text-md text-text-description mr-1">
               <Clock className="size-3.5" />
-              <Text as="span" size="sm" weight="medium">
+              <Text as="span" size="md" weight="medium">
                 {isStarted && activeShift.startTime
                   ? `Clocked in ${formatUkTime(activeShift.startTime)}`
                   : "Not clocked in"}
@@ -89,7 +89,7 @@ export function TaskAllocationHeader({
                 size="sm"
                 disabled={isClockActionPending}
                 onClick={onClockIn}
-                className="gap-1.5 h-8 text-sm font-semibold px-3.5"
+                className="gap-1.5 h-8 text-md font-semibold px-3.5"
               >
                 <Play className="size-3.5" />
                 Clock in
@@ -102,7 +102,7 @@ export function TaskAllocationHeader({
                 size="sm"
                 disabled={isClockActionPending}
                 onClick={onClockOut}
-                className="gap-1.5 h-8 text-sm font-semibold px-3.5"
+                className="gap-1.5 h-8 text-md font-semibold px-3.5"
               >
                 Clock out
               </Button>
@@ -118,7 +118,7 @@ export function TaskAllocationHeader({
               size="sm"
               onClick={onAutoAllocate}
               title="Key worker first, then the least-loaded eligible colleague on this shift"
-              className="text-sm font-semibold"
+              className="text-md font-semibold"
             >
               Auto-allocate unassigned
             </Button>
@@ -128,7 +128,7 @@ export function TaskAllocationHeader({
                 variant="primary"
                 size="sm"
                 onClick={onHandoverToNight}
-                className="text-sm font-semibold"
+                className="text-md font-semibold"
               >
                 Hand over incomplete tasks to Night
               </Button>

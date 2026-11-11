@@ -57,10 +57,10 @@ export function PermissionsTab() {
           <Info className="size-5 text-icon-primary" />
         </div>
         <div>
-          <Text as="h4" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h4" size="md" weight="semibold" className="text-slate-900">
             Permissions Audit Matrix
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5 leading-relaxed">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5 leading-relaxed">
             This matrix summarises active read (R), write (W), and delete (D) access rights granted to each role across system modules. Click on any role in the Roles tab to modify permissions.
           </Text>
         </div>
@@ -74,10 +74,10 @@ export function PermissionsTab() {
               <TableHead className="whitespace-nowrap min-w-52">Module Name</TableHead>
               {roles?.map((r) => (
                 <TableHead key={r.id} className="whitespace-nowrap text-center">
-                  <Text size="sm" weight="medium" className="text-slate-900">
+                  <Text size="md" weight="medium" className="text-slate-900">
                     {r.name}
                   </Text>
-                  <Text size="sm" weight="regular" className="text-slate-400 mt-0.5">
+                  <Text size="md" weight="regular" className="text-slate-400 mt-0.5">
                     {r.isSystem ? "System Role" : "Custom Role"}
                   </Text>
                 </TableHead>
@@ -89,10 +89,10 @@ export function PermissionsTab() {
             {MODULE_LIST.map((mod) => (
               <TableRow key={mod.id} className="hover:bg-slate-50/70 transition-colors">
                 <TableCell className="py-4">
-                  <Text size="sm" weight="medium" className="text-slate-900">
+                  <Text size="md" weight="medium" className="text-slate-900">
                     {mod.label}
                   </Text>
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     {mod.desc}
                   </Text>
                 </TableCell>
@@ -114,7 +114,7 @@ export function PermissionsTab() {
                           Full Access
                         </Badge>
                       ) : hasAny ? (
-                        <div className="inline-flex items-center gap-1 font-mono text-sm font-bold bg-white border border-slate-200/80 px-2 py-0.5 rounded text-slate-700">
+                        <div className="inline-flex items-center gap-1 font-mono text-md font-bold bg-white border border-slate-200/80 px-2 py-0.5 rounded text-slate-700">
                           <span className={p.read ? "text-emerald-700" : "text-slate-300"}>R</span>
                           <span className="text-slate-300">|</span>
                           <span className={p.write ? "text-blue-700" : "text-slate-300"}>W</span>

@@ -52,7 +52,7 @@ function EntityChipPicker({
               type="button"
               onClick={() => onToggle(item.id)}
               className={cn(
-                "px-2.5 py-1 rounded-lg text-sm font-medium border transition-all cursor-pointer",
+                "px-2.5 py-1 rounded-lg text-md font-medium border transition-all cursor-pointer",
                 checked
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100",
@@ -85,7 +85,7 @@ export function AddSchemeAssociationsSection({
           Properties in Scheme ({selectedPropertyIds.length} selected)
         </Label>
         {properties.length === 0 ? (
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             No properties registered yet. You can link properties after creating
             them.
           </Text>
@@ -99,7 +99,7 @@ export function AddSchemeAssociationsSection({
                   type="button"
                   onClick={() => onToggleProperty(p.id)}
                   className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-all cursor-pointer",
+                    "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-medium border transition-all cursor-pointer",
                     checked
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-surface-card-grey text-slate-700 border-slate-200 hover:bg-slate-100",

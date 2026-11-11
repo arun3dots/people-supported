@@ -69,7 +69,7 @@ export function ActiveShiftIndicator() {
       ref={containerRef}
       className="bg-primary/5 border-b border-primary/10 overflow-hidden w-full"
     >
-      <div className="w-full px-4 sm:px-8 lg:px-12 py-2 flex items-center justify-between text-sm sm:text-sm">
+      <div className="w-full px-4 sm:px-8 lg:px-12 py-2 flex items-center justify-between text-md">
         <div className="flex items-center gap-4 flex-1">
           <Badge variant={isActive ? "success" : "secondary"} className="shrink-0">
             {isActive ? "Ongoing Shift" : "Next Shift"}
@@ -93,7 +93,7 @@ export function ActiveShiftIndicator() {
 
             {shift.type && (
               <div className="hidden md:flex items-center gap-1.5 shrink-0">
-                <Badge variant="outline" className="text-[10px] py-0 border-primary/20 bg-primary/5">
+                <Badge variant="outline" className="text-md py-0 border-primary/20 bg-primary/5">
                   {shift.type.name}
                 </Badge>
               </div>
@@ -103,7 +103,7 @@ export function ActiveShiftIndicator() {
 
         <div className="flex items-center gap-2 shrink-0">
           {!isActive && (
-            <span className="text-[10px] text-muted-foreground hidden lg:inline">
+            <span className="text-md text-muted-foreground hidden lg:inline">
               Starts {formatShiftStart(shift.rawStartTime, shift.startTime)}
             </span>
           )}

@@ -259,7 +259,7 @@ export function ResidentTimelineTab({ residentId }: ResidentTimelineTabProps): R
                       <TableCell className="px-4 whitespace-nowrap">
                         <div className="font-normal text-slate-700 text-md">{item.dateTime}</div>
                         {item.timeDisplay && (
-                          <div className="text-sm sm:text-md text-slate-500 flex items-center gap-1 mt-0.5">
+                          <div className="text-md text-slate-500 flex items-center gap-1 mt-0.5">
                             <Clock4 className="size-3 text-slate-400" />
                             <span>{item.timeDisplay}</span>
                           </div>
@@ -267,7 +267,7 @@ export function ResidentTimelineTab({ residentId }: ResidentTimelineTabProps): R
                       </TableCell>
                       <TableCell className="px-4 max-w-md min-w-0">
                         <div className="font-normal text-slate-800 break-words break-all [overflow-wrap:anywhere] text-md">{item.taskTitle}</div>
-                        <div className="text-sm sm:text-md text-slate-500 truncate mt-0.5">{item.taskSubtitle}</div>
+                        <div className="text-md text-slate-500 truncate mt-0.5">{item.taskSubtitle}</div>
                       </TableCell>
                       <TableCell className="px-4 whitespace-nowrap">{renderCategoryBadge(item.category)}</TableCell>
                       <TableCell className="px-4 whitespace-nowrap">
@@ -276,7 +276,7 @@ export function ResidentTimelineTab({ residentId }: ResidentTimelineTabProps): R
                           <div>
                             <div className="font-normal text-slate-700 text-md">{item.completedBy}</div>
                             {item.completedByRole && (
-                              <div className="text-sm sm:text-md text-slate-400">{item.completedByRole}</div>
+                              <div className="text-md text-slate-400">{item.completedByRole}</div>
                             )}
                           </div>
                         </div>

@@ -83,7 +83,7 @@ export function ProfileNotificationPreferences() {
               className="flex items-center gap-2.5 cursor-pointer select-none"
             >
               <RoundIndicator checked={!!prefs?.[channel.field]} />
-              <Text size="sm" className="whitespace-nowrap">
+              <Text size="md" className="whitespace-nowrap">
                 {channel.label}
               </Text>
             </button>

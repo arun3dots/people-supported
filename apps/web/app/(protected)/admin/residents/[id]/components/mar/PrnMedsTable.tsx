@@ -60,7 +60,7 @@ export function PrnMedsTable({
                   <DialogTitle className="text-base font-semibold text-slate-900">
                     PRN (As Needed) Medications
                   </DialogTitle>
-                  <DialogDescription className="text-[12px] text-slate-500">
+                  <DialogDescription className="text-md text-slate-500">
                     Prescribed on-demand medications administered according to clinical protocols.
                   </DialogDescription>
                 </div>
@@ -72,7 +72,7 @@ export function PrnMedsTable({
                   variant="primary"
                   size="sm"
                   onClick={onAddPrn}
-                  className="gap-1.5 text-[12px] shrink-0"
+                  className="gap-1.5 text-md shrink-0"
                 >
                   <Plus className="size-3.5" /> Prescribe PRN
                 </Button>
@@ -88,10 +88,10 @@ export function PrnMedsTable({
                   <HeartPulse className="size-6 text-sky-700" />
                 </div>
                 <div className="space-y-1">
-                  <Text size="sm" weight="semibold" className="text-slate-800 text-[12px]">
+                  <Text size="md" weight="semibold" className="text-slate-800 text-md">
                     No PRN medications prescribed
                   </Text>
-                  <Text size="sm" variant="muted" className="max-w-sm mx-auto text-[12px] text-slate-500">
+                  <Text size="md" variant="muted" className="max-w-sm mx-auto text-md text-slate-500">
                     Add PRN protocols (e.g. pain relief, inhalers, calming) to enable on-demand logging.
                   </Text>
                 </div>
@@ -100,7 +100,7 @@ export function PrnMedsTable({
                     variant="outline"
                     size="sm"
                     onClick={onAddPrn}
-                    className="rounded-xl shadow-none gap-1 border-sky-200 text-sky-800 hover:bg-sky-50 cursor-pointer text-[12px]"
+                    className="rounded-xl shadow-none gap-1 border-sky-200 text-sky-800 hover:bg-sky-50 cursor-pointer text-md"
                   >
                     <Plus className="size-3.5" /> Add First PRN Medication
                   </Button>
@@ -111,14 +111,14 @@ export function PrnMedsTable({
                 <Table>
                   <TableHeader className="bg-slate-50/80">
                     <TableRow className="border-b border-slate-200">
-                      <TableHead className="text-[12px]">Medication</TableHead>
-                      <TableHead className="text-[12px]">Dose</TableHead>
-                      <TableHead className="text-[12px]">Status</TableHead>
-                      <TableHead className="text-[12px]">Last Administered</TableHead>
-                      <TableHead className="text-right text-[12px]">Actions</TableHead>
+                      <TableHead className="text-md">Medication</TableHead>
+                      <TableHead className="text-md">Dose</TableHead>
+                      <TableHead className="text-md">Status</TableHead>
+                      <TableHead className="text-md">Last Administered</TableHead>
+                      <TableHead className="text-right text-md">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
-                  <TableBody className="divide-y divide-slate-100 text-[12px]">
+                  <TableBody className="divide-y divide-slate-100 text-md">
                     {rounds.map((round: any) => {
                       const lastAdmin = round.administrations?.[0];
                       const isTaken = round.status === "Administered" || lastAdmin?.status === "Given";
@@ -147,20 +147,20 @@ export function PrnMedsTable({
                               )}
                               <div className="space-y-0.5">
                                 <div className="flex items-center gap-1.5">
-                                  <span className="font-semibold text-slate-900 text-[12px]">
+                                  <span className="font-semibold text-slate-900 text-md">
                                     {round.drugName}
                                   </span>
                                   {images.length > 1 && (
-                                    <Badge variant="secondary" state="info" className="px-1.5 py-0 text-[12px] shadow-none">
+                                    <Badge variant="secondary" state="info" className="px-1.5 py-0 text-md shadow-none">
                                       +{images.length - 1} photos
                                     </Badge>
                                   )}
                                 </div>
-                                <p className="text-[12px] text-slate-500">
+                                <p className="text-md text-slate-500">
                                   {round.form || "As Needed"}
                                 </p>
                                 {round.instructions && (
-                                  <div className="flex items-center gap-1 text-[12px] text-amber-800 bg-amber-50/80 px-1.5 py-0.5 rounded-md border border-amber-200/60 max-w-xs">
+                                  <div className="flex items-center gap-1 text-md text-amber-800 bg-amber-50/80 px-1.5 py-0.5 rounded-md border border-amber-200/60 max-w-xs">
                                     <Info className="size-3 shrink-0 text-amber-700" />
                                     <span className="truncate">{round.instructions}</span>
                                   </div>
@@ -170,13 +170,13 @@ export function PrnMedsTable({
                           </TableCell>
 
                           <TableCell className="py-2.5 px-3">
-                            <span className="font-medium text-slate-900 text-[12px]">
+                            <span className="font-medium text-slate-900 text-md">
                               {round.dose}
                             </span>
                           </TableCell>
 
                           <TableCell className="py-2.5 px-3">
-                            <Badge variant="secondary" state="info" className="px-2 py-0.5 text-[12px] shadow-none">
+                            <Badge variant="secondary" state="info" className="px-2 py-0.5 text-md shadow-none">
                               Available on Demand
                             </Badge>
                           </TableCell>
@@ -184,15 +184,15 @@ export function PrnMedsTable({
                           <TableCell className="py-2.5 px-3">
                             {lastAdmin ? (
                               <div>
-                                <p className="font-medium text-slate-900 text-[12px]">
+                                <p className="font-medium text-slate-900 text-md">
                                   {format(new Date(lastAdmin.administeredAt || lastAdmin.createdAt), "dd MMM yyyy")}
                                 </p>
-                                <p className="text-[12px] text-slate-500">
+                                <p className="text-md text-slate-500">
                                   {lastAdmin.performedBy || "Staff Member"}
                                 </p>
                               </div>
                             ) : (
-                              <span className="text-[12px] text-slate-400">Never administered</span>
+                              <span className="text-md text-slate-400">Never administered</span>
                             )}
                           </TableCell>
 
@@ -204,7 +204,7 @@ export function PrnMedsTable({
                                 onClick={() => onAdministerRound(round)}
                                 disabled={isTaken}
                                 title={isTaken ? "Already administered" : "Log PRN dose"}
-                                className="h-7 px-2.5 text-[12px] font-medium rounded-lg border-sky-200 text-sky-800 hover:bg-sky-50 shadow-none gap-1 cursor-pointer"
+                                className="h-7 px-2.5 text-md font-medium rounded-lg border-sky-200 text-sky-800 hover:bg-sky-50 shadow-none gap-1 cursor-pointer"
                               >
                                 <CheckSquare className="size-3" /> Log Dose
                               </Button>
@@ -223,7 +223,7 @@ export function PrnMedsTable({
                                         <Trash2 className="size-3.5" />
                                       </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent side="top" className="text-sm py-1 px-2.5 bg-slate-900 text-white font-medium rounded-lg shadow-md">
+                                    <TooltipContent side="top" className="text-md py-1 px-2.5 bg-slate-900 text-white font-medium rounded-lg shadow-md">
                                       Delete PRN Medication
                                     </TooltipContent>
                                   </Tooltip>
@@ -245,7 +245,7 @@ export function PrnMedsTable({
               variant="outline"
               size="sm"
               onClick={() => onOpenChange(false)}
-              className="min-w-[110px] px-6 text-[12px] font-medium"
+              className="min-w-[110px] px-6 text-md font-medium"
             >
               Close
             </Button>

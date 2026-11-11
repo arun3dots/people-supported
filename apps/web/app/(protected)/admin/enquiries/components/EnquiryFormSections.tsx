@@ -28,10 +28,10 @@ export function EnquirerContactSection({ register, errors, watch, setValue }: Fo
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Enquirer Contact Details
           </Text>
-          <Text size="sm" variant="muted" className="text-slate-500">
+          <Text size="md" variant="muted" className="text-slate-500">
             Person contacting the care home on behalf of the resident
           </Text>
         </div>
@@ -72,7 +72,7 @@ export function EnquirerContactSection({ register, errors, watch, setValue }: Fo
             </SelectContent>
           </Select>
           {errors.enquirerRelationship && (
-            <Text variant="error" size="sm" className="mt-1">
+            <Text variant="error" size="md" className="mt-1">
               {String(errors.enquirerRelationship.message)}
             </Text>
           )}
@@ -112,10 +112,10 @@ export function ProspectiveResidentSection({ register, errors, watch, setValue }
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Prospective Resident Details
           </Text>
-          <Text size="sm" variant="muted" className="text-slate-500">
+          <Text size="md" variant="muted" className="text-slate-500">
             Core background information for pre-admission assessment
           </Text>
         </div>
@@ -182,7 +182,7 @@ export function ProspectiveResidentSection({ register, errors, watch, setValue }
             </SelectContent>
           </Select>
           {errors.currentLocation && (
-            <Text variant="error" size="sm" className="mt-1">
+            <Text variant="error" size="md" className="mt-1">
               {String(errors.currentLocation.message)}
             </Text>
           )}
@@ -210,7 +210,7 @@ export function ProspectiveResidentSection({ register, errors, watch, setValue }
             </SelectContent>
           </Select>
           {errors.careCategory && (
-            <Text variant="error" size="sm" className="mt-1">
+            <Text variant="error" size="md" className="mt-1">
               {String(errors.careCategory.message)}
             </Text>
           )}

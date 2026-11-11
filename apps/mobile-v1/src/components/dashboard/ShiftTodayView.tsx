@@ -170,7 +170,7 @@ export function ShiftTodayView({
             <Users size={16} color={theme.colors.clinical.info} />
           </View>
           <Text className="text-lg font-bold text-foreground">{visibleResidents.length}</Text>
-          <Text className="text-xs font-medium text-muted-foreground">Residents</Text>
+          <Text className="text-xs font-medium text-muted-foreground">People</Text>
         </View>
 
         <View className="flex-1 bg-surface rounded-2xl p-3.5 items-center">
@@ -239,13 +239,13 @@ export function ShiftTodayView({
 
       {/* 5. Assigned Residents Summary (BUG-050) */}
       <Text className="text-xs font-bold text-primary uppercase tracking-wider mb-2 mt-3.5">
-        Assigned Residents ({visibleResidents.length})
+        Assigned People Supported ({visibleResidents.length})
       </Text>
       <View className="gap-2.5 mt-1.5 mb-3">
         {!isShiftStarted ? (
           <View className="w-full bg-surface rounded-2xl p-3.5">
             <Text className="text-xs text-muted-foreground">
-              Clock in and start your shift to view your assigned residents.
+              Clock in and start your shift to view your assigned people supported.
             </Text>
           </View>
         ) : visibleResidents.length > 0 ? (
@@ -260,7 +260,7 @@ export function ShiftTodayView({
                 ? res.bedNumber
                 : `Bed ${res.bedNumber}`
               : 'Standard Bed';
-            const wingLabel = res.wingName || 'Main Facility';
+            const wingLabel = res.wingName || 'Main Property';
 
             return (
               <View
@@ -287,7 +287,7 @@ export function ShiftTodayView({
           })
         ) : (
           <View className="w-full bg-surface rounded-2xl p-3.5">
-            <Text className="text-xs text-muted-foreground">No residents currently assigned.</Text>
+            <Text className="text-xs text-muted-foreground">No people supported currently assigned.</Text>
           </View>
         )}
       </View>

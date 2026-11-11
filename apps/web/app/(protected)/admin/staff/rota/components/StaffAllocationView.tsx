@@ -189,7 +189,7 @@ export function StaffAllocationView({
               setPropertyFilter("all");
               setStaffFilter("all");
             }}
-            className="h-10 px-2.5 text-sm text-slate-600 hover:text-slate-900 font-medium"
+            className="h-10 px-2.5 text-md text-slate-600 hover:text-slate-900 font-medium"
           >
             <RotateCcw className="size-3.5 mr-1" /> Reset
           </Button>

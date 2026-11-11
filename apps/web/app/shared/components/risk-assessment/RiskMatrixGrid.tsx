@@ -70,7 +70,7 @@ export function RiskMatrixGrid({
             return (
               <div
                 key={`s-${i}`}
-                className="text-center font-semibold text-slate-700 text-sm leading-tight px-0.5"
+                className="text-center font-semibold text-slate-700 text-md leading-tight px-0.5"
                 title={label}
               >
                 <span>{name}</span>
@@ -86,7 +86,7 @@ export function RiskMatrixGrid({
             return (
               <div key={`row-${l}`} className="contents">
                 <div
-                  className="self-center text-right pr-1.5 font-semibold text-slate-700 text-sm leading-tight truncate"
+                  className="self-center text-right pr-1.5 font-semibold text-slate-700 text-md leading-tight truncate"
                   title={LIKELIHOOD_LABELS[l - 1]}
                 >
                   {LIKELIHOOD_LABELS[l - 1]}
@@ -103,7 +103,7 @@ export function RiskMatrixGrid({
                       disabled={readOnly}
                       onClick={() => onSelect?.(l, s)}
                       className={cn(
-                        "h-8 sm:h-9 w-full rounded-lg font-bold text-sm transition-all flex items-center justify-center",
+                        "h-8 sm:h-9 w-full rounded-lg font-bold text-md transition-all flex items-center justify-center",
                         levelClass(level),
                         readOnly ? "cursor-default" : "hover:scale-105 cursor-pointer",
                         isSelected

@@ -100,7 +100,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
   if (isError) {
     return (
       <div className="p-8 text-center space-y-3">
-        <p className="text-red-600 font-semibold text-sm">Failed to load risk assessments.</p>
+        <p className="text-red-600 font-semibold text-md">Failed to load risk assessments.</p>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
           Retry
         </Button>
@@ -174,20 +174,20 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
 
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center justify-between gap-1 flex-wrap">
-                    <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                    <Text size="md" weight="medium" className="text-slate-900 truncate">
                       {item.title}
                     </Text>
                     {matching && (
                       <div className="flex items-center gap-1.5 flex-wrap">
                         {ss && (
-                          <Badge className={cn(ss.className, "text-sm")}>
+                          <Badge className={cn(ss.className, "text-md")}>
                             {ss.label}
                           </Badge>
                         )}
                         {effectiveLevel && ls && (
                           <Badge
                             variant="secondary"
-                            className={cn(ls.badge, "text-sm")}
+                            className={cn(ls.badge, "text-md")}
                           >
                             {effectiveLevel}
                           </Badge>
@@ -197,7 +197,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                   </div>
 
                   {/* Line 1: Tool, Line 2: Next review and time */}
-                  <div className="space-y-0.5 text-sm">
+                  <div className="space-y-0.5 text-md">
                     <p className={cn(matching ? "text-slate-600" : "text-slate-500", "truncate")}>
                       Tool: {matching?.tool || item.tool}
                     </p>
@@ -226,7 +226,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                         e.stopPropagation();
                         handleEditAssessment(matching);
                       }}
-                      className="h-8 px-3 text-sm text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 font-medium"
+                      className="h-8 px-3 text-md text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 font-medium"
                       title="Edit draft"
                     >
                       <Edit2 className="size-3.5" />
@@ -243,7 +243,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                         }
                       }}
                       disabled={remove.isPending}
-                      className="h-8 px-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 rounded-lg font-medium"
+                      className="h-8 px-3 text-md text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 rounded-lg font-medium"
                       title="Delete draft"
                     >
                       <Trash2 className="size-3.5" />
@@ -260,7 +260,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                         e.stopPropagation();
                         handleEditAssessment(matching);
                       }}
-                      className="h-8 px-3 text-sm text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 font-medium"
+                      className="h-8 px-3 text-md text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 font-medium"
                       title="Edit assessment"
                     >
                       <Edit2 className="size-3.5" />
@@ -275,7 +275,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                         setSelectedAssessment(matching);
                         setViewModalOpen(true);
                       }}
-                      className="h-8 px-3.5 text-sm rounded-xl cursor-pointer font-medium"
+                      className="h-8 px-3.5 text-md rounded-xl cursor-pointer font-medium"
                     >
                       View record
                     </Button>
@@ -289,7 +289,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                       e.stopPropagation();
                       handleOpenAssessment(item);
                     }}
-                    className="h-8 px-3.5 text-sm rounded-xl gap-1.5 cursor-pointer font-medium bg-emerald-800 hover:bg-emerald-900 text-white"
+                    className="h-8 px-3.5 text-md rounded-xl gap-1.5 cursor-pointer font-medium bg-emerald-800 hover:bg-emerald-900 text-white"
                   >
                     <Plus className="size-3.5" />
                     <span>{item.buttonLabel}</span>

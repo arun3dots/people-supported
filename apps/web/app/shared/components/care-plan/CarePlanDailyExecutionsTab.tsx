@@ -86,11 +86,11 @@ export function CarePlanDailyExecutionsTab({
         <div>
           <div className="flex items-center gap-2">
             <CalendarDays className="size-4 text-emerald-800" />
-            <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+            <Text as="h3" size="md" weight="semibold" className="text-slate-900">
               Shift Routine Executions
             </Text>
           </div>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             {completedCount} of {total} daily care routines completed today.
           </Text>
         </div>
@@ -102,7 +102,7 @@ export function CarePlanDailyExecutionsTab({
             size="sm"
             variant={selectedShift === "ALL" ? "primary" : "ghost"}
             onClick={() => setSelectedShift("ALL")}
-            className="h-7 px-2.5 rounded-lg text-sm cursor-pointer"
+            className="h-7 px-2.5 rounded-lg text-md cursor-pointer"
           >
             All Shifts ({total})
           </Button>
@@ -116,7 +116,7 @@ export function CarePlanDailyExecutionsTab({
                 size="sm"
                 variant={isSelected ? "primary" : "ghost"}
                 onClick={() => setSelectedShift(shift.id)}
-                className="h-7 px-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-1 shrink-0"
+                className="h-7 px-2.5 rounded-lg text-md cursor-pointer flex items-center gap-1 shrink-0"
               >
                 <shift.icon className="size-3" />
                 <span>{shift.id}</span>
@@ -130,10 +130,10 @@ export function CarePlanDailyExecutionsTab({
       {dailyTasks.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-200/80">
           <Sparkles className="size-8 text-slate-300 mx-auto mb-2" />
-          <Text size="sm" weight="semibold" className="text-slate-700">
+          <Text size="md" weight="semibold" className="text-slate-700">
             No Routines Scheduled for Today
           </Text>
-          <Text size="sm" variant="muted" className="mt-1">
+          <Text size="md" variant="muted" className="mt-1">
             Active care plans automatically generate daily care tasks according to defined frequencies.
           </Text>
         </div>
@@ -153,17 +153,17 @@ export function CarePlanDailyExecutionsTab({
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
                     <shift.icon className="size-4 text-emerald-800" />
-                    <Text size="sm" weight="bold" className="text-slate-900">
+                    <Text size="md" weight="bold" className="text-slate-900">
                       {shift.label}
                     </Text>
-                    <span className="text-sm text-slate-400 font-normal">
+                    <span className="text-md text-slate-400 font-normal">
                       {shift.time}
                     </span>
                   </div>
                   <Badge
                     variant="secondary"
                     state={shiftDone === shiftTasks.length && shiftTasks.length > 0 ? "success" : "inactive"}
-                    className="text-sm px-2 py-0.5 shadow-none"
+                    className="text-md px-2 py-0.5 shadow-none"
                   >
                     {shiftDone}/{shiftTasks.length} Done
                   </Badge>
@@ -172,7 +172,7 @@ export function CarePlanDailyExecutionsTab({
                 {/* Shift Task Cards */}
                 {shiftTasks.length === 0 ? (
                   <div className="p-4 bg-white rounded-xl border border-dashed border-slate-200 text-center">
-                    <Text size="sm" className="text-slate-400">
+                    <Text size="md" className="text-slate-400">
                       No tasks assigned for this shift window.
                     </Text>
                   </div>
@@ -194,19 +194,19 @@ export function CarePlanDailyExecutionsTab({
                         >
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <Text size="sm" weight="semibold" className="text-slate-900">
+                              <Text size="md" weight="semibold" className="text-slate-900">
                                 {t.title}
                               </Text>
 
                               {t.targetTime && (
-                                <span className="inline-flex items-center gap-1 text-sm text-slate-500 font-mono bg-slate-100 px-1.5 py-0.5 rounded">
+                                <span className="inline-flex items-center gap-1 text-md text-slate-500 font-mono bg-slate-100 px-1.5 py-0.5 rounded">
                                   <Clock className="size-2.5 text-slate-400" />
                                   {t.targetTime}
                                 </span>
                               )}
 
                               {t.category && (
-                                <span className="text-sm text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-medium">
+                                <span className="text-md text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-medium">
                                   {t.category}
                                 </span>
                               )}
@@ -214,20 +214,20 @@ export function CarePlanDailyExecutionsTab({
                               <Badge
                                 variant="secondary"
                                 state={isCompleted ? "success" : isSkipped ? "danger" : "inactive"}
-                                className="text-sm px-2 py-0.5 shadow-none"
+                                className="text-md px-2 py-0.5 shadow-none"
                               >
                                 {t.status}
                               </Badge>
                             </div>
 
                             {t.instructions && (
-                              <Text size="sm" className="text-sm text-slate-500 line-clamp-1">
+                              <Text size="md" className="text-md text-slate-500 line-clamp-1">
                                 {t.instructions}
                               </Text>
                             )}
 
                             {t.skipReason && (
-                              <Text size="sm" variant="destructive" className="font-medium mt-0.5">
+                              <Text size="md" variant="destructive" className="font-medium mt-0.5">
                                 Reason skipped: {t.skipReason}
                               </Text>
                             )}

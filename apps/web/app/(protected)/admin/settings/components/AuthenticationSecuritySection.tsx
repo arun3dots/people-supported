@@ -98,7 +98,7 @@ export function AuthenticationSecuritySection({
             <h3 className="font-medium text-[16px] leading-[20px] text-[#141F1E]">
               Authentication
             </h3>
-            <p className="font-normal text-[12px] leading-[15px] text-[#5D5D5D]">
+            <p className="font-normal text-md leading-[15px] text-[#5D5D5D]">
               Manage how you sign in and verify your identity
             </p>
           </div>
@@ -118,10 +118,10 @@ export function AuthenticationSecuritySection({
 
                     {/* Text Content */}
                     <div className="flex flex-col justify-center gap-[4px] max-w-full sm:max-w-[280px]">
-                      <h4 className="font-medium text-[12px] leading-[15px] text-[#141F1E]">
+                      <h4 className="font-medium text-md leading-[15px] text-[#141F1E]">
                         {item.title}
                       </h4>
-                      <p className="font-normal text-[12px] leading-[15px] text-[#5D5D5D]">
+                      <p className="font-normal text-md leading-[15px] text-[#5D5D5D]">
                         {item.desc}
                       </p>
                     </div>
@@ -131,10 +131,10 @@ export function AuthenticationSecuritySection({
                   <div className="flex items-center justify-between sm:justify-end gap-4 xs:gap-6 sm:gap-[32px] w-full sm:w-auto shrink-0 mt-1 sm:mt-0">
                     {/* Last Changed Meta */}
                     <div className="flex flex-col justify-center gap-[2px] text-left sm:text-right shrink-0">
-                      <span className="font-normal text-[8px] leading-[10px] text-[#5D5D5D]">
+                      <span className="font-normal text-md leading-[10px] text-[#5D5D5D]">
                         Last changed
                       </span>
-                      <span className="font-medium text-[12px] leading-[15px] text-[#5D5D5D]">
+                      <span className="font-medium text-md leading-[15px] text-[#5D5D5D]">
                         {item.lastChanged}
                       </span>
                     </div>
@@ -142,7 +142,7 @@ export function AuthenticationSecuritySection({
                     {/* Action Button */}
                     <Button
                       variant="outline"
-                      className="h-[33px] min-w-[125px] px-[14px] py-0 flex items-center justify-center rounded-xl border-[#BCD3CD] bg-transparent text-[#141F1E] hover:bg-white hover:text-[#141F1E] font-medium text-[12px] leading-[15px] transition-colors shadow-none shrink-0"
+                      className="h-[33px] min-w-[125px] px-[14px] py-0 flex items-center justify-center rounded-xl border-[#BCD3CD] bg-transparent text-[#141F1E] hover:bg-white hover:text-[#141F1E] font-medium text-md leading-[15px] transition-colors shadow-none shrink-0"
                       onClick={item.onClick}
                     >
                       {item.action}
@@ -163,7 +163,7 @@ export function AuthenticationSecuritySection({
             <h3 className="font-medium text-[16px] leading-[20px] text-[#141F1E]">
               Security Settings
             </h3>
-            <p className="font-normal text-[12px] leading-[15px] text-[#5D5D5D]">
+            <p className="font-normal text-md leading-[15px] text-[#5D5D5D]">
               Configure additional security preferences
             </p>
           </div>
@@ -183,10 +183,10 @@ export function AuthenticationSecuritySection({
                   <div className="flex items-center gap-3 xs:gap-4 flex-1 min-w-0">
                     <IconComponent className="w-[22px] h-[22px] xs:w-[24px] xs:h-[24px] text-[#141F1E] shrink-0 stroke-[1.75]" />
                     <div className="flex flex-col gap-[2px] min-w-0 pr-1">
-                      <span className="font-medium text-[12px] leading-[15px] text-[#141F1E]">
+                      <span className="font-medium text-md leading-[15px] text-[#141F1E]">
                         {item.title}
                       </span>
-                      <span className="font-normal text-[12px] leading-[15px] text-[#5D5D5D] break-words sm:truncate">
+                      <span className="font-normal text-md leading-[15px] text-[#5D5D5D] break-words sm:truncate">
                         {item.desc}
                       </span>
                     </div>

@@ -363,7 +363,7 @@ export function SupportedLivingProfileEditModal({
                             )
                           }
                           placeholder="Outcome title"
-                          className="h-9 bg-white text-sm"
+                          className="h-9 bg-white text-md"
                         />
                       </div>
                       <div className="col-span-2">
@@ -387,7 +387,7 @@ export function SupportedLivingProfileEditModal({
                               ),
                             )
                           }
-                          className="h-9 bg-white text-sm"
+                          className="h-9 bg-white text-md"
                         />
                       </div>
                       <div className="col-span-3">

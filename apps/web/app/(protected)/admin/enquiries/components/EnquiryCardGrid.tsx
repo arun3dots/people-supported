@@ -93,7 +93,7 @@ export function EnquiryCard({
               if (e.status === "Closed") return;
               onAdmitDirect(evt, e.id);
             }}
-            className="rounded-xl cursor-pointer gap-1 h-7.5 px-2 text-sm font-semibold shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-xl cursor-pointer gap-1 h-7.5 px-2 text-md font-semibold shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <UserCheck className="size-3.5" />
             Admit
@@ -104,7 +104,7 @@ export function EnquiryCard({
               size="sm"
               variant="outline"
               onClick={() => onOpenAssessment(e, true)}
-              className="gap-1 rounded-xl text-emerald-800 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 cursor-pointer h-7.5 px-2 text-sm font-semibold shrink-0"
+              className="gap-1 rounded-xl text-emerald-800 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 cursor-pointer h-7.5 px-2 text-md font-semibold shrink-0"
             >
               <ClipboardCheck className="size-3.5" />
               Assessment
@@ -114,7 +114,7 @@ export function EnquiryCard({
               size="sm"
               variant="outline"
               onClick={() => onOpenAssessment(e, false)}
-              className="gap-1 rounded-xl cursor-pointer h-7.5 px-2 text-sm font-semibold shrink-0 border-slate-300 hover:bg-slate-50"
+              className="gap-1 rounded-xl cursor-pointer h-7.5 px-2 text-md font-semibold shrink-0 border-slate-300 hover:bg-slate-50"
             >
               <ClipboardList className="size-3.5" />
               Assessment
@@ -136,7 +136,7 @@ export function EnquiryCard({
             </TooltipTrigger>
             <TooltipContent
               sideOffset={6}
-              className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-sm font-medium shadow-lg"
+              className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-lg"
             >
               Edit Enquiry
             </TooltipContent>

@@ -56,7 +56,7 @@ export function TaskRow({
         <div className="flex-1 min-w-[12rem]">
           <p className="text-md font-bold text-slate-900">{item.title}</p>
           {item.description && (
-            <p className="text-sm text-slate-600">{item.description}</p>
+            <p className="text-md text-slate-600">{item.description}</p>
           )}
           <div className="flex flex-wrap gap-2 pt-1.5">
             <RatingPill rating="none">{item.carePlan.area}</RatingPill>
@@ -79,7 +79,7 @@ export function TaskRow({
             </RatingPill>
           )}
           {item.status === "Pending" && isNurseOnly && (
-            <span className="text-sm font-semibold text-slate-600">Nurse task</span>
+            <span className="text-md font-semibold text-slate-600">Nurse task</span>
           )}
           {item.status === "Pending" &&
             canRecordTasks &&
@@ -109,7 +109,7 @@ export function TaskRow({
       </div>
 
       {item.record?.note && (
-        <p className="text-sm text-slate-700 bg-surface-card-grey rounded-xl px-3 py-2">
+        <p className="text-md text-slate-700 bg-surface-card-grey rounded-xl px-3 py-2">
           {item.record.note}
           {item.record.recordedByName ? ` — ${item.record.recordedByName}` : ""}
         </p>

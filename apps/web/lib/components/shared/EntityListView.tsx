@@ -192,7 +192,7 @@ export function EntityListView<T>({
             {title}
           </Text>
           {description && (
-            <Text variant="subdued" size="xs" weight="regular">
+            <Text variant="subdued" size="md" weight="regular">
               {description}
             </Text>
           )}
@@ -247,17 +247,17 @@ export function EntityListView<T>({
                 onClick={() =>
                   setViewMode(viewMode === "table" ? "card" : "table")
                 }
-                className="flex items-center gap-1.5 px-3 py-1.5 h-8 rounded-xl bg-white border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-xs"
+                className="flex items-center gap-1.5 px-3 py-1.5 h-8 rounded-xl bg-white border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 text-md font-semibold text-slate-700 transition-all cursor-pointer shadow-xs"
               >
                 {viewMode === "table" ? (
                   <>
                     <LayoutGrid className="size-3.5 text-emerald-800" />
-                    <Text variant="secondary" size="sm">Card View</Text>
+                    <Text variant="secondary" size="md">Card View</Text>
                   </>
                 ) : (
                   <>
                     <List className="size-3.5 text-emerald-800" />
-                    <Text variant="secondary" size="sm">List View</Text>
+                    <Text variant="secondary" size="md">List View</Text>
                   </>
                 )}
               </Button>

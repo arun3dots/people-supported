@@ -91,15 +91,15 @@ export function TaskShiftBanner({
         <Text as="h2" size="base" weight="bold" className="text-white hover:underline">
           {bannerTitle}
         </Text>
-        <Text size="sm" className="text-white/80">
+        <Text size="md" className="text-white/80">
           {bannerSubtitle}
         </Text>
       </div>
 
       <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
-        <div className="flex items-center gap-1.5 text-sm text-white/90">
+        <div className="flex items-center gap-1.5 text-md text-white/90">
           <Clock className="size-3.5" />
-          <Text as="span" size="sm" weight="medium" className="text-white">
+          <Text as="span" size="md" weight="medium" className="text-white">
             {clockInDisplay}
           </Text>
         </div>
@@ -113,7 +113,7 @@ export function TaskShiftBanner({
             onClick={onClockIn}
             title={eligibility.reason || "Clock in"}
             className={cn(
-              "gap-1.5 h-8 text-sm font-semibold px-3.5 bg-white text-primary border-white transition-opacity",
+              "gap-1.5 h-8 text-md font-semibold px-3.5 bg-white text-primary border-white transition-opacity",
               eligibility.canClockIn && !isClockActionPending
                 ? "hover:bg-slate-50 cursor-pointer"
                 : "opacity-60 cursor-not-allowed",
@@ -129,7 +129,7 @@ export function TaskShiftBanner({
             size="sm"
             disabled={isClockActionPending}
             onClick={onClockOut}
-            className="gap-1.5 h-8 text-sm font-semibold px-3.5 bg-white text-primary hover:bg-slate-50 border-white cursor-pointer"
+            className="gap-1.5 h-8 text-md font-semibold px-3.5 bg-white text-primary hover:bg-slate-50 border-white cursor-pointer"
           >
             End Shift &amp; Handover
           </Button>

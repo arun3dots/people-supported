@@ -33,7 +33,7 @@ export function MarSidebarWidgets({
             >
               Allergies & Contraindications
             </Text>
-            <Text size="sm" variant="muted" className="text-[11px] leading-tight truncate">
+            <Text size="md" variant="muted" className="text-md leading-tight truncate">
               Critical contraindications and drug allergies
             </Text>
           </div>
@@ -42,7 +42,7 @@ export function MarSidebarWidgets({
         {/* Inner Cards in 1 Row */}
         <div className="flex-1 flex items-center">
           {allergies.length === 0 ? (
-            <div className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-2.5 py-1.5 flex items-center gap-2 text-sm text-slate-500">
+            <div className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-2.5 py-1.5 flex items-center gap-2 text-md text-slate-500">
               <Info className="size-3.5 text-slate-400 shrink-0" />
               <span className="truncate">No known drug allergies recorded</span>
             </div>
@@ -54,14 +54,14 @@ export function MarSidebarWidgets({
                   className="bg-red-50/70 border border-red-200/80 rounded-xl px-2 py-1 flex items-center gap-1.5 min-w-0"
                   title={allergy}
                 >
-                  <div className="size-4 rounded-full bg-red-600 text-white flex items-center justify-center shrink-0 font-bold text-[9px]">
+                  <div className="size-4 rounded-full bg-red-600 text-white flex items-center justify-center shrink-0 font-bold text-md">
                     !
                   </div>
                   <div className="min-w-0 flex-1">
-                    <Text size="sm" weight="medium" className="text-slate-900 truncate block text-[11px] leading-tight font-medium">
+                    <Text size="md" weight="medium" className="text-slate-900 truncate block text-md leading-tight font-medium">
                       {allergy}
                     </Text>
-                    <Text size="sm" variant="muted" className="text-[9px] text-red-600/90 leading-tight">
+                    <Text size="md" variant="muted" className="text-md text-red-600/90 leading-tight">
                       Allergy
                     </Text>
                   </div>
@@ -87,7 +87,7 @@ export function MarSidebarWidgets({
             >
               Recent Administrations
             </Text>
-            <Text size="sm" variant="muted" className="text-[11px] leading-tight truncate">
+            <Text size="md" variant="muted" className="text-md leading-tight truncate">
               Audit log of completed medication events
             </Text>
           </div>
@@ -95,7 +95,7 @@ export function MarSidebarWidgets({
 
         <div className="flex-1 flex flex-col justify-center divide-y divide-slate-100">
           {recentAdministrations.length === 0 ? (
-            <div className="py-1 text-center text-sm text-slate-400">
+            <div className="py-1 text-center text-md text-slate-400">
               No recent administrations logged
             </div>
           ) : (
@@ -105,15 +105,15 @@ export function MarSidebarWidgets({
                   <div className="size-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
                     <CheckCircle2 className="size-3" />
                   </div>
-                  <Text size="sm" weight="medium" className="text-slate-900 truncate text-[11px] font-medium">
+                  <Text size="md" weight="medium" className="text-slate-900 truncate text-md font-medium">
                     {admin.drugName} {admin.dose}
                   </Text>
-                  <Text size="sm" variant="muted" className="text-[10px] truncate">
+                  <Text size="md" variant="muted" className="text-md truncate">
                     • {admin.administeredBy}
                   </Text>
                 </div>
                 <div className="text-right shrink-0">
-                  <Text size="sm" variant="muted" className="text-[10px]">
+                  <Text size="md" variant="muted" className="text-md">
                     {format(new Date(admin.administeredAt), "dd MMM, HH:mm")}
                   </Text>
                 </div>
@@ -138,7 +138,7 @@ export function MarSidebarWidgets({
             >
               Medication Notes
             </Text>
-            <Text size="sm" variant="muted" className="text-[11px] leading-tight truncate">
+            <Text size="md" variant="muted" className="text-md leading-tight truncate">
               Special instructions & administration guidelines
             </Text>
           </div>
@@ -146,9 +146,9 @@ export function MarSidebarWidgets({
 
         <div className="flex-1 flex flex-col justify-center text-slate-700 leading-relaxed overflow-hidden">
           {specialRequirements ? (
-            <p className="line-clamp-2 text-[11px] text-slate-600">{specialRequirements}</p>
+            <p className="line-clamp-2 text-md text-slate-600">{specialRequirements}</p>
           ) : (
-            <p className="text-slate-400 italic text-[11px]">No special medication notes recorded for this resident.</p>
+            <p className="text-slate-400 italic text-md">No special medication notes recorded for this resident.</p>
           )}
         </div>
       </Card>

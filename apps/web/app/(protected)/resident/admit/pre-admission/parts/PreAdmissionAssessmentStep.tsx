@@ -106,7 +106,7 @@ export function PreAdmissionAssessmentStep({
       >
         <Alert className="rounded-xl border-amber-200 bg-amber-50 p-6 text-center">
           <AlertDescription className="justify-items-center gap-3 text-amber-900">
-            <Text size="sm" weight="medium" className="text-amber-900">
+            <Text size="md" weight="medium" className="text-amber-900">
               Please save Step 1 (Admission and personal details) first to generate a resident record before completing the needs assessment.
             </Text>
             <Button
@@ -203,7 +203,7 @@ export function PreAdmissionAssessmentStep({
 
         {savedAt && !save.isPending && (
           <div className="flex justify-end pt-1">
-            <Text as="span" size="sm" className="inline-flex items-center gap-1.5 text-slate-600">
+            <Text as="span" size="md" className="inline-flex items-center gap-1.5 text-slate-600">
               <Check className="size-4 text-emerald-700" />
               Saved{" "}
               {savedAt.toLocaleTimeString("en-GB", {

@@ -118,13 +118,13 @@ export function ModalTasksSection({
   return (
     <div className="space-y-3 font-sans">
       {isAgreed && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           Tasks on an agreed care plan are read-only. Changes require a formal
           amendment.
         </p>
       )}
       {!isAgreed && hasAny && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           Created tasks appear in the final review step and on the carer shift list once the plan is agreed.
         </p>
       )}
@@ -144,7 +144,7 @@ export function ModalTasksSection({
                 <p className="text-md font-medium text-slate-800 truncate">
                   {task.title}
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-md text-slate-600">
                   {[
                     task.role,
                     task.time ? `${task.shift} shift` : null,
@@ -155,7 +155,7 @@ export function ModalTasksSection({
                     .join(" · ")}
                 </p>
               </div>
-              <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+              <label className="flex items-center gap-2 text-md text-slate-700 cursor-pointer">
                 <Switch
                   checked={task.isActive}
                   disabled={isAgreed || update.isPending}
@@ -185,7 +185,7 @@ export function ModalTasksSection({
                 <p className="text-md font-medium text-slate-800 truncate">
                   {task.title}
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-md text-slate-600">
                   {[
                     task.role,
                     task.time ? `${shiftLabel} shift` : null,
@@ -225,7 +225,7 @@ export function ModalTasksSection({
             type="button"
             variant="outline"
             onClick={() => setTaskDialogOpen(true)}
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             <Plus className="size-4" />
             Add task

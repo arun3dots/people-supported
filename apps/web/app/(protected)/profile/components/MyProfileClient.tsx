@@ -36,7 +36,7 @@ export function MyProfileClient() {
     return (
       <div className="p-8 text-center space-y-2">
         <Text size={'xl'} weight={'bold'}>Profile unavailable</Text>
-        <Text size={'sm'} weight={'regular'} className="text-slate-500">
+        <Text size={'md'} weight={'regular'} className="text-slate-500">
           We couldn&apos;t load your profile. Please try again later.
         </Text>
       </div>
@@ -55,7 +55,7 @@ export function MyProfileClient() {
         <Text size="xl" weight="bold" className="tracking-tight">
           Profile Settings
         </Text>
-        <Text variant="subdued" size="sm" weight="regular">
+        <Text variant="subdued" size="md" weight="regular">
           Manage your personal account, security and preferences.
         </Text>
       </div>

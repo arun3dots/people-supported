@@ -51,7 +51,7 @@ export function OrganizationProfile() {
           <Text size={'xl'} weight={'bold'}>
             Organisational Profile
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Manage your care home&apos;s identity, contact information, and physical address
           </Text>
         </div>

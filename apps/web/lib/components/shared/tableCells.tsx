@@ -45,7 +45,7 @@ export function formatCurrency(
 
 export function IndexCell({ rowIndex }: { rowIndex: number }) {
   return (
-    <Text size="sm" weight="regular" className="text-slate-500">
+    <Text size="md" weight="regular" className="text-slate-500">
       {rowIndex}
     </Text>
   );
@@ -274,7 +274,7 @@ export function PersonCell({
             {shown}
           </Text>
           {subtitle && (
-            <Text size="sm" weight="regular" className=" truncate">
+            <Text size="md" weight="regular" className=" truncate">
               {subtitle}
             </Text>
           )}

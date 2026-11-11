@@ -63,7 +63,7 @@ export function FindingMarker({
       aria-label={`${count} findings: ${findings.map((f) => f.trackingId).join(", ")}`}
     >
       {count > 1 ? (
-        <span className="text-[10px] font-extrabold text-white leading-none select-none">
+        <span className="text-md font-extrabold text-white leading-none select-none">
           {count}
         </span>
       ) : (

@@ -33,13 +33,13 @@ export function TaskKpiCards({
         }`}
         onClick={() => onSelectFilter("all")}
       >
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Assigned patient tasks
         </Text>
         <Text as="span" size="2xl" weight="bold" className="text-text-heading">
           {myTasksCount}
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           for your assigned residents
         </Text>
       </Card>
@@ -52,13 +52,13 @@ export function TaskKpiCards({
         }`}
         onClick={() => onSelectFilter("done")}
       >
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Done
         </Text>
         <Text as="span" size="2xl" weight="bold" variant="success">
           {doneCount}
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           logged this shift
         </Text>
       </Card>
@@ -71,7 +71,7 @@ export function TaskKpiCards({
         }`}
         onClick={() => onSelectFilter("open")}
       >
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Due now / overdue
         </Text>
         <Text
@@ -82,7 +82,7 @@ export function TaskKpiCards({
         >
           {dueNowCount}
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           needs attention
         </Text>
       </Card>
@@ -95,7 +95,7 @@ export function TaskKpiCards({
         }`}
         onClick={() => onSelectFilter("missed")}
       >
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Missed
         </Text>
         <Text
@@ -106,7 +106,7 @@ export function TaskKpiCards({
         >
           {missedCount}
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           past grace period
         </Text>
       </Card>
@@ -119,7 +119,7 @@ export function TaskKpiCards({
         }`}
         onClick={() => onSelectFilter("refused")}
       >
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Refused
         </Text>
         <Text
@@ -130,7 +130,7 @@ export function TaskKpiCards({
         >
           {refusedCount}
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           offer again, tell nurse
         </Text>
       </Card>

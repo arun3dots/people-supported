@@ -84,7 +84,7 @@ export default function CarePlanDetailPage({ params }: PageProps): JSX.Element {
     return (
       <div className="p-16 text-center bg-surface-card-grey rounded-2xl font-['Outfit',sans-serif]">
         <div className="animate-spin size-8 border-4 border-emerald-800 border-t-transparent rounded-full mx-auto mb-3" />
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Loading clinical care plan...
         </Text>
       </div>
@@ -94,7 +94,7 @@ export default function CarePlanDetailPage({ params }: PageProps): JSX.Element {
   if (!plan) {
     return (
       <div className="p-8 text-center bg-surface-card-grey rounded-2xl font-['Outfit',sans-serif]">
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Care plan record not found.
         </Text>
       </div>

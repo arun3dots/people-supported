@@ -111,13 +111,13 @@ export function ActiveCarePlanCard({
               <div className="bg-white p-3 rounded-xl border border-slate-100 space-y-1">
                 <div className="flex justify-between text-md items-center">
                   <span className="text-muted-foreground">Primary:</span>
-                  <Text size="sm" weight="semibold" title={primaryApprover}>
+                  <Text size="md" weight="semibold" title={primaryApprover}>
                     {primaryApprover}
                   </Text>
                 </div>
                 <div className="flex justify-between text-md items-center">
                   <span className="text-muted-foreground">Secondary:</span>
-                  <Text size="sm" weight="semibold" title={secondaryApprover}>
+                  <Text size="md" weight="semibold" title={secondaryApprover}>
                     {secondaryApprover}
                   </Text>
                 </div>

@@ -59,7 +59,7 @@ export function ShiftViewGrid({
             <th className="py-4 px-4 text-left text-md font-bold text-foreground w-36">Day</th>
             {days.map((day, idx) => (
               <th key={idx} className="py-4 px-3 text-center">
-                <div className="text-sm font-semibold text-muted-foreground tracking-wider">
+                <div className="text-md font-semibold text-muted-foreground tracking-wider">
                   {format(day, "EEEE")}
                 </div>
                 <div className="text-md font-bold text-foreground mt-0.5">{format(day, "d MMM")}</div>
@@ -78,7 +78,7 @@ export function ShiftViewGrid({
                   />
                   <div>
                     <div className="text-md font-bold text-foreground">{shiftType.name}</div>
-                    <div className="text-sm text-muted-foreground mt-0.5">
+                    <div className="text-md text-muted-foreground mt-0.5">
                       {shiftType.startTime} - {shiftType.endTime}
                     </div>
                   </div>
@@ -106,22 +106,22 @@ export function ShiftViewGrid({
                             {(firstShift.assignments ?? []).slice(0, 4).map((assignment: { user?: { fullName?: string } }, i: number) => (
                               <div
                                 key={i}
-                                className="inline-block size-7 rounded-full ring-2 ring-white overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-xs font-bold shrink-0"
+                                className="inline-block size-7 rounded-full ring-2 ring-white overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-md font-bold shrink-0"
                               >
                                 {assignment.user?.fullName ? getInitials(assignment.user.fullName) : "?"}
                               </div>
                             ))}
                             {(firstShift.assignments?.length ?? 0) > 4 && (
-                              <div className="inline-block size-7 rounded-full ring-2 ring-white bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                              <div className="inline-block size-7 rounded-full ring-2 ring-white bg-slate-200 flex items-center justify-center text-md font-bold text-slate-600 shrink-0">
                                 +{(firstShift.assignments?.length ?? 0) - 4}
                               </div>
                             )}
                           </div>
-                          <span className="text-sm font-semibold text-slate-600">
+                          <span className="text-md font-semibold text-slate-600">
                             {firstShift.assignments?.length ?? 0} staff
                           </span>
                           {dayShifts.length > 1 && (
-                            <span className="text-sm text-slate-500">+{dayShifts.length - 1} more</span>
+                            <span className="text-md text-slate-500">+{dayShifts.length - 1} more</span>
                           )}
                         </div>
                       );
@@ -130,7 +130,7 @@ export function ShiftViewGrid({
                         onClick={() => onAddShift(day)}
                         className="p-2 rounded-2xl bg-gray-50/70 border border-gray-100 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 min-h-[72px]"
                       >
-                        <span className="text-sm font-semibold text-slate-500 hover:text-primary">
+                        <span className="text-md font-semibold text-slate-500 hover:text-primary">
                           + Add Shift
                         </span>
                       </div>

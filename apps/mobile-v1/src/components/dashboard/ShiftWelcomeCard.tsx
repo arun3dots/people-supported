@@ -33,7 +33,7 @@ export interface ShiftWelcomeCardProps {
 export function ShiftWelcomeCard({
   shift,
   userName,
-  careHomeName = 'Care Home',
+  careHomeName = 'Supported Living',
   isShiftStarted,
   onStartShift,
   onEndShift,

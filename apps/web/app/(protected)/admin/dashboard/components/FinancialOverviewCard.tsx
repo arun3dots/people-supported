@@ -163,7 +163,7 @@ export function FinancialOverviewCard() {
       {/* Top Bar Header */}
       <div className="w-full flex flex-row items-center justify-between pb-4 gap-2">
         <div className="flex items-center gap-[5px]">
-          <Text as="h3" size="sm" weight="medium" className="leading-tight">
+          <Text as="h3" size="md" weight="medium" className="leading-tight">
             Revenue & Financial Overview
           </Text>
         </div>
@@ -173,7 +173,7 @@ export function FinancialOverviewCard() {
           size="sm"
           className="gap-0"
         >
-          <Text size="sm" className="mr-2">
+          <Text size="md" className="mr-2">
             This Month
           </Text>
           <ChevronDown className="w-[16px] h-[16px] text-[#000000]" />
@@ -187,7 +187,7 @@ export function FinancialOverviewCard() {
         <div className="w-full lg:w-[220px] shrink-0 flex flex-col sm:flex-row lg:flex-col justify-between items-stretch gap-4 sm:gap-6 lg:gap-4">
           {/* Total Revenue */}
           <div className="flex flex-col gap-[8px] sm:gap-[10px] flex-1 justify-center">
-            <Text size="sm" className="leading-[18px]">
+            <Text size="md" className="leading-[18px]">
               Total Revenue
             </Text>
             <Text size="md" weight="medium" className="leading-[24px]">
@@ -195,7 +195,7 @@ export function FinancialOverviewCard() {
             </Text>
             <div className="flex items-center gap-[5px]">
               <ArrowUp className="w-[16px] h-[16px] text-[#1E7735]" />
-              <Text size="sm" variant="success" className="leading-[10px]">
+              <Text size="md" variant="success" className="leading-[10px]">
                 Invoiced to date
               </Text>
             </div>
@@ -213,7 +213,7 @@ export function FinancialOverviewCard() {
 
           {/* Outstanding Invoices */}
           <div className="flex flex-col gap-[8px] sm:gap-[10px] flex-1 justify-center">
-            <Text size="sm" className="leading-[18px]">
+            <Text size="md" className="leading-[18px]">
               Outstanding Invoices
             </Text>
             <Text size="md" weight="medium" className="leading-[24px]">
@@ -221,7 +221,7 @@ export function FinancialOverviewCard() {
             </Text>
             <div className="flex items-center gap-[5px]">
               <ArrowDown className="w-[16px] h-[16px] text-[#ED2115]" />
-              <Text size="sm" variant="error" className="leading-[10px]">
+              <Text size="md" variant="error" className="leading-[10px]">
                 {overdueCount} overdue invoices
               </Text>
             </div>
@@ -237,7 +237,7 @@ export function FinancialOverviewCard() {
           />
           {/* Total Expenses */}
           <div className="flex flex-col gap-[8px] sm:gap-[10px] flex-1 justify-center">
-            <Text size="sm" className="leading-[18px]">
+            <Text size="md" className="leading-[18px]">
               Total Expenses
             </Text>
             <Text size="md" weight="medium" className="leading-[24px]">
@@ -245,7 +245,7 @@ export function FinancialOverviewCard() {
             </Text>
             <div className="flex items-center gap-[5px]">
               <ArrowDown className="w-[16px] h-[16px] text-[#ED2115]" />
-              <Text size="sm" variant="error" className="leading-[10px]">
+              <Text size="md" variant="error" className="leading-[10px]">
                 {expensesCount} expense records
               </Text>
             </div>
@@ -259,7 +259,7 @@ export function FinancialOverviewCard() {
         <div className="w-full lg:max-w-[388px] min-h-[197px] flex-1 flex flex-col justify-start gap-5">
           {/* Title Header */}
           <div className="w-full h-[15px] flex items-center mb-2 lg:mb-0">
-            <Text size="sm" className="leading-[18px]">
+            <Text size="md" className="leading-[18px]">
               Revenue Trend
             </Text>
           </div>
@@ -273,7 +273,7 @@ export function FinancialOverviewCard() {
                 {yAxisLabels.map((lbl, idx) => (
                   <Text
                     key={idx}
-                    size="sm"
+                    size="md"
                     className="w-full text-right leading-[15px]"
                   >
                     {lbl}
@@ -328,7 +328,7 @@ export function FinancialOverviewCard() {
             {/* X-Axis Labels */}
             <div className="w-full pl-[46px] h-[33px] grid grid-cols-5 items-center gap-1">
               {["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"].map((w) => (
-                <Text key={w} size="sm" className="text-center">
+                <Text key={w} size="md" className="text-center">
                   {w}
                 </Text>
               ))}
@@ -340,7 +340,7 @@ export function FinancialOverviewCard() {
         <div className="w-full lg:max-w-[358px] flex-1 flex flex-col gap-[18px]">
           {/* Section Title */}
           <div className="w-full h-[15px] flex items-center">
-            <Text size="sm" className="leading-[18px]">
+            <Text size="md" className="leading-[18px]">
               Expense Breakdown
             </Text>
           </div>
@@ -404,11 +404,11 @@ export function FinancialOverviewCard() {
               <div className="w-full h-7 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="size-2.5 rounded-xs bg-[#4A706A] shrink-0" />
-                  <Text size="sm" className="leading-[15px]">
+                  <Text size="md" className="leading-[15px]">
                     Staff Costs
                   </Text>
                 </div>
-                <Text size="sm" className="leading-[15px]">
+                <Text size="md" className="leading-[15px]">
                   {staffPct}%
                 </Text>
               </div>
@@ -417,11 +417,11 @@ export function FinancialOverviewCard() {
               <div className="w-full h-7 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="size-2.5 rounded-xs bg-[#D9B498] shrink-0" />
-                  <Text size="sm" className="leading-[15px]">
+                  <Text size="md" className="leading-[15px]">
                     Care Supplies
                   </Text>
                 </div>
-                <Text size="sm" className="leading-[15px]">
+                <Text size="md" className="leading-[15px]">
                   {suppliesPct}%
                 </Text>
               </div>
@@ -430,11 +430,11 @@ export function FinancialOverviewCard() {
               <div className="w-full h-7 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="size-2.5 rounded-xs bg-[#E8D2C0] shrink-0" />
-                  <Text size="sm" className="leading-[15px]">
+                  <Text size="md" className="leading-[15px]">
                     Facility Costs
                   </Text>
                 </div>
-                <Text size="sm" className="leading-[15px]">
+                <Text size="md" className="leading-[15px]">
                   {facilityPct}%
                 </Text>
               </div>
@@ -443,11 +443,11 @@ export function FinancialOverviewCard() {
               <div className="w-full h-7 flex flex-row items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="size-2.5 rounded-xs bg-[#BC734E] shrink-0" />
-                  <Text size="sm" className="leading-[15px]">
+                  <Text size="md" className="leading-[15px]">
                     Admin & other
                   </Text>
                 </div>
-                <Text size="sm" className="leading-[15px]">
+                <Text size="md" className="leading-[15px]">
                   {adminPct}%
                 </Text>
               </div>

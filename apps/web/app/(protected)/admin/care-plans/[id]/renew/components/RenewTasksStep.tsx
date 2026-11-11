@@ -48,11 +48,11 @@ export function RenewTasksStep({
         <div>
           <div className="flex items-center gap-2">
             <ListTodo className="size-5 text-emerald-800" />
-            <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+            <Text as="h3" size="md" weight="medium" className="text-slate-900">
               3. Review &amp; Update Daily Tasks
             </Text>
           </div>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Review recurring tasks performed by carers. Adjust instructions, slots, or remove deprecated tasks.
           </Text>
         </div>
@@ -76,7 +76,7 @@ export function RenewTasksStep({
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Text
-                    size="sm"
+                    size="md"
                     weight="semibold"
                     className={isRemoved ? "line-through text-slate-400" : "text-slate-900"}
                   >
@@ -86,12 +86,12 @@ export function RenewTasksStep({
                     {task.category}
                   </Badge>
                   {getDiffBadge(task.diffTag)}
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Slots: {task.timeOfDay?.join(", ") || "AllDay"}
                   </Text>
                 </div>
                 {task.instructions && (
-                  <Text size="sm" weight="regular" className="text-slate-500">{task.instructions}</Text>
+                  <Text size="md" weight="regular" className="text-slate-500">{task.instructions}</Text>
                 )}
               </div>
 

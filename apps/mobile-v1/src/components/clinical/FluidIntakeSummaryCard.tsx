@@ -137,7 +137,7 @@ export function FluidIntakeSummaryCard({
         <View className="flex-row items-center gap-1.5 rounded-xl bg-clinical-warningBg px-3 py-2 mt-2.5">
           <AlertTriangle size={13} color="#C38C0B" />
           <Text className="text-xs font-semibold text-clinical-warning flex-1">
-            Dehydration risk: Prompt resident with preferred fluids (NICE CG32).
+            Dehydration risk: Prompt person supported with preferred fluids (NICE CG32).
           </Text>
         </View>
       )}

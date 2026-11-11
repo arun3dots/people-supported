@@ -214,7 +214,7 @@ export function AddPropertyModal({
             <DialogTitle className="text-lg font-semibold text-slate-900">
               {isEdit ? "Edit Property" : "Add Property"}
             </DialogTitle>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Configure a supported living home, link it to a scheme, and set up its
               tenancy rooms, beds, and landlord details.
             </Text>

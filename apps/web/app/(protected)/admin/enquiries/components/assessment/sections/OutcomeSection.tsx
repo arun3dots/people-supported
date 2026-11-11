@@ -44,8 +44,8 @@ export function OutcomeSection({ formData, onChange, readOnly }: Props) {
           >
             <RadioGroupItem value="APPROVED" id="decision-approved" disabled={readOnly} />
             <Text className="cursor-pointer">
-              <Text as="span" size="sm" weight="semibold" className="block">Suitable for Admission</Text>
-              <Text as="span" size="sm" variant="muted" className="block">Care home can meet all identified care and clinical needs</Text>
+              <Text as="span" size="md" weight="semibold" className="block">Suitable for Admission</Text>
+              <Text as="span" size="md" variant="muted" className="block">Care home can meet all identified care and clinical needs</Text>
             </Text>
           </div>
 
@@ -55,8 +55,8 @@ export function OutcomeSection({ formData, onChange, readOnly }: Props) {
           >
             <RadioGroupItem value="DECLINED" id="decision-declined" disabled={readOnly} />
             <Text className="cursor-pointer">
-              <Text as="span" size="sm" weight="semibold" className="block">Unsuitable / Decline</Text>
-              <Text as="span" size="sm" variant="muted" className="block">Needs exceed registered care capacity</Text>
+              <Text as="span" size="md" weight="semibold" className="block">Unsuitable / Decline</Text>
+              <Text as="span" size="md" variant="muted" className="block">Needs exceed registered care capacity</Text>
             </Text>
           </div>
         </RadioGroup>
@@ -78,7 +78,7 @@ export function OutcomeSection({ formData, onChange, readOnly }: Props) {
               onClick={() => !readOnly && onChange("recommendedCareAllocationLevel", level)}
             >
               <RadioGroupItem value={level} id={`care-level-${level}`} disabled={readOnly} />
-              <Text size="sm" className="cursor-pointer">
+              <Text size="md" className="cursor-pointer">
                 {level}
               </Text>
             </div>

@@ -149,11 +149,11 @@ export function ReportCardsGrid({
     return (
       <div className="bg-surface-card-grey rounded-2xl p-12 text-center shadow-none border-none font-sans">
         <FileText className="size-10 text-slate-300 mx-auto mb-2" />
-        <Text size="sm" weight="medium" className="text-slate-600">
+        <Text size="md" weight="medium" className="text-slate-600">
           No reports match your filters
         </Text>
         <Text
-          size="sm"
+          size="md"
           weight="regular"
           className="text-slate-400 mt-1 max-w-sm mx-auto"
         >
@@ -182,14 +182,14 @@ export function ReportCardsGrid({
                   </div>
                   <div className="flex flex-col min-w-0">
                     <Text
-                      size="sm"
+                      size="md"
                       weight="bold"
                       className="text-slate-900 leading-tight truncate"
                     >
                       {report.title}
                     </Text>
                     <Text
-                      size="sm"
+                      size="md"
                       weight="regular"
                       className="text-slate-500 mt-0.5"
                     >
@@ -209,7 +209,7 @@ export function ReportCardsGrid({
 
               {/* Description */}
               <Text
-                size="sm"
+                size="md"
                 weight="regular"
                 className="text-slate-600 leading-relaxed line-clamp-2"
               >

@@ -61,43 +61,43 @@ export function OverviewMedicalCard({ resident }: OverviewMedicalCardProps) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-md">
             {care.heightCm && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Height</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Height</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{care.heightCm} cm</Text>
               </div>
             )}
             {care.weightKg && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Weight</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Weight</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{care.weightKg} kg</Text>
               </div>
             )}
             {care.bmi && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">BMI</Text>
+                <Text size="md" weight="medium" className="text-slate-500">BMI</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{care.bmi}</Text>
               </div>
             )}
             {baselineVitals.bp && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">BP</Text>
+                <Text size="md" weight="medium" className="text-slate-500">BP</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{baselineVitals.bp} mmHg</Text>
               </div>
             )}
             {baselineVitals.pulse && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Pulse</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Pulse</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{baselineVitals.pulse} bpm</Text>
               </div>
             )}
             {baselineVitals.temp && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Temperature</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Temperature</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{baselineVitals.temp} °C</Text>
               </div>
             )}
             {baselineVitals.spO2 && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">SpO2</Text>
+                <Text size="md" weight="medium" className="text-slate-500">SpO2</Text>
                 <Text size="md" weight="bold" className="text-slate-900">{baselineVitals.spO2}%</Text>
               </div>
             )}
