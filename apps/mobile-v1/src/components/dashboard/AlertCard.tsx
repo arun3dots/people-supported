@@ -39,7 +39,7 @@ export function AlertCard({
   const alertTitle = primaryAlert.title || 'Overdue Care Tasks';
   const alertDescription =
     primaryAlert.description ||
-    'Please complete them to stay on track and ensure resident care safety';
+    'Please complete them to stay on track and ensure support safety';
 
   return (
     <View style={[styles.wrapper, style]}>

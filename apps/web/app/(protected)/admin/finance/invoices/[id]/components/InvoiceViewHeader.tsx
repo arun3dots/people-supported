@@ -36,7 +36,7 @@ export function InvoiceViewHeader({
             Invoice {invoiceNumber}
           </Text>
         </div>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+        <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
           Manage invoices, payments, and expenses for the care home
         </Text>
       </div>

@@ -124,7 +124,7 @@ export function EmptyState({
       {/* Description */}
       {description && (
         <Text
-          size="sm"
+          size="md"
           weight="regular"
           className="text-slate-500 max-w-sm leading-relaxed mb-5"
         >

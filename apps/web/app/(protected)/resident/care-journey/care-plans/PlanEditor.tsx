@@ -109,13 +109,13 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
 
       {content.found && (
         <div className="bg-surface-card-grey rounded-xl px-4 py-3">
-          <p className="text-sm font-bold text-slate-700">What the assessment found</p>
+          <p className="text-md font-bold text-slate-700">What the assessment found</p>
           <p className="text-md text-slate-800">{content.found}</p>
         </div>
       )}
 
       {isAgreed && (
-        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-md text-emerald-900">
           This agreed care plan is read-only. Changes require a formal amendment.
         </p>
       )}

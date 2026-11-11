@@ -94,9 +94,9 @@ export function ShiftResidentFilterToolbar({
         <div className="flex flex-wrap items-end gap-2.5 flex-1 min-w-0">
           {/* Wing Filter */}
           <div className="flex flex-col gap-1 w-32 sm:w-36 shrink-0">
-            <Label className="text-sm font-semibold text-slate-700">Wing</Label>
+            <Label className="text-md font-semibold text-slate-700">Wing</Label>
             <Select value={selectedWingId || "none"} onValueChange={onWingChange}>
-              <SelectTrigger className="w-full bg-white h-9 text-sm rounded-lg border-slate-200">
+              <SelectTrigger className="w-full bg-white h-9 text-md rounded-lg border-slate-200">
                 <SelectValue placeholder="All Wings" />
               </SelectTrigger>
               <SelectContent>
@@ -112,9 +112,9 @@ export function ShiftResidentFilterToolbar({
 
           {/* Room Filter */}
           <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-            <Label className="text-sm font-semibold text-slate-700">Room</Label>
+            <Label className="text-md font-semibold text-slate-700">Room</Label>
             <Select value={selectedRoomId || "none"} onValueChange={onRoomChange}>
-              <SelectTrigger className="w-full bg-white h-9 text-sm rounded-lg border-slate-200">
+              <SelectTrigger className="w-full bg-white h-9 text-md rounded-lg border-slate-200">
                 <SelectValue placeholder="All Rooms" />
               </SelectTrigger>
               <SelectContent>
@@ -130,12 +130,12 @@ export function ShiftResidentFilterToolbar({
 
           {/* Bed Filter */}
           <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-            <Label className="text-sm font-semibold text-slate-700">Bed</Label>
+            <Label className="text-md font-semibold text-slate-700">Bed</Label>
             <Select
               value={selectedBedId || "none"}
               onValueChange={onBedChange || (() => { })}
             >
-              <SelectTrigger className="w-full bg-white h-9 text-sm rounded-lg border-slate-200">
+              <SelectTrigger className="w-full bg-white h-9 text-md rounded-lg border-slate-200">
                 <SelectValue placeholder="All Beds" />
               </SelectTrigger>
               <SelectContent>
@@ -151,14 +151,14 @@ export function ShiftResidentFilterToolbar({
 
           {/* Search Resident Input */}
           <div className="flex flex-col gap-1 min-w-[160px] flex-1 [&_[data-slot=input-error]]:hidden">
-            <Label className="text-sm font-semibold text-slate-700">Search Resident</Label>
+            <Label className="text-md font-semibold text-slate-700">Search Resident</Label>
             <div className="relative">
               <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10" />
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search resident..."
-                className="pl-8 bg-white h-9 text-sm rounded-lg border-slate-200"
+                className="pl-8 bg-white h-9 text-md rounded-lg border-slate-200"
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ export function ShiftResidentFilterToolbar({
               variant="ghost"
               size="sm"
               onClick={onClearResidents}
-              className="text-slate-500 hover:text-slate-900 rounded-lg h-9 px-2.5 text-sm"
+              className="text-slate-500 hover:text-slate-900 rounded-lg h-9 px-2.5 text-md"
             >
               <X className="size-3 mr-1" />
               Clear ({selectedCount})
@@ -185,7 +185,7 @@ export function ShiftResidentFilterToolbar({
             size="sm"
             disabled={totalFiltered === 0}
             onClick={onAssignEntireFacility}
-            className="rounded-lg h-9 px-3 text-sm font-semibold gap-1.5 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            className="rounded-lg h-9 px-3 text-md font-semibold gap-1.5 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             <UserCheck className="size-3.5 text-primary" />
             <span>Assign All {facilityLabel} ({totalFiltered})</span>

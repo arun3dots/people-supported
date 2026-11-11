@@ -102,7 +102,7 @@ export function RecentActivitiesSection() {
           <h3 className="font-medium text-[16px] leading-[20px] text-[#141F1E]">
             Active Sessions
           </h3>
-          <p className="font-normal text-[12px] leading-[15px] text-[#5D5D5D]">
+          <p className="font-normal text-md leading-[15px] text-[#5D5D5D]">
             You are currently signed in on the following devices
           </p>
         </div>
@@ -126,7 +126,7 @@ export function RecentActivitiesSection() {
                     {/* Device Info (Frame 1390) */}
                     <div className="flex flex-col gap-[2px] min-w-0">
                       <div className="flex items-center gap-[9px] flex-wrap">
-                        <span className="font-medium text-[12px] leading-[15px] text-[#141F1E]">
+                        <span className="font-medium text-md leading-[15px] text-[#141F1E]">
                           {session.device}
                         </span>
 
@@ -138,7 +138,7 @@ export function RecentActivitiesSection() {
                         )}
                       </div>
 
-                      <span className="font-normal text-[12px] leading-[15px] text-[#5D5D5D] truncate sm:whitespace-normal">
+                      <span className="font-normal text-md leading-[15px] text-[#5D5D5D] truncate sm:whitespace-normal">
                         {session.location}
                       </span>
                     </div>
@@ -147,11 +147,11 @@ export function RecentActivitiesSection() {
                   {/* Right Group: Timestamp Info (Frame 1371) */}
                   <div className="flex flex-col items-start sm:items-end shrink-0 pl-[68px] sm:pl-0">
                     {session.lastChangedLabel && (
-                      <span className="font-normal text-[8px] leading-[10px] text-[#5D5D5D]">
+                      <span className="font-normal text-md leading-[10px] text-[#5D5D5D]">
                         {session.lastChangedLabel}
                       </span>
                     )}
-                    <span className="font-normal text-[12px] leading-[15px] text-[#5D5D5D]">
+                    <span className="font-normal text-md leading-[15px] text-[#5D5D5D]">
                       {session.time}
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export function RecentActivitiesSection() {
         </div>
 
         {/* View All Sessions Button (Frame 1367) */}
-        <button className="flex items-center gap-2 text-[#1E7735] text-[12px] leading-[15px] font-medium hover:underline cursor-pointer w-fit transition-colors pt-1">
+        <button className="flex items-center gap-2 text-[#1E7735] text-md leading-[15px] font-medium hover:underline cursor-pointer w-fit transition-colors pt-1">
           <span>View All Sessions</span>
           <ArrowRight className="w-4 h-4 text-[#1E7735]" />
         </button>

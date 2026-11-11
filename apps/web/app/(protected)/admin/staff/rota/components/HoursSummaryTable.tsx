@@ -72,7 +72,7 @@ export function HoursSummaryTable({
         <Text as="h2" size="md" weight="semibold" className="text-slate-900">
           Hours Summary by Scheme &amp; Property
         </Text>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Compare commissioned, planned and delivered weekly support hours
         </Text>
       </div>
@@ -125,7 +125,7 @@ export function HoursSummaryTable({
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Building2 className="size-3.5 text-primary shrink-0" />
-                      <Text as="span" size="sm" weight="medium" className="text-slate-900">
+                      <Text as="span" size="md" weight="medium" className="text-slate-900">
                         {row.scheme}
                       </Text>
                     </div>

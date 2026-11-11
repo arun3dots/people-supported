@@ -130,7 +130,7 @@ export function ShiftRequestDialog({
           <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">
             Submit Shift Request
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-md text-slate-500">
             Requests are sent to line managers and rotas will update upon approval.
           </DialogDescription>
         </DialogHeader>
@@ -139,7 +139,7 @@ export function ShiftRequestDialog({
           {/* Request Type & Optional Shift Selector */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
             <div className={cn("space-y-1", !(requestType === "Change" || requestType === "Cover") && "sm:col-span-2")}>
-              <Label className="text-sm font-semibold text-slate-700">Request Type</Label>
+              <Label className="text-md font-semibold text-slate-700">Request Type</Label>
               <Select
                 value={requestType || ""}
                 onValueChange={(v) => {
@@ -157,14 +157,14 @@ export function ShiftRequestDialog({
                 </SelectContent>
               </Select>
               {errors.type && (
-                <p className="text-sm text-red-500 font-medium">Please select a request type</p>
+                <p className="text-md text-red-500 font-medium">Please select a request type</p>
               )}
             </div>
 
             {/* Shift Selector if swap/cover */}
             {(requestType === "Change" || requestType === "Cover") && (
               <div className="space-y-1">
-                <Label className="text-sm font-semibold text-slate-700">
+                <Label className="text-md font-semibold text-slate-700">
                   Select Shift to {requestType === "Change" ? "Swap" : "Cover"}
                 </Label>
                 <Select onValueChange={handleShiftSelect} value={selectedShiftId || undefined}>
@@ -194,7 +194,7 @@ export function ShiftRequestDialog({
           {/* Date & Time Range */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
             <div className="space-y-1">
-              <Label className="text-sm font-semibold text-slate-700">Start Time</Label>
+              <Label className="text-md font-semibold text-slate-700">Start Time</Label>
               <Controller
                 name="startTime"
                 control={control}
@@ -211,7 +211,7 @@ export function ShiftRequestDialog({
                 )}
               />
               {errors.startTime && (
-                <Text size="sm" variant="error" className="text-sm text-rose-600">
+                <Text size="md" variant="error" className="text-md text-rose-600">
                   {errors.startTime.message}
                 </Text>
               )}
@@ -219,8 +219,8 @@ export function ShiftRequestDialog({
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <Label className="text-sm font-semibold text-slate-700">End Time</Label>
-                <span className="text-xs text-slate-400 font-normal">(Optional)</span>
+                <Label className="text-md font-semibold text-slate-700">End Time</Label>
+                <span className="text-md text-slate-400 font-normal">(Optional)</span>
               </div>
               <Controller
                 name="endTime"
@@ -238,7 +238,7 @@ export function ShiftRequestDialog({
                 )}
               />
               {errors.endTime && (
-                <Text size="sm" variant="error" className="text-sm text-rose-600">
+                <Text size="md" variant="error" className="text-md text-rose-600">
                   {errors.endTime.message}
                 </Text>
               )}
@@ -247,7 +247,7 @@ export function ShiftRequestDialog({
 
           {/* Reason */}
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-700">Reason</Label>
+            <Label className="text-md font-semibold text-slate-700">Reason</Label>
             <Input
               placeholder="e.g. Family appointment, medical, personal"
               {...register("reason")}
@@ -256,10 +256,10 @@ export function ShiftRequestDialog({
 
           {/* Notes */}
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-700">Additional Notes</Label>
+            <Label className="text-md font-semibold text-slate-700">Additional Notes</Label>
             <Textarea
               rows={2}
-              className="min-h-[58px] resize-none text-sm"
+              className="min-h-[58px] resize-none text-md"
               placeholder="Any details to help rota management..."
               {...register("notes")}
             />

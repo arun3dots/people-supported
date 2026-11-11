@@ -55,12 +55,12 @@ export default function EmergencyResidentScreen() {
           >
             <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+          <Text className="text-lg font-bold text-foreground">Person Supported</Text>
           <View className="w-9" />
         </View>
         <View className="items-center justify-center py-24">
           <ActivityIndicator size="large" color="#4A706A" />
-          <Text className="text-xs text-muted-foreground mt-3 font-medium">Loading resident profile...</Text>
+          <Text className="text-xs text-muted-foreground mt-3 font-medium">Loading person supported details...</Text>
         </View>
       </ScreenWrapper>
     );
@@ -78,15 +78,15 @@ export default function EmergencyResidentScreen() {
           >
             <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+          <Text className="text-lg font-bold text-foreground">Person Supported</Text>
           <View className="w-9" />
         </View>
         <View className="items-center py-16 px-4">
           <Text className="text-base font-bold text-foreground text-center mb-1">
-            Could not open resident profile
+            Could not open profile
           </Text>
           <Text className="text-sm text-muted-foreground text-center mb-4">
-            Unable to locate resident record. Please try again.
+            Unable to locate person supported record. Please try again.
           </Text>
           <Button variant="outline" onPress={() => void refetch()}>
             Retry
@@ -108,7 +108,7 @@ export default function EmergencyResidentScreen() {
         >
           <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+        <Text className="text-lg font-bold text-foreground">Person Supported</Text>
         <View className="w-9" />
       </View>
 
@@ -144,7 +144,7 @@ export default function EmergencyResidentScreen() {
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <Users size={22} color="#4A706A" strokeWidth={2} />
-            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Care Plan</Text>
+            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Support Plan</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

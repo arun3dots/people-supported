@@ -45,7 +45,7 @@ export function MonthTimelineView({
           style={{ gridTemplateColumns: `220px repeat(${days.length}, 80px)` }}
         >
           <div className="w-[220px] p-3 border-r border-slate-200 bg-slate-50/70 sticky left-0 z-30">
-            <Text size="sm" weight="bold" className="text-slate-700">
+            <Text size="md" weight="bold" className="text-slate-700">
               {viewMode === "staff" ? "Staff Member" : "Area / Level"}
             </Text>
           </div>
@@ -55,7 +55,7 @@ export function MonthTimelineView({
                 key={day.toISOString()}
                 className="w-20 shrink-0 py-2 text-center flex flex-col items-center justify-center leading-tight"
               >
-                <Text size="sm" weight="medium" className="text-sm text-slate-500 mb-0.5 uppercase font-medium">
+                <Text size="md" weight="medium" className="text-md text-slate-500 mb-0.5 uppercase font-medium">
                   {format(day, "EEE")}
                 </Text>
                 <Text size="base" weight="semibold" className="text-base font-semibold text-slate-900">
@@ -83,7 +83,7 @@ export function MonthTimelineView({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <Text size="sm" weight="semibold" className="text-slate-900 truncate">
+                <Text size="md" weight="semibold" className="text-slate-900 truncate">
                   {row.name}
                 </Text>
               </div>
@@ -127,7 +127,7 @@ export function MonthTimelineView({
                             title={`${shift.type?.name || "Shift"} (${formatUkTime(shift.startTime)}-${formatUkTime(shift.endTime)})${isCancelled ? " [Cancelled]" : ""}`}
                             className={`w-full h-5 rounded text-white flex items-center justify-center overflow-hidden hover:opacity-85 shadow-2xs cursor-pointer ${isCancelled ? "opacity-60 line-through" : ""}`}
                           >
-                            <Text size="sm" weight="bold" className="text-sm text-white leading-none">
+                            <Text size="md" weight="bold" className="text-md text-white leading-none">
                               {shift.type?.name?.charAt(0) || "S"}
                             </Text>
                           </div>

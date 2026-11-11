@@ -80,12 +80,12 @@ export function ColumnVisibilityDropdown({
           variant="outline"
           size="sm"
           className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 h-8 rounded-xl bg-white border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-xs",
+            "flex items-center gap-1.5 px-3 py-1.5 h-8 rounded-xl bg-white border-slate-200/80 hover:bg-slate-50 hover:border-slate-300 text-md font-semibold text-slate-700 transition-all cursor-pointer shadow-xs",
             className,
           )}
         >
           <SlidersHorizontal className="size-3.5 text-emerald-800" />
-          <Text variant="secondary" size="sm">Columns</Text>
+          <Text variant="secondary" size="md">Columns</Text>
         </Button>
       </PopoverTrigger>
 
@@ -109,7 +109,7 @@ export function ColumnVisibilityDropdown({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search columns..."
-            className="h-8 w-full pl-8 pr-3 text-xs bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-slate-300 transition-colors placeholder:text-slate-400 text-slate-900"
+            className="h-8 w-full pl-8 pr-3 text-md bg-slate-50 border border-slate-200 rounded-lg outline-none focus:bg-white focus:border-slate-300 transition-colors placeholder:text-slate-400 text-slate-900"
           />
         </div>
 
@@ -124,7 +124,7 @@ export function ColumnVisibilityDropdown({
                 <label
                   key={col.id}
                   className={cn(
-                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer select-none",
+                    "flex items-center justify-between px-2.5 py-1.5 rounded-lg text-md font-medium transition-colors cursor-pointer select-none",
                     isMandatory
                       ? "text-slate-400 bg-slate-50/60 cursor-not-allowed"
                       : isChecked
@@ -147,7 +147,7 @@ export function ColumnVisibilityDropdown({
                   </div>
 
                   {isMandatory && (
-                    <div className="flex items-center gap-1 text-[10px] text-slate-400 font-normal">
+                    <div className="flex items-center gap-1 text-md text-slate-400 font-normal">
                       <Lock className="size-3" />
                       <span>Always</span>
                     </div>
@@ -156,7 +156,7 @@ export function ColumnVisibilityDropdown({
               );
             })
           ) : (
-            <div className="py-4 text-center text-xs text-slate-400">
+            <div className="py-4 text-center text-md text-slate-400">
               No columns match &quot;{searchQuery}&quot;
             </div>
           )}
@@ -169,7 +169,7 @@ export function ColumnVisibilityDropdown({
             variant="outline"
             size="sm"
             onClick={handleReset}
-            className="h-8 px-3 text-xs rounded-xl hover:bg-slate-50 cursor-pointer"
+            className="h-8 px-3 text-md rounded-xl hover:bg-slate-50 cursor-pointer"
           >
             <RotateCcw className="size-3 mr-1 text-slate-500" />
             Reset
@@ -180,7 +180,7 @@ export function ColumnVisibilityDropdown({
             variant="primary"
             size="sm"
             onClick={handleApply}
-            className="h-8 px-4 text-xs rounded-xl cursor-pointer"
+            className="h-8 px-4 text-md rounded-xl cursor-pointer"
           >
             Apply
           </Button>

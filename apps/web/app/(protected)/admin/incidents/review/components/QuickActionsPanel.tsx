@@ -112,7 +112,7 @@ export function QuickActionsPanel({
               className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-50/80 border border-slate-200/80 hover:bg-emerald-50 hover:border-emerald-700/40 transition-all text-center gap-1.5 cursor-pointer min-h-[76px] group disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Icon className="size-4 text-slate-600 group-hover:text-emerald-800 transition-colors" />
-              <Text size={'xs'} weight={'semibold'} className="text-slate-800 leading-tight group-hover:text-emerald-800">
+              <Text size={'md'} weight={'semibold'} className="text-slate-800 leading-tight group-hover:text-emerald-800">
                 {act.title}
               </Text>
             </button>
@@ -123,7 +123,7 @@ export function QuickActionsPanel({
       {/* Info Callout Bar */}
       <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
         <Info className="size-3.5 text-slate-400 shrink-0" />
-        <Text size={'xs'} weight={'regular'} className="text-slate-500">
+        <Text size={'md'} weight={'regular'} className="text-slate-500">
           All actions are logged and update the compliance checklist
         </Text>
       </div>

@@ -60,12 +60,12 @@ export function ZoneFindingsDialog({
             <DialogTitle className="flex items-center gap-2 text-base font-semibold text-slate-900">
               <MapPin className="size-4 text-blue-600" />
               {locationLabel}
-              <Badge variant="outline" className="text-sm font-normal">
+              <Badge variant="outline" className="text-md font-normal">
                 {view}
               </Badge>
             </DialogTitle>
             {openFindingsCount > 0 && (
-              <Badge variant="destructive" className="text-sm">
+              <Badge variant="destructive" className="text-md">
                 {openFindingsCount} Open
               </Badge>
             )}
@@ -73,7 +73,7 @@ export function ZoneFindingsDialog({
         </DialogHeader>
 
         <div className="space-y-3 my-2">
-          <p className="text-sm text-slate-500">
+          <p className="text-md text-slate-500">
             {findings.length} recorded finding{findings.length !== 1 ? "s" : ""} on this anatomical area:
           </p>
 
@@ -95,29 +95,29 @@ export function ZoneFindingsDialog({
                         style={{ background: typeColor }}
                       />
                       {f.trackingId && (
-                        <span className="font-mono text-[10px] bg-slate-200/80 text-slate-700 px-1 rounded">
+                        <span className="font-mono text-md bg-slate-200/80 text-slate-700 px-1 rounded">
                           {f.trackingId}
                         </span>
                       )}
-                      <span className="text-sm font-semibold text-slate-900">
+                      <span className="text-md font-semibold text-slate-900">
                         {f.findingType}
                       </span>
                       <Badge
                         variant="outline"
-                        className="text-[10px] px-1.5 py-0 font-medium"
+                        className="text-md px-1.5 py-0 font-medium"
                         style={{ borderColor: sevColor, color: sevColor }}
                       >
                         {f.severity}
                       </Badge>
                       <Badge
                         variant={isOpen ? "destructive" : "secondary"}
-                        className="text-[10px] px-1.5 py-0"
+                        className="text-md px-1.5 py-0"
                       >
                         {f.status}
                       </Badge>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <div className="flex items-center gap-2 text-md text-slate-500">
                       <Calendar className="size-3" />
                       <span>
                         Onset: {format(new Date(f.onsetDate), "dd MMM yyyy")}
@@ -131,7 +131,7 @@ export function ZoneFindingsDialog({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-8 gap-1 text-sm border-slate-300"
+                    className="h-8 gap-1 text-md border-slate-300"
                     onClick={() => {
                       onOpenChange(false);
                       onViewFindingDetail(f);

@@ -180,7 +180,7 @@ export function HighRiskResidentsCard() {
                 type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleLevelClick(r.highestLevel); }}
               >
-                <Badge className={`${getRiskLevelStyle(r.highestLevel).badge} text-sm px-2 py-0.5 hover:opacity-80 cursor-pointer`}>
+                <Badge className={`${getRiskLevelStyle(r.highestLevel).badge} text-md px-2 py-0.5 hover:opacity-80 cursor-pointer`}>
                   {r.highestLevel}
                 </Badge>
               </button>

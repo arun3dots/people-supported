@@ -113,7 +113,7 @@ export function ResidentCard({
               </Text>
             </View>
             <Text className="text-xs text-muted-foreground">
-              {resident.gender || 'Resident'}
+              {resident.gender || 'Person Supported'}
               {resident.age ? ` · ${resident.age} yrs` : ''}
             </Text>
           </View>

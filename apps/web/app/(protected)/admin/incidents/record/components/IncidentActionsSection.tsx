@@ -161,7 +161,7 @@ export function IncidentActionsSection({
                   <p className="text-md font-semibold text-slate-800 truncate px-1">
                     {att.name}
                   </p>
-                  <p className="text-sm text-slate-400 truncate">
+                  <p className="text-md text-slate-400 truncate">
                     {att.timestamp}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export function IncidentActionsSection({
               <span className="text-md font-semibold text-slate-700">
                 Upload Attachments
               </span>
-              <span className="text-sm text-slate-400 font-normal">
+              <span className="text-md text-slate-400 font-normal">
                 PDF, PNG, JPG (Max 10MB)
               </span>
             </label>

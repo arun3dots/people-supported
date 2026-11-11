@@ -183,7 +183,7 @@ export function DocumentsAndCertificatesSection() {
                           {doc.skills.map((skill, sIdx) => (
                             <span
                               key={sIdx}
-                              className="inline-flex items-center px-2 py-0.5 rounded-md text-sm font-medium bg-slate-100 text-slate-700 border border-slate-200"
+                              className="inline-flex items-center px-2 py-0.5 rounded-md text-md font-medium bg-slate-100 text-slate-700 border border-slate-200"
                             >
                               {skill}
                             </span>

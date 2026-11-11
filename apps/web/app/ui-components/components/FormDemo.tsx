@@ -45,7 +45,7 @@ export function FormDemo() {
                 Full Name
               </label>
               <Input placeholder="John Doe" />
-              <p className="text-[11px] text-gray-400 font-medium">
+              <p className="text-md text-gray-400 font-medium">
                 Enter your legal name as it appears on your ID.
               </p>
             </div>

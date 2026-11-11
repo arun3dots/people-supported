@@ -25,7 +25,7 @@ export function PackageChooser({
 }: PackageChooserProps) {
   if (packages.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-muted-foreground">
+      <p className="py-8 text-center text-md text-muted-foreground">
         No subscription packages are available right now. Please contact
         support.
       </p>
@@ -58,11 +58,11 @@ export function PackageChooser({
             <h4 className="text-base font-bold text-foreground">{pkg.name}</h4>
             <div className="mt-1 text-2xl font-bold text-foreground">
               {pkg.currency} {pkg.priceMonthly}
-              <span className="text-xs font-medium text-muted-foreground">
+              <span className="text-md font-medium text-muted-foreground">
                 /mo
               </span>
             </div>
-            <div className="mt-3 flex gap-4 text-xs text-muted-foreground">
+            <div className="mt-3 flex gap-4 text-md text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Users className="h-3.5 w-3.5" /> {pkg.residentLimit} residents
               </span>

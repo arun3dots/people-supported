@@ -68,7 +68,7 @@ export function useShiftTableColumns({
 
           if (assignedUsers.length === 0) {
             return (
-              <span className="inline-flex items-center text-sm font-normal text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/60">
+              <span className="inline-flex items-center text-md font-normal text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/60">
                 Unassigned
               </span>
             );
@@ -84,7 +84,7 @@ export function useShiftTableColumns({
               <Text size="md" weight="normal" className="text-slate-800 truncate">
                 {names || primaryUser?.fullName || "Staff Member"}
               </Text>
-              <Text size="sm" weight="normal" className="text-slate-400 truncate">
+              <Text size="md" weight="normal" className="text-slate-400 truncate">
                 {roleTitle}
               </Text>
             </div>
@@ -121,7 +121,7 @@ export function useShiftTableColumns({
               <Text size="md" weight="normal" className="text-slate-800 truncate">
                 {wingName}
               </Text>
-              <Text size="sm" weight="normal" className="text-slate-400 truncate">
+              <Text size="md" weight="normal" className="text-slate-400 truncate">
                 {facilityName}
               </Text>
             </div>
@@ -148,7 +148,7 @@ export function useShiftTableColumns({
               <Text size="md" weight="normal" className="text-slate-800 truncate">
                 {shiftType}
               </Text>
-              <Text size="sm" weight="normal" className="text-slate-400 mt-0.5">
+              <Text size="md" weight="normal" className="text-slate-400 mt-0.5">
                 {formattedDate}
               </Text>
             </div>
@@ -185,7 +185,7 @@ export function useShiftTableColumns({
                 {timingText}
               </Text>
               {durationText && (
-                <Text size="sm" weight="normal" className="text-slate-400">
+                <Text size="md" weight="normal" className="text-slate-400">
                   {durationText}
                 </Text>
               )}
@@ -201,7 +201,7 @@ export function useShiftTableColumns({
           return (
             <span
               className={cn(
-                "inline-flex items-center px-2.5 py-1 rounded-full text-sm font-normal border",
+                "inline-flex items-center px-2.5 py-1 rounded-full text-md font-normal border",
                 getStatusBadgeStyle(status),
               )}
             >

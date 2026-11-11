@@ -146,7 +146,7 @@ export function ModifyShiftBlockModal({
           <DialogTitle className="text-lg font-semibold text-slate-900">
             Modify Shift Care Type &amp; Hours
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-md text-slate-500">
             {staffName
               ? `${staffName} · ${dayLabel || "Selected Day"}`
               : "Configure shift allocation and timing."}

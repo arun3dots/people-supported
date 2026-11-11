@@ -165,11 +165,11 @@ export function AdministerMedicationDialog({
             <div>
               <div className="flex items-center gap-2">
                 <Text size="lg" weight="bold" className="text-slate-900">{round.drugName}</Text>
-                <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-900 text-sm">{round.dose}</Badge>
-                {round.form && <Badge variant="secondary" className="text-sm">{round.form}</Badge>}
+                <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-900 text-md">{round.dose}</Badge>
+                {round.form && <Badge variant="secondary" className="text-md">{round.form}</Badge>}
               </div>
               {round.scheduledTime && (
-                <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
+                <div className="flex items-center gap-1.5 text-slate-500 text-md mt-1">
                   <Clock className="size-3.5" />
                   <span>Scheduled: {format(new Date(round.scheduledTime), "dd MMM yyyy 'at' HH:mm")}</span>
                 </div>
@@ -189,7 +189,7 @@ export function AdministerMedicationDialog({
             )}
           </div>
           {round.instructions && (
-            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-50/80 border border-amber-200/80 text-amber-900 text-sm">
+            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-50/80 border border-amber-200/80 text-amber-900 text-md">
               <Info className="size-4 shrink-0 mt-0.5 text-amber-700" />
               <span>{round.instructions}</span>
             </div>

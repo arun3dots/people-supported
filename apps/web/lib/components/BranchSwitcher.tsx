@@ -59,7 +59,7 @@ export function BranchSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex items-center gap-2 rounded-full border border-border bg-white px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:ring-0 disabled:opacity-60"
+          className="flex items-center gap-2 rounded-full border border-border bg-white px-3 py-2 text-md font-medium text-gray-800 focus:outline-none focus:ring-0 disabled:opacity-60"
           disabled={switchBranch.isPending}
         >
           {switchBranch.isPending ? (

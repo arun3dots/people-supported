@@ -105,7 +105,7 @@ export const TaskSignOffModal: React.FC<TaskSignOffModalProps> = ({
                 <Text className="text-xs text-muted-foreground mt-1 leading-4">
                   Record care delivery or skip status for{' '}
                   <Text className="font-bold text-foreground">
-                    {task.residentName || 'resident'}
+                    {task.residentName || 'person supported'}
                   </Text>
                   :{' '}
                   <Text className="font-semibold text-foreground">
@@ -181,7 +181,7 @@ export const TaskSignOffModal: React.FC<TaskSignOffModalProps> = ({
                   <Text className="text-clinical-critical font-bold">*</Text>
                 </Text>
                 <TextInput
-                  placeholder="e.g. Resident asleep, refused, away at hospital..."
+                  placeholder="e.g. Asleep, refused, away at appointment..."
                   placeholderTextColor="#8E8E93"
                   value={skipReason}
                   onChangeText={setSkipReason}

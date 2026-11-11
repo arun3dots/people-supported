@@ -97,20 +97,20 @@ export function HandoverDocumentsSection({
                   <FileText className="size-5" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-bold text-md sm:text-md text-slate-900 truncate" title={doc.name}>
+                  <h4 className="font-bold text-md text-slate-900 truncate" title={doc.name}>
                     {doc.name}
                   </h4>
-                  <p className="text-sm text-slate-500 font-medium">
+                  <p className="text-md text-slate-500 font-medium">
                     {(doc.fileType || "doc").toUpperCase()}. {fileSizeKb} KB
                   </p>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-slate-100 mt-2">
-                <p className="text-sm text-slate-500 font-medium leading-tight">
+                <p className="text-md text-slate-500 font-medium leading-tight">
                   Updated
                 </p>
-                <p className="text-sm text-slate-700 font-semibold leading-tight truncate">
+                <p className="text-md text-slate-700 font-semibold leading-tight truncate">
                   {doc.updatedAt || "Just now"}
                 </p>
               </div>
@@ -135,7 +135,7 @@ export function HandoverDocumentsSection({
           <span className="text-md font-bold text-slate-800 group-hover:text-emerald-900">
             {isUploading ? "Uploading..." : "Upload More"}
           </span>
-          <span className="text-sm text-slate-400 group-hover:text-emerald-700/80 font-normal">
+          <span className="text-md text-slate-400 group-hover:text-emerald-700/80 font-normal">
             PDF, DOC, PNG, JPG (Max 10MB)
           </span>
         </button>

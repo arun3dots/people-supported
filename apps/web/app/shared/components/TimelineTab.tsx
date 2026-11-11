@@ -109,7 +109,7 @@ export function TimelineTab({ residentId, selectedDate }: TimelineTabProps) {
                 <span>•</span>
                 <Badge
                   variant="secondary"
-                  className="px-1.5 py-0 text-[10px] uppercase font-bold tracking-wider"
+                  className="px-1.5 py-0 text-md uppercase font-bold tracking-wider"
                 >
                   {event.eventType.replace(/_/g, " ")}
                 </Badge>

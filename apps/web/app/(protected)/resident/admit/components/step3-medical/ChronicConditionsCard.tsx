@@ -29,7 +29,7 @@ export function ChronicConditionsCard({
         <Text as="h3" size="md" weight="bold">
           Chronic Conditions Checklist
         </Text>
-        <Text size="sm" weight="regular" variant="subdued">
+        <Text size="md" weight="regular" variant="subdued">
           Select all that currently apply to this resident.
         </Text>
       </div>

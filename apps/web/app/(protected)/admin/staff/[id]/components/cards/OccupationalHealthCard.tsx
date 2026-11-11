@@ -138,7 +138,7 @@ export function OccupationalHealthCard({
       ) : !hasHealthRecord ? (
         <div className="flex flex-col items-center justify-center py-8 text-center space-y-3 border border-dashed rounded-xl border-slate-200">
           <ShieldCheck className="w-8 h-8 text-slate-400" />
-          <Text size="sm" weight="regular" className="text-slate-500 italic">
+          <Text size="md" weight="regular" className="text-slate-500 italic">
             No occupational health clearance record found. Click &quot;Edit&quot; to record health details.
           </Text>
         </div>
@@ -182,7 +182,7 @@ export function OccupationalHealthCard({
               {/* Center Gauge Status replacing percentage */}
               <div className="absolute flex flex-col items-center justify-center text-center p-3">
                 <Text
-                  size="sm"
+                  size="md"
                   weight="bold"
                   className={cn("leading-tight tracking-wide  text-center break-words", statusTextColorClass)}
                 >
@@ -202,7 +202,7 @@ export function OccupationalHealthCard({
                       statusDotColorClass
                     )}
                   />
-                  <Text size="sm" weight="regular" className="text-[#141F1E]">
+                  <Text size="md" weight="regular" className="text-[#141F1E]">
                     {health?.status || "Pending"}
                   </Text>
                 </div>
@@ -255,10 +255,10 @@ export function OccupationalHealthCard({
                 <ShieldCheck className="w-4 h-4 text-[#4A706A]" />
               </div>
               <div className="flex flex-col gap-0.5">
-                <Text size="sm" weight="semibold" className="text-[#22973F]">
+                <Text size="md" weight="semibold" className="text-[#22973F]">
                   {health?.outcome || "Fit to Work"}
                 </Text>
-                <Text size="sm" weight="regular" className="text-[#5D5D5D]">
+                <Text size="md" weight="regular" className="text-[#5D5D5D]">
                   {cleanNotes}
                 </Text>
               </div>

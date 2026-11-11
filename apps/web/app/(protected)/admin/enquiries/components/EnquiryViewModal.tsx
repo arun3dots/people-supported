@@ -69,10 +69,10 @@ interface PreviewSectionCardProps {
 function PreviewSectionCard({ section }: PreviewSectionCardProps) {
   return (
     <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100/80">
-      <Text size="sm" weight="semibold" className="text-slate-900 leading-tight">
+      <Text size="md" weight="semibold" className="text-slate-900 leading-tight">
         {section.title}
       </Text>
-      <Text size="sm" variant="subdued" className="text-slate-500 mt-0.5 mb-4 block">
+      <Text size="md" variant="subdued" className="text-slate-500 mt-0.5 mb-4 block">
         {section.description}
       </Text>
 

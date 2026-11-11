@@ -166,10 +166,10 @@ export function ShiftResidentTable({
                   className="rounded border-slate-300 text-primary focus:ring-primary size-4 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </TableHead>
-              <TableHead className="whitespace-nowrap min-w-44 py-2.5 text-sm font-semibold text-slate-700">Resident &amp; Room</TableHead>
-              <TableHead className="whitespace-nowrap py-2.5 text-sm font-semibold text-slate-700">Dependency</TableHead>
-              <TableHead className="whitespace-nowrap py-2.5 text-sm font-semibold text-slate-700">Care Needs</TableHead>
-              <TableHead className="whitespace-nowrap py-2.5 text-sm font-semibold text-slate-700">Status</TableHead>
+              <TableHead className="whitespace-nowrap min-w-44 py-2.5 text-md font-semibold text-slate-700">Resident &amp; Room</TableHead>
+              <TableHead className="whitespace-nowrap py-2.5 text-md font-semibold text-slate-700">Dependency</TableHead>
+              <TableHead className="whitespace-nowrap py-2.5 text-md font-semibold text-slate-700">Care Needs</TableHead>
+              <TableHead className="whitespace-nowrap py-2.5 text-md font-semibold text-slate-700">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

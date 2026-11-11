@@ -42,18 +42,18 @@ export function HoursSummaryCharts({
             <Text as="h2" size="md" weight="semibold" className="text-slate-900">
               Weekly Hours Comparison
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Daily commissioned (required), planned (staff) and delivered (actual) hours
             </Text>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Text as="span" size="xs" weight="medium" className="flex items-center gap-1.5 text-slate-600">
+            <Text as="span" size="md" weight="medium" className="flex items-center gap-1.5 text-slate-600">
               <span className="size-2.5 rounded-full bg-emerald-600 inline-block" /> Commissioned
             </Text>
-            <Text as="span" size="xs" weight="medium" className="flex items-center gap-1.5 text-slate-600">
+            <Text as="span" size="md" weight="medium" className="flex items-center gap-1.5 text-slate-600">
               <span className="size-2.5 rounded-full bg-primary inline-block" /> Planned
             </Text>
-            <Text as="span" size="xs" weight="medium" className="flex items-center gap-1.5 text-slate-600">
+            <Text as="span" size="md" weight="medium" className="flex items-center gap-1.5 text-slate-600">
               <span className="size-2.5 rounded-full bg-blue-600 inline-block" /> Delivered
             </Text>
           </div>
@@ -66,7 +66,7 @@ export function HoursSummaryCharts({
         >
           {!hasAnyHours ? (
             <div className="w-full h-full flex items-center justify-center">
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 No commissioned or scheduled hours recorded for this week.
               </Text>
             </div>
@@ -93,7 +93,7 @@ export function HoursSummaryCharts({
                     className="w-3 bg-blue-600 rounded-t-sm"
                   />
                 </div>
-                <Text as="span" size="xs" weight="medium" variant="muted">
+                <Text as="span" size="md" weight="medium" variant="muted">
                   {d.day}
                 </Text>
               </div>
@@ -107,7 +107,7 @@ export function HoursSummaryCharts({
           <Text as="h2" size="md" weight="semibold" className="text-slate-900">
             Overall Coverage
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Delivered support hours vs target
           </Text>
         </div>
@@ -138,7 +138,7 @@ export function HoursSummaryCharts({
               <Text as="span" size="2xl" weight="semibold" className="text-slate-900">
                 {metrics.coveragePercent}%
               </Text>
-              <Text as="span" size="xs" variant="muted">
+              <Text as="span" size="md" variant="muted">
                 Coverage
               </Text>
             </div>
@@ -147,26 +147,26 @@ export function HoursSummaryCharts({
 
         <Card variant="white" border="default" className="p-3.5 gap-2 shadow-none">
           <div className="flex justify-between">
-            <Text as="span" size="sm" variant="muted">
+            <Text as="span" size="md" variant="muted">
               Delivered Hours
             </Text>
-            <Text as="span" size="sm" weight="medium" className="text-slate-900">
+            <Text as="span" size="md" weight="medium" className="text-slate-900">
               {metrics.delivered} hrs
             </Text>
           </div>
           <div className="flex justify-between">
-            <Text as="span" size="sm" variant="muted">
+            <Text as="span" size="md" variant="muted">
               Variance (Gap)
             </Text>
-            <Text as="span" size="sm" weight="medium" className="text-amber-700">
+            <Text as="span" size="md" weight="medium" className="text-amber-700">
               {metrics.gap} hrs
             </Text>
           </div>
           <div className="flex justify-between">
-            <Text as="span" size="sm" variant="muted">
+            <Text as="span" size="md" variant="muted">
               Required Hours
             </Text>
-            <Text as="span" size="sm" weight="medium" className="text-slate-900">
+            <Text as="span" size="md" weight="medium" className="text-slate-900">
               {metrics.required} hrs
             </Text>
           </div>

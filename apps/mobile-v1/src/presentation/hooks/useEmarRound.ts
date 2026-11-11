@@ -43,7 +43,7 @@ export function useEmarRound(
             return {
               id: String(r.id || `round_${idx}`),
               residentId: targetResidentId,
-              residentName: String(residentObj?.fullName || 'Resident'),
+              residentName: String(residentObj?.fullName || 'Person Supported'),
               roomNumber: String(
                 residentObj?.roomNumber ||
                   roomObj?.roomNumber ||

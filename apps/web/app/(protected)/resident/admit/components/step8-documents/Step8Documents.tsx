@@ -106,10 +106,10 @@ export function Step8Documents({
                 {verifiedCount} of {totalCount} uploaded
               </Badge>
             </div>
-            <Text size="sm" weight="regular" variant="subdued">
+            <Text size="md" weight="regular" variant="subdued">
               Items marked with <span className="text-red-500 font-bold">*required</span> should be uploaded or verified prior to final admission.
             </Text>
-            <div className="flex items-center gap-1.5 mt-2 text-sm sm:text-md text-slate-500 bg-white/80 px-3 py-1.5 rounded-lg border border-slate-200/80 w-fit">
+            <div className="flex items-center gap-1.5 mt-2 text-md text-slate-500 bg-white/80 px-3 py-1.5 rounded-lg border border-slate-200/80 w-fit">
               <Info className="size-3.5 text-emerald-800 shrink-0" />
               <span>
                 Supported formats: <strong className="font-medium text-slate-700">{ADMISSION_UPLOAD_LIMITS.DOCUMENT.formatsLabel}</strong> · Max size: <strong className="font-medium text-slate-700">{ADMISSION_UPLOAD_LIMITS.DOCUMENT.maxSizeMB}MB per file</strong>
@@ -134,10 +134,10 @@ export function Step8Documents({
               className="p-4 border border-slate-200/70 rounded-xl bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
             >
               <div>
-                <Text as="h4" size="sm" weight="bold">
+                <Text as="h4" size="md" weight="bold">
                   {doc.name} {doc.required && <span className="text-red-500 font-bold">*required</span>}
                 </Text>
-                <Text size="sm" variant="subdued" className="block mt-0.5">
+                <Text size="md" variant="subdued" className="block mt-0.5">
                   {doc.category}
                 </Text>
               </div>
@@ -215,7 +215,7 @@ export function Step8Documents({
                   setNewDocRequired(checked === true)
                 }
               />
-              <Text size="sm" variant="subdued">
+              <Text size="md" variant="subdued">
                 Mark as Mandatory Requirement for Admission Finalisation
               </Text>
             </div>

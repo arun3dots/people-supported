@@ -78,16 +78,16 @@ export function NeedsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-56 text-sm font-bold text-slate-800">
+              <TableHead className="w-56 text-md font-bold text-slate-800">
                 Area of need
               </TableHead>
-              <TableHead className="min-w-[320px] text-sm font-bold text-slate-800">
+              <TableHead className="min-w-[320px] text-md font-bold text-slate-800">
                 What the assessment found
-                <span className="block text-sm font-normal text-slate-500">
+                <span className="block text-md font-normal text-slate-500">
                   Facts and findings from risk assessments
                 </span>
               </TableHead>
-              <TableHead className="w-56 text-sm font-bold text-slate-800">
+              <TableHead className="w-56 text-md font-bold text-slate-800">
                 Becomes care plan
               </TableHead>
             </TableRow>
@@ -127,7 +127,7 @@ export function NeedsTable({
                     <Text size="md" weight="bold" className="text-slate-800">
                       {area.label}
                     </Text>
-                    <Text size="sm" className="text-slate-600">
+                    <Text size="md" className="text-slate-600">
                       {area.source}
                     </Text>
                   </TableCell>
@@ -154,14 +154,14 @@ export function NeedsTable({
                         >
                           <SelectTrigger
                             aria-label={`Select saved risk assessment for ${area.label}`}
-                            className="h-8 text-sm text-slate-700 bg-slate-50 hover:bg-slate-100 border-slate-200 rounded-lg shadow-none font-medium flex items-center justify-between"
+                            className="h-8 text-md text-slate-700 bg-slate-50 hover:bg-slate-100 border-slate-200 rounded-lg shadow-none font-medium flex items-center justify-between"
                           >
                             <SelectValue placeholder="▾ Select saved risk assessment..." />
                           </SelectTrigger>
                           <SelectContent>
                             {suggested.length > 0 && (
                               <SelectGroup>
-                                <SelectLabel className="text-sm font-bold text-emerald-800">
+                                <SelectLabel className="text-md font-bold text-emerald-800">
                                   Suggested for {area.label}
                                 </SelectLabel>
                                 {suggested.map((ra) => {
@@ -171,7 +171,7 @@ export function NeedsTable({
                                     <SelectItem
                                       key={ra.id}
                                       value={ra.id}
-                                      className="text-sm cursor-pointer"
+                                      className="text-md cursor-pointer"
                                     >
                                       {ra.title} {ra.tool ? `(${ra.tool})` : ""} · Score {score} ({level})
                                     </SelectItem>
@@ -181,7 +181,7 @@ export function NeedsTable({
                             )}
                             {others.length > 0 && (
                               <SelectGroup>
-                                <SelectLabel className="text-sm font-bold text-slate-500">
+                                <SelectLabel className="text-md font-bold text-slate-500">
                                   All saved risk assessments
                                 </SelectLabel>
                                 {others.map((ra) => {
@@ -191,7 +191,7 @@ export function NeedsTable({
                                     <SelectItem
                                       key={ra.id}
                                       value={ra.id}
-                                      className="text-sm cursor-pointer"
+                                      className="text-md cursor-pointer"
                                     >
                                       {ra.title} {ra.tool ? `(${ra.tool})` : ""} · Score {score} ({level})
                                     </SelectItem>
@@ -228,7 +228,7 @@ export function NeedsTable({
                                   )
                                 }
                                 className={cn(
-                                  "h-auto min-h-0 rounded-full border px-2.5 py-1 text-sm font-medium",
+                                  "h-auto min-h-0 rounded-full border px-2.5 py-1 text-md font-medium",
                                   linked
                                     ? "bg-emerald-50 text-emerald-900 border-emerald-300"
                                     : CHIP_TONE[chip.rating],
@@ -248,7 +248,7 @@ export function NeedsTable({
 
                       {selectedOthers.length > 0 && (
                         <div className="space-y-1.5">
-                          <Text size="sm" weight="medium" className="text-slate-600">
+                          <Text size="md" weight="medium" className="text-slate-600">
                             Selected saved risk assessments
                           </Text>
                           <div className="flex flex-wrap items-center gap-1.5">
@@ -280,7 +280,7 @@ export function NeedsTable({
                                     )
                                   }
                                   className={cn(
-                                    "h-auto min-h-0 rounded-full border px-2.5 py-1 text-sm font-medium bg-emerald-50 text-emerald-900 border-emerald-300",
+                                    "h-auto min-h-0 rounded-full border px-2.5 py-1 text-md font-medium bg-emerald-50 text-emerald-900 border-emerald-300",
                                   )}
                                 >
                                   <Check className="size-3.5 shrink-0" />
@@ -308,7 +308,7 @@ export function NeedsTable({
                           <FileText className="size-4 shrink-0" />
                           {existingPlan.area}
                         </Button>
-                        <Text size="sm" className="text-slate-600">
+                        <Text size="md" className="text-slate-600">
                           {existingPlan.status} · {existingPlan.taskCount} task
                           {existingPlan.taskCount === 1 ? "" : "s"}
                         </Text>
@@ -318,7 +318,7 @@ export function NeedsTable({
                         type="button"
                         variant="outline"
                         onClick={() => onOpenCarePlan(area.key)}
-                        className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+                        className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
                       >
                         <Plus className="size-4" />
                         Add care plan

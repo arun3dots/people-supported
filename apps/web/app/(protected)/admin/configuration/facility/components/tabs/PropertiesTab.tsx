@@ -199,7 +199,7 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
           <EntityCard
             key={p.id}
             avatar={
-              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
+              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-md shrink-0">
                 {p.name.slice(0, 2).toUpperCase()}
               </div>
             }

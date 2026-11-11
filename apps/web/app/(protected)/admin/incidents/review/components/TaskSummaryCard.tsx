@@ -46,7 +46,7 @@ export function TaskSummaryCard({
           <Text size={"lg"} weight={"bold"}>
             Task Summary
           </Text>
-          <Text size={"xs"} weight={"regular"} className="text-slate-500">
+          <Text size={"md"} weight={"regular"} className="text-slate-500">
             Actionable tasks assigned for this incident.
           </Text>
         </div>
@@ -66,7 +66,7 @@ export function TaskSummaryCard({
       {tasks.length === 0 ? (
         <div className="border border-dashed border-slate-200 rounded-xl p-6 text-center space-y-2 bg-slate-50/50">
           <ListTodo className="size-6 text-slate-400 mx-auto" />
-          <Text size={"xs"} weight={"medium"} className="text-slate-600">
+          <Text size={"md"} weight={"medium"} className="text-slate-600">
             No tasks assigned yet
           </Text>
           <Button
@@ -95,7 +95,7 @@ export function TaskSummaryCard({
                   className="w-full flex items-center justify-between p-3.5 text-left cursor-pointer hover:bg-slate-50/70 transition-colors"
                 >
                   <Text
-                    size={"sm"}
+                    size={"md"}
                     weight={"semibold"}
                     className="text-slate-900"
                   >
@@ -114,7 +114,7 @@ export function TaskSummaryCard({
                 {isExpanded && (
                   <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100 bg-slate-50/30">
                     <Text
-                      size={"xs"}
+                      size={"md"}
                       weight={"regular"}
                       className="text-slate-600 leading-relaxed"
                     >
@@ -124,7 +124,7 @@ export function TaskSummaryCard({
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200/60">
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -138,14 +138,14 @@ export function TaskSummaryCard({
                                 alt={task.assignedToName}
                               />
                             )}
-                            <AvatarFallback className="text-[9px] bg-slate-200">
+                            <AvatarFallback className="text-md bg-slate-200">
                               {task.assignedToName?.slice(0, 2).toUpperCase() ||
                                 "ST"}
                             </AvatarFallback>
                           </Avatar>
                           <div className="leading-tight">
                             <Text
-                              size={"xs"}
+                              size={"md"}
                               weight={"medium"}
                               className="text-slate-800"
                             >
@@ -153,7 +153,7 @@ export function TaskSummaryCard({
                             </Text>
                             {task.assignedToRole && (
                               <Text
-                                size={"xs"}
+                                size={"md"}
                                 weight={"regular"}
                                 className="text-slate-400 block"
                               >
@@ -166,7 +166,7 @@ export function TaskSummaryCard({
 
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -182,7 +182,7 @@ export function TaskSummaryCard({
                                   : "bg-emerald-500"
                             }`}
                           />
-                          <Text size={"xs"} weight={"semibold"}>
+                          <Text size={"md"} weight={"semibold"}>
                             {task.priority}
                           </Text>
                         </div>
@@ -190,7 +190,7 @@ export function TaskSummaryCard({
 
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -198,7 +198,7 @@ export function TaskSummaryCard({
                         </Text>
                         <div className="flex items-center gap-1.5 pt-1 text-slate-700">
                           <Paperclip className="size-3 text-slate-400" />
-                          <Text size={"xs"} weight={"regular"}>
+                          <Text size={"md"} weight={"regular"}>
                             {task.attachmentCount || 0} Files attached
                           </Text>
                         </div>
@@ -208,7 +208,7 @@ export function TaskSummaryCard({
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200/60">
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -216,7 +216,7 @@ export function TaskSummaryCard({
                         </Text>
                         <div className="flex items-center gap-1.5 pt-1 text-slate-700">
                           <Calendar className="size-3 text-slate-400" />
-                          <Text size={"xs"} weight={"regular"}>
+                          <Text size={"md"} weight={"regular"}>
                             {task.date}
                           </Text>
                         </div>
@@ -224,7 +224,7 @@ export function TaskSummaryCard({
 
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -232,7 +232,7 @@ export function TaskSummaryCard({
                         </Text>
                         <div className="flex items-center gap-1.5 pt-1 text-slate-700">
                           <Clock className="size-3 text-slate-400" />
-                          <Text size={"xs"} weight={"regular"}>
+                          <Text size={"md"} weight={"regular"}>
                             {task.time}
                           </Text>
                         </div>
@@ -240,7 +240,7 @@ export function TaskSummaryCard({
 
                       <div>
                         <Text
-                          size={"xs"}
+                          size={"md"}
                           weight={"regular"}
                           className="text-slate-500"
                         >
@@ -248,7 +248,7 @@ export function TaskSummaryCard({
                         </Text>
                         <div className="flex items-center gap-1.5 pt-1 text-slate-700">
                           <Mail className="size-3 text-slate-400" />
-                          <Text size={"xs"} weight={"regular"}>
+                          <Text size={"md"} weight={"regular"}>
                             {task.notifyEmail
                               ? "Email Enabled"
                               : "No Notification"}

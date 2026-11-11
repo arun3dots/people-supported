@@ -83,7 +83,7 @@ export function CustomNeedForm({ count, onAdd }: CustomNeedFormProps) {
           Add custom area of need
         </Button>
       )}
-      <Text size="sm" className="text-slate-600">
+      <Text size="md" className="text-slate-600">
         Custom areas can be used to create care plans from the table below.
       </Text>
     </div>
@@ -118,7 +118,7 @@ export function CustomNeedRows({
                 <Text size="md" weight="bold" className="text-slate-800">
                   {need.customAreaLabel}
                 </Text>
-                <Text size="sm" className="text-slate-600">
+                <Text size="md" className="text-slate-600">
                   Custom area
                 </Text>
               </div>
@@ -156,7 +156,7 @@ export function CustomNeedRows({
                 >
                   {existingPlan.area}
                 </Button>
-                <Text size="sm" className="text-slate-600">
+                <Text size="md" className="text-slate-600">
                   {existingPlan.status} · {existingPlan.taskCount} task
                   {existingPlan.taskCount === 1 ? "" : "s"}
                 </Text>
@@ -166,7 +166,7 @@ export function CustomNeedRows({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenCarePlan(need.areaKey)}
-                className="rounded-xl text-sm font-semibold shadow-none"
+                className="rounded-xl text-md font-semibold shadow-none"
               >
                 <Plus className="size-4" />
                 Add care plan

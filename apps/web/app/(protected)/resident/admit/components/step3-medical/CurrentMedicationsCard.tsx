@@ -44,7 +44,7 @@ export function CurrentMedicationsCard({
           <Text as="h3" size="md" weight="bold">
             Current Medications
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Will automatically populate the initial Care Plan MAR schedule.
           </Text>
         </div>
@@ -61,7 +61,7 @@ export function CurrentMedicationsCard({
 
       <div className="space-y-3">
         {formData.currentMedications.length === 0 ? (
-          <Text size="sm" variant="subdued" className="italic text-center py-4">
+          <Text size="md" variant="subdued" className="italic text-center py-4">
             No medications added yet. Click &quot;Add Medication&quot; above to record baseline prescriptions.
           </Text>
         ) : (

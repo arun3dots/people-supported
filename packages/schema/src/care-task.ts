@@ -82,6 +82,32 @@ export const CareTaskDayQuerySchema = z.object({
 });
 export type CareTaskDayQueryDTO = z.infer<typeof CareTaskDayQuerySchema>;
 
+export const CareTaskBoardQuerySchema = z.object({
+  date: isoDate.optional(),
+});
+export type CareTaskBoardQueryDTO = z.infer<typeof CareTaskBoardQuerySchema>;
+
+export type CareTaskBoardStatus = "Pending" | "Completed" | "Skipped";
+
+export interface CareTaskBoardItemDTO {
+  taskId: string;
+  residentId: string;
+  title: string;
+  status: CareTaskBoardStatus;
+  timeSlot: CareTaskShift;
+  targetTime: string | null;
+  role: CareTaskRole;
+  instructions: string | null;
+  skipReason: string | null;
+  resident: { id: string; fullName: string };
+  carePlan: { id: string; area: string };
+}
+
+export interface CareTaskBoardDTO {
+  date: string;
+  items: CareTaskBoardItemDTO[];
+}
+
 export const UndoCareTaskSchema = z.object({ date: isoDate.optional() });
 export type UndoCareTaskDTO = z.infer<typeof UndoCareTaskSchema>;
 

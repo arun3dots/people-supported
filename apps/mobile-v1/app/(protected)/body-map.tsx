@@ -150,8 +150,8 @@ export default function BodyMapScreen() {
             </>
           ) : (
             <>
-              <Text className="text-md font-bold text-foreground">Resident Not Found</Text>
-              <Text className="text-xs text-muted-foreground mt-1">Please select a resident to view body map.</Text>
+              <Text className="text-md font-bold text-foreground">Person Not Found</Text>
+              <Text className="text-xs text-muted-foreground mt-1">Please select a person supported to view body map.</Text>
             </>
           )}
         </View>

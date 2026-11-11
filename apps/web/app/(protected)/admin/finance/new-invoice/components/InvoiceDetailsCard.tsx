@@ -101,10 +101,10 @@ export function InvoiceDetailsCard({
       {/* Card Header matching Staff style */}
       <div className="w-full flex items-center justify-between">
         <div>
-          <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+          <Text as="h3" size="md" weight="medium" className="text-slate-900">
             Invoice Details
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Auto-generated invoice number, dates, payment terms, and reference
           </Text>
         </div>

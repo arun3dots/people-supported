@@ -255,7 +255,7 @@ export function HoursSummaryView({
               setPropertyFilter("all");
               setStaffFilter("all");
             }}
-            className="h-10 px-2.5 text-sm text-slate-600 hover:text-slate-900 font-medium"
+            className="h-10 px-2.5 text-md text-slate-600 hover:text-slate-900 font-medium"
           >
             <RotateCcw className="size-3.5 mr-1" /> Reset
           </Button>
@@ -269,13 +269,13 @@ export function HoursSummaryView({
           className="gap-0 border-b border-slate-200 lg:border-b-0"
         >
           <TabsList className="justify-start bg-transparent p-0 h-auto rounded-none gap-5">
-            <TabsTrigger value="both" className="px-0 py-1.5 text-sm">
+            <TabsTrigger value="both" className="px-0 py-1.5 text-md">
               By Scheme &amp; Property
             </TabsTrigger>
-            <TabsTrigger value="scheme" className="px-0 py-1.5 text-sm">
+            <TabsTrigger value="scheme" className="px-0 py-1.5 text-md">
               By Scheme
             </TabsTrigger>
-            <TabsTrigger value="property" className="px-0 py-1.5 text-sm">
+            <TabsTrigger value="property" className="px-0 py-1.5 text-md">
               By Property
             </TabsTrigger>
           </TabsList>

@@ -126,7 +126,7 @@ export function EndShiftModal({
               <View style={styles.overviewItem}>
                 <Users size={16} color={theme.colors.primary.DEFAULT} />
                 <Text className="text-xs font-semibold text-primary ml-1.5">
-                  {assignedResidents.length} Residents Assigned
+                  {assignedResidents.length} People Supported Assigned
                 </Text>
               </View>
             </View>
@@ -137,7 +137,7 @@ export function EndShiftModal({
                 Handover Notes for Next Shift <Text className="text-red-500 font-bold">*</Text>
               </Text>
               <Text className="text-xs text-muted-foreground mb-2">
-                Document any resident changes, skin integrity alerts, or outstanding actions for the incoming carer.
+                Document any person supported updates, skin integrity alerts, or outstanding actions for the incoming carer.
               </Text>
 
               {/* Validation Error Banner */}

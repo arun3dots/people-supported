@@ -27,14 +27,14 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-md shrink-0">
                 {s.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="flex flex-col min-w-0">
-                <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                <Text size="md" weight="medium" className="text-slate-900 truncate">
                   {s.name}
                 </Text>
-                <Text size="xs" variant="muted" className="truncate">
+                <Text size="md" variant="muted" className="truncate">
                   Ref: {s.referenceId || s.id.slice(0, 8)} ·{" "}
                   {s.housingPartner || "Registered Housing Partner"}
                 </Text>
@@ -51,10 +51,10 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex flex-col min-w-0">
-              <Text size="sm" weight="medium" className="text-slate-900 truncate">
+              <Text size="md" weight="medium" className="text-slate-900 truncate">
                 {s.location || "Regional Scheme"}
               </Text>
-              <Text size="xs" variant="muted" className="truncate">
+              <Text size="md" variant="muted" className="truncate">
                 {s.commissioningLa || "Local Authority Commissioned"}
               </Text>
             </div>
@@ -66,7 +66,7 @@ export function useSchemeColumns({
         header: "Scheme Manager",
         enableSorting: false,
         cell: ({ row }) => (
-          <Text size="sm" weight="normal" className="text-slate-800">
+          <Text size="md" weight="normal" className="text-slate-800">
             {row.original.schemeManagerName || "Assigned Manager"}
           </Text>
         ),
@@ -76,7 +76,7 @@ export function useSchemeColumns({
         header: "Commissioned Hours",
         enableSorting: false,
         cell: ({ row }) => (
-          <Text size="sm" weight="medium" className="text-slate-800">
+          <Text size="md" weight="medium" className="text-slate-800">
             {row.original.commissionedHours
               ? `${row.original.commissionedHours} hrs/wk`
               : "—"}
@@ -91,10 +91,10 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex flex-col">
-              <Text size="sm" weight="medium" className="text-slate-900">
+              <Text size="md" weight="medium" className="text-slate-900">
                 {s.totalProperties} properties
               </Text>
-              <Text size="xs" variant="muted">
+              <Text size="md" variant="muted">
                 {s.totalRooms} rooms · {s.totalBeds} beds
               </Text>
             </div>
@@ -110,10 +110,10 @@ export function useSchemeColumns({
           return (
             <div className="w-32 space-y-1">
               <div className="flex items-center justify-between">
-                <Text size="sm" weight="medium" className="text-slate-900">
+                <Text size="md" weight="medium" className="text-slate-900">
                   {s.occupiedBeds}/{s.totalBeds}
                 </Text>
-                <Text size="xs" variant="muted">
+                <Text size="md" variant="muted">
                   {s.occupancyRate}%
                 </Text>
               </div>

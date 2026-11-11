@@ -172,12 +172,12 @@ export default function CarerTodayShiftPage() {
           <Text size="xl" weight="bold" className="tracking-tight">
             Today's Shift Tasks
           </Text>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Real-time daily schedule, assigned resident care routines, and shift execution tasks.
           </Text>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100/80 border border-slate-200/60 text-sm font-semibold text-slate-700 self-start sm:self-auto">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100/80 border border-slate-200/60 text-md font-semibold text-slate-700 self-start sm:self-auto">
           <Calendar className="size-3.5 text-[#3D5C57]" />
           <span>{format(new Date(), "EEEE, d MMM yyyy")}</span>
         </div>
@@ -269,7 +269,7 @@ export default function CarerTodayShiftPage() {
           {/* 4. Grouped Tasks List */}
           {tasksLoading ? (
             <Card variant="surface" className="p-12 text-center">
-              <Text size="sm" variant="muted">Loading shift tasks...</Text>
+              <Text size="md" variant="muted">Loading shift tasks...</Text>
             </Card>
           ) : groupedTasks.length === 0 ? (
             <Card variant="surface" className="p-8">
@@ -285,7 +285,7 @@ export default function CarerTodayShiftPage() {
                   <div className="flex items-center justify-between px-1">
                     <Text
                       as="h3"
-                      size="sm"
+                      size="md"
                       weight="bold"
                       className={
                         group.bucket === "Due now"
@@ -295,7 +295,7 @@ export default function CarerTodayShiftPage() {
                     >
                       {group.bucket}
                     </Text>
-                    <Text size="sm" variant="muted">
+                    <Text size="md" variant="muted">
                       {group.tasks.length} task(s)
                     </Text>
                   </div>

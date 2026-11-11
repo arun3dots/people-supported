@@ -22,10 +22,10 @@ export function OrgActionBar({
       <div className="flex items-center gap-2.5 text-slate-500">
         <Shield className="size-4 text-emerald-800 shrink-0" />
         <div className="flex flex-col text-left">
-          <Text size="sm" weight="medium" className="text-slate-700">
+          <Text size="md" weight="medium" className="text-slate-700">
             Your information is securely stored and encrypted
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-400 text-[11px]">
+          <Text size="md" weight="regular" className="text-slate-400 text-md">
             Last updated on {new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
           </Text>
         </div>

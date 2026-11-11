@@ -42,7 +42,7 @@ export default function CarePlanHistoryPage({ params }: PageProps): JSX.Element 
     return (
       <div className="p-16 text-center bg-white rounded-2xl border border-slate-200/90 font-sans">
         <Loader2 className="size-8 animate-spin text-primary mx-auto mb-3" />
-        <Text size="sm" weight="medium" variant="muted">
+        <Text size="md" weight="medium" variant="muted">
           Loading care plan history...
         </Text>
       </div>
@@ -56,12 +56,12 @@ export default function CarePlanHistoryPage({ params }: PageProps): JSX.Element 
           variant="ghost"
           size="sm"
           onClick={() => router.back()}
-          className="gap-1.5 text-sm font-semibold text-slate-700 hover:text-slate-900 rounded-xl"
+          className="gap-1.5 text-md font-semibold text-slate-700 hover:text-slate-900 rounded-xl"
         >
           <ArrowLeft className="size-4" /> Back to Care Plan
         </Button>
 
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Resident: <span className="font-semibold text-slate-800">{residentName}</span>
         </Text>
       </div>

@@ -71,10 +71,10 @@ export function LoginForm() {
             type="email"
             placeholder="Enter your email"
             {...register("email")}
-            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-white text-md sm:text-md font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4A706A]/30 focus:border-[#4A706A] transition-all"
+            className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-white text-md font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4A706A]/30 focus:border-[#4A706A] transition-all"
           />
           {errors.email && (
-            <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+            <p className="text-md text-red-500 mt-0.5 font-medium">
               {errors.email.message}
             </p>
           )}
@@ -94,7 +94,7 @@ export function LoginForm() {
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               {...register("password")}
-              className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 bg-white text-md sm:text-md font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4A706A]/30 focus:border-[#4A706A] transition-all"
+              className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 bg-white text-md font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4A706A]/30 focus:border-[#4A706A] transition-all"
             />
             <button
               type="button"
@@ -109,7 +109,7 @@ export function LoginForm() {
             </button>
           </div>
           {errors.password && (
-            <p className="text-[11px] text-red-500 mt-0.5 font-medium">
+            <p className="text-md text-red-500 mt-0.5 font-medium">
               {errors.password.message}
             </p>
           )}
@@ -130,7 +130,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full h-11 rounded-xl bg-[#4A706A] hover:bg-[#3D5E59] text-white font-bold text-md sm:text-md shadow-md transition-all mt-4 disabled:opacity-50 cursor-pointer"
+          className="w-full h-11 rounded-xl bg-[#4A706A] hover:bg-[#3D5E59] text-white font-bold text-md shadow-md transition-all mt-4 disabled:opacity-50 cursor-pointer"
         >
           {isLoading ? "Signing In..." : "Sign In"}
         </button>
@@ -147,7 +147,7 @@ export function LoginForm() {
         </div>
 
         {/* Legal & Privacy Footer Links (A-04 / A-02) */}
-        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-slate-500">
+        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-md text-slate-500">
           <Link href="/privacy-policy" className="hover:text-slate-800 hover:underline">
             Privacy Notice
           </Link>

@@ -198,7 +198,7 @@ export function EditCarePlanMasterDialog({
               )}
             />
             {errors.approvedById && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">{errors.approvedById.message}</p>
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">{errors.approvedById.message}</p>
             )}
           </div>
 
@@ -224,7 +224,7 @@ export function EditCarePlanMasterDialog({
               )}
             />
             {errors.secondaryApprovedById && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.secondaryApprovedById.message}
               </p>
             )}

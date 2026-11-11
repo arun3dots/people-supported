@@ -75,7 +75,7 @@ export function StaffEditEmploymentFields({
           )}
         />
         {errors.roleId && (
-          <p className="text-sm text-red-600 mt-1">{errors.roleId.message}</p>
+          <p className="text-md text-red-600 mt-1">{errors.roleId.message}</p>
         )}
       </div>
 
@@ -91,7 +91,7 @@ export function StaffEditEmploymentFields({
               </SelectTrigger>
               <SelectContent className="bg-white rounded-xl">
                 {!departments || departments.length === 0 ? (
-                  <div className="px-3 py-2.5 text-center text-sm text-slate-500">
+                  <div className="px-3 py-2.5 text-center text-md text-slate-500">
                     No departments found
                   </div>
                 ) : (
@@ -106,7 +106,7 @@ export function StaffEditEmploymentFields({
           )}
         />
         {errors.department && (
-          <p className="text-sm text-red-600 mt-1">
+          <p className="text-md text-red-600 mt-1">
             {errors.department.message}
           </p>
         )}

@@ -130,7 +130,7 @@ export function CarePlanContentSections({
             variant="outline"
             disabled={readOnly}
             onClick={() => setSteps([...steps, ""])}
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             <Plus className="size-4" />
             Add step

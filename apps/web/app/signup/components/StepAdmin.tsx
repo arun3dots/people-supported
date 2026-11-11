@@ -145,14 +145,14 @@ export function StepAdmin({
         />
         <label
           htmlFor="terms"
-          className="text-sm font-medium text-slate-600 cursor-pointer select-none"
+          className="text-md font-medium text-slate-600 cursor-pointer select-none"
         >
           <PolicyLinks
             className="font-semibold text-emerald-800 hover:underline"
           />
         </label>
       </div>
-      {termsError && <p className="text-sm text-rose-600">{termsError}</p>}
+      {termsError && <p className="text-md text-rose-600">{termsError}</p>}
 
     </div>
   );

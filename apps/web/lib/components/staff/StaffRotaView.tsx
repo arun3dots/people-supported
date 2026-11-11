@@ -114,7 +114,7 @@ export function StaffRotaView() {
           <Text size="xl" weight="bold" className="tracking-tight">
             My rota
           </Text>
-          <Text variant="subdued" size="xs" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             <span className="font-semibold text-slate-800">
               {user?.fullName || "Care assistant"}
             </span>{" "}
@@ -134,7 +134,7 @@ export function StaffRotaView() {
           >
             <ChevronLeft className="size-4" />
           </Button>
-          <Text size="xs" weight="semibold" className="px-3 text-slate-800 whitespace-nowrap select-none">
+          <Text size="md" weight="semibold" className="px-3 text-slate-800 whitespace-nowrap select-none">
             Week of {format(calendarStartDate, "d MMM")}
           </Text>
           <Button
@@ -178,7 +178,7 @@ export function StaffRotaView() {
             >
               <div className="space-y-2">
                 {/* Day Header */}
-                <Text size="xs" weight="bold" className="text-slate-900">
+                <Text size="md" weight="bold" className="text-slate-900">
                   {format(day, "EEE d MMM")}
                 </Text>
 
@@ -250,28 +250,28 @@ export function StaffRotaView() {
                           <Badge
                             variant="outline"
                             state="info"
-                            className="px-1.5 py-0.5 text-[10px] font-semibold rounded-md bg-emerald-50 text-emerald-800 border-emerald-200 truncate max-w-[85px] shadow-none"
+                            className="px-1.5 py-0.5 text-md font-semibold rounded-md bg-emerald-50 text-emerald-800 border-emerald-200 truncate max-w-[85px] shadow-none"
                             title={shiftTypeName}
                           >
                             {shiftTypeName}
                           </Badge>
                           <Badge
                             variant="outline"
-                            className={cn("px-1.5 py-0.5 text-[10px] font-semibold rounded-md shrink-0 shadow-none", statusBadgeClass)}
+                            className={cn("px-1.5 py-0.5 text-md font-semibold rounded-md shrink-0 shadow-none", statusBadgeClass)}
                           >
                             {displayShiftStatus}
                           </Badge>
                         </div>
 
                         {/* Timing */}
-                        <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-800 min-w-0">
+                        <div className="flex items-center gap-1 text-md font-semibold text-slate-800 min-w-0">
                           <Clock className="size-3 text-emerald-700 shrink-0" />
                           <span className="truncate">{timeDisplay}</span>
                         </div>
 
                         {/* Wing / Room / Facility Location - left blank if none assigned */}
                         {locationName ? (
-                          <div className="flex items-center gap-1 text-[10px] text-slate-500 min-w-0">
+                          <div className="flex items-center gap-1 text-md text-slate-500 min-w-0">
                             <MapPin className="size-2.5 text-slate-400 shrink-0" />
                             <span className="truncate">{locationName}</span>
                           </div>
@@ -285,7 +285,7 @@ export function StaffRotaView() {
                     <Badge
                       variant="outline"
                       state="inactive"
-                      className="p-0 px-2 py-0.5 text-xs font-medium rounded-md shadow-none"
+                      className="p-0 px-2 py-0.5 text-md font-medium rounded-md shadow-none"
                     >
                       Off
                     </Badge>
@@ -304,7 +304,7 @@ export function StaffRotaView() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleOpenSwapDialog(swappable)}
-                      className="w-full h-7 text-[11px] font-medium rounded-xl border-slate-200/90 hover:bg-slate-50 text-slate-700 cursor-pointer shadow-none"
+                      className="w-full h-7 text-md font-medium rounded-xl border-slate-200/90 hover:bg-slate-50 text-slate-700 cursor-pointer shadow-none"
                     >
                       Request swap
                     </Button>

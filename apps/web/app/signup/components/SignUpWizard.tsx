@@ -272,7 +272,7 @@ export function SignUpWizard() {
 
       {/* General Error Alert */}
       {error && (
-        <div className="p-3.5 rounded-xl bg-red-50 text-red-600 text-sm font-medium border border-red-100">
+        <div className="p-3.5 rounded-xl bg-red-50 text-red-600 text-md font-medium border border-red-100">
           {error}
         </div>
       )}

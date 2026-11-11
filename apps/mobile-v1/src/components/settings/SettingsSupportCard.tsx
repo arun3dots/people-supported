@@ -6,7 +6,7 @@ import { Text } from '../ui/text';
 export function SettingsSupportCard() {
   const handleSupportPress = () => {
     Alert.alert(
-      'Care Home Support',
+      'Supported Living Support',
       'For technical issues or roster inquiries, please contact IT support at support@centracare.co.uk or phone ext. 404.'
     );
   };
@@ -21,7 +21,7 @@ export function SettingsSupportCard() {
   const handleTermsPress = () => {
     Alert.alert(
       'Terms of Service',
-      'Authorized NHS and private care home personnel only. All access and changes are audited under CQC standards.'
+      'Authorized NHS and supported living personnel only. All access and changes are audited under CQC standards.'
     );
   };
 

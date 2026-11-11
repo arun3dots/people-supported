@@ -67,7 +67,7 @@ export function InternalNotesCard({
                 {notes.length} {notes.length === 1 ? "Note" : "Notes"}
               </Badge>
             </div>
-            <Text size={'xs'} weight={'regular'} className="text-slate-500 mt-0.5">
+            <Text size={'md'} weight={'regular'} className="text-slate-500 mt-0.5">
               Confidential internal logs, clinical assessments, and post-incident observations.
             </Text>
           </div>
@@ -138,7 +138,7 @@ export function InternalNotesCard({
                     <Text size={'md'} weight={'bold'} className="text-slate-900">
                       {note.author}
                     </Text>
-                    <Text size={'xs'} weight={'regular'} className="text-slate-500">
+                    <Text size={'md'} weight={'regular'} className="text-slate-500">
                       • {note.role}
                     </Text>
                   </div>
@@ -153,7 +153,7 @@ export function InternalNotesCard({
                     </Badge>
                     <div className="flex items-center gap-1">
                       <Clock className="size-3 text-slate-400" />
-                      <Text size={'xs'} weight={'regular'} className="text-slate-500">
+                      <Text size={'md'} weight={'regular'} className="text-slate-500">
                         {note.date} at {note.time}
                       </Text>
                     </div>
@@ -161,7 +161,7 @@ export function InternalNotesCard({
                 </div>
 
                 {/* Note Content Body */}
-                <Text size={'xs'} weight={'regular'} className="text-slate-700 leading-relaxed whitespace-pre-wrap">
+                <Text size={'md'} weight={'regular'} className="text-slate-700 leading-relaxed whitespace-pre-wrap">
                   {note.content}
                 </Text>
               </div>
@@ -174,12 +174,12 @@ export function InternalNotesCard({
           <div className="size-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
             <MessageSquare className="size-5" />
           </div>
-          <Text size={'sm'} weight={'bold'} className="text-slate-900">
+          <Text size={'md'} weight={'bold'} className="text-slate-900">
             {searchTerm || selectedCategory !== "All"
               ? "No notes found matching your filters"
               : "No internal notes recorded yet"}
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500 max-w-sm mx-auto">
+          <Text size={'md'} weight={'regular'} className="text-slate-500 max-w-sm mx-auto">
             {searchTerm || selectedCategory !== "All"
               ? "Try clearing your search query or selecting a different category."
               : "Document internal care team observations, direct quotes, or managerial reviews."}

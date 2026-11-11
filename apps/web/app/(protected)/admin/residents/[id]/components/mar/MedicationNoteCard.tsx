@@ -89,16 +89,16 @@ export function MedicationNoteCard({
             <div className="size-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
               <User className="size-3.5" />
             </div>
-            <span className="text-[12px] font-medium text-slate-900 truncate">
+            <span className="text-md font-medium text-slate-900 truncate">
               {note.author}
             </span>
-            <Badge variant="secondary" state="info" className="px-1.5 py-0 text-[12px] shadow-none">
+            <Badge variant="secondary" state="info" className="px-1.5 py-0 text-md shadow-none">
               {note.role}
             </Badge>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-[12px] text-slate-400 shrink-0">
+            <div className="flex items-center gap-1 text-md text-slate-400 shrink-0">
               <Clock className="size-3" />
               <span>{note.dateStr}</span>
             </div>
@@ -144,7 +144,7 @@ export function MedicationNoteCard({
               rows={3}
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="bg-white border-slate-300 text-[12px] text-slate-900 focus:border-slate-500"
+              className="bg-white border-slate-300 text-md text-slate-900 focus:border-slate-500"
               autoFocus
             />
             <div className="flex items-center justify-end gap-1.5">
@@ -157,7 +157,7 @@ export function MedicationNoteCard({
                   setIsEditing(false);
                 }}
                 disabled={updateMutation.isPending}
-                className="h-7 px-2.5 text-[12px] text-slate-600"
+                className="h-7 px-2.5 text-md text-slate-600"
               >
                 <X className="size-3 mr-1" />
                 Cancel
@@ -169,7 +169,7 @@ export function MedicationNoteCard({
                 size="sm"
                 onClick={handleSaveEdit}
                 disabled={!editContent.trim() || updateMutation.isPending}
-                className="h-7 px-3 text-[12px] gap-1"
+                className="h-7 px-3 text-md gap-1"
               >
                 {updateMutation.isPending ? (
                   <Loader2 className="size-3 animate-spin" />
@@ -181,7 +181,7 @@ export function MedicationNoteCard({
             </div>
           </div>
         ) : (
-          <p className="text-[12px] text-slate-700 whitespace-pre-wrap break-words break-all leading-relaxed pl-8">
+          <p className="text-md text-slate-700 whitespace-pre-wrap break-words break-all leading-relaxed pl-8">
             {note.content}
           </p>
         )}
@@ -194,21 +194,21 @@ export function MedicationNoteCard({
             <AlertDialogTitle className="text-base font-semibold text-slate-900">
               Delete Medication Note?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-[12px] text-slate-500">
+            <AlertDialogDescription className="text-md text-slate-500">
               Are you sure you want to delete this medication note? This action will be recorded in the clinical audit trail.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
               disabled={deleteMutation.isPending}
-              className="text-[12px] h-8 px-4"
+              className="text-md h-8 px-4"
             >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
               disabled={deleteMutation.isPending}
-              className="bg-red-600 hover:bg-red-700 text-white text-[12px] h-8 px-4 gap-1.5"
+              className="bg-red-600 hover:bg-red-700 text-white text-md h-8 px-4 gap-1.5"
             >
               {deleteMutation.isPending ? (
                 <>

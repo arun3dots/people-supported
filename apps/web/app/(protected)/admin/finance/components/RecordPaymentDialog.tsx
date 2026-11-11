@@ -137,7 +137,7 @@ export function RecordPaymentDialog({
               </Text>
             </DialogTitle>
           </div>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Record a full or partial settlement received for invoice {invoice.invoiceNumber}.
           </Text>
         </DialogHeader>
@@ -145,16 +145,16 @@ export function RecordPaymentDialog({
         {/* Invoice Summary Box */}
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 my-1">
           <div className="flex justify-between items-center text-md">
-            <Text size="sm" weight="medium" className="text-slate-600">Resident / Payer:</Text>
-            <Text size="sm" weight="semibold" className="text-slate-900">{invoice.resident?.fullName || "—"}</Text>
+            <Text size="md" weight="medium" className="text-slate-600">Resident / Payer:</Text>
+            <Text size="md" weight="semibold" className="text-slate-900">{invoice.resident?.fullName || "—"}</Text>
           </div>
           <div className="flex justify-between items-center text-md mt-1.5">
-            <Text size="sm" weight="medium" className="text-slate-600">Total Invoiced:</Text>
-            <Text size="sm" weight="semibold" className="text-slate-900">{formatCurrency(invoice.amount)}</Text>
+            <Text size="md" weight="medium" className="text-slate-600">Total Invoiced:</Text>
+            <Text size="md" weight="semibold" className="text-slate-900">{formatCurrency(invoice.amount)}</Text>
           </div>
           <div className="flex justify-between items-center text-md mt-1.5 pt-1.5 border-t border-slate-200">
-            <Text size="sm" weight="bold" className="text-slate-700">Outstanding Balance:</Text>
-            <Text size="sm" weight="bold" className="text-emerald-700">{formatCurrency(currentInvoiceBalance)}</Text>
+            <Text size="md" weight="bold" className="text-slate-700">Outstanding Balance:</Text>
+            <Text size="md" weight="bold" className="text-emerald-700">{formatCurrency(currentInvoiceBalance)}</Text>
           </div>
         </div>
 
@@ -179,11 +179,11 @@ export function RecordPaymentDialog({
               />
             </div>
             {errors.amountPaid && (
-              <Text variant="error" size="sm">{errors.amountPaid.message}</Text>
+              <Text variant="error" size="md">{errors.amountPaid.message}</Text>
             )}
             <div className="flex justify-between text-md text-slate-500 pt-0.5">
-              <Text size="sm" weight="regular" className="text-slate-500">Remaining Balance after this payment:</Text>
-              <Text size="sm" weight="semibold" className={remainingAfterPayment === 0 ? "text-emerald-700 font-bold" : "text-slate-700"}>
+              <Text size="md" weight="regular" className="text-slate-500">Remaining Balance after this payment:</Text>
+              <Text size="md" weight="semibold" className={remainingAfterPayment === 0 ? "text-emerald-700 font-bold" : "text-slate-700"}>
                 {formatCurrency(remainingAfterPayment)} {remainingAfterPayment === 0 ? "(Paid in Full)" : ""}
               </Text>
             </div>
@@ -206,7 +206,7 @@ export function RecordPaymentDialog({
                 )}
               />
               {errors.paymentDate && (
-                <Text variant="error" size="sm">{errors.paymentDate.message}</Text>
+                <Text variant="error" size="md">{errors.paymentDate.message}</Text>
               )}
             </div>
 
@@ -256,7 +256,7 @@ export function RecordPaymentDialog({
                 {...register("payerName", { required: "Payer name is required" })}
               />
               {errors.payerName && (
-                <Text variant="error" size="sm">{errors.payerName.message}</Text>
+                <Text variant="error" size="md">{errors.payerName.message}</Text>
               )}
             </div>
           </div>

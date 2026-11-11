@@ -48,11 +48,11 @@ export function RenewGoalsStep({
         <div>
           <div className="flex items-center gap-2">
             <Target className="size-5 text-emerald-800" />
-            <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+            <Text as="h3" size="md" weight="medium" className="text-slate-900">
               2. Review &amp; Update Goals
             </Text>
           </div>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Existing goals have been carried over. Modify, mark achieved/retired, or add new targets.
           </Text>
         </div>
@@ -76,7 +76,7 @@ export function RenewGoalsStep({
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Text
-                    size="sm"
+                    size="md"
                     weight="semibold"
                     className={isRetired ? "line-through text-slate-400" : "text-slate-900"}
                   >
@@ -86,11 +86,11 @@ export function RenewGoalsStep({
                     {goal.category}
                   </Badge>
                   {getDiffBadge(goal.diffTag)}
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Progress: {goal.progressPercent}%
                   </Text>
                 </div>
-                <Text size="sm" weight="regular" className="text-slate-500">{goal.targetDescription}</Text>
+                <Text size="md" weight="regular" className="text-slate-500">{goal.targetDescription}</Text>
               </div>
 
               <div className="flex items-center gap-1">

@@ -38,7 +38,7 @@ export function PartCAllergiesSection({
       description="Record all known drug, food, or environmental allergies and their reactions."
     >
       {errorMessage && (
-        <p className="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5 mb-3">
+        <p className="text-md font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5 mb-3">
           {errorMessage}
         </p>
       )}
@@ -80,7 +80,7 @@ export function PartCAllergiesSection({
                   {a.severity && (
                     <Badge
                       variant="outline"
-                      className={`px-2.5 py-0.5 text-sm ${severityBadgeStyles[a.severity] ?? "bg-slate-100 text-slate-700"}`}
+                      className={`px-2.5 py-0.5 text-md ${severityBadgeStyles[a.severity] ?? "bg-slate-100 text-slate-700"}`}
                     >
                       {a.severity}
                     </Badge>
@@ -114,7 +114,7 @@ export function PartCAllergiesSection({
               </div>
 
               {a.reaction && (
-                <div className="flex items-center gap-2 text-sm text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
+                <div className="flex items-center gap-2 text-md text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
                   <AlertCircle className="size-4 text-slate-400 shrink-0" />
                   <div>
                     <span className="font-semibold text-slate-700">Reaction: </span>

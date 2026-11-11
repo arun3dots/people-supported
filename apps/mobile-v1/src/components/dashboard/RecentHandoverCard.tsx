@@ -34,11 +34,12 @@ export function resolveHandoverResidentNames(
   let resolved = content;
   for (const r of residents) {
     if (r.id && r.fullName) {
-      resolved = resolved.split(`[Resident: ${r.id}]`).join(`[Resident: ${r.fullName}]`);
+      resolved = resolved.split(`[Resident: ${r.id}]`).join(`[Person Supported: ${r.fullName}]`);
+      resolved = resolved.split(`[Person Supported: ${r.id}]`).join(`[Person Supported: ${r.fullName}]`);
       resolved = resolved.split(r.id).join(r.fullName);
     }
   }
-  return resolved;
+  return resolved.split('[Resident: ').join('[Person Supported: ');
 }
 
 export function RecentHandoverCard({

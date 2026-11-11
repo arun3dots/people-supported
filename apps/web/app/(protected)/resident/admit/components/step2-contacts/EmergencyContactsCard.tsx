@@ -60,7 +60,7 @@ export function EmergencyContactsCard({
         <Text as="h3" size="md" weight="bold" >
           Emergency Contacts
         </Text>
-        <Text size="sm" weight="regular" variant="subdued" >
+        <Text size="md" weight="regular" variant="subdued" >
           Primary and secondary emergency contacts for the resident.
         </Text>
       </div>
@@ -68,7 +68,7 @@ export function EmergencyContactsCard({
       <div className="space-y-6">
         {/* Primary Contact */}
         <div className="space-y-4">
-          <Text as="h3" size="sm" weight="medium" className="text-slate-700">
+          <Text as="h3" size="md" weight="medium" className="text-slate-700">
             Primary Emergency Contact <span className="text-red-500">*</span>
           </Text>
 
@@ -151,7 +151,7 @@ export function EmergencyContactsCard({
 
         {/* Secondary Contact */}
         <div className="space-y-4 pt-4 border-t border-slate-200/80">
-          <Text as="h3" size="sm" weight="medium" className="text-slate-700">
+          <Text as="h3" size="md" weight="medium" className="text-slate-700">
             Secondary Emergency Contact (Optional)
           </Text>
 

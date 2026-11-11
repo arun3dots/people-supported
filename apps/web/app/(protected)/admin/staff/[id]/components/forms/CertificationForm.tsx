@@ -159,7 +159,7 @@ export function CertificationForm({
             <Award className="w-5 h-5 text-primary" />
             {isEdit ? "Edit" : "Add"} Certification — {staffName}
           </DialogTitle>
-          <DialogDescription className="text-sm text-[12px]">
+          <DialogDescription className="text-md">
             Record a mandatory NHS/CQC training module or certification.
           </DialogDescription>
         </DialogHeader>
@@ -183,7 +183,7 @@ export function CertificationForm({
               placeholder="e.g. First Aid, CPR, Medication Administration"
               errorMessage={errors.skills?.message}
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-md text-muted-foreground">
               Enter skills separated by commas
             </p>
           </div>
@@ -231,7 +231,7 @@ export function CertificationForm({
               </SelectContent>
             </Select>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 

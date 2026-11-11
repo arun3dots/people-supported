@@ -115,7 +115,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {/* Available From */}
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">
+            <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">
               Available From <span className="text-[#ED2115]">*</span>
             </label>
             <div className="relative">
@@ -146,7 +146,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
 
           {/* Assign to Resident (Optional) */}
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">
+            <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">
               Assign to Resident (Optional) <span className="text-[#ED2115]">*</span>
             </label>
             <Select value={assignedResident} onValueChange={setAssignedResident}>
@@ -155,7 +155,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
               </SelectTrigger>
               <SelectContent className="bg-white">
                 {selectableResidents.length === 0 && (
-                  <div className="px-3 py-2 text-[13px] text-[#5D5D5D]">No residents available</div>
+                  <div className="px-3 py-2 text-md text-[#5D5D5D]">No residents available</div>
                 )}
                 {selectableResidents.map((r) => (
                   <SelectItem key={r.id} value={r.id}>
@@ -168,7 +168,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
 
           {/* Planned Status */}
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">
+            <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">
               Planned Status <span className="text-[#ED2115]">*</span>
             </label>
             <Select value={plannedStatus} onValueChange={setPlannedStatus}>
@@ -195,7 +195,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {/* Available From */}
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">Available From</label>
+            <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">Available From</label>
             <Select value={occupancyAvailableFrom} onValueChange={setOccupancyAvailableFrom}>
               <SelectTrigger className="h-[50px] border-[0.5px] border-[#BCD3CD] rounded-xl bg-white text-[#141F1E] text-md px-5">
                 <SelectValue placeholder="Immediate" />
@@ -211,7 +211,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
 
           {/* Expected Discharge Date */}
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">
+            <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">
               Expected Discharge Date (Optional) <span className="text-[#ED2115]">*</span>
             </label>
             <div className="relative">
@@ -244,7 +244,7 @@ export function AddBedStep3({ onNext, onBack, initialValues }: AddBedStep3Props)
 
       {/* Notes (Optional) */}
       <div className="space-y-2 pt-2">
-        <label className="text-[12px] font-normal leading-[15px] text-[#5D5D5D]">Notes (Optional)</label>
+        <label className="text-md font-normal leading-[15px] text-[#5D5D5D]">Notes (Optional)</label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}

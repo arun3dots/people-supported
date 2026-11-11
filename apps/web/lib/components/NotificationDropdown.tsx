@@ -204,7 +204,7 @@ export function NotificationDropdown() {
         <Button variant="ghost" size="icon" className="relative text-muted-foreground">
           <Bell className="size-5" />
           {unreadCount > 0 && (
-            <span className="absolute top-0 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white ring-2 ring-white">
+            <span className="absolute top-0 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-md font-bold text-white ring-2 ring-white">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -212,9 +212,9 @@ export function NotificationDropdown() {
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0 bg-white shadow-xl rounded-2xl border-slate-200" align="end">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-          <h4 className="text-sm sm:text-md font-semibold text-slate-900">Notifications</h4>
+          <h4 className="text-md font-semibold text-slate-900">Notifications</h4>
           {unreadCount > 0 && (
-            <Badge variant="outline" className="text-sm font-medium bg-emerald-50 text-emerald-800 border-emerald-200">
+            <Badge variant="outline" className="text-md font-medium bg-emerald-50 text-emerald-800 border-emerald-200">
               {unreadCount} New
             </Badge>
           )}
@@ -222,11 +222,11 @@ export function NotificationDropdown() {
 
         <div className="max-h-[400px] overflow-y-auto divide-y divide-slate-100">
           {isLoading ? (
-            <div className="p-8 text-center text-sm text-muted-foreground">Loading notifications...</div>
+            <div className="p-8 text-center text-md text-muted-foreground">Loading notifications...</div>
           ) : notifications.length === 0 ? (
             <div className="p-8 text-center">
               <Bell className="size-8 mx-auto text-muted-foreground/20 mb-2" />
-              <p className="text-sm text-muted-foreground">No notifications yet</p>
+              <p className="text-md text-muted-foreground">No notifications yet</p>
             </div>
           ) : (
             <div className="flex flex-col">
@@ -247,19 +247,19 @@ export function NotificationDropdown() {
                   </div>
                   <div className="flex-1 space-y-1 overflow-hidden">
                     <div className="flex items-center justify-between gap-2">
-                      <Text size="sm" weight="semibold" className="truncate">
+                      <Text size="md" weight="semibold" className="truncate">
                         {notification.title}
                       </Text>
-                      <span className="text-sm  text-muted-foreground flex items-center gap-1 shrink-0">
+                      <span className="text-md  text-muted-foreground flex items-center gap-1 shrink-0">
                         <Clock className="size-3" />
                         {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                       </span>
                     </div>
-                    <p className="text-sm sm:text-md text-slate-600 line-clamp-2 leading-relaxed">
+                    <p className="text-md text-slate-600 line-clamp-2 leading-relaxed">
                       {notification.message}
                     </p>
                     <div className="flex items-center gap-2 pt-1">
-                      <Badge variant="outline" className={cn("text-sm  px-1.5 py-0 font-normal", getPriorityColor(notification.priority))}>
+                      <Badge variant="outline" className={cn("text-md  px-1.5 py-0 font-normal", getPriorityColor(notification.priority))}>
                         {notification.priority}
                       </Badge>
                     </div>
@@ -273,7 +273,7 @@ export function NotificationDropdown() {
           <Button
             type="button"
             variant="ghost"
-            className="w-full justify-between text-sm font-semibold text-emerald-800 hover:bg-emerald-50"
+            className="w-full justify-between text-md font-semibold text-emerald-800 hover:bg-emerald-50"
             onClick={() => router.push("/notifications")}
           >
             View All Notifications

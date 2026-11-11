@@ -43,7 +43,7 @@ export function PlanDetailsStep({
         <Text as="h2" size="lg" weight="semibold" className="text-slate-900 tracking-tight">
           Plan Details &amp; Scope
         </Text>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-1">
+        <Text size="md" weight="regular" className="text-slate-500 mt-1">
           Specify the resident and validity period for this master clinical care plan.
         </Text>
       </div>

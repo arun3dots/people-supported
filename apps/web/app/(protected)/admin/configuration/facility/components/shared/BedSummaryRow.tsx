@@ -202,7 +202,7 @@ export function BedSummaryRow({
           </div>
 
           {/* Subtitle Footer */}
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             {metric.subtitle}
           </Text>
         </div>

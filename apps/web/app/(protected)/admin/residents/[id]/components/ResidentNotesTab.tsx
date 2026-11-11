@@ -174,7 +174,7 @@ export function ResidentNotesTab({ resident, residentId, readOnly }: ResidentNot
             <Text as="h3" size="base" weight="medium" className="text-slate-900">
               Latest Care Note
             </Text>
-            <Text size="sm" className="text-slate-400">
+            <Text size="md" className="text-slate-400">
               (No notes recorded yet)
             </Text>
           </div>

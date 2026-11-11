@@ -190,7 +190,7 @@ export function ResidentCareNotesSections({ residentId }: Props) {
           <Text className="text-xs text-text-secondary mt-1 text-center max-w-[260px]">
             {searchQuery
               ? 'No notes match your search criteria.'
-              : 'No care notes have been documented for this resident yet.'}
+              : 'No care notes have been documented for this person supported yet.'}
           </Text>
           <TouchableOpacity
             onPress={() => setIsAddModalOpen(true)}

@@ -158,11 +158,11 @@ export function DbsDetailsCard({
                 subValue={
                   dbs.expiryDate ? (
                     isDbsExpired(dbs.expiryDate) ? (
-                      <Text size="sm" weight="regular" className="text-red-600 text-[10px] font-medium">
+                      <Text size="md" weight="regular" className="text-red-600 text-md font-medium">
                         Expired
                       </Text>
                     ) : isDbsExpiring(dbs.expiryDate) ? (
-                      <Text size="sm" weight="regular" className="text-[#C38C0B] text-[10px] font-medium">
+                      <Text size="md" weight="regular" className="text-[#C38C0B] text-md font-medium">
                         Expiring Soon
                       </Text>
                     ) : null
@@ -174,7 +174,7 @@ export function DbsDetailsCard({
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-center space-y-3 border border-dashed rounded-xl border-slate-200 my-auto">
             <ShieldAlert className="w-8 h-8 text-slate-400" />
-            <Text size="sm" weight="regular" className="text-slate-500 italic">
+            <Text size="md" weight="regular" className="text-slate-500 italic">
               No DBS details recorded.
             </Text>
             <Button

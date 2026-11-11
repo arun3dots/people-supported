@@ -209,7 +209,7 @@ export function DocumentsTable({
                         size="sm"
                         title="Restore document to active records"
                         disabled={isRestoring}
-                        className="h-7 px-2 text-sm text-emerald-700 hover:bg-emerald-50 gap-1"
+                        className="h-7 px-2 text-md text-emerald-700 hover:bg-emerald-50 gap-1"
                         onClick={() => onRestore(doc.id)}
                       >
                         <RotateCcw className="size-3.5" /> Restore

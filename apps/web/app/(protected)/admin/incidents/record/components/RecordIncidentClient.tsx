@@ -360,7 +360,7 @@ export function RecordIncidentClient({
           <Text size="xl" weight="bold" className="tracking-tight">
             Record Incident
           </Text>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Record care home incidents, clinical injuries, and immediate actions
             taken for audit and CQC governance.
           </Text>

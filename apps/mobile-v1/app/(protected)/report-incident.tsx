@@ -55,7 +55,7 @@ export default function ReportIncidentScreen() {
           const rawBed = String(r.bedNumber || bed?.bedLabel || bed?.number || '').trim();
           map.set(id, {
             id,
-            fullName: String(r.fullName || 'Resident'),
+            fullName: String(r.fullName || 'Person Supported'),
   roomNumber: rawRoom
     ? rawRoom.toLowerCase().startsWith('room')
       ? rawRoom
@@ -118,7 +118,7 @@ const handleSubmit = async (data: {
     return;
   }
   if (!form.residentName) {
-    Alert.alert('Required Field', 'Please select the affected resident.');
+    Alert.alert('Required Field', 'Please select the affected person supported.');
     return;
   }
   if (!form.category) {

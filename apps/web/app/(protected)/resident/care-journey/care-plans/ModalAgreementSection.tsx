@@ -108,13 +108,13 @@ export function ModalAgreementSection({
           type="button"
           variant="outline"
           onClick={() => onPeopleChange([...people, { name: "", role: "" }])}
-          className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+          className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
         >
           <Plus className="size-4" />
           Add person
         </Button>
         {filled.length > 0 && !readyToAgree && (
-          <span className="text-sm text-amber-800">
+          <span className="text-md text-amber-800">
             Add the outcome and at least one support step to record agreement.
           </span>
         )}
@@ -129,7 +129,7 @@ export function ModalAgreementSection({
                 data: { agreedBy: filled },
               })
             }
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             {agree.isPending ? "Recording…" : "Record agreement"}
           </Button>

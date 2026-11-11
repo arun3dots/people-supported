@@ -184,7 +184,7 @@ export function CarePlanStatCards({
         )}
       >
         <div className="flex items-center justify-between gap-2">
-          <Text size="sm" weight="semibold" className="text-slate-700 leading-tight truncate">
+          <Text size="md" weight="semibold" className="text-slate-700 leading-tight truncate">
             {card.title}
           </Text>
           <div
@@ -208,9 +208,9 @@ export function CarePlanStatCards({
             {card.value}
           </Text>
           <Text
-            size="sm"
+            size="md"
             variant="muted"
-            className="text-[11px] text-slate-500 mt-1 leading-snug line-clamp-1"
+            className="text-md text-slate-500 mt-1 leading-snug line-clamp-1"
           >
             {card.subtitle}
           </Text>

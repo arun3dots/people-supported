@@ -104,7 +104,7 @@ export function RoleDetailPanel({
                 </Badge>
               </div>
 
-              <Text size="sm" weight="regular" className="text-emerald-100 leading-relaxed">
+              <Text size="md" weight="regular" className="text-emerald-100 leading-relaxed">
                 {role.isSystem
                   ? "Full system access and operational management capabilities."
                   : "Custom role with specific access rights configured."}
@@ -114,19 +114,19 @@ export function RoleDetailPanel({
               <div className="flex flex-wrap items-center gap-4 pt-1">
                 <div className="flex items-center gap-1.5">
                   <Users className="size-3.5 text-emerald-200" />
-                  <Text size="sm" weight="regular" className="text-emerald-100">
+                  <Text size="md" weight="regular" className="text-emerald-100">
                     {assignedUsers.length} {assignedUsers.length === 1 ? "user assigned" : "users assigned"}
                   </Text>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Calendar className="size-3.5 text-emerald-200" />
-                  <Text size="sm" weight="regular" className="text-emerald-100">
+                  <Text size="md" weight="regular" className="text-emerald-100">
                     Created {format(new Date(role.createdAt), "dd MMM yyyy")}
                   </Text>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <RotateCw className="size-3.5 text-emerald-200" />
-                  <Text size="sm" weight="regular" className="text-emerald-100">
+                  <Text size="md" weight="regular" className="text-emerald-100">
                     Updated {format(new Date(role.updatedAt), "dd MMM yyyy")}
                   </Text>
                 </div>
@@ -169,7 +169,7 @@ export function RoleDetailPanel({
             <Text size="md" weight="bold" className="text-slate-900">
               Module Access Overview
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+            <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
               Active permission scopes assigned to this role by system module.
             </Text>
           </div>
@@ -201,7 +201,7 @@ export function RoleDetailPanel({
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <IconComponent className="size-4 text-icon-primary shrink-0" />
-                  <Text size="sm" weight="semibold" className="text-slate-900 truncate">
+                  <Text size="md" weight="semibold" className="text-slate-900 truncate">
                     {mod.label}
                   </Text>
                 </div>
@@ -229,7 +229,7 @@ export function RoleDetailPanel({
             <Text size="md" weight="bold" className="text-slate-900">
               Assigned Staff Members ({assignedUsers.length})
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+            <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
               Users currently mapped to this permission profile.
             </Text>
           </div>
@@ -274,7 +274,7 @@ export function RoleDetailPanel({
           )}
 
           {assignedUsers.length === 0 && (
-            <Text size="sm" weight="regular" className="text-slate-400 italic">
+            <Text size="md" weight="regular" className="text-slate-400 italic">
               No staff members currently assigned to this role.
             </Text>
           )}
@@ -290,7 +290,7 @@ export function RoleDetailPanel({
           <Text size="md" weight="bold" className="text-slate-900">
             Permission Coverage Summary
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Total capabilities granted vs restricted across the {MODULE_LIST.length} system modules.
           </Text>
         </div>
@@ -301,7 +301,7 @@ export function RoleDetailPanel({
               <ShieldCheck className="size-5 text-icon-primary" />
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500 block">
+              <Text size="md" weight="medium" className="text-slate-500 block">
                 Total Scopes
               </Text>
               <Text size="lg" weight="bold" className="text-slate-900">
@@ -315,7 +315,7 @@ export function RoleDetailPanel({
               <CheckCircle2 className="size-5 text-icon-primary" />
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500 block">
+              <Text size="md" weight="medium" className="text-slate-500 block">
                 Granted Scopes
               </Text>
               <Text size="lg" weight="bold" className="text-emerald-800">
@@ -329,7 +329,7 @@ export function RoleDetailPanel({
               <Ban className="size-5 text-amber-700" />
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500 block">
+              <Text size="md" weight="medium" className="text-slate-500 block">
                 Restricted Scopes
               </Text>
               <Text size="lg" weight="bold" className="text-amber-700">

@@ -215,7 +215,7 @@ export default function ReportsPage() {
         <Text size="xl" weight="bold">
           Reports &amp; Analytics Hub
         </Text>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+        <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
           Generate, schedule, and export statutory compliance, care quality, financial, and operational reports.
         </Text>
       </div>

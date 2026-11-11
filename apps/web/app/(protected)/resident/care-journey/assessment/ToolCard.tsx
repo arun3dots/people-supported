@@ -79,7 +79,7 @@ export function ToolCard({ tool, onChange }: ToolCardProps) {
         <div>
           <p className="text-md font-bold text-slate-800">{def.name}</p>
           {HINTS[tool.toolKey] && (
-            <p className="text-sm text-slate-600">{HINTS[tool.toolKey]}</p>
+            <p className="text-md text-slate-600">{HINTS[tool.toolKey]}</p>
           )}
         </div>
         {hasToolValue(tool) && (

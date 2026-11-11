@@ -188,7 +188,7 @@ export function ResidentRecordSecondaryCards({
               <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Onboarding & Pre-Admission Assessment Record (v{preAdmissionRecord.versionNumber})
               </Text>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Click to {showPreAdmission ? "hide" : "view"} full pre-admission clinical &
                 baseline details
               </Text>

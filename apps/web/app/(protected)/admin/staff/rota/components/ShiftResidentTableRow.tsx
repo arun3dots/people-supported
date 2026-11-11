@@ -79,10 +79,10 @@ export function ShiftResidentTableRow({
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col min-w-0 gap-0.5   max-w-56">
-            <Text size="sm" weight="medium" className="text-slate-900 truncate">
+            <Text size="md" weight="medium" className="text-slate-900 truncate">
               {resident.name}
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 truncate">
+            <Text size="md" weight="regular" className="text-slate-500 truncate">
             {resident.roomBed || "No room or bed assigned"}
             </Text>
           </div>
@@ -115,14 +115,14 @@ export function ShiftResidentTableRow({
         {isAssigned ? (
           <div className="flex items-center gap-1.5 text-slate-400">
             <span className="size-1.5 rounded-full bg-slate-400" />
-            <Text size="sm" weight="medium" className="text-slate-500">
+            <Text size="md" weight="medium" className="text-slate-500">
               Assigned to {resident.assignedStaffName || "another staff member"}
             </Text>
           </div>
         ) : (
           <div className="flex items-center gap-1.5 text-amber-700">
             <span className="size-1.5 rounded-full bg-amber-500" />
-            <Text size="sm" weight="medium" className="text-amber-700">
+            <Text size="md" weight="medium" className="text-amber-700">
               {resident.status || "Unknown"}
             </Text>
           </div>

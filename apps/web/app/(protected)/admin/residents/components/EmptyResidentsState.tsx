@@ -12,7 +12,7 @@ export function EmptyResidentsState() {
       <Text as="h3" size="base" weight="semibold">
         No residents found
       </Text>
-      <Text size="sm" weight="regular" variant="muted" className="mt-1 max-w-sm mx-auto">
+      <Text size="md" weight="regular" variant="muted" className="mt-1 max-w-sm mx-auto">
         Try adjusting your search or admit a new resident.
       </Text>
       <Link

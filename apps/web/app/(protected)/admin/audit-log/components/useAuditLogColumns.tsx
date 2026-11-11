@@ -35,10 +35,10 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
           const { date, time } = formatLogWhen(row.original.timestamp);
           return (
             <div className="flex flex-col leading-tight py-1">
-              <Text size="sm" weight="medium" className="text-slate-800">
+              <Text size="md" weight="medium" className="text-slate-800">
                 {date}
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-500">
+              <Text size="md" weight="regular" className="text-slate-500">
                 {time}
               </Text>
             </div>
@@ -55,10 +55,10 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
           const role = log.userRoleName || "Staff";
           return (
             <div className="flex flex-col leading-tight py-1">
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 {name}
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-500">
+              <Text size="md" weight="regular" className="text-slate-500">
                 {role}
               </Text>
             </div>
@@ -77,7 +77,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
             return (
               <Link
                 href={`/admin/residents/${residentId}?tab=careplan`}
-                className="text-sm font-semibold text-emerald-800 hover:text-emerald-950 hover:underline transition-colors block py-1"
+                className="text-md font-semibold text-emerald-800 hover:text-emerald-950 hover:underline transition-colors block py-1"
                 title={`View ${resident}'s care plan`}
               >
                 {resident}
@@ -86,7 +86,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
           }
 
           return (
-            <Text size="sm" weight="regular" className="text-slate-800 py-1">
+            <Text size="md" weight="regular" className="text-slate-800 py-1">
               {resident}
             </Text>
           );
@@ -99,7 +99,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
         cell: ({ row }) => {
           const area = getLogArea(row.original);
           return (
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-md font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
               {area}
             </span>
           );
@@ -113,7 +113,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
           const change = getLogChange(row.original);
           return (
             <div className="max-w-md py-1 min-w-0">
-              <Text size="sm" weight="regular" className="text-slate-800 leading-snug break-words break-all [overflow-wrap:anywhere]">
+              <Text size="md" weight="regular" className="text-slate-800 leading-snug break-words break-all [overflow-wrap:anywhere]">
                 {change}
               </Text>
             </div>
@@ -127,7 +127,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
         cell: ({ row }) => {
           const lines = getLogBeforeLines(row.original);
           return (
-            <div className="flex flex-col gap-0.5 py-1 max-w-xs text-sm text-slate-600 leading-relaxed min-w-0">
+            <div className="flex flex-col gap-0.5 py-1 max-w-xs text-md text-slate-600 leading-relaxed min-w-0">
               {lines.map((line, idx) => (
                 <span key={idx} className="block break-words break-all [overflow-wrap:anywhere]">
                   {line}
@@ -144,7 +144,7 @@ export function useAuditLogColumns(): TableColumn<AuditLogItem>[] {
         cell: ({ row }) => {
           const lines = getLogAfterLines(row.original);
           return (
-            <div className="flex flex-col gap-0.5 py-1 max-w-xs text-sm text-slate-800 font-medium leading-relaxed min-w-0">
+            <div className="flex flex-col gap-0.5 py-1 max-w-xs text-md text-slate-800 font-medium leading-relaxed min-w-0">
               {lines.map((line, idx) => (
                 <span key={idx} className="block break-words break-all [overflow-wrap:anywhere]">
                   {line}

@@ -91,7 +91,7 @@ export function WeeklyRotaScheduleTable({
           <Text as="h2" size="base" weight="semibold" className="text-slate-900">
             Weekly Staff Rota &amp; Care Type Schedule
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Click any shift block to view the people supported, medication rounds, 1:1 tasks or reassign cover.
           </Text>
         </div>
@@ -101,7 +101,7 @@ export function WeeklyRotaScheduleTable({
             <Text
               key={item.label}
               as="span"
-              size="xs"
+              size="md"
               weight="medium"
               className="text-slate-600 inline-flex items-center gap-1.5"
             >
@@ -130,10 +130,10 @@ export function WeeklyRotaScheduleTable({
                     key={d.key}
                     className="py-3 px-2 text-center min-w-[96px]"
                   >
-                    <Text size="sm" weight="medium" className="text-slate-700">
+                    <Text size="md" weight="medium" className="text-slate-700">
                       {d.dayName}
                     </Text>
-                    <Text size="xs" variant="muted" weight="regular">
+                    <Text size="md" variant="muted" weight="regular">
                       {d.dayNumber}
                     </Text>
                   </TableHead>
@@ -158,14 +158,14 @@ export function WeeklyRotaScheduleTable({
                     <TableCell className="py-3 px-3.5">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="size-9 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-xs shrink-0">
+                          <div className="size-9 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
                             {staff.fullName.slice(0, 2).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                            <Text size="md" weight="medium" className="text-slate-900 truncate">
                               {staff.fullName}
                             </Text>
-                            <Text size="xs" variant="muted" className="truncate">
+                            <Text size="md" variant="muted" className="truncate">
                               {propertyName
                                 ? `${staffRole} · ${propertyName}`
                                 : staffRole}
@@ -199,7 +199,7 @@ export function WeeklyRotaScheduleTable({
                               title="Click to assign shift"
                               className="w-full h-13 rounded-xl bg-white/60 hover:bg-white text-slate-400 hover:text-primary flex flex-col items-center justify-center transition-colors cursor-pointer"
                             >
-                              <Text as="span" size="xs" weight="medium" variant="muted">
+                              <Text as="span" size="md" weight="medium" variant="muted">
                                 &mdash;
                               </Text>
                             </button>
@@ -229,7 +229,7 @@ export function WeeklyRotaScheduleTable({
                             )}
                           >
                             {appearance.isOff ? (
-                              <Text as="span" size="xs" weight="medium" variant="muted">
+                              <Text as="span" size="md" weight="medium" variant="muted">
                                 Off
                               </Text>
                             ) : (
@@ -241,12 +241,12 @@ export function WeeklyRotaScheduleTable({
                                   {appearance.isNight && (
                                     <Moon className="size-3.5 text-rose-700 shrink-0" />
                                   )}
-                                  <Text as="span" size="xs" weight="medium">
+                                  <Text as="span" size="md" weight="medium">
                                     {shift.durationHours ? `${shift.durationHours}h ` : ""}
                                     {appearance.shortLabel}
                                   </Text>
                                 </div>
-                                <Text as="span" size="xs" variant="muted" className="truncate max-w-[85px]">
+                                <Text as="span" size="md" variant="muted" className="truncate max-w-[85px]">
                                   {appearance.subLabel}
                                 </Text>
                               </>

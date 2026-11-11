@@ -123,7 +123,7 @@ export function AssessmentFormTab({
               <Text variant="base-medium" className="text-text-body font-semibold">
                 General Assessment Details
               </Text>
-              <Text variant="xs-regular" className="text-text-description">
+              <Text variant="md-regular" className="text-text-description">
                 Assessment date, assessor name, candidate details, location, and reason
               </Text>
             </div>
@@ -218,7 +218,7 @@ export function AssessmentFormTab({
             <Text variant="base-medium" className="text-text-body font-semibold">
               Assessor Outcome &amp; Clinical Sign-Off
             </Text>
-            <Text variant="xs-regular" className="text-text-description">
+            <Text variant="md-regular" className="text-text-description">
               Final admission recommendation, care level, room requirements, and signature
             </Text>
           </div>

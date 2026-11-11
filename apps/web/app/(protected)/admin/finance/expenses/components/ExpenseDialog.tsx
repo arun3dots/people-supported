@@ -116,7 +116,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
           <DialogTitle className="text-xl font-bold text-slate-900">
             Record Care Home Expense
           </DialogTitle>
-          <Text size="sm" variant="muted" className="mt-0.5">
+          <Text size="md" variant="muted" className="mt-0.5">
             Log medical equipment, utilities, catering, or agency staffing expenses.
           </Text>
         </DialogHeader>
@@ -149,7 +149,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
                 )}
               />
               {errors.category && (
-                <Text variant="error" size="sm">{errors.category.message}</Text>
+                <Text variant="error" size="md">{errors.category.message}</Text>
               )}
             </div>
 
@@ -174,7 +174,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
                 )}
               />
               {errors.status && (
-                <Text variant="error" size="sm">{errors.status.message}</Text>
+                <Text variant="error" size="md">{errors.status.message}</Text>
               )}
             </div>
           </div>
@@ -257,7 +257,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
                 )}
               />
               {errors.date && (
-                <Text variant="error" size="sm">{errors.date.message}</Text>
+                <Text variant="error" size="md">{errors.date.message}</Text>
               )}
             </div>
           </div>

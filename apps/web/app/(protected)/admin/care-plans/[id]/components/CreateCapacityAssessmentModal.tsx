@@ -236,7 +236,7 @@ export function CreateCapacityAssessmentModal({
             <Brain className="size-5 text-emerald-800" />
             Mental Capacity Assessment (MCA 2005)
           </DialogTitle>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Decision-specific statutory assessment for {residentName} (CQC Regulations 11 &amp; 13)
           </Text>
         </DialogHeader>
@@ -284,7 +284,7 @@ export function CreateCapacityAssessmentModal({
           {/* Diagnostic Stage 1 */}
           <div ref={stage1Ref} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="semibold" className="text-slate-800 uppercase tracking-wider">
+              <Text size="md" weight="semibold" className="text-slate-800 uppercase tracking-wider">
                 Stage 1 Diagnostic Test (Mind/Brain Impairment)
               </Text>
               <div className="flex items-center gap-2">
@@ -293,7 +293,7 @@ export function CreateCapacityAssessmentModal({
                   size="sm"
                   variant={hasImpairment === true ? "primary" : "outline"}
                   onClick={() => setHasImpairment(true)}
-                  className="h-6 px-2.5 text-sm rounded-lg cursor-pointer"
+                  className="h-6 px-2.5 text-md rounded-lg cursor-pointer"
                 >
                   Yes
                 </Button>
@@ -302,7 +302,7 @@ export function CreateCapacityAssessmentModal({
                   size="sm"
                   variant={hasImpairment === false ? "primary" : "outline"}
                   onClick={() => setHasImpairment(false)}
-                  className="h-6 px-2.5 text-sm rounded-lg cursor-pointer"
+                  className="h-6 px-2.5 text-md rounded-lg cursor-pointer"
                 >
                   No
                 </Button>
@@ -320,7 +320,7 @@ export function CreateCapacityAssessmentModal({
 
           {/* Functional Stage 2 */}
           <div ref={stage2Ref} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5">
-            <Text size="sm" weight="semibold" className="text-slate-800 uppercase tracking-wider">
+            <Text size="md" weight="semibold" className="text-slate-800 uppercase tracking-wider">
               Stage 2 Functional Test (4 Statutory Elements)
             </Text>
 
@@ -331,7 +331,7 @@ export function CreateCapacityAssessmentModal({
               >
                 <div>
                   <span className="font-semibold text-slate-800">{q.stage}: {q.title}</span>
-                  <p className="text-sm text-slate-500">{q.desc}</p>
+                  <p className="text-md text-slate-500">{q.desc}</p>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <Button
@@ -339,7 +339,7 @@ export function CreateCapacityAssessmentModal({
                     size="sm"
                     variant={q.state === true ? "primary" : "outline"}
                     onClick={() => q.setter(true)}
-                    className="h-6 px-2.5 text-sm rounded-lg cursor-pointer"
+                    className="h-6 px-2.5 text-md rounded-lg cursor-pointer"
                   >
                     Pass
                   </Button>
@@ -348,7 +348,7 @@ export function CreateCapacityAssessmentModal({
                     size="sm"
                     variant={q.state === false ? "secondary" : "outline"}
                     onClick={() => q.setter(false)}
-                    className="h-6 px-2.5 text-sm rounded-lg cursor-pointer"
+                    className="h-6 px-2.5 text-md rounded-lg cursor-pointer"
                   >
                     Fail
                   </Button>
@@ -362,7 +362,7 @@ export function CreateCapacityAssessmentModal({
               <Badge
                 variant="secondary"
                 state={!allTestsEvaluated ? "inactive" : hasCapacity ? "success" : "warning"}
-                className="gap-1 text-sm py-1"
+                className="gap-1 text-md py-1"
               >
                 {!allTestsEvaluated ? (
                   <span>Pending Evaluation (All 4 Required)</span>

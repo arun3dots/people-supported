@@ -79,7 +79,7 @@ export function MedicationPrescriptionsTable({
             <Text as="h3" size="md" weight="semibold" className="text-slate-900">
               Medication Prescriptions
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Stop, pause, or change a prescription from a chosen date without editing each scheduled dose.
             </Text>
           </div>
@@ -109,7 +109,7 @@ export function MedicationPrescriptionsTable({
       {filteredPrescriptions.length === 0 ? (
         <Card variant="white" border="secondary" className="p-4 flex items-center gap-2">
           <Info className="size-4 text-slate-400 shrink-0" />
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             {scheduleFilter === "today"
               ? "No active prescriptions scheduled for today."
               : "No prescriptions recorded for this resident."}
@@ -143,7 +143,7 @@ export function MedicationPrescriptionsTable({
                     {rx.pauses.length === 0
                       ? "—"
                       : rx.pauses.map((p) => (
-                        <Text key={p.id} size="sm" variant="muted">
+                        <Text key={p.id} size="md" variant="muted">
                           {format(new Date(p.pauseFrom), "dd MMM")} → {format(new Date(p.resumeOn), "dd MMM")}
                         </Text>
                       ))}
@@ -151,7 +151,7 @@ export function MedicationPrescriptionsTable({
                   <TableCell>
                     <Badge variant={STATUS_VARIANT[rx.status]}>{rx.status}</Badge>
                     {rx.stopReason && (
-                      <Text size="sm" variant="muted" className="mt-1">{rx.stopReason}</Text>
+                      <Text size="md" variant="muted" className="mt-1">{rx.stopReason}</Text>
                     )}
                   </TableCell>
                   {isEditable && (

@@ -52,10 +52,10 @@ export function WizardStep2({
             <Activity className="size-4" />
           </div>
           <div>
-            <Text size="sm" weight="medium" className="text-emerald-950">
+            <Text size="md" weight="medium" className="text-emerald-950">
               Evaluating candidate fit for: <strong className="font-bold">{candidateName || "Prospective Resident"}</strong> ({careCategory || "Residential"})
             </Text>
-            <Text size="sm" weight="regular" className="text-emerald-700">
+            <Text size="md" weight="regular" className="text-emerald-700">
               Complete pre-admission clinical, mobility, dietary and risk observations.
             </Text>
           </div>

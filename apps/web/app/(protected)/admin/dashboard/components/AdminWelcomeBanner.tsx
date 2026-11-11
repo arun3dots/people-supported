@@ -32,7 +32,7 @@ export function AdminWelcomeBanner() {
           “Caring is more than a gesture.
         </Text>
         <Text
-          size="sm"
+          size="md"
           variant="muted"
           className="w-full text-[#5D5D5D] leading-[18px]"
         >

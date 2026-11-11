@@ -132,7 +132,7 @@ export function AdminActivityCard({
         </Text>
         <Link
           href="/admin/care-plans/daily-tasks"
-          className="flex items-center gap-1 text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          className="flex items-center gap-1 text-md font-medium text-emerald-700 hover:text-emerald-800"
         >
           See All
           <ArrowRight className="size-4" />
@@ -180,7 +180,7 @@ export function AdminActivityCard({
                   {/* Content Group (Time + Titles) */}
                   <div className="flex flex-row items-start gap-3.5 flex-1 min-w-0">
                     <Text
-                      size="sm"
+                      size="md"
                       variant="muted"
                       weight="medium"
                       className="min-w-[72px] shrink-0 tabular-nums pt-0.5"
@@ -189,10 +189,10 @@ export function AdminActivityCard({
                     </Text>
 
                     <div className="flex flex-col flex-1 min-w-0">
-                      <Text size="sm" weight="medium" className="text-slate-800 truncate">
+                      <Text size="md" weight="medium" className="text-slate-800 truncate">
                         {act.title}
                       </Text>
-                      <Text size="sm" variant="muted" className="text-slate-500 truncate">
+                      <Text size="md" variant="muted" className="text-slate-500 truncate">
                         {act.desc}
                       </Text>
                     </div>

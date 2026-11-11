@@ -64,23 +64,23 @@ export default function ResidentsDirectoryScreen() {
       {/* Title & Subtitle */}
       <View className="pt-2 pb-3">
         <Text className="text-xl font-bold text-foreground">
-          Assigned Residents
+          My Assigned People Supported
         </Text>
         <Text className="text-sm text-muted-foreground mt-0.5">
           {isShiftStarted
-            ? 'Following residents are assigned to your shift'
-            : 'Point-of-Care Access & Resident Search'}
+            ? 'People supported assigned to your current shift'
+            : 'Point-of-Care Access & People Supported Search'}
         </Text>
       </View>
 
-      {/* Global Resident Search Input - Always accessible (BUG-018) */}
+      {/* Global Search Input - Always accessible (BUG-018) */}
       <View className="bg-surface rounded-xl px-3.5 h-11 flex-row items-center gap-2.5 mb-3">
         <Search size={18} color="#8E8E93" />
         <TextInput
           ref={searchInputRef}
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Search assigned residents..."
+          placeholder="Search assigned people supported..."
           placeholderTextColor="#8E8E93"
           style={{ fontFamily: theme.fonts.regular }}
           className="flex-1 text-md text-foreground h-full"
@@ -109,7 +109,7 @@ export default function ResidentsDirectoryScreen() {
             </Text>
 
             <Text className="text-xs text-muted-foreground text-center leading-5 mb-5 max-w-[280px]">
-              Assigned residents and point-of-care clinical records are accessible once your
+              Assigned people supported and point-of-care support records are accessible once your
               shift is started. Use the Emergency Directory for emergency read-only access.
             </Text>
 
@@ -174,7 +174,7 @@ export default function ResidentsDirectoryScreen() {
             <View className="flex-1">
               <Text className="text-md font-bold text-foreground">Emergency Directory</Text>
               <Text className="text-xs text-muted-foreground">
-                All residents, read-only. Access is logged.
+                All people supported, read-only. Access is logged.
               </Text>
             </View>
           </TouchableOpacity>
@@ -199,10 +199,10 @@ export default function ResidentsDirectoryScreen() {
           </View>
 
           <Text className="text-xs font-medium text-muted-foreground mb-3">
-            Showing {filtered.length} of {baseList.length} Residents
+            Showing {filtered.length} of {baseList.length} People Supported
           </Text>
 
-          {/* Residents Cards List */}
+          {/* People Supported Cards List */}
           <View className="pb-8">
             {filtered.map((res) => (
               <ResidentCard
@@ -224,13 +224,13 @@ export default function ResidentsDirectoryScreen() {
                 </View>
                 <Text className="text-md font-bold text-foreground text-center mb-1">
                   {assignedResidents.length === 0
-                    ? 'No Residents Assigned'
-                    : 'No Matching Residents'}
+                    ? 'No People Supported Assigned'
+                    : 'No Matching People Supported'}
                 </Text>
                 <Text className="text-xs text-muted-foreground text-center max-w-[280px]">
                   {assignedResidents.length === 0
-                    ? `No residents are assigned to your shift (${shift?.name || 'Shift'}). Contact your manager or nurse lead to assign residents.`
-                    : 'No residents matched your search query. Try clearing the filter.'}
+                    ? `No people supported are assigned to your shift (${shift?.name || 'Shift'}). Contact your manager or team lead to assign people supported.`
+                    : 'No people supported matched your search query. Try clearing the filter.'}
                 </Text>
               </View>
             )}

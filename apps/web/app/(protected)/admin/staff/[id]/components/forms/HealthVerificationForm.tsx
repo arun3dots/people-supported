@@ -175,7 +175,7 @@ export function HealthClearanceForm({
                 errorMessage={errors.clearanceDate?.message}
               />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             <div className="space-y-1.5">
@@ -188,11 +188,11 @@ export function HealthClearanceForm({
                 errorMessage={errors.nextAssessmentDate?.message}
               />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -211,21 +211,21 @@ export function HealthClearanceForm({
               </Select>
 
               {errors.status?.message && (
-                <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+                <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
               )}
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             <div className="space-y-1.5">
               <Label>Assessed By</Label>
               <Input {...register("assessedBy")} placeholder="e.g. Dr. Sarah Jenkins (OH Provider)" errorMessage={errors.assessedBy?.message} />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -234,18 +234,18 @@ export function HealthClearanceForm({
               <Label>Outcome</Label>
               <Input {...register("outcome")} placeholder="e.g. Fit to Work / Fit with Adjustments" errorMessage={errors.outcome?.message} />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             <div className="space-y-1.5">
               <Label>Work Restrictions</Label>
               <Input {...register("restrictions")} placeholder="e.g. Max 10kg lifting, no night shifts" errorMessage={errors.restrictions?.message} />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -253,7 +253,7 @@ export function HealthClearanceForm({
             <Label>Notes & Summary</Label>
             <Textarea {...register("notes")} placeholder="e.g. Health assessment completed with no issues reported" rows={3} errorMessage={errors.notes?.message} />
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -268,7 +268,7 @@ export function HealthClearanceForm({
               helpText="Upload occupational health assessment or clearance letter (PDF, JPG, PNG up to 10MB)"
             />
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -409,7 +409,7 @@ export function ImmunisationForm({
               errorMessage={errors.name?.message}
             />
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -424,7 +424,7 @@ export function ImmunisationForm({
                 errorMessage={errors.dateAdministered?.message}
               />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             <div className="space-y-1.5">
@@ -437,11 +437,11 @@ export function ImmunisationForm({
                 errorMessage={errors.nextDueDate?.message}
               />
               {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 
@@ -459,11 +459,11 @@ export function ImmunisationForm({
               </SelectContent>
             </Select>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
 
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 

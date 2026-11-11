@@ -238,7 +238,7 @@ export function ResidentRecordOverview({
                     <CheckCircle2 className="size-3.5 text-emerald-700 shrink-0" />
                     {goal.title}
                   </Text>
-                  <Text as="span" size="sm" weight="medium" variant="muted">
+                  <Text as="span" size="md" weight="medium" variant="muted">
                     {goal.progress}%
                   </Text>
                 </div>

@@ -185,15 +185,15 @@ export function SupportPlanTab({
               </Text>
             </Text>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1">
-              <Text size="sm" className="inline-flex items-center gap-1.5 text-slate-700">
+              <Text size="md" className="inline-flex items-center gap-1.5 text-slate-700">
                 <Calendar className="size-3.5 text-slate-500" />
                 Next review {nextReview}
               </Text>
-              <Text size="sm" className="inline-flex items-center gap-1.5 text-slate-700">
+              <Text size="md" className="inline-flex items-center gap-1.5 text-slate-700">
                 <Users className="size-3.5 text-slate-500" />
                 {supportHours} hrs/wk ({oneToOne}h 1:1)
               </Text>
-              <Text size="sm" className="inline-flex items-center gap-1.5 text-slate-700">
+              <Text size="md" className="inline-flex items-center gap-1.5 text-slate-700">
                 <ShieldCheck className="size-3.5 text-slate-500" />
                 {riskLevel} overall risk
               </Text>
@@ -272,7 +272,7 @@ export function SupportPlanTab({
                       style={{ width: `${Math.min(100, Math.max(0, goal.progress))}%` }}
                     />
                   </div>
-                  <Text size="sm" variant="muted">
+                  <Text size="md" variant="muted">
                     {goal.progress}% towards outcome
                   </Text>
                 </Card>
@@ -302,7 +302,7 @@ export function SupportPlanTab({
             <Text as="h3" size="md" weight="semibold" className="text-slate-800">
               Clinical Care Plan Modules & Reviews
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Expand to manage detailed clinical care plan records, versions, and evaluations
             </Text>
           </div>

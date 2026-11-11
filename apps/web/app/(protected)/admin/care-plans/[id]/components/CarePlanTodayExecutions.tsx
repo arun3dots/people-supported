@@ -38,13 +38,13 @@ export function CarePlanTodayExecutions({
   return (
     <Card className="border border-slate-200 shadow-none bg-white font-['Outfit',sans-serif]">
       <CardHeader className="pb-3 border-b border-slate-100">
-        <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+        <Text as="h3" size="md" weight="semibold" className="text-slate-900">
           Today&apos;s Task Occurrences ({dailyTasks.length})
         </Text>
       </CardHeader>
       <CardContent className="p-6 space-y-3">
         {dailyTasks.length === 0 ? (
-          <Text size="sm" weight="regular" className="text-center py-6 text-slate-400 block">
+          <Text size="md" weight="regular" className="text-center py-6 text-slate-400 block">
             No tasks generated for today. Tasks generate automatically when care plan is active.
           </Text>
         ) : (
@@ -60,7 +60,7 @@ export function CarePlanTodayExecutions({
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <Text size="sm" weight="semibold" className="text-slate-900">
+                      <Text size="md" weight="semibold" className="text-slate-900">
                         {t.title}
                       </Text>
                       <Badge
@@ -72,7 +72,7 @@ export function CarePlanTodayExecutions({
                       </Badge>
                     </div>
                     {t.skipReason && (
-                      <Text size="sm" className="text-red-600 font-medium mt-0.5">
+                      <Text size="md" className="text-red-600 font-medium mt-0.5">
                         Skipped: {t.skipReason}
                       </Text>
                     )}

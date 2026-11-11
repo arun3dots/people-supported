@@ -46,12 +46,12 @@ export function MarMatrixSection({
           <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Medication Administration Record (MAR)
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             {rangeStartLabel} – {rangeEndLabel} · Tap today&apos;s dose to record it
           </Text>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+        <div className="flex flex-wrap items-center gap-3 text-md text-slate-600">
           <span className="inline-flex items-center gap-1.5">
             <span className="size-5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 inline-flex items-center justify-center">
               <Check className="size-3" />
@@ -93,14 +93,14 @@ export function MarMatrixSection({
                 return (
                   <TableHead key={day.toISOString()} className="text-center min-w-[72px]">
                     <Text
-                      size="sm"
+                      size="md"
                       weight={isTodayCol ? "semibold" : "medium"}
                       className={isTodayCol ? "text-slate-900" : "text-slate-600"}
                     >
                       {format(day, "EEE dd")}
                     </Text>
                     {isTodayCol && (
-                      <Text size="xs" weight="medium" className="text-emerald-700">
+                      <Text size="md" weight="medium" className="text-emerald-700">
                         Today
                       </Text>
                     )}
@@ -113,10 +113,10 @@ export function MarMatrixSection({
             {matrixRows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="px-4">
-                  <Text size="sm" weight="medium" className="text-slate-900">
+                  <Text size="md" weight="medium" className="text-slate-900">
                     {row.drugName}
                   </Text>
-                  <Text size="xs" variant="muted">
+                  <Text size="md" variant="muted">
                     {row.doseAndForm} · {row.timeLabel}
                   </Text>
                 </TableCell>

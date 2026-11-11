@@ -63,7 +63,7 @@ export function ScheduledMedsTable({
             <Text as="h3" size="base" weight="medium" className="text-slate-900 text-base font-medium">
               Scheduled Medications
             </Text>
-            <Text size="sm" variant="muted" className="text-sm text-slate-500">
+            <Text size="md" variant="muted" className="text-md text-slate-500">
               Routine prescription rounds scheduled for regular administration.
             </Text>
           </div>
@@ -100,10 +100,10 @@ export function ScheduledMedsTable({
             <Pill className="size-6 text-emerald-800" />
           </div>
           <div className="space-y-1">
-            <Text size="sm" weight="semibold" className="text-slate-700">
+            <Text size="md" weight="semibold" className="text-slate-700">
               No scheduled medications prescribed
             </Text>
-            <Text size="sm" variant="muted" className="max-w-sm mx-auto">
+            <Text size="md" variant="muted" className="max-w-sm mx-auto">
               Prescribe routine medications to generate the resident's daily Electronic MAR sheet.
             </Text>
           </div>
@@ -115,19 +115,19 @@ export function ScheduledMedsTable({
         </div>
       ) : (
         <div className="w-full overflow-x-auto rounded-xl border border-slate-200 bg-white">
-          <Table className="w-full table-fixed text-[12px]">
+          <Table className="w-full table-fixed text-md">
             <TableHeader className="bg-slate-50/80">
               <TableRow className="border-b border-slate-200 hover:bg-transparent bg-slate-50/80 h-auto">
-                <TableHead className="w-[5%] text-center px-1 pb-2 font-semibold text-[12px] text-slate-700">#</TableHead>
-                <TableHead className="w-[27%] px-2 pb-2 font-semibold text-[12px] text-slate-700">Medication</TableHead>
-                <TableHead className="w-[17%] px-2 pb-2 font-semibold text-[12px] text-slate-700">Dose &amp; Route</TableHead>
-                <TableHead className="w-[15%] px-2 pb-2 font-semibold text-[12px] text-slate-700">Schedule</TableHead>
-                <TableHead className="w-[12%] text-center px-1 pb-2 font-semibold text-[12px] text-slate-700">Status</TableHead>
-                <TableHead className="w-[13%] px-2 pb-2 font-semibold text-[12px] text-slate-700">Last Given</TableHead>
-                <TableHead className="w-[11%] text-right pr-2 pl-1 pb-2 font-semibold text-[12px] text-slate-700">Actions</TableHead>
+                <TableHead className="w-[5%] text-center px-1 pb-2 font-semibold text-md text-slate-700">#</TableHead>
+                <TableHead className="w-[27%] px-2 pb-2 font-semibold text-md text-slate-700">Medication</TableHead>
+                <TableHead className="w-[17%] px-2 pb-2 font-semibold text-md text-slate-700">Dose &amp; Route</TableHead>
+                <TableHead className="w-[15%] px-2 pb-2 font-semibold text-md text-slate-700">Schedule</TableHead>
+                <TableHead className="w-[12%] text-center px-1 pb-2 font-semibold text-md text-slate-700">Status</TableHead>
+                <TableHead className="w-[13%] px-2 pb-2 font-semibold text-md text-slate-700">Last Given</TableHead>
+                <TableHead className="w-[11%] text-right pr-2 pl-1 pb-2 font-semibold text-md text-slate-700">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="divide-y divide-slate-100 text-[12px]">
+            <TableBody className="divide-y divide-slate-100 text-md">
               {paginatedGroups.map((group, index) => {
                 const rowNumber = (currentPage - 1) * pageSize + index + 1;
                 return (

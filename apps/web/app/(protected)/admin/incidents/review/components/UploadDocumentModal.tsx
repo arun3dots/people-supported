@@ -142,7 +142,7 @@ export function UploadDocumentModal({
             Browse Files
           </Button>
 
-          <p className="text-[11px] text-text-description mt-4">
+          <p className="text-md text-text-description mt-4">
             Supported formats: PDF, JPG, PNG (Max: 10 MB)
           </p>
         </div>
@@ -160,7 +160,7 @@ export function UploadDocumentModal({
                   <span className="font-medium text-slate-700 truncate">
                     {file.name}
                   </span>
-                  <span className="text-[10px] text-slate-400">
+                  <span className="text-md text-slate-400">
                     ({(file.size / 1024).toFixed(0)} KB)
                   </span>
                 </div>

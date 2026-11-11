@@ -84,19 +84,19 @@ export function useCarePlanColumns({
                 {res?.photoUrl && (
                   <AvatarImage src={res.photoUrl} alt={res?.fullName || "Resident"} />
                 )}
-                <AvatarFallback className="bg-emerald-100 text-emerald-800 font-bold text-sm">
+                <AvatarFallback className="bg-emerald-100 text-emerald-800 font-bold text-md">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col leading-tight min-w-0">
                 <Text
-                  size="sm"
+                  size="md"
                   weight="bold"
                   className="text-slate-900 group-hover:text-emerald-800 transition truncate"
                 >
                   {res?.fullName || "Unassigned Resident"}
                 </Text>
-                <Text size="sm" variant="muted" className="font-mono text-slate-400">
+                <Text size="md" variant="muted" className="font-mono text-slate-400">
                   {shortCode}
                 </Text>
               </div>
@@ -115,7 +115,7 @@ export function useCarePlanColumns({
           const text = wing && room ? `${wing} · ${room}` : room ? `Room ${room}` : wing ? wing : "—";
 
           return (
-            <Text size="sm" weight="medium" className="text-slate-800">
+            <Text size="md" weight="medium" className="text-slate-800">
               {text}
             </Text>
           );
@@ -162,12 +162,12 @@ export function useCarePlanColumns({
                 <Badge
                   variant="outline"
                   state={badgeState}
-                  className="p-0 px-2 py-0.5 text-sm font-semibold rounded-full border shadow-none"
+                  className="p-0 px-2 py-0.5 text-md font-semibold rounded-full border shadow-none"
                 >
                   {label}
                 </Badge>
               </div>
-              <Text size="sm" variant="muted" className="text-[11px] text-slate-500 mt-1 line-clamp-1">
+              <Text size="md" variant="muted" className="text-md text-slate-500 mt-1 line-clamp-1">
                 Updated {updatedDateStr}{author ? ` · ${author}` : ""}
               </Text>
             </div>
@@ -180,10 +180,10 @@ export function useCarePlanColumns({
         enableSorting: false,
         cell: ({ row }) => {
           const plan = row.original;
-          if (!plan.approvedAt) return <Text size="sm" variant="muted" className="text-slate-400">—</Text>;
+          if (!plan.approvedAt) return <Text size="md" variant="muted" className="text-slate-400">—</Text>;
           const dateStr = formatDateSafe(plan.approvedAt, "d MMM yyyy");
           return (
-            <Text size="sm" weight="medium" className="text-slate-700">
+            <Text size="md" weight="medium" className="text-slate-700">
               {dateStr} · v{plan.versionNumber || 1}
             </Text>
           );
@@ -196,10 +196,10 @@ export function useCarePlanColumns({
         cell: ({ row }) => {
           const plan = row.original;
           const nextDate = plan.nextReviewDate || plan.validTo;
-          if (!nextDate) return <Text size="sm" variant="muted" className="text-slate-400">—</Text>;
+          if (!nextDate) return <Text size="md" variant="muted" className="text-slate-400">—</Text>;
 
           const d = typeof nextDate === "string" ? parseISO(nextDate) : nextDate;
-          if (isNaN(d.getTime())) return <Text size="sm" variant="muted" className="text-slate-400">—</Text>;
+          if (isNaN(d.getTime())) return <Text size="md" variant="muted" className="text-slate-400">—</Text>;
 
           const today = startOfDay(new Date());
           const target = startOfDay(d);
@@ -211,7 +211,7 @@ export function useCarePlanColumns({
               <Badge
                 variant="outline"
                 state="danger"
-                className="p-0 px-2.5 py-0.5 text-sm font-semibold rounded-full bg-rose-100 text-rose-800 border-rose-200 shadow-none"
+                className="p-0 px-2.5 py-0.5 text-md font-semibold rounded-full bg-rose-100 text-rose-800 border-rose-200 shadow-none"
               >
                 Overdue {daysDiff}d · {format(d, "d MMM yyyy")}
               </Badge>
@@ -223,7 +223,7 @@ export function useCarePlanColumns({
               <Badge
                 variant="outline"
                 state="warning"
-                className="p-0 px-2.5 py-0.5 text-sm font-semibold rounded-full bg-amber-100 text-amber-900 border-amber-200 shadow-none"
+                className="p-0 px-2.5 py-0.5 text-md font-semibold rounded-full bg-amber-100 text-amber-900 border-amber-200 shadow-none"
               >
                 {format(d, "d MMM yyyy")} · {daysDiff}d
               </Badge>
@@ -231,7 +231,7 @@ export function useCarePlanColumns({
           }
 
           return (
-            <Text size="sm" weight="medium" className="text-slate-700">
+            <Text size="md" weight="medium" className="text-slate-700">
               {format(d, "d MMM yyyy")}
             </Text>
           );
@@ -246,10 +246,10 @@ export function useCarePlanColumns({
           const kw = res?.keyworker?.fullName;
           const role = res?.keyworker?.role?.name;
           if (!kw) {
-            return <Text size="sm" variant="muted" className="text-slate-400">—</Text>;
+            return <Text size="md" variant="muted" className="text-slate-400">—</Text>;
           }
           return (
-            <Text size="sm" weight="medium" className="text-slate-800">
+            <Text size="md" weight="medium" className="text-slate-800">
               {kw}{role ? ` (${role})` : ""}
             </Text>
           );
@@ -275,7 +275,7 @@ export function useCarePlanColumns({
               <Badge
                 variant="outline"
                 state="danger"
-                className="p-0 px-2 py-0.5 text-[11px] font-semibold rounded-full bg-rose-100 text-rose-800 border-rose-200 shadow-none"
+                className="p-0 px-2 py-0.5 text-md font-semibold rounded-full bg-rose-100 text-rose-800 border-rose-200 shadow-none"
               >
                 Review overdue
               </Badge>
@@ -288,14 +288,14 @@ export function useCarePlanColumns({
               <Badge
                 variant="outline"
                 state="warning"
-                className="p-0 px-2 py-0.5 text-[11px] font-semibold rounded-full bg-amber-100 text-amber-800 border-amber-200 shadow-none"
+                className="p-0 px-2 py-0.5 text-md font-semibold rounded-full bg-amber-100 text-amber-800 border-amber-200 shadow-none"
               >
                 Goals missing
               </Badge>
             );
           }
 
-          return <Text size="sm" variant="muted" className="text-slate-400">—</Text>;
+          return <Text size="md" variant="muted" className="text-slate-400">—</Text>;
         },
       },
       {
@@ -318,7 +318,7 @@ export function useCarePlanColumns({
                   e.stopPropagation();
                   onSelectResident(resId);
                 }}
-                className="h-7 px-3 text-sm cursor-pointer"
+                className="h-7 px-3 text-md cursor-pointer"
               >
                 Review
               </Button>
@@ -334,7 +334,7 @@ export function useCarePlanColumns({
                 e.stopPropagation();
                 onSelectResident(resId);
               }}
-              className="h-7 px-3 text-sm cursor-pointer"
+              className="h-7 px-3 text-md cursor-pointer"
             >
               Open
             </Button>

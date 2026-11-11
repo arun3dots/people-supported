@@ -155,7 +155,7 @@ export function AdmissionStepper({
                   {isCompleted && !isActive ? (
                     <Check className="size-5 text-white stroke-[2.5]" />
                   ) : (
-                    <span className="text-sm sm:text-base font-semibold leading-none">
+                    <span className="text-md sm:text-base font-semibold leading-none">
                       {step.number}
                     </span>
                   )}
@@ -172,7 +172,7 @@ export function AdmissionStepper({
                   {/* Line 1 (Up - Increased font) */}
                   <span
                     className={cn(
-                      "text-sm sm:text-md leading-tight tracking-tight truncate max-w-full",
+                      "text-md leading-tight tracking-tight truncate max-w-full",
                       isActive ? "text-white font-bold" : "text-white/90 font-medium"
                     )}
                   >
@@ -183,7 +183,7 @@ export function AdmissionStepper({
                   {labels.line2 && (
                     <span
                       className={cn(
-                        "text-sm sm:text-md leading-tight tracking-tight truncate max-w-full mt-0.5",
+                        "text-md leading-tight tracking-tight truncate max-w-full mt-0.5",
                         isActive ? "text-white font-bold" : "text-white/90 font-medium"
                       )}
                     >

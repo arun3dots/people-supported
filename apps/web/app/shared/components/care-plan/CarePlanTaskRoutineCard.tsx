@@ -36,14 +36,14 @@ export function CarePlanTaskRoutineCard({
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="size-2 rounded-full bg-emerald-800 shrink-0" />
-          <Text size="sm" weight="bold" className="text-slate-900">{task.title}</Text>
+          <Text size="md" weight="bold" className="text-slate-900">{task.title}</Text>
           {getPriorityBadge(task.priority)}
           <Badge state="inactive" className="text-md px-2 py-0.5 shadow-none">
             {task.category}
           </Badge>
           <div className="flex items-center gap-1">
             <Clock className="size-3 text-slate-400" />
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               {task.timeOfDay?.join(", ") || task.frequency}
               {task.targetTime ? ` (${task.targetTime})` : ""}
             </Text>
@@ -85,7 +85,7 @@ export function CarePlanTaskRoutineCard({
 
       {task.instructions && (
         <div className="pl-3">
-          <Text size="sm" variant="muted" className="leading-relaxed">
+          <Text size="md" variant="muted" className="leading-relaxed">
             <span className="font-semibold text-slate-700">Instructions:</span> {task.instructions}
           </Text>
         </div>
@@ -94,7 +94,7 @@ export function CarePlanTaskRoutineCard({
       {task.precautions && (
         <div className="ml-3 flex items-start gap-1.5 p-2 rounded-xl border border-amber-200/70 bg-amber-50">
           <ShieldAlert className="size-3.5 text-amber-600 shrink-0 mt-0.5" />
-          <Text size="sm" className="text-amber-900">
+          <Text size="md" className="text-amber-900">
             <span className="font-semibold">Safety Check:</span> {task.precautions}
           </Text>
         </div>

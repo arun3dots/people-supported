@@ -126,7 +126,7 @@ export function calculateNews2(input: News2Input): News2Result {
   } else if (totalScore >= 5 || hasRedScore) {
     riskLevel = 'Medium';
     clinicalAction =
-      'URGENT: Urgent clinical review by Registered Nurse within 1 hour. Consider escalation to resident GP / NHS 111.';
+      "URGENT: Urgent clinical review by Registered Nurse within 1 hour. Consider escalation to the person's GP / NHS 111.";
   } else if (totalScore >= 1) {
     riskLevel = 'Low';
     clinicalAction = 'Increase observation frequency to 4-6 hourly; inform Nurse in charge.';

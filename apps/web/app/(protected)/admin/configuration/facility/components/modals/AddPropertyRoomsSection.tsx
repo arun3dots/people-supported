@@ -87,7 +87,7 @@ export function TagMultiSelect({
               type="button"
               onClick={() => toggleItem(item)}
               className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-all cursor-pointer",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-medium border transition-all cursor-pointer",
                 isSelected
                   ? "bg-primary text-primary-foreground border-primary shadow-xs"
                   : "bg-surface-card-grey text-slate-700 border-slate-200 hover:bg-slate-100",
@@ -110,7 +110,7 @@ export function TagMultiSelect({
             }
           }}
           placeholder={customPlaceholder}
-          className="h-9 text-sm bg-white"
+          className="h-9 text-md bg-white"
         />
         <Button
           type="button"
@@ -171,7 +171,7 @@ export function AddPropertyRoomsSection({
           <Text size="md" weight="semibold" className="text-slate-900">
             Rooms, Flats &amp; Bed Allocation ({rooms.length})
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Each unit creates a Room and its corresponding Beds for tenancy
             assignment.
           </Text>
@@ -208,7 +208,7 @@ export function AddPropertyRoomsSection({
                   })
                 }
                 placeholder="e.g. Flat 1"
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
@@ -220,7 +220,7 @@ export function AddPropertyRoomsSection({
                 value={room.floor || "Ground floor"}
                 onValueChange={(val) => updateRoom(idx, { floor: val })}
               >
-                <SelectTrigger className="h-9 bg-white text-sm">
+                <SelectTrigger className="h-9 bg-white text-md">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -246,7 +246,7 @@ export function AddPropertyRoomsSection({
                   })
                 }
                 placeholder="158.00"
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
@@ -264,12 +264,12 @@ export function AddPropertyRoomsSection({
                     bedsCount: Math.max(1, Number(e.target.value) || 1),
                   })
                 }
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
             <div className="col-span-2 flex items-center justify-between pt-4 pl-1">
-              <label className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 cursor-pointer">
+              <label className="inline-flex items-center gap-1.5 text-md font-medium text-slate-700 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={Boolean(room.isAccessible)}

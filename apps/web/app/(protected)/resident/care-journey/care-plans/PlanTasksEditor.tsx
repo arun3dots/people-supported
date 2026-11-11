@@ -75,12 +75,12 @@ export function PlanTasksEditor({
   return (
     <div className="space-y-3">
       {!isAgreed && tasks.length > 0 && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           These tasks appear on the carer list once the plan has been agreed.
         </p>
       )}
       {isAgreed && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           Tasks on an agreed care plan are read-only. Changes require a formal
           amendment.
         </p>
@@ -99,11 +99,11 @@ export function PlanTasksEditor({
               <p className="text-md font-medium text-slate-800 truncate">
                 {task.title}
               </p>
-              <p className="text-sm text-slate-600">
+              <p className="text-md text-slate-600">
                 {task.role} · {describeRecurrence(task.recurrence)}
               </p>
             </div>
-            <label className="flex items-center gap-2 text-sm text-slate-700">
+            <label className="flex items-center gap-2 text-md text-slate-700">
               <Switch
                 checked={task.isActive}
                 disabled={isAgreed || update.isPending}
@@ -180,7 +180,7 @@ export function PlanTasksEditor({
                         : [...prev, index],
                     )
                   }
-                  className="px-3 py-1 rounded-full border text-sm font-medium border-slate-300 text-slate-700 aria-pressed:bg-emerald-800 aria-pressed:text-white aria-pressed:border-emerald-800"
+                  className="px-3 py-1 rounded-full border text-md font-medium border-slate-300 text-slate-700 aria-pressed:bg-emerald-800 aria-pressed:text-white aria-pressed:border-emerald-800"
                 >
                   {label}
                 </button>

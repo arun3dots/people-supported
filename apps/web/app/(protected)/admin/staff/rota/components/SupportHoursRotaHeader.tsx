@@ -118,20 +118,20 @@ export function SupportHoursRotaHeader({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Text as="span" size="xs" weight="medium" variant="muted">
+            <Text as="span" size="md" weight="medium" variant="muted">
               Support Hours &amp; Rota
             </Text>
-            <Text as="span" size="xs" variant="muted">
+            <Text as="span" size="md" variant="muted">
               &rsaquo;
             </Text>
-            <Text as="span" size="xs" weight="medium" className="text-slate-800">
+            <Text as="span" size="md" weight="medium" className="text-slate-800">
               All Properties
             </Text>
           </div>
           <Text as="h1" size="2xl" weight="semibold" className="tracking-tight text-slate-900">
             Support Hours &amp; Rota
           </Text>
-          <Text size="sm" variant="muted" className="mt-0.5">
+          <Text size="md" variant="muted" className="mt-0.5">
             Plan and track weekly staff rotas, care types (Shared, 1:1, Sleep-in, Waking Night) and commissioned support hours.
           </Text>
         </div>
@@ -214,7 +214,7 @@ export function SupportHoursRotaHeader({
                 type="button"
                 onClick={() => onCareTypeChange(f.id)}
                 className={cn(
-                  "h-8 rounded-full px-3.5 text-xs font-medium transition-colors cursor-pointer",
+                  "h-8 rounded-full px-3.5 text-md font-medium transition-colors cursor-pointer",
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "bg-surface-card-grey text-slate-600 hover:bg-slate-200/70 hover:text-slate-900",

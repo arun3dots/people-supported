@@ -251,7 +251,7 @@ export default function NewInvoicePage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <Text size="xl" weight="bold">New Invoice</Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Create and send new invoice to a resident or payer
           </Text>
         </div>
@@ -297,10 +297,10 @@ export default function NewInvoicePage() {
         <Card className="p-6 flex flex-col gap-6 w-full font-['Outfit',sans-serif]">
           <div className="w-full flex items-center justify-between">
             <div>
-              <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+              <Text as="h3" size="md" weight="medium" className="text-slate-900">
                 Notes
               </Text>
-              <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+              <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
                 Optional payment instructions or additional context for the recipient
               </Text>
             </div>

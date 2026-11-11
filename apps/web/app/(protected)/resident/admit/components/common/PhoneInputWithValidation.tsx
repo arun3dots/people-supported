@@ -54,9 +54,9 @@ export function PhoneInputWithValidation({
           }`}
       />
       {activeError ? (
-        <p className="text-sm text-red-600 mt-1 leading-tight">{activeError}</p>
+        <p className="text-md text-red-600 mt-1 leading-tight">{activeError}</p>
       ) : helperText ? (
-        <p className="text-sm text-slate-500 mt-1">{helperText}</p>
+        <p className="text-md text-slate-500 mt-1">{helperText}</p>
       ) : null}
     </div>
   );

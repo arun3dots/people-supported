@@ -137,7 +137,7 @@ export function VerifyDocumentModal({
                 <DialogTitle className="text-base font-semibold text-text-body">
                   Verify Resident Document
                 </DialogTitle>
-                <Text size="sm" className="text-text-description">
+                <Text size="md" className="text-text-description">
                   Review original file contents before marking as verified
                 </Text>
               </div>
@@ -158,7 +158,7 @@ export function VerifyDocumentModal({
         </DialogHeader>
 
         {/* Document Info Header */}
-        <div className="py-2.5 px-3.5 bg-slate-50 border border-slate-200/80 rounded-xl my-2 flex flex-wrap items-center justify-between gap-2 text-sm">
+        <div className="py-2.5 px-3.5 bg-slate-50 border border-slate-200/80 rounded-xl my-2 flex flex-wrap items-center justify-between gap-2 text-md">
           <div>
             <span className="font-semibold text-slate-800">{document.name}</span>
             <span className="text-slate-400 ml-2">({document.category || document.type || "Document"})</span>
@@ -189,7 +189,7 @@ export function VerifyDocumentModal({
               <FileText className="size-12 mx-auto text-slate-400" />
               <div>
                 <p className="font-semibold text-slate-700">{document.name}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-md text-slate-500">
                   Preview not directly supported in-browser for this format ({document.fileType || "File"}).
                 </p>
               </div>
@@ -208,7 +208,7 @@ export function VerifyDocumentModal({
         {/* Rejection / Notes Section */}
         <div className="space-y-2 mt-2">
           {document.notes && !showRejectForm && (
-            <div className="p-3 rounded-xl border border-amber-200 bg-amber-50/60 text-sm space-y-1">
+            <div className="p-3 rounded-xl border border-amber-200 bg-amber-50/60 text-md space-y-1">
               <span className="font-semibold text-amber-900">Verification Notes:</span>
               <p className="text-amber-800">{document.notes}</p>
             </div>
@@ -216,7 +216,7 @@ export function VerifyDocumentModal({
 
           {showRejectForm && (
             <div className="mt-4 p-4 rounded-xl border border-red-200 bg-red-50/50 space-y-3 animate-in fade-in duration-200">
-              <div className="flex items-center gap-2 text-red-800 font-medium text-sm">
+              <div className="flex items-center gap-2 text-red-800 font-medium text-md">
                 <AlertCircle className="size-4" />
                 <span>Specify Rejection Reason or Document Request Notes</span>
               </div>
@@ -228,7 +228,7 @@ export function VerifyDocumentModal({
                   if (rejectError) setRejectError(null);
                 }}
                 rows={2}
-                className="bg-white border-red-200 focus:border-red-400 text-sm"
+                className="bg-white border-red-200 focus:border-red-400 text-md"
                 errorMessage={rejectError || undefined}
               />
               <div className="flex items-center justify-end gap-2">
@@ -265,7 +265,7 @@ export function VerifyDocumentModal({
 
         {/* Modal Footer / Verification Buttons */}
         <div className="pt-4 border-t border-border-secondary flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="text-sm text-slate-500">
+          <div className="text-md text-slate-500">
             {document.status === "Verified" ? (
               <span className="inline-flex items-center gap-1.5 text-emerald-700 font-medium">
                 <CheckCircle2 className="size-3.5" /> Verified by Registered Manager / Admin
@@ -294,7 +294,7 @@ export function VerifyDocumentModal({
                     size="sm"
                     disabled={verifyMutation.isPending}
                     onClick={handleRevertToPending}
-                    className="h-9 px-3 text-sm text-slate-600 hover:text-amber-800 hover:bg-amber-50 gap-1.5"
+                    className="h-9 px-3 text-md text-slate-600 hover:text-amber-800 hover:bg-amber-50 gap-1.5"
                   >
                     <RotateCcw className="size-3.5" /> Revert to Pending
                   </Button>

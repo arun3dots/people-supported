@@ -170,7 +170,7 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
           <Text size="md" weight="semibold" className="text-slate-900">
             Secure Resident Records &amp; Data Protection
           </Text>
-          <Text size="sm" variant="muted" className="mt-0.5">
+          <Text size="md" variant="muted" className="mt-0.5">
             Documents are encrypted and viewed securely in-app. Registered Managers verify documents for regulatory compliance, and records are retained via archiving.
           </Text>
         </div>

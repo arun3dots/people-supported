@@ -157,16 +157,16 @@ export default function CarerHandoverPage() {
               Shift handover
             </Text>
             {ongoingShift ? (
-              <Badge variant="outline" state="success" className="p-0 px-2.5 py-0.5 text-sm font-semibold rounded-full shadow-none">
+              <Badge variant="outline" state="success" className="p-0 px-2.5 py-0.5 text-md font-semibold rounded-full shadow-none">
                 Active shift on duty
               </Badge>
             ) : (
-              <Badge variant="outline" state="inactive" className="p-0 px-2.5 py-0.5 text-sm font-semibold rounded-full shadow-none">
+              <Badge variant="outline" state="inactive" className="p-0 px-2.5 py-0.5 text-md font-semibold rounded-full shadow-none">
                 Not clocked in
               </Badge>
             )}
           </div>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Review incoming briefing notes, monitor task completion, record resident observations, and publish handover to incoming staff.
           </Text>
         </div>
@@ -180,7 +180,7 @@ export default function CarerHandoverPage() {
               onClick={handleClockIn}
               title={nextEligibility.reason}
               className={cn(
-                "gap-1.5 bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl h-9 px-4 text-sm font-semibold shadow-xs",
+                "gap-1.5 bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl h-9 px-4 text-md font-semibold shadow-xs",
                 !nextEligibility.canClockIn && "opacity-60 cursor-not-allowed",
               )}
             >
@@ -200,7 +200,7 @@ export default function CarerHandoverPage() {
                 size="sm"
                 disabled={updateHandoverMutation.isPending}
                 onClick={handleSaveDraft}
-                className="gap-1.5 rounded-xl h-9 px-3.5 text-sm font-semibold border-slate-200"
+                className="gap-1.5 rounded-xl h-9 px-3.5 text-md font-semibold border-slate-200"
               >
                 <Save className="size-3.5 text-slate-600" />
                 {saveSuccess ? "Saved!" : updateHandoverMutation.isPending ? "Saving..." : "Save draft notes"}
@@ -209,7 +209,7 @@ export default function CarerHandoverPage() {
                 size="sm"
                 disabled={endShiftMutation.isPending || publishSuccess}
                 onClick={handlePublishHandover}
-                className="gap-1.5 bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl h-9 px-4 text-sm font-semibold shadow-xs"
+                className="gap-1.5 bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl h-9 px-4 text-md font-semibold shadow-xs"
               >
                 <Send className="size-3.5" />
                 {endShiftMutation.isPending ? "Publishing..." : publishSuccess ? "Handover Published" : "Publish & End Shift"}
@@ -227,10 +227,10 @@ export default function CarerHandoverPage() {
               <Clock className="size-4 text-amber-800" />
             </div>
             <div>
-              <Text size="sm" weight="bold" className="text-amber-950">
+              <Text size="md" weight="bold" className="text-amber-950">
                 You are currently scheduled for: {nextScheduledShift.name || "Shift"}
               </Text>
-              <Text size="sm" className="text-amber-800">
+              <Text size="md" className="text-amber-800">
                 Clock in to start recording clinical logs, medication passes, and prepare your official end-of-shift handover.
               </Text>
             </div>
@@ -241,7 +241,7 @@ export default function CarerHandoverPage() {
             onClick={handleClockIn}
             title={nextEligibility.reason}
             className={cn(
-              "bg-amber-900 hover:bg-amber-950 text-white rounded-xl text-sm font-semibold h-8 px-3.5 shrink-0",
+              "bg-amber-900 hover:bg-amber-950 text-white rounded-xl text-md font-semibold h-8 px-3.5 shrink-0",
               !nextEligibility.canClockIn && "opacity-60 cursor-not-allowed",
             )}
           >
@@ -260,21 +260,21 @@ export default function CarerHandoverPage() {
       {/* KPI Counters: Task Execution & Safety Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Card variant="white" className="p-4 rounded-2xl border-slate-200/90 shadow-xs flex flex-col justify-between gap-0 min-h-[88px]">
-          <Text size="sm" weight="semibold" className="text-slate-700 leading-tight">Total shift tasks</Text>
+          <Text size="md" weight="semibold" className="text-slate-700 leading-tight">Total shift tasks</Text>
           <Text size="2xl" weight="bold" className="text-slate-900 mt-2">{tasks.length}</Text>
         </Card>
         <Card variant="white" className="p-4 rounded-2xl border-slate-200/90 shadow-xs flex flex-col justify-between gap-0 min-h-[88px]">
-          <Text size="sm" weight="semibold" className="text-slate-700 leading-tight">Completed on shift</Text>
+          <Text size="md" weight="semibold" className="text-slate-700 leading-tight">Completed on shift</Text>
           <Text size="2xl" weight="bold" className="text-emerald-700 mt-2">{completedTasks.length}</Text>
         </Card>
         <Card variant="white" className="p-4 rounded-2xl border-slate-200/90 shadow-xs flex flex-col justify-between gap-0 min-h-[88px]">
-          <Text size="sm" weight="semibold" className="text-slate-700 leading-tight">Tasks to hand over</Text>
+          <Text size="md" weight="semibold" className="text-slate-700 leading-tight">Tasks to hand over</Text>
           <Text size="2xl" weight="bold" className={cn("mt-2", carriedOverTasks.length > 0 ? "text-amber-700" : "text-slate-900")}>
             {carriedOverTasks.length}
           </Text>
         </Card>
         <Card variant="white" className="p-4 rounded-2xl border-slate-200/90 shadow-xs flex flex-col justify-between gap-0 min-h-[88px]">
-          <Text size="sm" weight="semibold" className="text-slate-700 leading-tight">Active safety incidents</Text>
+          <Text size="md" weight="semibold" className="text-slate-700 leading-tight">Active safety incidents</Text>
           <Text size="2xl" weight="bold" className={cn("mt-2", openIncidents.length > 0 ? "text-rose-600" : "text-slate-900")}>
             {openIncidents.length}
           </Text>
@@ -283,10 +283,10 @@ export default function CarerHandoverPage() {
 
       {/* General Ward / Wing Handover Summary */}
       <Card variant="white" className="rounded-2xl border-slate-200/90 shadow-xs p-5 space-y-2 gap-0">
-        <Text size="sm" weight="bold" className="text-slate-900">
+        <Text size="md" weight="bold" className="text-slate-900">
           General Ward / Unit Handover Summary
         </Text>
-        <Text size="sm" variant="subdued">
+        <Text size="md" variant="subdued">
           Summarize overall wing dynamics, staffing levels, GP visits, or facility maintenance flags for incoming colleagues.
         </Text>
         <Textarea
@@ -299,10 +299,10 @@ export default function CarerHandoverPage() {
       {/* Grid of Resident Handover Cards */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <Text size="sm" weight="bold" className="text-slate-900">
+          <Text size="md" weight="bold" className="text-slate-900">
             Resident-Specific Status & Handover Observations
           </Text>
-          <Text size="sm" variant="subdued">
+          <Text size="md" variant="subdued">
             {residents.length} resident(s) in care
           </Text>
         </div>

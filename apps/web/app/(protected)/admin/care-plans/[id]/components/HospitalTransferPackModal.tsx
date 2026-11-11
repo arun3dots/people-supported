@@ -53,7 +53,7 @@ export function HospitalTransferPackModal({
               <span className="block font-mono font-semibold">
                 {pack?.generatedAt ? new Date(pack.generatedAt).toLocaleDateString("en-GB") : ""}
               </span>
-              <span className="text-red-200 text-[11px]">Emergency Transfer</span>
+              <span className="text-red-200 text-md">Emergency Transfer</span>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ export function HospitalTransferPackModal({
                   </div>
                   {/* NHS Number Box */}
                   <div className="p-2 bg-indigo-50 border border-indigo-200 rounded-lg text-center mt-1">
-                    <span className="text-[10px] text-indigo-700 block uppercase tracking-wider font-semibold">
+                    <span className="text-md text-indigo-700 block uppercase tracking-wider font-semibold">
                       NHS Number
                     </span>
                     <span className="font-mono text-md font-bold text-indigo-950 tracking-wider">
@@ -113,7 +113,7 @@ export function HospitalTransferPackModal({
                     </div>
                   </div>
                   {pack.emergencyContacts.length > 0 && (
-                    <div className="pt-1 text-[11px] text-slate-600 border-t border-slate-200 mt-1">
+                    <div className="pt-1 text-md text-slate-600 border-t border-slate-200 mt-1">
                       <strong>Next of Kin:</strong> {pack.emergencyContacts[0]?.name} ({pack.emergencyContacts[0]?.relationship}) — {pack.emergencyContacts[0]?.phone}
                     </div>
                   )}
@@ -133,7 +133,7 @@ export function HospitalTransferPackModal({
                   <span className="text-md font-extrabold block mt-0.5">
                     {pack.legalDirectives.dnacprInPlace ? "DNACPR IN PLACE" : "FOR FULL RESUSCITATION"}
                   </span>
-                  <span className="text-[10px] block mt-1">
+                  <span className="text-md block mt-1">
                     {pack.legalDirectives.dnacprLocation || "Physical form in care file"}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ export function HospitalTransferPackModal({
                   <span className="text-md font-semibold block mt-0.5">
                     {pack.legalDirectives.hasCapacity ? "Has Capacity" : "Lacks Capacity (Best Interests)"}
                   </span>
-                  <span className="text-[10px] text-slate-500 block mt-1">
+                  <span className="text-md text-slate-500 block mt-1">
                     {pack.legalDirectives.lpaHealthAndWelfareName
                       ? `LPA: ${pack.legalDirectives.lpaHealthAndWelfareName}`
                       : "No registered LPA"}
@@ -157,7 +157,7 @@ export function HospitalTransferPackModal({
                   <span className="text-md font-semibold block mt-0.5">
                     {pack.legalDirectives.dolsInPlace ? "DoLS Authorised" : "No Active DoLS"}
                   </span>
-                  <span className="text-[10px] text-slate-500 block mt-1">
+                  <span className="text-md text-slate-500 block mt-1">
                     {pack.legalDirectives.dolsSupervisoryBody || "None"}
                   </span>
                 </div>
@@ -179,27 +179,27 @@ export function HospitalTransferPackModal({
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-2 text-center text-slate-700">
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">Consciousness</span>
+                      <span className="text-md text-slate-400 block">Consciousness</span>
                       <strong className="text-md">{pack.latestVitals.consciousness || "Alert"}</strong>
                     </div>
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">Blood Pressure</span>
+                      <span className="text-md text-slate-400 block">Blood Pressure</span>
                       <strong className="text-md">{pack.latestVitals.bloodPressure || "--"}</strong>
                     </div>
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">Pulse Rate</span>
+                      <span className="text-md text-slate-400 block">Pulse Rate</span>
                       <strong className="text-md">{pack.latestVitals.pulse ? `${pack.latestVitals.pulse} bpm` : "--"}</strong>
                     </div>
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">SpO2</span>
+                      <span className="text-md text-slate-400 block">SpO2</span>
                       <strong className="text-md">{pack.latestVitals.spo2 ? `${pack.latestVitals.spo2}%` : "--"}</strong>
                     </div>
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">Temperature</span>
+                      <span className="text-md text-slate-400 block">Temperature</span>
                       <strong className="text-md">{pack.latestVitals.temperature ? `${pack.latestVitals.temperature}°C` : "--"}</strong>
                     </div>
                     <div className="p-1.5 bg-white rounded border border-slate-200">
-                      <span className="text-[10px] text-slate-400 block">Respiration</span>
+                      <span className="text-md text-slate-400 block">Respiration</span>
                       <strong className="text-md">{pack.latestVitals.respirationRate ? `${pack.latestVitals.respirationRate}/min` : "--"}</strong>
                     </div>
                   </div>
@@ -211,7 +211,7 @@ export function HospitalTransferPackModal({
                 <span className="font-bold text-slate-900 block text-md">
                   Baseline Care & Communication Profile
                 </span>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-md">
                   <div><strong>Mobility:</strong> {pack.baselineCare.mobility}</div>
                   <div><strong>Transfers:</strong> {pack.baselineCare.transferAssistance}</div>
                   <div><strong>Diet:</strong> {pack.baselineCare.nutrition} ({pack.baselineCare.iddsiFood})</div>
@@ -233,7 +233,7 @@ export function HospitalTransferPackModal({
                   <span className="text-slate-500 text-md">No active regular medications charted.</span>
                 ) : (
                   <div className="overflow-x-auto">
-                    <table className="w-full text-[11px] text-left">
+                    <table className="w-full text-md text-left">
                       <thead className="bg-slate-100 text-slate-600">
                         <tr>
                           <th className="p-1.5 font-semibold">Medication</th>

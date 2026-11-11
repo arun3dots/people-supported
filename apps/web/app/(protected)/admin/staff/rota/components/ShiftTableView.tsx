@@ -151,14 +151,14 @@ export function ShiftTableView({
       {totalRecords > 0 && (
         <div className="pt-4 border-t border-border-secondary/50 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-500">Rows per page:</span>
+            <span className="text-md text-slate-500">Rows per page:</span>
             <select
               value={pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="h-8 rounded-md border border-slate-300 bg-white px-2 py-1 text-sm text-slate-700 shadow-xs focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
+              className="h-8 rounded-md border border-slate-300 bg-white px-2 py-1 text-md text-slate-700 shadow-xs focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
             >
               {[10, 20, 50, 100].map((size) => (
                 <option key={size} value={size}>
@@ -166,7 +166,7 @@ export function ShiftTableView({
                 </option>
               ))}
             </select>
-            <span className="text-sm text-slate-500 ml-2">
+            <span className="text-md text-slate-500 ml-2">
               Showing {Math.min((currentPage - 1) * pageSize + 1, totalRecords)} to{" "}
               {Math.min(currentPage * pageSize, totalRecords)} of {totalRecords} shifts
             </span>

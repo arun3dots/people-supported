@@ -54,7 +54,7 @@ function ShiftBadge({ shift }: { shift?: Shift }) {
   return (
     <div className={`py-2 px-3 rounded-xl ${colorClass} text-md font-semibold text-center shadow-2xs`}>
       <div className="font-bold">{label}</div>
-      <div className={`text-sm ${subColor} mt-0.5`}>
+      <div className={`text-md ${subColor} mt-0.5`}>
         {formatUkTime(start)} - {formatUkTime(end)}
       </div>
     </div>
@@ -91,7 +91,7 @@ export function StaffViewGrid({ currentDate, staffList = [], shifts = [], onAddS
               <th className="py-3.5 px-4 text-left text-md font-bold text-slate-900 w-56">Staff Member</th>
               {days.map((day, idx) => (
                 <th key={idx} className="py-3.5 px-3 text-center">
-                  <div className="text-sm font-semibold text-slate-500  tracking-wider">
+                  <div className="text-md font-semibold text-slate-500  tracking-wider">
                     {format(day, "EEEE")}
                   </div>
                   <div className="text-md font-bold text-slate-900 mt-0.5">{format(day, "d MMM")}</div>
@@ -114,7 +114,7 @@ export function StaffViewGrid({ currentDate, staffList = [], shifts = [], onAddS
                     </div>
                     <div>
                       <div className="text-md font-bold text-slate-900">{staff.fullName}</div>
-                      <div className="text-sm text-slate-500">{staff.role?.name}</div>
+                      <div className="text-md text-slate-500">{staff.role?.name}</div>
                     </div>
                   </div>
                 </td>

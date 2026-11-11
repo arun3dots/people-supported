@@ -147,7 +147,7 @@ export function AssessmentStep({
               key={tool.toolKey}
               className="bg-surface-card-grey rounded-2xl p-4 space-y-1"
             >
-              <Text size="sm" weight="bold" className="text-slate-600">
+              <Text size="md" weight="bold" className="text-slate-600">
                 {ASSESSMENT_TOOLS.find((t) => t.key === tool.toolKey)?.name}
               </Text>
               <RatingPill rating={tool.rating ?? "none"}>
@@ -216,7 +216,7 @@ export function AssessmentStep({
             {save.isPending ? "Saving…" : "Save draft"}
           </Button>
           {savedAt && !save.isPending && (
-            <span className="inline-flex items-center gap-1 text-sm text-slate-600">
+            <span className="inline-flex items-center gap-1 text-md text-slate-600">
               <Check className="size-3.5 text-emerald-700" />
               Saved {savedAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
             </span>

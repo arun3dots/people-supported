@@ -38,7 +38,7 @@ export function SupportPlanDomainCard({
           <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             {domain.domain}
           </Text>
-          <Text size="sm" variant="muted" className="truncate">
+          <Text size="md" variant="muted" className="truncate">
             Outcome: {domain.outcomeSummary ?? "Maintain independence"} · Updated{" "}
             {domain.updatedAt ?? "21/10/2026"}
           </Text>
@@ -67,7 +67,7 @@ export function SupportPlanDomainCard({
         <div className="px-5 pb-5 pt-3 border-t border-slate-200/70 grid grid-cols-1 md:grid-cols-3 gap-3.5">
           <Card variant="white" border="secondary" className="p-4 space-y-1.5">
             <Text
-              size="xs"
+              size="md"
               weight="medium"
               variant="muted"
               className="uppercase tracking-wider"
@@ -81,7 +81,7 @@ export function SupportPlanDomainCard({
 
           <Card variant="white" border="secondary" className="p-4 space-y-1.5">
             <Text
-              size="xs"
+              size="md"
               weight="medium"
               variant="muted"
               className="uppercase tracking-wider"
@@ -96,7 +96,7 @@ export function SupportPlanDomainCard({
 
           <Card variant="secondary" border="secondary" className="p-4 space-y-1.5">
             <Text
-              size="xs"
+              size="md"
               weight="medium"
               variant="primary"
               className="uppercase tracking-wider"

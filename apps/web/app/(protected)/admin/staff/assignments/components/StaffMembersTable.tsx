@@ -180,7 +180,7 @@ export function StaffMembersTable({
           {paginated.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="py-14 text-center">
-                <Text size="sm" weight="medium" className="text-slate-500">
+                <Text size="md" weight="medium" className="text-slate-500">
                   No staff members match the selected criteria
                 </Text>
               </TableCell>
@@ -217,10 +217,10 @@ export function StaffMembersTable({
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col min-w-0 gap-0.5">
-                        <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                        <Text size="md" weight="medium" className="text-slate-900 truncate">
                           {staff.name}
                         </Text>
-                        <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                        <Text size="md" weight="regular" className="text-slate-500 truncate">
                           {staff.role}
                         </Text>
                       </div>
@@ -237,10 +237,10 @@ export function StaffMembersTable({
                     <div className="flex items-center gap-2">
                       <span className="size-2 rounded-full bg-emerald-500 shrink-0" />
                       <div className="flex flex-col gap-0.5">
-                        <Text size="sm" weight="medium" className="text-slate-900">
+                        <Text size="md" weight="medium" className="text-slate-900">
                           {staff.availability}
                         </Text>
-                        <Text size="sm" weight="regular" className="text-slate-500">
+                        <Text size="md" weight="regular" className="text-slate-500">
                           {staff.workType}
                         </Text>
                       </div>
@@ -250,7 +250,7 @@ export function StaffMembersTable({
                   {/* Capacity */}
                   <TableCell className="py-3.5">
                     <div className="space-y-1.5 min-w-28">
-                      <Text size="sm" weight="semibold" className="text-slate-800">
+                      <Text size="md" weight="semibold" className="text-slate-800">
                         {staff.capacityAssigned.toString().padStart(2, "0")}/
                         {staff.capacityTotal.toString().padStart(2, "0")}
                       </Text>

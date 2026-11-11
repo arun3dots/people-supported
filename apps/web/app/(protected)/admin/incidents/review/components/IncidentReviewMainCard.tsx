@@ -65,23 +65,23 @@ export function IncidentReviewMainCard({
             <AlertCircle className="size-5" />
           </div>
           <div className="space-y-0.5 min-w-0">
-            <Text size={'sm'} weight={'bold'} className="text-slate-900 leading-tight truncate">
+            <Text size={'md'} weight={'bold'} className="text-slate-900 leading-tight truncate">
               {incident.title}
             </Text>
-            <Text size={'xs'} weight={'regular'} className="text-slate-500">
+            <Text size={'md'} weight={'regular'} className="text-slate-500">
               #{incident.incidentNumber}
             </Text>
             <div className="flex items-center gap-1.5 pt-0.5">
-              <Text size={'xs'} weight={'regular'} className="text-slate-400">
+              <Text size={'md'} weight={'regular'} className="text-slate-400">
                 Reported by:
               </Text>
-              <Text size={'xs'} weight={'medium'} className="text-slate-700">
+              <Text size={'md'} weight={'medium'} className="text-slate-700">
                 {incident.reportedBy?.fullName || "Staff Member"}
               </Text>
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="size-3 text-slate-400" />
-              <Text size={'xs'} weight={'regular'} className="text-slate-500">
+              <Text size={'md'} weight={'regular'} className="text-slate-500">
                 {formattedDate}
               </Text>
             </div>
@@ -102,13 +102,13 @@ export function IncidentReviewMainCard({
             </AvatarFallback>
           </Avatar>
           <div className="space-y-0.5 min-w-0">
-            <Text size={'sm'} weight={'bold'} className="text-slate-900 truncate">
+            <Text size={'md'} weight={'bold'} className="text-slate-900 truncate">
               {residentName}
             </Text>
-            <Text size={'xs'} weight={'regular'} className="text-slate-500">
+            <Text size={'md'} weight={'regular'} className="text-slate-500">
               Resident
             </Text>
-            <Text size={'xs'} weight={'regular'} className="text-slate-600 pt-0.5">
+            <Text size={'md'} weight={'regular'} className="text-slate-600 pt-0.5">
               Room {room}, Bed {bed}
             </Text>
           </div>
@@ -120,10 +120,10 @@ export function IncidentReviewMainCard({
             <MapPin className="size-5" />
           </div>
           <div className="space-y-0.5 min-w-0">
-            <Text size={'xs'} weight={'regular'} className="text-slate-500">
+            <Text size={'md'} weight={'regular'} className="text-slate-500">
               Location
             </Text>
-            <Text size={'sm'} weight={'bold'} className="text-slate-900 truncate">
+            <Text size={'md'} weight={'bold'} className="text-slate-900 truncate">
               {incident.location || "Bedroom"}
             </Text>
           </div>
@@ -133,15 +133,15 @@ export function IncidentReviewMainCard({
       {/* 2. Meta Grid (Category, Harm-Level, Severity, Status) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pb-4 border-b border-slate-100">
         <div>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Category
           </Text>
-          <Text size={'xs'} weight={'semibold'} className="text-slate-800 pt-0.5">
+          <Text size={'md'} weight={'semibold'} className="text-slate-800 pt-0.5">
             {incident.category || "General"}
           </Text>
         </div>
         <div>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Harm-Level
           </Text>
           <Badge
@@ -158,7 +158,7 @@ export function IncidentReviewMainCard({
           </Badge>
         </div>
         <div>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Severity
           </Text>
           <Badge
@@ -175,7 +175,7 @@ export function IncidentReviewMainCard({
           </Badge>
         </div>
         <div>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500 mb-1">
+          <Text size={'md'} weight={'regular'} className="text-slate-500 mb-1">
             Status
           </Text>
           <Badge
@@ -199,15 +199,15 @@ export function IncidentReviewMainCard({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-4 border-b border-slate-100">
         {/* Initial Assessment */}
         <div className="space-y-2">
-          <Text size={'xs'} weight={'bold'} className="text-slate-900">
+          <Text size={'md'} weight={'bold'} className="text-slate-900">
             Initial Assessment
           </Text>
           {incident.initialAssessment ? (
-            <Text size={'xs'} weight={'regular'} className="text-slate-600 leading-relaxed">
+            <Text size={'md'} weight={'regular'} className="text-slate-600 leading-relaxed">
               {incident.initialAssessment}
             </Text>
           ) : (
-            <Text size={'xs'} weight={'regular'} className="text-slate-400 italic">
+            <Text size={'md'} weight={'regular'} className="text-slate-400 italic">
               No assessment notes recorded.
             </Text>
           )}
@@ -215,7 +215,7 @@ export function IncidentReviewMainCard({
 
         {/* Immediate Actions Taken */}
         <div className="space-y-2">
-          <Text size={'xs'} weight={'bold'} className="text-slate-900">
+          <Text size={'md'} weight={'bold'} className="text-slate-900">
             Immediate Actions Taken
           </Text>
           {actionsTaken.length > 0 ? (
@@ -223,14 +223,14 @@ export function IncidentReviewMainCard({
               {actionsTaken.map((action, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
-                  <Text size={'xs'} weight={'regular'} className="text-slate-700 break-all">
+                  <Text size={'md'} weight={'regular'} className="text-slate-700 break-all">
                     {action}
                   </Text>
                 </div>
               ))}
             </div>
           ) : (
-            <Text size={'xs'} weight={'regular'} className="text-slate-400 italic">
+            <Text size={'md'} weight={'regular'} className="text-slate-400 italic">
               No immediate actions recorded.
             </Text>
           )}
@@ -240,7 +240,7 @@ export function IncidentReviewMainCard({
 
       {/* 5. Attachments Section */}
       <div className="space-y-3">
-        <Text size={'xs'} weight={'bold'} className="text-slate-900">
+        <Text size={'md'} weight={'bold'} className="text-slate-900">
           Attachments ({activeAttachments.length})
         </Text>
 
@@ -279,10 +279,10 @@ export function IncidentReviewMainCard({
               </button>
 
               <div className="text-center w-full mt-2">
-                <Text size={'xs'} weight={'medium'} className="text-slate-800 truncate px-1 block">
+                <Text size={'md'} weight={'medium'} className="text-slate-800 truncate px-1 block">
                   {att.name}
                 </Text>
-                <Text size={'xs'} weight={'regular'} className="text-slate-400 truncate block">
+                <Text size={'md'} weight={'regular'} className="text-slate-400 truncate block">
                   {att.timestamp}
                 </Text>
               </div>
@@ -299,10 +299,10 @@ export function IncidentReviewMainCard({
               <div className="size-7 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800">
                 <Upload className="size-3.5" />
               </div>
-              <Text size={'xs'} weight={'medium'} className="text-slate-700">
+              <Text size={'md'} weight={'medium'} className="text-slate-700">
                 Upload More
               </Text>
-              <span className="text-[10px] text-slate-400 text-center">
+              <span className="text-md text-slate-400 text-center">
                 PNG, JPG, JPEG · Max 5MB
               </span>
             </button>
@@ -317,10 +317,10 @@ export function IncidentReviewMainCard({
               <div className="size-7 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800">
                 <Upload className="size-3.5" />
               </div>
-              <Text size={'xs'} weight={'medium'} className="text-slate-700">
+              <Text size={'md'} weight={'medium'} className="text-slate-700">
                 Upload More
               </Text>
-              <span className="text-[10px] text-slate-400 text-center">
+              <span className="text-md text-slate-400 text-center">
                 PNG, JPG, JPEG · Max 5MB
               </span>
             </label>

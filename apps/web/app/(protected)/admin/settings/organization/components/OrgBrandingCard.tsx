@@ -113,7 +113,7 @@ export function OrgBrandingCard({ initialLogoUrl, onLogoChange }: OrgBrandingCar
         <Text size={'base'} weight={'bold'} className="text-slate-900">
           Branding
         </Text>
-        <Text size={'xs'} weight={'regular'} className="text-slate-500">
+        <Text size={'md'} weight={'regular'} className="text-slate-500">
           Your care home&apos;s brand identity
         </Text>
       </div>
@@ -157,7 +157,7 @@ export function OrgBrandingCard({ initialLogoUrl, onLogoChange }: OrgBrandingCar
         </div>
 
         {/* Subtext */}
-        <Text size="sm" weight="regular" className="text-center text-slate-400">
+        <Text size="md" weight="regular" className="text-center text-slate-400">
           JPG, PNG, or SVG · Max 2MB
         </Text>
 

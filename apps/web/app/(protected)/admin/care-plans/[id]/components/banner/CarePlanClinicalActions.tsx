@@ -160,7 +160,7 @@ export function CarePlanClinicalActions({
         <div className="flex items-center gap-1.5">
           {restrictiveTasksWithoutMca && (
             <span
-              className="inline-flex items-center gap-1 text-sm font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-lg border border-amber-200"
+              className="inline-flex items-center gap-1 text-md font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-lg border border-amber-200"
               title="Warning: Restrictive interventions exist without documented MCA assessment"
             >
               <AlertCircle className="size-3 text-amber-600" /> MCA Review Advised

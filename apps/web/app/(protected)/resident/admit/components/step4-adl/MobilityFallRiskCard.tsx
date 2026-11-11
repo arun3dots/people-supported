@@ -44,7 +44,7 @@ export function MobilityFallRiskCard({
         <Text as="h3" size="md" weight="bold">
           Mobility &amp; Fall Risk
         </Text>
-        <Text size="sm" weight="regular" variant="subdued">
+        <Text size="md" weight="regular" variant="subdued">
           Ambulation independence, mobility aids, and historical fall tracking.
         </Text>
       </div>

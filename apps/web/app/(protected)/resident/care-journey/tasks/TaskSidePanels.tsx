@@ -29,7 +29,7 @@ export function MustKnowCard({ items }: { items: MustKnowItemDTO[] }) {
               key={`${item.label}-${item.value}`}
               className="min-w-0 space-y-0.5"
             >
-              <span className="text-sm font-bold text-slate-700">{item.label}</span>
+              <span className="text-md font-bold text-slate-700">{item.label}</span>
               <div className="min-w-0">
                 <RatingPill
                   rating={TONE_RATING[item.tone]}
@@ -69,7 +69,7 @@ export function NotesCard({ residentId, shift, date, notes }: NotesCardProps) {
         {notes.map((n) => (
           <li key={n.id} className="bg-surface-card-grey rounded-xl px-3 py-2">
             <p className="text-md text-slate-800">{n.text}</p>
-            <p className="text-sm text-slate-600">
+            <p className="text-md text-slate-600">
               {n.shift} shift{n.authorName ? ` · ${n.authorName}` : ""}
             </p>
           </li>

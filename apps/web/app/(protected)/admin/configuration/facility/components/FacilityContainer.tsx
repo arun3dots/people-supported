@@ -115,14 +115,14 @@ export function FacilityContainer() {
               className="mt-4 px-4 py-2.5 flex flex-row items-center justify-between gap-3"
             >
               <div className="flex items-center gap-2 flex-wrap">
-                <Text size="sm" weight="medium" className="text-emerald-800">
+                <Text size="md" weight="medium" className="text-emerald-800">
                   Filtered view:
                 </Text>
                 {activeWing && (
                   <button
                     type="button"
                     onClick={() => navigate("properties")}
-                    className="hover:underline text-sm font-medium cursor-pointer text-emerald-800"
+                    className="hover:underline text-md font-medium cursor-pointer text-emerald-800"
                   >
                     Property: {activeWing.name}
                   </button>
@@ -130,7 +130,7 @@ export function FacilityContainer() {
                 {activeRoom && (
                   <>
                     <ChevronRight className="size-3.5 text-emerald-500" />
-                    <Text size="sm" weight="medium" className="text-emerald-900">
+                    <Text size="md" weight="medium" className="text-emerald-900">
                       Room: {activeRoom.roomNumber}
                     </Text>
                   </>

@@ -46,7 +46,7 @@ export function PropertyDrawerSections({
             <Text size="md" weight="semibold" className="text-slate-900">
               Individual Tenancies &amp; Units
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Each person holds an individual tenancy agreement in this scheme.
             </Text>
           </div>
@@ -87,20 +87,20 @@ export function PropertyDrawerSections({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <div className="size-7 rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-medium flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="size-7 rounded-lg bg-white border border-slate-200 text-slate-700 text-md font-medium flex items-center justify-center shrink-0 mt-0.5">
                         {index + 1}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <Text
                             as="span"
-                            size="sm"
+                            size="md"
                             weight="semibold"
                             className="text-slate-900"
                           >
                             {room.roomNumber}
                           </Text>
-                          <Text as="span" size="sm" variant="muted">
+                          <Text as="span" size="md" variant="muted">
                             · {room.floor || "Ground floor"}
                             {room.isAccessible ? " (Accessible)" : ""}
                           </Text>
@@ -110,7 +110,7 @@ export function PropertyDrawerSections({
                           <div className="mt-1.5 space-y-0.5">
                             <Link
                               href={`/admin/residents/${occupant.id}`}
-                              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-800 hover:text-primary hover:underline"
+                              className="inline-flex items-center gap-1.5 text-md font-medium text-slate-800 hover:text-primary hover:underline"
                             >
                               <User className="size-3.5 text-primary" />
                               <span>{occupant.fullName}</span>
@@ -121,7 +121,7 @@ export function PropertyDrawerSections({
                                 )
                               </span>
                             </Link>
-                            <Text size="sm" variant="muted">
+                            <Text size="md" variant="muted">
                               Key worker:{" "}
                               {occupant.keyWorkerName || "Assigned"} ·{" "}
                               {occupant.supportHoursPerWeek ?? 24}h/wk support
@@ -129,7 +129,7 @@ export function PropertyDrawerSections({
                             </Text>
                           </div>
                         ) : (
-                          <Text size="sm" variant="muted" className="mt-1">
+                          <Text size="md" variant="muted" className="mt-1">
                             {room.notes ||
                               "Void room ready; awaiting local authority referral panel decision."}
                           </Text>
@@ -147,7 +147,7 @@ export function PropertyDrawerSections({
                       </Badge>
                       <Text
                         as="span"
-                        size="xs"
+                        size="md"
                         variant="muted"
                         weight="medium"
                       >
@@ -195,10 +195,10 @@ export function PropertyDrawerSections({
                 <div className="flex items-start gap-3">
                   <ShieldCheck className="size-5 text-primary mt-0.5 shrink-0" />
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-900">
+                    <Text size="md" weight="medium" className="text-slate-900">
                       {cert.name}
                     </Text>
-                    <Text size="sm" variant="muted">
+                    <Text size="md" variant="muted">
                       {cert.notes || "Statutory landlord safety inspection"} ·
                       Expires: {cert.expiryDate || "Scheduled"}
                     </Text>
@@ -226,11 +226,11 @@ export function PropertyDrawerSections({
           <div className="flex items-center gap-3">
             <Calendar className="size-5 text-primary shrink-0" />
             <div>
-              <Text size="sm" weight="medium" className="text-slate-900">
+              <Text size="md" weight="medium" className="text-slate-900">
                 Today&apos;s Shift Cover: {property.staffToday.assignedCount}/
                 {property.staffToday.requiredCount} on shift
               </Text>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Live staffing allocation for {property.name}
               </Text>
             </div>
@@ -259,11 +259,11 @@ export function PropertyDrawerSections({
               className="p-4 gap-3 flex-row items-center justify-between"
             >
               <div>
-                <Text size="sm" weight="medium" className="text-slate-900">
+                <Text size="md" weight="medium" className="text-slate-900">
                   {format(new Date(sh.startTime), "HH:mm")} –{" "}
                   {format(new Date(sh.endTime), "HH:mm")}
                 </Text>
-                <Text size="sm" variant="muted">
+                <Text size="md" variant="muted">
                   Staff:{" "}
                   {sh.staffNames.length > 0
                     ? sh.staffNames.join(", ")
@@ -314,10 +314,10 @@ export function PropertyDrawerSections({
               <div className="flex items-center gap-3">
                 <AlertTriangle className="size-4 text-amber-600 shrink-0" />
                 <div>
-                  <Text size="sm" weight="medium" className="text-slate-900">
+                  <Text size="md" weight="medium" className="text-slate-900">
                     {rm.roomNumber} · {rm.floor}
                   </Text>
-                  <Text size="sm" variant="muted">
+                  <Text size="md" variant="muted">
                     {rm.notes || "Ready for referral or maintenance check"}
                   </Text>
                 </div>

@@ -177,7 +177,7 @@ export function ResidentCareTabs({
                               <p className="text-md font-bold text-foreground">
                                 NEWS2 Score
                               </p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-md text-muted-foreground">
                                 {format(
                                   new Date(obs.timestamp),
                                   "MMM d, h:mm a",
@@ -189,7 +189,7 @@ export function ResidentCareTabs({
                             <p className="text-md font-bold">
                               {obs.temp || "--"}°C
                             </p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-md text-muted-foreground">
                               {obs.pulse || "--"} bpm
                             </p>
                           </div>

@@ -9,7 +9,7 @@ export function MultiSelect({ label, ...props }: MultiSelectProps) {
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="text-sm font-medium text-slate-700">{label}</label>
+        <label className="text-md font-medium text-slate-700">{label}</label>
       )}
       <Select
         isMulti

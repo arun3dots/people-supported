@@ -51,18 +51,18 @@ export function usePropertyColumns({
               onClick={() => onSelectProperty(p)}
               className="flex items-center gap-3 text-left group cursor-pointer"
             >
-              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-md shrink-0">
                 {getInitials(p.name)}
               </div>
               <div className="flex flex-col min-w-0">
                 <Text
-                  size="sm"
+                  size="md"
                   weight="medium"
                   className="text-slate-900 group-hover:text-primary transition-colors truncate"
                 >
                   {p.name}
                 </Text>
-                <Text size="xs" variant="muted" className="truncate max-w-[230px]">
+                <Text size="md" variant="muted" className="truncate max-w-[230px]">
                   {addr || p.description || "Supported Living Home"} · ID: {refId}
                 </Text>
               </div>
@@ -86,10 +86,10 @@ export function usePropertyColumns({
             pd.unitConfiguration || pd.propertyType || "Self-contained flats";
           return (
             <div className="flex flex-col min-w-0">
-              <Text size="sm" weight="medium" className="text-slate-900 truncate">
+              <Text size="md" weight="medium" className="text-slate-900 truncate">
                 {schemeName}
               </Text>
-              <Text size="xs" variant="muted" className="truncate max-w-[240px]">
+              <Text size="md" variant="muted" className="truncate max-w-[240px]">
                 {partner} · {unitType}
               </Text>
             </div>
@@ -108,10 +108,10 @@ export function usePropertyColumns({
             "Assigned Lead";
           return (
             <div className="flex items-center gap-2">
-              <div className="size-7 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center shrink-0">
+              <div className="size-7 rounded-full bg-primary text-primary-foreground text-md font-medium flex items-center justify-center shrink-0">
                 {getInitials(leader)}
               </div>
-              <Text size="sm" weight="normal" className="text-slate-800 truncate">
+              <Text size="md" weight="normal" className="text-slate-800 truncate">
                 {leader}
               </Text>
             </div>
@@ -127,10 +127,10 @@ export function usePropertyColumns({
           return (
             <div className="w-32 space-y-1">
               <div className="flex items-center justify-between">
-                <Text size="sm" weight="medium" className="text-slate-900">
+                <Text size="md" weight="medium" className="text-slate-900">
                   {p.occupiedBeds}/{p.totalBeds}
                 </Text>
-                <Text size="xs" variant="muted">
+                <Text size="md" variant="muted">
                   {p.occupancyRate}%
                 </Text>
               </div>
@@ -152,7 +152,7 @@ export function usePropertyColumns({
           const p = row.original;
           const { assignedCount, requiredCount } = p.staffToday;
           return (
-            <Text size="sm" weight="medium" className="text-slate-800">
+            <Text size="md" weight="medium" className="text-slate-800">
               {assignedCount}/{requiredCount} on shift
             </Text>
           );

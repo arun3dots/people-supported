@@ -169,7 +169,7 @@ export function AddPrnMedicationDialog({
             </div>
             <div>
               <DialogTitle className="text-base font-semibold text-slate-900">PRN (As Needed) Medication</DialogTitle>
-              <DialogDescription className="text-[12px] text-slate-500">Manage on-demand PRN medications for {residentName || "this resident"}.</DialogDescription>
+              <DialogDescription className="text-md text-slate-500">Manage on-demand PRN medications for {residentName || "this resident"}.</DialogDescription>
             </div>
           </div>
         </DialogHeader>
@@ -239,7 +239,7 @@ export function AddPrnMedicationDialog({
                 </SelectContent>
               </Select>
               {fieldErrors.form && (
-                <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">{fieldErrors.form}</p>
+                <p className="text-md text-text-error font-medium min-h-[18px] mt-1">{fieldErrors.form}</p>
               )}
             </div>
 
@@ -262,7 +262,7 @@ export function AddPrnMedicationDialog({
                 </SelectContent>
               </Select>
               {fieldErrors.indication && (
-                <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">{fieldErrors.indication}</p>
+                <p className="text-md text-text-error font-medium min-h-[18px] mt-1">{fieldErrors.indication}</p>
               )}
             </div>
           </div>

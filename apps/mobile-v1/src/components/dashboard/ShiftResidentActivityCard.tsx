@@ -16,7 +16,7 @@ interface Props {
 }
 
 function getActivityTitle(eventType: string): string {
-  if (eventType === 'RESIDENT_RECORD_VIEWED') return 'Resident profile viewed';
+  if (eventType === 'RESIDENT_RECORD_VIEWED') return 'Profile viewed';
   return eventType
     .replace(/_/g, ' ')
     .toLowerCase()
@@ -35,7 +35,7 @@ export function ShiftResidentActivityCard({
   return (
     <View className="mt-2">
       <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-lg font-bold text-foreground">Recent Resident Activity</Text>
+        <Text className="text-lg font-bold text-foreground">Recent Support Activity</Text>
       </View>
 
       <Card className="p-4">
@@ -47,7 +47,7 @@ export function ShiftResidentActivityCard({
         ) : error ? (
           <View>
             <Text className="text-xs text-amber-800">
-              Could not load recent resident activity. {error}
+              Could not load recent activity. {error}
             </Text>
             <TouchableOpacity onPress={onRetry} activeOpacity={0.7} className="mt-2">
               <Text className="text-xs font-bold text-amber-900">Retry</Text>
@@ -102,8 +102,8 @@ export function ShiftResidentActivityCard({
         ) : (
           <Text className="text-xs text-muted-foreground py-2">
             {hasAssignedResidents
-              ? 'You have no recent activity recorded for your assigned residents.'
-              : 'No residents are assigned to your current shift.'}
+              ? 'You have no recent activity recorded for your assigned people supported.'
+              : 'No people supported are assigned to your current shift.'}
           </Text>
         )}
       </Card>

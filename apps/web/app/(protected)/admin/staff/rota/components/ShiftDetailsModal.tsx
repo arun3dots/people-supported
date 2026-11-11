@@ -107,7 +107,7 @@ export function ShiftDetailsModal({
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Home className="size-4 text-primary" />
-              <Text as="span" size="sm" weight="medium" variant="muted">
+              <Text as="span" size="md" weight="medium" variant="muted">
                 {locationSummary}
               </Text>
             </div>
@@ -117,14 +117,14 @@ export function ShiftDetailsModal({
           </div>
 
           <div className="mt-2 flex items-center gap-3">
-            <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-sm shrink-0">
+            <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
               {staffName.slice(0, 2).toUpperCase()}
             </div>
             <div className="text-left">
               <DialogTitle className="text-lg font-semibold text-slate-900">
                 {staffName}
               </DialogTitle>
-              <Text as="span" size="sm" variant="muted" className="block">
+              <Text as="span" size="md" variant="muted" className="block">
                 {[staffRole, dayLabel].filter(Boolean).join(" · ")}
               </Text>
             </div>
@@ -161,10 +161,10 @@ export function ShiftDetailsModal({
 
         {/* Shift Brief & Handover Context */}
         <Card variant="surface" border="default" className="p-4 gap-2 shadow-none">
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Shift Brief &amp; Handover Context
           </Text>
-          <Text size="sm" className="text-slate-700 leading-relaxed">
+          <Text size="md" className="text-slate-700 leading-relaxed">
             {shift.notes?.trim()
               ? shift.notes
               : "No handover notes recorded for this shift."}
@@ -178,7 +178,7 @@ export function ShiftDetailsModal({
               <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 People Supported on this Shift
               </Text>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Assigned people supported and recorded care outcomes
               </Text>
             </div>
@@ -194,7 +194,7 @@ export function ShiftDetailsModal({
               border="default"
               className="p-4 text-center shadow-none"
             >
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 No people supported are assigned to this shift yet.
               </Text>
             </Card>
@@ -227,15 +227,15 @@ export function ShiftDetailsModal({
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="size-8 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-xs text-primary shrink-0">
+                        <div className="size-8 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-md text-primary shrink-0">
                           {initials}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2">
-                          <Text as="span" size="sm" weight="medium" className="text-slate-900">
+                          <Text as="span" size="md" weight="medium" className="text-slate-900">
                             {person.fullName}
                           </Text>
                           {metaParts.length > 0 && (
-                            <Text as="span" size="xs" variant="muted">
+                            <Text as="span" size="md" variant="muted">
                               {metaParts.join(" · ")}
                             </Text>
                           )}
@@ -252,7 +252,7 @@ export function ShiftDetailsModal({
                           <Text
                             key={outcome.id}
                             as="li"
-                            size="sm"
+                            size="md"
                             variant="muted"
                             className="flex items-center gap-1.5"
                           >

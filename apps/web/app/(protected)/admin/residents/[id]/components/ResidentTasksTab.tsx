@@ -244,7 +244,7 @@ export function ResidentTasksTab({ residentId }: ResidentTasksTabProps): React.J
                       <TableCell className="pl-4 font-medium text-slate-500 text-md">{rowNumber}</TableCell>
                       <TableCell className="px-4 whitespace-nowrap">
                         <div className="font-semibold text-slate-800 text-md">{format(new Date(t.scheduledDate), "dd MMM yyyy")}</div>
-                        <div className="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
+                        <div className="text-md text-slate-500 flex items-center gap-1 mt-0.5">
                           <Clock className="size-3 text-slate-400" />
                           <span>{t.targetTime || t.timeSlot || "All Day"}</span>
                         </div>
@@ -254,8 +254,8 @@ export function ResidentTasksTab({ residentId }: ResidentTasksTabProps): React.J
                           <span className="font-semibold text-slate-900 text-md break-words break-all [overflow-wrap:anywhere]">{t.title}</span>
                           {renderTaskPriority(t.priority)}
                         </div>
-                        {t.instructions && <div className="text-sm text-slate-500 truncate mt-0.5 max-w-sm">{t.instructions}</div>}
-                        {t.assignedStaff && <div className="text-sm text-slate-400 mt-0.5">Assigned: {t.assignedStaff.fullName}</div>}
+                        {t.instructions && <div className="text-md text-slate-500 truncate mt-0.5 max-w-sm">{t.instructions}</div>}
+                        {t.assignedStaff && <div className="text-md text-slate-400 mt-0.5">Assigned: {t.assignedStaff.fullName}</div>}
                       </TableCell>
                       <TableCell className="px-4 whitespace-nowrap">
                         <Badge variant="secondary" state="info" className="px-2.5 py-0.5 shadow-none text-md">{t.category}</Badge>
@@ -269,7 +269,7 @@ export function ResidentTasksTab({ residentId }: ResidentTasksTabProps): React.J
                               size="sm"
                               onClick={(e) => handleMarkComplete(t.id, e)}
                               disabled={updateMutation.isPending}
-                              className="h-8 px-2.5 text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border-emerald-200 rounded-lg cursor-pointer flex items-center gap-1"
+                              className="h-8 px-2.5 text-md font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border-emerald-200 rounded-lg cursor-pointer flex items-center gap-1"
                             >
                               <Check className="size-3.5" />
                               <span>Complete</span>
@@ -279,14 +279,14 @@ export function ResidentTasksTab({ residentId }: ResidentTasksTabProps): React.J
                               size="sm"
                               onClick={(e) => handleOpenSkipModal(t, e)}
                               disabled={updateMutation.isPending}
-                              className="h-8 px-2 text-sm font-medium text-rose-700 bg-rose-50 hover:bg-rose-100 border-rose-200 rounded-lg cursor-pointer flex items-center gap-1"
+                              className="h-8 px-2 text-md font-medium text-rose-700 bg-rose-50 hover:bg-rose-100 border-rose-200 rounded-lg cursor-pointer flex items-center gap-1"
                             >
                               <Ban className="size-3" />
                               <span>Skip</span>
                             </Button>
                           </div>
                         ) : (
-                          <span className="text-sm text-slate-400 font-medium">Logged</span>
+                          <span className="text-md text-slate-400 font-medium">Logged</span>
                         )}
                       </TableCell>
                     </TableRow>

@@ -33,7 +33,7 @@ export default function ShiftHistoryPage() {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Shift History
           </h1>
-          <p className="text-md sm:text-md text-slate-500 font-medium mt-0.5">
+          <p className="text-md text-slate-500 font-medium mt-0.5">
             View and manage your scheduled and previous work sessions.
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function ShiftHistoryPage() {
 
                 <div className="flex items-center justify-between sm:justify-end gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                   <div className="text-left sm:text-right">
-                    <p className="text-[10px] font-bold  text-slate-400 tracking-wider">
+                    <p className="text-md font-bold  text-slate-400 tracking-wider">
                       Total Time
                     </p>
                     <p className="font-bold text-md text-slate-900">{duration}</p>

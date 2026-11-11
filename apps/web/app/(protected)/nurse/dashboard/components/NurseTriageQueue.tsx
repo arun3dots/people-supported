@@ -53,21 +53,21 @@ export function NurseTriageQueue(): React.JSX.Element {
     switch (severity.toLowerCase()) {
       case "critical":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-sm font-bold bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-md font-bold bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
             <Flame className="size-3 text-rose-600" />
             CRITICAL
           </span>
         );
       case "high":
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-sm font-bold bg-orange-100 text-orange-800 border border-orange-200">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-md font-bold bg-orange-100 text-orange-800 border border-orange-200">
             <AlertTriangle className="size-3 text-orange-600" />
             HIGH PRIORITY
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-sm font-bold bg-amber-50 text-amber-800 border border-amber-200">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-md font-bold bg-amber-50 text-amber-800 border border-amber-200">
             MEDIUM
           </span>
         );
@@ -79,35 +79,35 @@ export function NurseTriageQueue(): React.JSX.Element {
       {/* Clinical Shift KPI Summary Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs">
-          <div className="text-sm font-bold text-slate-500 uppercase tracking-wider">Active Alerts</div>
+          <div className="text-md font-bold text-slate-500 uppercase tracking-wider">Active Alerts</div>
           <div className="text-2xl font-black text-rose-600 mt-1">
             {activeEscalations.filter((e) => e.status === "Open").length}
           </div>
-          <div className="text-sm text-slate-400 mt-0.5">Awaiting SBAR triage</div>
+          <div className="text-md text-slate-400 mt-0.5">Awaiting SBAR triage</div>
         </div>
 
         <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs">
-          <div className="text-sm font-bold text-slate-500 uppercase tracking-wider">In Progress Triage</div>
+          <div className="text-md font-bold text-slate-500 uppercase tracking-wider">In Progress Triage</div>
           <div className="text-2xl font-black text-amber-600 mt-1">
             {activeEscalations.filter((e) => e.status !== "Open" && e.status !== "Resolved").length}
           </div>
-          <div className="text-sm text-slate-400 mt-0.5">Monitoring / GP calls</div>
+          <div className="text-md text-slate-400 mt-0.5">Monitoring / GP calls</div>
         </div>
 
         <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs">
-          <div className="text-sm font-bold text-slate-500 uppercase tracking-wider">Emergency / Critical</div>
+          <div className="text-md font-bold text-slate-500 uppercase tracking-wider">Emergency / Critical</div>
           <div className="text-2xl font-black text-purple-700 mt-1">
             {shiftSummary?.emergencyCount ?? 0}
           </div>
-          <div className="text-sm text-slate-400 mt-0.5">Escalated to Hospital/Mgr</div>
+          <div className="text-md text-slate-400 mt-0.5">Escalated to Hospital/Mgr</div>
         </div>
 
         <div className="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-2xs">
-          <div className="text-sm font-bold text-slate-500 uppercase tracking-wider">Shift Escalations</div>
+          <div className="text-md font-bold text-slate-500 uppercase tracking-wider">Shift Escalations</div>
           <div className="text-2xl font-black text-emerald-800 mt-1">
             {shiftSummary?.totalToday ?? 0}
           </div>
-          <div className="text-sm text-slate-400 mt-0.5">Total shift records</div>
+          <div className="text-md text-slate-400 mt-0.5">Total shift records</div>
         </div>
       </div>
 
@@ -162,14 +162,14 @@ export function NurseTriageQueue(): React.JSX.Element {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         {getSeverityBadge(item.severity)}
-                        <Badge variant="outline" className="text-sm font-bold text-slate-700 border-slate-200">
+                        <Badge variant="outline" className="text-md font-bold text-slate-700 border-slate-200">
                           {item.reason}
                         </Badge>
                         <span className="text-md font-bold text-slate-900">{residentName}</span>
                         {roomNumber && (
-                          <span className="text-sm text-slate-500 font-medium">(Room {roomNumber})</span>
+                          <span className="text-md text-slate-500 font-medium">(Room {roomNumber})</span>
                         )}
-                        <span className="text-sm text-slate-400 flex items-center gap-1 ml-auto sm:ml-0">
+                        <span className="text-md text-slate-400 flex items-center gap-1 ml-auto sm:ml-0">
                           <Clock className="size-3" /> {dateStr}
                         </span>
                       </div>
@@ -178,7 +178,7 @@ export function NurseTriageQueue(): React.JSX.Element {
                         {item.initialNotes}
                       </p>
 
-                      <div className="text-sm text-slate-500 font-medium">
+                      <div className="text-md text-slate-500 font-medium">
                         Raised by: <span className="text-slate-700 font-semibold">{item.raisedBy?.fullName || "Carer"}</span>
                         {item.dailyTask && ` • Linked Task: ${item.dailyTask.title}`}
                       </div>
@@ -197,7 +197,7 @@ export function NurseTriageQueue(): React.JSX.Element {
                   </div>
 
                   {item.actionsTaken && Array.isArray(item.actionsTaken) && item.actionsTaken.length > 1 && (
-                    <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-sm text-slate-500">
+                    <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-md text-slate-500">
                       <ShieldCheck className="size-3 text-emerald-600" />
                       <span>{item.actionsTaken.length} actions logged (Latest: {item.actionsTaken[item.actionsTaken.length - 1]?.action})</span>
                     </div>

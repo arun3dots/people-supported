@@ -127,7 +127,7 @@ export function MetricStatsRow({ stats, isLoading }: MetricStatsRowProps) {
 
             {/* Metric Content */}
             <div className="flex flex-col gap-1 min-w-0">
-              <Text size={"sm"} weight={"regular"} >
+              <Text size={"md"} weight={"regular"} >
                 {stat.title}
               </Text>
 
@@ -139,7 +139,7 @@ export function MetricStatsRow({ stats, isLoading }: MetricStatsRowProps) {
                 className={`flex items-center gap-1 t ${stat.trendColor}`}
               >
                 <TrendIcon className="size-3 stroke-[2.5]" />
-                <Text size={"xs"} weight={"regular"} className={`text-${stat.trendColor}`}>{stat.trend}</Text>
+                <Text size={"md"} weight={"regular"} className={`text-${stat.trendColor}`}>{stat.trend}</Text>
               </div>
             </div>
           </Card>

@@ -107,7 +107,7 @@ export default function CarerIncidentsPage() {
   const getHarmBadge = (incident: Incident) => {
     const harm = incident.harmLevel || incident.severity;
     if (!harm || harm === "None" || harm === "Level 0") {
-      return <Text size="sm" variant="muted">None</Text>;
+      return <Text size="md" variant="muted">None</Text>;
     }
     if (/high|level 3|severe|death/i.test(harm)) {
       return <Badge state="danger">High</Badge>;
@@ -151,7 +151,7 @@ export default function CarerIncidentsPage() {
           <Text size="xl" weight="bold" className="tracking-tight">
             Incidents & safeguarding
           </Text>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Report, grade, escalate and review. Rules: RIDDOR 2013, duty of candour (Reg 20), CQC notifications (Reg 18), safeguarding (Care Act 2014 s42). Entries are append-only.
           </Text>
         </div>
@@ -256,30 +256,30 @@ export default function CarerIncidentsPage() {
                   >
                     {/* ID + Reporter subtitle */}
                     <TableCell className="px-5 py-3.5 align-middle">
-                      <Text size="sm" weight="semibold">
+                      <Text size="md" weight="semibold">
                         {incident.incidentNumber || `INC-${incident.id.slice(0, 4)}`}
                       </Text>
-                      <Text size="sm" variant="muted" className="mt-0.5">
+                      <Text size="md" variant="muted" className="mt-0.5">
                         {reporterName}
                       </Text>
                     </TableCell>
 
                     {/* Resident + Room subtitle */}
                     <TableCell className="px-5 py-3.5 align-middle">
-                      <Text size="sm" weight="semibold">
+                      <Text size="md" weight="semibold">
                         {residentName}
                       </Text>
-                      <Text size="sm" variant="muted" className="mt-0.5">
+                      <Text size="md" variant="muted" className="mt-0.5">
                         {room}
                       </Text>
                     </TableCell>
 
                     {/* Type · when */}
                     <TableCell className="px-5 py-3.5 align-middle">
-                      <Text size="sm" weight="semibold">
+                      <Text size="md" weight="semibold">
                         {incident.category || incident.title}
                       </Text>
-                      <Text size="sm" variant="muted" className="mt-0.5 font-mono">
+                      <Text size="md" variant="muted" className="mt-0.5 font-mono">
                         {dateStr} {timeStr}
                       </Text>
                     </TableCell>
@@ -302,13 +302,13 @@ export default function CarerIncidentsPage() {
                             <Badge
                               key={flag}
                               state="inactive"
-                              className="text-sm"
+                              className="text-md"
                             >
                               {flag}
                             </Badge>
                           ))
                         ) : (
-                          <Text size="sm" variant="muted">—</Text>
+                          <Text size="md" variant="muted">—</Text>
                         )}
                       </div>
                     </TableCell>

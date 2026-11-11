@@ -177,14 +177,14 @@ export function ImmunisationCard({
               <div className="w-6 h-6 rounded-full bg-slate-200 shrink-0 flex items-center justify-center">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#4A706A]" />
               </div>
-              <Text size="sm" weight="regular" className="text-slate-500">
+              <Text size="md" weight="regular" className="text-slate-500">
                 All required immunizations are up-to-date
               </Text>
             </div>
           </>
         ) : (
           <Text
-            size="sm"
+            size="md"
             weight="regular"
             className="text-center py-8 text-slate-500 italic border border-dashed rounded-xl border-slate-200"
           >

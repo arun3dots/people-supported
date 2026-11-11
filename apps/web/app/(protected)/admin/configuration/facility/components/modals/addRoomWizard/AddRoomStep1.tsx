@@ -113,7 +113,7 @@ export function AddRoomStep1({
             )}
           />
           {errors.wingId && (
-            <p className="text-[10px] text-red-500 mt-0.5">{errors.wingId.message}</p>
+            <p className="text-md text-red-500 mt-0.5">{errors.wingId.message}</p>
           )}
         </div>
 

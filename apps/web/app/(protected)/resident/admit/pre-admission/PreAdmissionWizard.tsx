@@ -100,7 +100,7 @@ export function PreAdmissionWizard() {
               />
             ) : (
               <div className="rounded-xl bg-amber-50 border border-amber-200 p-6 text-center space-y-3">
-                <Text size="sm" weight="medium" className="text-amber-900">
+                <Text size="md" weight="medium" className="text-amber-900">
                   Please save Step 1 (Admission and personal details) first to generate a resident record before completing risk assessments.
                 </Text>
                 <Button

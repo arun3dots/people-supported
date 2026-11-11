@@ -219,11 +219,11 @@ export function UpcomingTasksList({
                       </h4>
                       <Badge
                         variant="secondary"
-                        className={`text-sm font-semibold px-2 py-0.5 border ${getPriorityBadgeClass(priority)}`}
+                        className={`text-md font-semibold px-2 py-0.5 border ${getPriorityBadgeClass(priority)}`}
                       >
                         {priority}
                       </Badge>
-                      <Badge variant="outline" className="text-sm font-medium text-slate-500 border-slate-200">
+                      <Badge variant="outline" className="text-md font-medium text-slate-500 border-slate-200">
                         {category}
                       </Badge>
                     </div>

@@ -119,7 +119,7 @@ export default function AssessmentTemplatesPage() {
               Assessment Templates
             </Text>
           </div>
-          <Text size="sm" variant="muted" className="mt-1 ml-10">
+          <Text size="md" variant="muted" className="mt-1 ml-10">
             Create and maintain custom Pre-Admission clinical questionnaire templates for different
             care tiers.
           </Text>
@@ -139,7 +139,7 @@ export default function AssessmentTemplatesPage() {
 
       {/* ── Preset Built-in Templates ───────────────────────────────────── */}
       <div className="space-y-3">
-        <Text as="h2" size="sm" weight="bold" className="flex items-center gap-2">
+        <Text as="h2" size="md" weight="bold" className="flex items-center gap-2">
           <Sparkles className="size-4 text-emerald-700" />
           Standard Built-in Clinical Templates
         </Text>
@@ -152,19 +152,19 @@ export default function AssessmentTemplatesPage() {
 
       {/* ── Custom Care Home Templates ──────────────────────────────────── */}
       <div className="space-y-3 pt-4">
-        <Text as="h2" size="sm" weight="bold" className="flex items-center gap-2">
+        <Text as="h2" size="md" weight="bold" className="flex items-center gap-2">
           <FileText className="size-4 text-slate-700" />
           Custom Care Home Templates
         </Text>
 
         {isLoading ? (
           <Card variant="secondary" className="p-8 text-center animate-pulse gap-3">
-            <Text size="sm" variant="muted">Loading custom templates...</Text>
+            <Text size="md" variant="muted">Loading custom templates...</Text>
           </Card>
         ) : dbTemplates.length === 0 ? (
           <Card variant="secondary" className="p-8 text-center">
-            <Text size="sm" weight="semibold" className="text-slate-700">No custom templates created yet</Text>
-            <Text size="sm" variant="muted" className="mt-1">
+            <Text size="md" weight="semibold" className="text-slate-700">No custom templates created yet</Text>
+            <Text size="md" variant="muted" className="mt-1">
               Click &quot;Create Assessment Template&quot; to build tailored question sets for your
               care categories.
             </Text>

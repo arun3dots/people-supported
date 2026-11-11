@@ -140,7 +140,7 @@ export function ProfileEditModal({
                 style={[styles.input, styles.readOnlyInput]}
               />
               <Text className="text-xs text-text-muted mt-1 italic">
-                Official name is managed by care home administrator
+                Official name is managed by your service administrator
               </Text>
             </View>
 
@@ -184,7 +184,7 @@ export function ProfileEditModal({
               <TextInput
                 value={department}
                 onChangeText={setDepartment}
-                placeholder="e.g. Memory Care, Residential, Nursing"
+                placeholder="e.g. Supported Living, Autism Support, Complex Care"
                 placeholderTextColor="#94A3B8"
                 style={styles.input}
               />

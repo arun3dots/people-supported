@@ -23,7 +23,7 @@ export default function RiskAssessmentScreen() {
           >
             <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+          <Text className="text-lg font-bold text-foreground">Person Supported</Text>
           <View className="w-9" />
         </View>
         <View className="items-center justify-center py-24">
@@ -53,17 +53,17 @@ export default function RiskAssessmentScreen() {
             <ShieldAlert size={32} color="#4A706A" />
           </View>
           <Text className="text-lg font-bold text-foreground text-center">
-            No Resident Selected
+            No Person Selected
           </Text>
           <Text className="text-xs text-muted-foreground mt-1 text-center max-w-[260px]">
-            Please select a resident to view their clinical risk assessments and safeguards.
+            Please select a person supported to view their risk assessments and safeguards.
           </Text>
           <TouchableOpacity
             onPress={() => router.navigate('/residents' as Href)}
             className="mt-5 px-6 py-3 bg-primary rounded-full"
             activeOpacity={0.8}
           >
-            <Text className="text-white font-bold text-md">Select Resident</Text>
+            <Text className="text-white font-bold text-md">Select Person</Text>
           </TouchableOpacity>
         </View>
       </ScreenWrapper>
@@ -82,7 +82,7 @@ export default function RiskAssessmentScreen() {
         >
           <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+        <Text className="text-lg font-bold text-foreground">Person Supported</Text>
         <View className="w-9" />
       </View>
 

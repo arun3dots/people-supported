@@ -136,7 +136,7 @@ export function WaterlowCalculatorTab() {
         <div>
           <Label>Special Risks</Label>
           <div className="space-y-1.5 mt-1">
-            <label className="flex items-center gap-1.5 text-sm text-slate-700 cursor-pointer">
+            <label className="flex items-center gap-1.5 text-md text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={tissueMalnutrition > 0}
@@ -145,7 +145,7 @@ export function WaterlowCalculatorTab() {
               />
               <span>Tissue Malnutrition (Cardiac/Vascular/Smoking)</span>
             </label>
-            <label className="flex items-center gap-1.5 text-sm text-slate-700 cursor-pointer">
+            <label className="flex items-center gap-1.5 text-md text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={neuroDeficit > 0}
@@ -176,7 +176,7 @@ export function WaterlowCalculatorTab() {
           <Badge
             variant="secondary"
             state={waterlowTotal >= 15 ? "danger" : waterlowTotal >= 10 ? "warning" : "success"}
-            className="text-sm font-semibold"
+            className="text-md font-semibold"
           >
             {waterlowTotal >= 20
               ? "Very High Risk (20+)"
@@ -187,7 +187,7 @@ export function WaterlowCalculatorTab() {
                   : "Low Risk (<10)"}
           </Badge>
         </div>
-        <p className="text-sm">
+        <p className="text-md">
           {waterlowTotal >= 15
             ? "Action Required: Dynamic alternating air mattress, 2-hourly repositioning chart, heel elevation boots, barrier cream applied with each pad change, weekly photographic tissue inspection."
             : waterlowTotal >= 10

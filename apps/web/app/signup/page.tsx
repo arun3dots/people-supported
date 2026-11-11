@@ -227,14 +227,14 @@ export default function SignUpPage() {
             <Text as="h2" size="xl" weight="bold" className="tracking-tight">
               Account created! 2
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 leading-relaxed">
+            <Text size="md" weight="regular" className="text-slate-500 leading-relaxed">
               We&apos;ve emailed a verification link and a payment link to your
               primary contact. Verify your email, then complete payment to
               unlock your dashboard.
             </Text>
           </div>
           {paymentError && (
-            <Text size="sm" className="text-red-500 font-medium">
+            <Text size="md" className="text-red-500 font-medium">
               {paymentError}
             </Text>
           )}
@@ -342,7 +342,7 @@ export default function SignUpPage() {
                         {isCompleted ? (
                           <Check className="size-4 stroke-[2.5]" />
                         ) : (
-                          <Text as="span" size="sm" weight="bold" className="leading-none text-inherit">
+                          <Text as="span" size="md" weight="bold" className="leading-none text-inherit">
                             {idx + 1}
                           </Text>
                         )}
@@ -350,7 +350,7 @@ export default function SignUpPage() {
 
                       {/* Step Label */}
                       <Text
-                        size="sm"
+                        size="md"
                         weight={isActive ? "medium" : "regular"}
                         className={cn(
                           "mt-2 text-center font-medium leading-tight",
@@ -374,7 +374,7 @@ export default function SignUpPage() {
           >
             {error && (
               <div className="p-3 mb-4 rounded-lg bg-red-50">
-                <Text size="sm" weight="medium" variant="destructive">{error}</Text>
+                <Text size="md" weight="medium" variant="destructive">{error}</Text>
               </div>
             )}
 
@@ -570,13 +570,13 @@ export default function SignUpPage() {
                       setTermsError("");
                     }}
                   />
-                  <Text as="span" size="sm">
+                  <Text as="span" size="md">
                     <PolicyLinks
                       className="text-primary hover:underline"
                     />
                   </Text>
                 </div>
-                {termsError && <p className="text-sm text-rose-600">{termsError}</p>}
+                {termsError && <p className="text-md text-rose-600">{termsError}</p>}
               </div>
             )}
 
@@ -586,7 +586,7 @@ export default function SignUpPage() {
             {step === 3 && (
               <div className="space-y-4">
                 {(packages ?? []).length === 0 && (
-                  <Text size="sm" weight="regular" variant="muted" className="text-center">
+                  <Text size="md" weight="regular" variant="muted" className="text-center">
                     No plans are currently available. Please contact support.
                   </Text>
                 )}
@@ -621,10 +621,10 @@ export default function SignUpPage() {
                         <div className="mt-1">
                           <Text as="span" size="2xl" weight="bold">
                             {pkg.currency} {pkg.priceMonthly}
-                            <Text as="span" size="sm" weight="medium" variant="muted">/mo</Text>
+                            <Text as="span" size="md" weight="medium" variant="muted">/mo</Text>
                           </Text>
                         </div>
-                        <Text size="sm" weight="regular" variant="muted" className="mt-3 block">
+                        <Text size="md" weight="regular" variant="muted" className="mt-3 block">
                           Up to {pkg.residentLimit} residents · {pkg.staffLimit} staff
                         </Text>
                       </Card>
@@ -632,7 +632,7 @@ export default function SignUpPage() {
                   })}
                 </div>
                 {errors.packageId && (
-                  <Text size="sm" weight="semibold" variant="destructive">
+                  <Text size="md" weight="semibold" variant="destructive">
                     {errors.packageId.message}
                   </Text>
                 )}

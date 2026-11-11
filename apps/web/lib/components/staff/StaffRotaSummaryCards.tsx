@@ -32,7 +32,7 @@ export function StaffRotaSummaryCards({
       {/* Hours Summary Card */}
       <div className="bg-white rounded-xl border border-slate-200/90 p-5 sm:p-6 shadow-2sm">
         <h3 className="text-base font-bold text-slate-900 mb-4">Hours</h3>
-        <div className="space-y-3 text-sm sm:text-sm">
+        <div className="space-y-3 text-md">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-0.5">
             <span className="text-slate-500 font-normal sm:w-44 shrink-0">
               Scheduled this week
@@ -96,7 +96,7 @@ export function StaffRotaSummaryCards({
                 return (
                   <div
                     key={req.id}
-                    className="flex items-center justify-between text-sm py-1 border-b border-slate-100 last:border-0"
+                    className="flex items-center justify-between text-md py-1 border-b border-slate-100 last:border-0"
                   >
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-slate-800">
@@ -106,13 +106,13 @@ export function StaffRotaSummaryCards({
                             ? "Shift Swap"
                             : "Shift Cover"}
                       </span>
-                      <span className="text-slate-400 text-sm">
+                      <span className="text-slate-400 text-md">
                         ({formattedDate})
                       </span>
                     </div>
                     <span
                       className={cn(
-                        "px-2 py-0.5 rounded text-sm font-semibold",
+                        "px-2 py-0.5 rounded text-md font-semibold",
                         req.status === "Approved"
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                           : req.status === "Rejected"
@@ -127,7 +127,7 @@ export function StaffRotaSummaryCards({
               })}
             </div>
           ) : (
-            <p className="text-sm sm:text-sm text-slate-500 mb-4">
+            <p className="text-md text-slate-500 mb-4">
               No swap or leave requests.
             </p>
           )}
@@ -137,7 +137,7 @@ export function StaffRotaSummaryCards({
           <Button
             variant="outline"
             onClick={onRequestLeave}
-            className="rounded-lg border-slate-300 text-slate-700 text-sm sm:text-sm font-medium hover:bg-slate-50 transition-colors shadow-2sm py-1.5 px-3 h-auto"
+            className="rounded-lg border-slate-300 text-slate-700 text-md font-medium hover:bg-slate-50 transition-colors shadow-2sm py-1.5 px-3 h-auto"
           >
             Submit Request
           </Button>

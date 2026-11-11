@@ -6,10 +6,10 @@ export default function AccessibilityStatementPage() {
       <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12 space-y-8">
         <header className="border-b border-slate-200 pb-6 space-y-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+            <p className="text-md font-bold uppercase tracking-wider text-emerald-800">
               CantraCare Accessibility &amp; Digital Inclusion Statement
             </p>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 border border-emerald-200">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-md font-semibold text-emerald-800 border border-emerald-200">
               Version v1.0-2026-10 • Standard WCAG 2.2 Level AA
             </span>
           </div>
@@ -136,7 +136,7 @@ export default function AccessibilityStatementPage() {
           </p>
         </section>
 
-        <footer className="border-t border-slate-200 pt-6 text-sm text-slate-500 flex justify-between items-center flex-wrap gap-2">
+        <footer className="border-t border-slate-200 pt-6 text-md text-slate-500 flex justify-between items-center flex-wrap gap-2">
           <span>CantraCare Health Technologies Ltd • Registered in England &amp; Wales</span>
           <div className="flex gap-4">
             <Link href="/privacy-policy" className="hover:underline">

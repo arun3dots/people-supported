@@ -138,7 +138,7 @@ export function AssessmentRegisterSection({
                 <TableCell className="px-4">
                   <div className="flex items-center gap-2.5">
                     <ClipboardList className="size-4 text-slate-500 shrink-0" />
-                    <Text size="sm" weight="medium" className="text-slate-900">
+                    <Text size="md" weight="medium" className="text-slate-900">
                       {row.title}
                     </Text>
                   </div>
@@ -153,23 +153,23 @@ export function AssessmentRegisterSection({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Text size="sm" weight="normal" className="text-slate-700">
+                  <Text size="md" weight="normal" className="text-slate-700">
                     {row.result}
                   </Text>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <Text size="sm" weight="medium" className="text-slate-800">
+                    <Text size="md" weight="medium" className="text-slate-800">
                       {row.completedDate}
                     </Text>
-                    <Text size="xs" variant="muted">
+                    <Text size="md" variant="muted">
                       {row.assessor}
                     </Text>
                   </div>
                 </TableCell>
                 <TableCell>
                   <Text
-                    size="sm"
+                    size="md"
                     weight="medium"
                     className={isDueOrOverdue ? "text-amber-700" : "text-slate-800"}
                   >

@@ -61,7 +61,7 @@ export default function ProtectedLayout() {
           },
           tabBarLabelStyle: {
             fontFamily: theme.fonts.semibold,
-            fontSize: 11,
+            fontSize: 10,
             marginTop: 2,
             marginBottom: Platform.OS === 'android' ? 6 : 2,
           },
@@ -99,11 +99,11 @@ export default function ProtectedLayout() {
           }}
         />
 
-        {/* 3. Residents Tab */}
+        {/* 3. People Supported Tab */}
         <Tabs.Screen
           name="residents"
           options={{
-            title: 'Residents',
+            title: 'People Supported',
             tabBarIcon: ({ color, size }) => (
               <Contact size={size || 24} color={color} strokeWidth={2.2} />
             ),

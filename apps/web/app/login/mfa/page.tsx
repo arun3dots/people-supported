@@ -158,7 +158,7 @@ function MfaVerificationContent() {
               <h1 className="text-xl font-bold text-slate-900">
                 Two-Factor Authentication
               </h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-md text-slate-500">
                 UK GDPR & DSPT Clinical Data Protection
               </p>
             </div>
@@ -166,7 +166,7 @@ function MfaVerificationContent() {
           <button
             type="button"
             onClick={() => logout()}
-            className="text-sm font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1 cursor-pointer"
+            className="text-md font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1 cursor-pointer"
           >
             <LogOut className="size-3.5" /> Sign out
           </button>
@@ -176,12 +176,12 @@ function MfaVerificationContent() {
           <>
             {isSetupMode && (
               <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 space-y-3">
-                <p className="text-sm font-semibold text-slate-800">
+                <p className="text-md font-semibold text-slate-800">
                   Step 1: Scan this QR code with your Authenticator App (Google
                   Authenticator, Microsoft Authenticator, or Authy)
                 </p>
                 {loadingQr ? (
-                  <div className="py-8 text-center text-sm text-slate-500">
+                  <div className="py-8 text-center text-md text-slate-500">
                     Generating secure TOTP secret...
                   </div>
                 ) : qrData ? (
@@ -191,7 +191,7 @@ function MfaVerificationContent() {
                       alt="TOTP QR Code"
                       className="size-44 rounded-lg border border-slate-200 bg-white p-2"
                     />
-                    <p className="text-sm text-slate-500 break-all text-center">
+                    <p className="text-md text-slate-500 break-all text-center">
                       Manual key:{" "}
                       <code className="font-mono font-bold text-slate-800">
                         {qrData.secret}
@@ -202,7 +202,7 @@ function MfaVerificationContent() {
                   <button
                     type="button"
                     onClick={handleGenerateQr}
-                    className="w-full py-2 px-3 rounded-lg bg-emerald-700 text-white text-sm font-semibold hover:bg-emerald-800 cursor-pointer"
+                    className="w-full py-2 px-3 rounded-lg bg-emerald-700 text-white text-md font-semibold hover:bg-emerald-800 cursor-pointer"
                   >
                     Generate QR Code
                   </button>
@@ -238,13 +238,13 @@ function MfaVerificationContent() {
               <button
                 type="submit"
                 disabled={verifying || token.length !== 6}
-                className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-md shadow-md transition-all disabled:opacity-50 cursor-pointer"
               >
                 {verifying ? "Verifying..." : "Verify & Continue"}
               </button>
             </form>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-sm">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-md">
               {!isSetupMode ? (
                 <button
                   type="button"
@@ -274,7 +274,7 @@ function MfaVerificationContent() {
           </>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-slate-600">
+            <p className="text-md text-slate-600">
               Reset your authenticator device using a one-time recovery code sent
               to your registered work email.
             </p>
@@ -289,13 +289,13 @@ function MfaVerificationContent() {
                     required
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-white text-sm text-slate-800"
+                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-white text-md text-slate-800"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={resetLoading}
-                  className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm cursor-pointer disabled:opacity-50"
+                  className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-md cursor-pointer disabled:opacity-50"
                 >
                   {resetLoading ? "Sending OTP..." : "Send Recovery OTP"}
                 </button>
@@ -321,7 +321,7 @@ function MfaVerificationContent() {
                 <button
                   type="submit"
                   disabled={resetLoading || resetOtp.length !== 6}
-                  className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm cursor-pointer disabled:opacity-50"
+                  className="w-full h-11 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-md cursor-pointer disabled:opacity-50"
                 >
                   {resetLoading ? "Resetting MFA..." : "Confirm MFA Reset"}
                 </button>
@@ -333,7 +333,7 @@ function MfaVerificationContent() {
                 setShowReset(false);
                 setOtpSent(false);
               }}
-              className="w-full text-center text-sm font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1 cursor-pointer"
+              className="w-full text-center text-md font-semibold text-slate-500 hover:text-slate-800 inline-flex items-center justify-center gap-1 cursor-pointer"
             >
               <RefreshCw className="size-3.5" /> Back to Authenticator Code
             </button>
@@ -348,7 +348,7 @@ export default function MfaPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center text-sm text-slate-600">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center text-md text-slate-600">
           Loading security verification...
         </div>
       }

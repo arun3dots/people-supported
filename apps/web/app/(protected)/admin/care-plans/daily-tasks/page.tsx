@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   Button,
   Badge,
@@ -15,32 +14,48 @@ import {
 } from "@repo/ui/components/ui";
 import { format } from "date-fns";
 import {
-  ArrowLeft,
   Clock,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
 import { SummaryCardsGrid, type SummaryCardItem } from "@repo/ui/components/ui";
-import { useGetDailyTasksQuery } from "../../../../../lib/queries/residents";
-import { useUpdateDailyTaskStatusMutation } from "../../../../../lib/queries/care-plan";
+import type { CareTaskBoardItemDTO, CareTaskShift } from "@repo/schema";
+import {
+  useGetCareTaskBoardQuery,
+  useRecordCareTaskFromBoardMutation,
+} from "../../../../../lib/queries/care-journey";
 import { TaskSkipReasonModal } from "../../../../shared/components/care-plan/TaskSkipReasonModal";
-import { DailyTaskCard, TaskItem } from "./components/DailyTaskCard";
+import { DailyTaskCard } from "./components/DailyTaskCard";
+
+const getUkCalendarDate = (): string => {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const part = (type: "year" | "month" | "day") =>
+    parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+};
 
 export default function FacilityDailyTasksPage() {
   const [selectedDate, setSelectedDate] = useState(
-    format(new Date(), "yyyy-MM-dd")
+    getUkCalendarDate()
   );
-  const todayStr = format(new Date(), "yyyy-MM-dd");
+  const todayStr = getUkCalendarDate();
+  const boardDate = selectedDate || todayStr;
   const isPastDate = Boolean(selectedDate && selectedDate < todayStr);
-  const [timeSlotFilter, setTimeSlotFilter] = useState("ALL");
-  const [skippingTask, setSkippingTask] = useState<{ id: string; title: string } | null>(null);
+  const isFutureDate = Boolean(selectedDate && selectedDate > todayStr);
+  const isReadOnlyDate = isPastDate || isFutureDate;
+  const [timeSlotFilter, setTimeSlotFilter] = useState<"ALL" | CareTaskShift>("ALL");
+  const [skippingTask, setSkippingTask] = useState<CareTaskBoardItemDTO | null>(null);
 
-  const { data: rawTasks = [], isLoading } = useGetDailyTasksQuery({
-    date: selectedDate,
-  });
+  const { data: board, isLoading, isError, refetch } =
+    useGetCareTaskBoardQuery(boardDate);
 
-  const tasks: TaskItem[] = Array.isArray(rawTasks) ? (rawTasks as TaskItem[]) : [];
-  const updateStatusMutation = useUpdateDailyTaskStatusMutation();
+  const tasks = board?.items ?? [];
+  const recordTaskMutation = useRecordCareTaskFromBoardMutation();
 
   const filteredTasks = tasks.filter((t) => {
     if (timeSlotFilter !== "ALL" && t.timeSlot !== timeSlotFilter) {
@@ -50,13 +65,13 @@ export default function FacilityDailyTasksPage() {
   });
 
   const pendingTasks = filteredTasks.filter(
-    (t) => t.status === "Pending" || t.status === "pending"
+    (t) => t.status === "Pending"
   );
   const completedTasks = filteredTasks.filter(
-    (t) => t.status === "Completed" || t.status === "completed"
+    (t) => t.status === "Completed"
   );
   const skippedTasks = filteredTasks.filter(
-    (t) => t.status === "Skipped" || t.status === "skipped"
+    (t) => t.status === "Skipped"
   );
 
   const totalCount = filteredTasks.length;
@@ -73,7 +88,7 @@ export default function FacilityDailyTasksPage() {
     {
       title: "Completed Today",
       value: String(completedTasks.length),
-      subtitle: `${completionPct}% task completion rate`,
+      subtitle: `${completionPct}% of selected-date tasks`,
       icon: <CheckCircle2 className="size-5 text-emerald-800" />,
       subtitleColor: "text-emerald-800 font-medium",
     },
@@ -94,7 +109,7 @@ export default function FacilityDailyTasksPage() {
           <Text as="h1" size="xl" weight="bold">
             Daily Tasks Board
           </Text>
-          <Text size="sm" weight="regular" variant="muted">
+          <Text size="md" weight="regular" variant="muted">
             Live floor execution tracking, routine completion verification, and clinical skip logging.
           </Text>
         </div>
@@ -110,15 +125,18 @@ export default function FacilityDailyTasksPage() {
             className="w-40"
           />
 
-          <Select value={timeSlotFilter} onValueChange={setTimeSlotFilter}>
+          <Select
+            value={timeSlotFilter}
+            onValueChange={(value) =>
+              setTimeSlotFilter(value === "Day" || value === "Night" ? value : "ALL")
+            }
+          >
             <SelectTrigger className="w-35 h-11 bg-white border-slate-200">
               <SelectValue placeholder="Time Slot" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All Slots</SelectItem>
-              <SelectItem value="Morning">Morning</SelectItem>
-              <SelectItem value="Afternoon">Afternoon</SelectItem>
-              <SelectItem value="Evening">Evening</SelectItem>
+              <SelectItem value="ALL">All Shifts</SelectItem>
+              <SelectItem value="Day">Day shift</SelectItem>
               <SelectItem value="Night">Night</SelectItem>
             </SelectContent>
           </Select>
@@ -130,47 +148,75 @@ export default function FacilityDailyTasksPage() {
 
       {/* Historical Date Notice */}
       {isPastDate && (
-        <div className="flex items-center gap-2.5 p-3.5 bg-amber-50 border border-amber-200/80 text-amber-900 text-sm rounded-xl font-medium">
+        <div className="flex items-center gap-2.5 p-3.5 bg-amber-50 border border-amber-200/80 text-amber-900 text-md rounded-xl font-medium">
           <AlertCircle className="size-4 shrink-0 text-amber-700" />
           <span>Historical daily tasks record for {selectedDate}. Tasks from elapsed dates cannot be marked as completed.</span>
         </div>
       )}
+      {isFutureDate && (
+        <div className="flex items-center gap-2.5 p-3.5 bg-slate-50 border border-slate-200 text-slate-700 text-md rounded-xl font-medium">
+          <Clock className="size-4 shrink-0 text-slate-500" />
+          <span>Future daily tasks for {selectedDate}. Tasks cannot be recorded before that date.</span>
+        </div>
+      )}
 
       {/* 3. Kanban Columns */}
-      {isLoading ? (
+      {isError ? (
+        <div className="p-8 text-center bg-rose-50 rounded-2xl border border-rose-200 space-y-3">
+          <Text size="md" weight="medium" className="text-rose-800">
+            Could not load daily tasks from residents’ current care plans.
+          </Text>
+          <Button type="button" variant="outline" onClick={() => void refetch()}>
+            Try again
+          </Button>
+        </div>
+      ) : isLoading ? (
         <div className="p-16 text-center bg-surface-card-grey rounded-2xl">
           <div className="animate-spin size-8 border-4 border-emerald-800 border-t-transparent rounded-full mx-auto mb-3" />
-          <Text size="sm" weight="medium" variant="muted">Loading daily tasks...</Text>
+          <Text size="md" weight="medium" variant="muted">Loading daily tasks...</Text>
         </div>
       ) : (
+        <>
+        {tasks.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6">
+            <Text size="md" weight="medium" className="text-slate-800">
+              No care tasks are due for this date and shift.
+            </Text>
+            <Text size="md" variant="muted" className="mt-1">
+              Active tasks from current agreed care plans appear here when their schedule matches the selected date.
+            </Text>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
           {/* Column 1: Pending */}
           <div className="bg-surface-card-grey rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 Pending ({pendingTasks.length})
               </Text>
               <Badge variant="secondary" state="warning" className="px-2 py-0.5 shadow-none">
+                To do
               </Badge>
             </div>
             <div className="space-y-3">
               {pendingTasks.length === 0 ? (
                 <div className="p-8 text-center bg-white/60 rounded-xl border border-dashed border-slate-200">
-                  <Text size="sm" variant="muted">No pending tasks</Text>
+                  <Text size="md" variant="muted">No pending tasks</Text>
                 </div>
               ) : (
                 pendingTasks.map((t) => (
                   <DailyTaskCard
-                    key={t.id}
+                    key={t.taskId}
                     task={t}
-                    showActions={!isPastDate}
-                    onComplete={(id) =>
-                      updateStatusMutation.mutate({
-                        taskId: id,
-                        data: { status: "Completed" },
+                    showActions={!isReadOnlyDate && !recordTaskMutation.isPending}
+                    onComplete={(task) =>
+                      recordTaskMutation.mutate({
+                        residentId: task.residentId,
+                        taskId: task.taskId,
+                        data: { outcome: "Done", date: boardDate },
                       })
                     }
-                    onSkip={(id, title) => setSkippingTask({ id, title })}
+                    onSkip={setSkippingTask}
                   />
                 ))
               )}
@@ -180,7 +226,7 @@ export default function FacilityDailyTasksPage() {
           {/* Column 2: Completed */}
           <div className="bg-surface-card-grey rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 Completed ({completedTasks.length})
               </Text>
               <Badge variant="secondary" state="success" className="px-2 py-0.5 shadow-none">
@@ -190,16 +236,16 @@ export default function FacilityDailyTasksPage() {
             <div className="space-y-3">
               {completedTasks.length === 0 ? (
                 <div className="p-8 text-center bg-white/60 rounded-xl border border-dashed border-slate-200">
-                  <Text size="sm" variant="muted">No completed tasks yet</Text>
+                  <Text size="md" variant="muted">No completed tasks yet</Text>
                 </div>
               ) : (
                 completedTasks.map((t) => (
                   <DailyTaskCard
-                    key={t.id}
+                    key={t.taskId}
                     task={t}
                     showActions={false}
-                    onComplete={() => { }}
-                    onSkip={() => { }}
+                    onComplete={() => undefined}
+                    onSkip={() => undefined}
                   />
                 ))
               )}
@@ -208,7 +254,7 @@ export default function FacilityDailyTasksPage() {
           {/* Column 3: Skipped */}
           <div className="bg-surface-card-grey rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 Skipped ({skippedTasks.length})
               </Text>
               <Badge variant="secondary" state="danger" className="px-2 py-0.5 shadow-none">
@@ -217,21 +263,22 @@ export default function FacilityDailyTasksPage() {
             </div>
             {skippedTasks.length === 0 ? (
               <div className="p-8 text-center bg-white/60 rounded-xl border border-dashed border-slate-200">
-                <Text size="sm" variant="muted">No skipped tasks</Text>
+                <Text size="md" variant="muted">No skipped tasks</Text>
               </div>
             ) : (
               skippedTasks.map((t) => (
                 <DailyTaskCard
-                  key={t.id}
+                  key={t.taskId}
                   task={t}
                   showActions={false}
-                  onComplete={() => { }}
-                  onSkip={() => { }}
+                  onComplete={() => undefined}
+                  onSkip={() => undefined}
                 />
               ))
             )}
           </div>
         </div>
+        </>
       )}
 
       {/* 4. Skip Reason Modal */}
@@ -240,15 +287,19 @@ export default function FacilityDailyTasksPage() {
           isOpen={true}
           onClose={() => setSkippingTask(null)}
           taskTitle={skippingTask.title}
-          onSubmit={(reason: string) => {
-            updateStatusMutation.mutate({
-              taskId: skippingTask.id,
+          isLoading={recordTaskMutation.isPending}
+          onSubmit={(reason: string, notes?: string) => {
+            recordTaskMutation.mutate({
+              residentId: skippingTask.residentId,
+              taskId: skippingTask.taskId,
               data: {
-                status: "Skipped",
-                skipReason: reason,
+                outcome: "Declined",
+                note: [reason, notes].filter(Boolean).join(" — "),
+                date: boardDate,
               },
+            }, {
+              onSuccess: () => setSkippingTask(null),
             });
-            setSkippingTask(null);
           }}
         />
       )}

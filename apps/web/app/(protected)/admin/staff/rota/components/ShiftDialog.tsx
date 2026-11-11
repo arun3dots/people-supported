@@ -576,7 +576,7 @@ export function ShiftDialog({
             </Text>
           </DialogTitle>
           <DialogDescription asChild>
-            <Text size="sm" weight="regular" className="text-slate-500">
+            <Text size="md" weight="regular" className="text-slate-500">
               Assign staff members, set work timing, and balance resident care dependencies.
             </Text>
           </DialogDescription>
@@ -586,7 +586,7 @@ export function ShiftDialog({
           {Object.keys(errors).length > 0 && (
             <div ref={errorBannerRef}>
               <Card variant="surface" className="border border-rose-200 bg-rose-50 p-4 shadow-none">
-                <Text size="sm" weight="semibold" className="text-rose-800">
+                <Text size="md" weight="semibold" className="text-rose-800">
                   {topErrorMessage}
                 </Text>
               </Card>
@@ -598,15 +598,15 @@ export function ShiftDialog({
               <div className="flex items-start gap-2.5">
                 <Ban className="size-5 text-rose-600 mt-0.5 shrink-0" />
                 <div className="flex flex-col gap-1">
-                  <Text size="sm" weight="bold" className="text-rose-900">
+                  <Text size="md" weight="bold" className="text-rose-900">
                     This shift has been cancelled
                   </Text>
-                  <Text size="sm" className="text-rose-700">
+                  <Text size="md" className="text-rose-700">
                     {shift.cancellationReason
                       ? `Reason: ${shift.cancellationReason}`
                       : "No specific cancellation reason was provided."}
                   </Text>
-                  <Text size="xs" className="text-rose-600 mt-0.5">
+                  <Text size="md" className="text-rose-600 mt-0.5">
                     Click &quot;Schedule Replacement Shift&quot; below to assign a new carer to this slot with the same care requirements.
                   </Text>
                 </div>
@@ -673,7 +673,7 @@ export function ShiftDialog({
                 Facility Allocation &amp; Resident Care Matching <span className="text-rose-500">*</span>
               </Text>
               {errors.residentIds?.message && (
-                <Text size="sm" weight="semibold" className="text-rose-600">
+                <Text size="md" weight="semibold" className="text-rose-600">
                   {String(errors.residentIds.message)}
                 </Text>
               )}
@@ -734,14 +734,14 @@ export function ShiftDialog({
                   variant="outline"
                   onClick={() => setIsCancelDialogOpen(true)}
                   disabled={deleteShiftMutation.isPending || updateShiftMutation.isPending}
-                  className="h-10 px-3.5 text-amber-700 hover:text-amber-800 hover:bg-amber-50 border-amber-300 rounded-xl gap-2 font-semibold text-sm"
+                  className="h-10 px-3.5 text-amber-700 hover:text-amber-800 hover:bg-amber-50 border-amber-300 rounded-xl gap-2 font-semibold text-md"
                 >
                   <Ban className="size-4" />
                   Cancel Shift
                 </Button>
               )}
               {shift?.id && !isReplacementMode && shift?.status === "Cancelled" && (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-md font-semibold">
                   <Ban className="size-4" />
                   Shift is Cancelled
                 </div>
@@ -884,7 +884,7 @@ export function ShiftDialog({
               className={cancelReasonError ? "border-rose-500 focus:ring-rose-500" : ""}
             />
             {cancelReasonError && (
-              <p className="text-sm font-medium text-rose-600">
+              <p className="text-md font-medium text-rose-600">
                 {cancelReasonError}
               </p>
             )}

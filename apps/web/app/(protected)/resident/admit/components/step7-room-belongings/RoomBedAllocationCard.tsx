@@ -139,7 +139,7 @@ export function RoomBedAllocationCard({
           <Text as="h3" size="md" weight="bold">
             Room &amp; Bed Allocation
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Select physical wing, room, and available bed from facility inventory.
           </Text>
         </div>
@@ -215,7 +215,7 @@ export function RoomBedAllocationCard({
               </SelectContent>
             </Select>
             {errors?.roomNumber && (
-              <p className="text-sm text-text-error font-medium leading-tight mt-1">
+              <p className="text-md text-text-error font-medium leading-tight mt-1">
                 {errors.roomNumber}
               </p>
             )}
@@ -265,7 +265,7 @@ export function RoomBedAllocationCard({
               </SelectContent>
             </Select>
             {errors?.bedId && (
-              <p className="text-sm text-text-error font-medium leading-tight mt-1">
+              <p className="text-md text-text-error font-medium leading-tight mt-1">
                 {errors.bedId}
               </p>
             )}
@@ -321,7 +321,7 @@ export function RoomBedAllocationCard({
                   type="button"
                   variant="link"
                   onClick={() => updateFormData({ roommate: potentialRoommate })}
-                  className="h-auto p-0 text-sm font-semibold text-emerald-800 hover:text-emerald-900 hover:underline"
+                  className="h-auto p-0 text-md font-semibold text-emerald-800 hover:text-emerald-900 hover:underline"
                 >
                   Autofill: {potentialRoommate}
                 </Button>
@@ -346,11 +346,11 @@ export function RoomBedAllocationCard({
               <Badge state="success" className="font-semibold px-2.5 py-0.5 rounded-full">
                 Bed Selected
               </Badge>
-              <Text size="sm" weight="bold" className="text-slate-900">
+              <Text size="md" weight="bold" className="text-slate-900">
                 Room {formData.roomNumber} • {formData.roomType}
               </Text>
             </div>
-            <Text size="sm" weight="medium" className="text-slate-500">
+            <Text size="md" weight="medium" className="text-slate-500">
               ID: {formData.assignedBedId}
             </Text>
           </Card>

@@ -76,7 +76,7 @@ export function NewEnquiryModal({ open, onOpenChange }: NewEnquiryModalProps) {
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-2">
           {/* Section 1: Enquirer Details */}
           <div className="space-y-3 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
-            <Text size="sm" weight="semibold" className="text-slate-900 tracking-wider">
+            <Text size="md" weight="semibold" className="text-slate-900 tracking-wider">
               Enquirer Details (The Person Calling)
             </Text>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -137,7 +137,7 @@ export function NewEnquiryModal({ open, onOpenChange }: NewEnquiryModalProps) {
 
           {/* Section 2: Prospective Resident Details */}
           <div className="space-y-3 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
-            <Text size="sm" weight="semibold" className="text-slate-900 tracking-wider">
+            <Text size="md" weight="semibold" className="text-slate-900 tracking-wider">
               Prospective Resident Details (The Person Needing Care)
             </Text>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
