@@ -86,11 +86,11 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
   return (
     <div className="space-y-6 font-sans animate-in fade-in duration-300">
       {isLoading ? (
-        <div className="flex items-center justify-center py-16">
+        <Card variant="surface" className="flex items-center justify-center py-16">
           <Loader2 className="size-6 animate-spin text-surface-primary" />
-        </div>
+        </Card>
       ) : (
-        <Card className="space-y-4">
+        <Card variant="surface" className="p-5 sm:p-6 space-y-4">
           {/* Action Toolbar with Active / Archived Filter */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-3">
@@ -105,14 +105,14 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
               </div>
 
               {/* Active vs Archived segmented filter */}
-              <div className="inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200 text-md">
+              <div className="inline-flex items-center p-1 rounded-xl bg-white border border-slate-200 text-md">
                 <button
                   type="button"
                   onClick={() => setFilterTab("active")}
                   className={cn(
-                    "px-3 py-1.5 font-semibold rounded-lg transition-all cursor-pointer",
+                    "px-3 py-1.5 font-medium rounded-lg transition-all cursor-pointer",
                     filterTab === "active"
-                      ? "bg-white text-slate-900 shadow-2xs"
+                      ? "bg-primary text-primary-foreground shadow-2xs"
                       : "text-slate-600 hover:text-slate-900"
                   )}
                 >
@@ -122,9 +122,9 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
                   type="button"
                   onClick={() => setFilterTab("archived")}
                   className={cn(
-                    "px-3 py-1.5 font-semibold rounded-lg transition-all cursor-pointer",
+                    "px-3 py-1.5 font-medium rounded-lg transition-all cursor-pointer",
                     filterTab === "archived"
-                      ? "bg-white text-slate-900 shadow-2xs"
+                      ? "bg-primary text-primary-foreground shadow-2xs"
                       : "text-slate-600 hover:text-slate-900"
                   )}
                 >
@@ -138,7 +138,7 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
               type="button"
               variant="primary"
               onClick={() => setIsUploadModalOpen(true)}
-              className="rounded-xl gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+              className="gap-2 self-start sm:self-auto shrink-0"
             >
               <Upload className="size-4 text-white" />
               Upload Document
@@ -162,19 +162,19 @@ export function ResidentDocumentsTab({ residentId }: ResidentDocumentsTabProps) 
       )}
 
       {/* Security Callout Banner */}
-      <div className="bg-emerald-50/40 border border-slate-200/80 rounded-2xl p-5 shadow-2xs flex items-center gap-4">
-        <div className="size-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 shrink-0">
-          <ShieldCheck className="size-5 text-[#3D5C57]" />
+      <Card variant="secondary" border="secondary" className="p-5 flex flex-row items-center gap-4">
+        <div className="size-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shrink-0">
+          <ShieldCheck className="size-5 text-primary" />
         </div>
         <div>
-          <Text size="md" weight="bold" className="text-slate-900">
+          <Text size="md" weight="semibold" className="text-slate-900">
             Secure Resident Records &amp; Data Protection
           </Text>
-          <Text size="md" weight="medium" className="text-slate-600 mt-0.5">
+          <Text size="sm" variant="muted" className="mt-0.5">
             Documents are encrypted and viewed securely in-app. Registered Managers verify documents for regulatory compliance, and records are retained via archiving.
           </Text>
         </div>
-      </div>
+      </Card>
 
       <UploadDocumentModal
         isOpen={isUploadModalOpen}

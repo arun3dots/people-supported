@@ -6,6 +6,7 @@ import { Pill, PauseCircle, PencilLine, StopCircle, Info, Plus } from "lucide-re
 import {
   Badge,
   Button,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -68,24 +69,24 @@ export function MedicationPrescriptionsTable({
   }, [prescriptions, scheduleFilter]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+    <Card variant="surface" className="p-5 space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/70 pb-3">
         <div className="flex items-center gap-2.5">
           <div className="size-8 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-800 shrink-0">
             <Pill className="size-4" />
           </div>
           <div>
-            <Text as="h3" size="base" weight="medium" className="text-slate-900 text-base font-medium">
+            <Text as="h3" size="md" weight="semibold" className="text-slate-900">
               Medication Prescriptions
             </Text>
-            <Text size="sm" variant="muted" className="text-slate-500">
+            <Text size="sm" variant="muted">
               Stop, pause, or change a prescription from a chosen date without editing each scheduled dose.
             </Text>
           </div>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
           {onScheduleFilterChange && (
-            <div className="inline-flex rounded-lg border border-slate-200 p-0.5">
+            <div className="inline-flex rounded-lg bg-white border border-slate-200 p-0.5">
               {(["today", "all"] as const).map((filter) => (
                 <Button
                   key={filter}
@@ -106,32 +107,32 @@ export function MedicationPrescriptionsTable({
       </div>
 
       {filteredPrescriptions.length === 0 ? (
-        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-sm text-slate-500 flex items-center gap-2">
+        <Card variant="white" border="secondary" className="p-4 flex items-center gap-2">
           <Info className="size-4 text-slate-400 shrink-0" />
-          <span>
+          <Text size="sm" variant="muted">
             {scheduleFilter === "today"
               ? "No active prescriptions scheduled for today."
               : "No prescriptions recorded for this resident."}
-          </span>
-        </div>
+          </Text>
+        </Card>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <Card variant="white" border="secondary" className="overflow-hidden p-0">
           <Table>
-            <TableHeader className="bg-slate-50/80">
-              <TableRow className="border-b border-slate-200">
-                <TableHead>Medication</TableHead>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="px-4">Medication</TableHead>
                 <TableHead>Dose / Form</TableHead>
                 <TableHead>Times</TableHead>
                 <TableHead>Period</TableHead>
                 <TableHead>Pauses</TableHead>
                 <TableHead>Status</TableHead>
-                {isEditable && <TableHead className="text-right">Actions</TableHead>}
+                {isEditable && <TableHead className="px-4 text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
-            <TableBody className="divide-y divide-slate-100">
+            <TableBody>
               {filteredPrescriptions.map((rx) => (
                 <TableRow key={rx.id}>
-                  <TableCell className="font-medium text-slate-900">{rx.drugName}</TableCell>
+                  <TableCell className="px-4 font-medium text-slate-900">{rx.drugName}</TableCell>
                   <TableCell>{rx.dose} · {rx.form}</TableCell>
                   <TableCell>{rx.times.join(", ")}</TableCell>
                   <TableCell>
@@ -142,19 +143,19 @@ export function MedicationPrescriptionsTable({
                     {rx.pauses.length === 0
                       ? "—"
                       : rx.pauses.map((p) => (
-                        <div key={p.id} className="text-sm text-slate-600">
+                        <Text key={p.id} size="sm" variant="muted">
                           {format(new Date(p.pauseFrom), "dd MMM")} → {format(new Date(p.resumeOn), "dd MMM")}
-                        </div>
+                        </Text>
                       ))}
                   </TableCell>
                   <TableCell>
                     <Badge variant={STATUS_VARIANT[rx.status]}>{rx.status}</Badge>
                     {rx.stopReason && (
-                      <div className="text-sm text-slate-500 mt-1">{rx.stopReason}</div>
+                      <Text size="sm" variant="muted" className="mt-1">{rx.stopReason}</Text>
                     )}
                   </TableCell>
                   {isEditable && (
-                    <TableCell className="text-right">
+                    <TableCell className="px-4 text-right">
                       {rx.status === "Active" && (
                         <div className="flex justify-end gap-1.5">
                           <Button variant="outline" size="sm" onClick={() => openAction("pause", rx)}>
@@ -174,7 +175,7 @@ export function MedicationPrescriptionsTable({
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       )}
 
       {selected && (
@@ -186,6 +187,6 @@ export function MedicationPrescriptionsTable({
           residentId={residentId}
         />
       )}
-    </div>
+    </Card>
   );
 }

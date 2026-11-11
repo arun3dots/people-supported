@@ -21,6 +21,10 @@ import {
 import { AuditService } from '../audit/audit.service';
 import { MfaService } from './mfa.service';
 import { PasswordService } from './password.service';
+import {
+  ACCESS_TOKEN_TTL,
+  MFA_PENDING_ACCESS_TOKEN_TTL,
+} from './auth.constants';
 import type { AuthenticatedUser } from '../common/interfaces/request.interface';
 
 export type SafeUser = Omit<User, 'passwordHash'> & {
@@ -299,7 +303,9 @@ export class AuthService {
     }
 
     const payload = this.buildJwtPayload(user, undefined, mfaVerified);
-    const access_token = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: mfaVerified ? ACCESS_TOKEN_TTL : MFA_PENDING_ACCESS_TOKEN_TTL,
+    });
     // Pending-MFA logins receive only a short-lived access token. A refresh
     // token is issued after MFA is complete so refresh cannot elevate claims.
     const refresh_token = mfaVerified
@@ -360,12 +366,13 @@ export class AuthService {
     }
   }
 
-  async refreshAccessToken(
-    oldRefreshToken: string,
-    accessToken?: string,
-  ) {
-    const { newToken, userId, activeBranchId, mfaVerified: tokenMfaVerified } =
-      await this.refreshTokenService.rotateRefreshToken(oldRefreshToken);
+  async refreshAccessToken(oldRefreshToken: string, accessToken?: string) {
+    const {
+      newToken,
+      userId,
+      activeBranchId,
+      mfaVerified: tokenMfaVerified,
+    } = await this.refreshTokenService.rotateRefreshToken(oldRefreshToken);
 
     const rawUser = await this.usersService.findById(userId);
     if (!rawUser) {
@@ -389,7 +396,9 @@ export class AuthService {
     const mfaVerified =
       tokenMfaVerified ?? accessTokenMfaVerified ?? !mfaRequired;
     const payload = this.buildJwtPayload(user, activeBranchId, mfaVerified);
-    const access_token = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: ACCESS_TOKEN_TTL,
+    });
 
     void this.auditService.emitAuth({
       userId: user.id,
@@ -425,7 +434,9 @@ export class AuthService {
     await this.refreshTokenService.updateActiveBranch(refreshToken, branchId);
 
     const payload = this.buildJwtPayload(user, branchId, true);
-    const access_token = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: ACCESS_TOKEN_TTL,
+    });
 
     void this.auditService.emitAuth({
       userId: user.id,

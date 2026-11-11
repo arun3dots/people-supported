@@ -52,7 +52,7 @@ export function useRoomColumns({
           const label = formatRoomLabel(r.roomNumber);
           return (
             <div className="flex items-center gap-3">
-              <div className="size-9 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-md shrink-0 overflow-hidden">
+              <div className="size-9 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-md shrink-0 overflow-hidden">
                 {r.roomNumber.replace(/[^0-9]/g, "").slice(0, 2) || r.roomNumber.slice(0, 2)}
               </div>
               <div className="flex flex-col min-w-0">

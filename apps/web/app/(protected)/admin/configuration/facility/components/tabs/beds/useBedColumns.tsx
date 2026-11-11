@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo } from "react";
 import { BedDouble, LogOut, UserPlus } from "lucide-react";
@@ -63,7 +63,7 @@ export function useBedColumns({
 
           return (
             <div className="flex items-center gap-3 min-w-0">
-              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-base shrink-0 overflow-hidden">
+              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-base shrink-0 overflow-hidden">
                 {occupied ? initials : <BedDouble className="size-5 text-icon-primary" />}
               </div>
               <div className="flex flex-col min-w-0 gap-1">

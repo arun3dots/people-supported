@@ -43,6 +43,10 @@ import {
   REFRESH_COOKIE_OPTIONS,
   formatAuthUser,
 } from './auth-cookie.util';
+import {
+  ACCESS_TOKEN_MAX_AGE_MS,
+  MFA_PENDING_ACCESS_TOKEN_MAX_AGE_MS,
+} from './auth.constants';
 
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || undefined;
 
@@ -98,7 +102,12 @@ export class AuthController {
     res.cookie(
       'access_token',
       result.access_token,
-      ACCESS_COOKIE_OPTIONS(this.isProduction),
+      ACCESS_COOKIE_OPTIONS(
+        this.isProduction,
+        result.mfaVerified
+          ? ACCESS_TOKEN_MAX_AGE_MS
+          : MFA_PENDING_ACCESS_TOKEN_MAX_AGE_MS,
+      ),
     );
     if (result.refresh_token) {
       res.cookie(

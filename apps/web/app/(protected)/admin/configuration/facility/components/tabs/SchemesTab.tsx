@@ -173,7 +173,7 @@ export function SchemesTab() {
           <EntityCard
             key={s.id}
             avatar={
-              <div className="size-11 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-sm shrink-0">
+              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
                 {s.name.slice(0, 2).toUpperCase()}
               </div>
             }

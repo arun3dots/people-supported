@@ -51,6 +51,7 @@ export function PropertiesSchemeStats({
           value: String(totalProperties),
           subtitle: "All registered properties",
           icon: <Building2 className="size-5 text-emerald-800" />,
+          iconClassName: "bg-emerald-50",
           subtitleColor: "text-slate-500",
         },
         {
@@ -58,6 +59,7 @@ export function PropertiesSchemeStats({
           value: String(totalSchemes),
           subtitle: "Support schemes",
           icon: <FolderKanban className="size-5 text-emerald-800" />,
+          iconClassName: "bg-emerald-50",
           subtitleColor: "text-slate-500",
         },
         {
@@ -65,6 +67,7 @@ export function PropertiesSchemeStats({
           value: String(totalRooms),
           subtitle: "Across all properties",
           icon: <DoorOpen className="size-5 text-emerald-800" />,
+          iconClassName: "bg-slate-100",
           subtitleColor: "text-slate-500",
         },
         {
@@ -72,6 +75,7 @@ export function PropertiesSchemeStats({
           value: String(totalCapacity),
           subtitle: "Beds available",
           icon: <BedDouble className="size-5 text-emerald-800" />,
+          iconClassName: "bg-slate-100",
           subtitleColor: "text-slate-500",
         },
         {
@@ -79,14 +83,16 @@ export function PropertiesSchemeStats({
           value: `${occupiedPct}%`,
           subtitle: `${occupiedCount} of ${totalCapacity} beds occupied`,
           icon: <UserCheck className="size-5 text-emerald-800" />,
-          subtitleColor: "text-emerald-800 font-medium",
+          iconClassName: "bg-emerald-50",
+          subtitleColor: "text-emerald-800",
         },
         {
           title: "Vacant",
           value: `${vacantPct}%`,
           subtitle: `${vacantCount} beds ready for referral`,
           icon: <Sparkles className="size-5 text-amber-600" />,
-          subtitleColor: "text-amber-700 font-medium",
+          iconClassName: "bg-amber-50",
+          subtitleColor: "text-amber-700",
         },
       ]}
     />

@@ -2,8 +2,29 @@
 
 import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, ExternalLink, Loader2, Plus, ShieldAlert } from "lucide-react";
-import { Button, Text } from "@repo/ui/components/ui";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Loader2,
+  Plus,
+  ShieldAlert,
+} from "lucide-react";
+import {
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  SummaryCardsGrid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Text,
+} from "@repo/ui/components/ui";
 import { useGetIncidentsQuery } from "../../../../../../lib/queries/incidents";
 import { useAuth } from "../../../../../../lib/context/AuthContext";
 import type { Resident } from "../../../../../../lib/types/resident";
@@ -40,59 +61,76 @@ export function ResidentIncidentsTab({
     return { total, open, closed };
   }, [residentIncidents]);
 
+  const summaryCards = useMemo(
+    () => [
+      {
+        title: "Total incidents",
+        value: counts.total,
+        subtitle: "Recorded for this person",
+        icon: <ShieldAlert className="size-5 text-slate-600" />,
+        iconClassName: "bg-slate-100",
+      },
+      {
+        title: "Open / Under review",
+        value: counts.open,
+        subtitle: "Active safeguarding or follow-up",
+        subtitleColor: counts.open > 0 ? "text-amber-700" : undefined,
+        icon: <Clock className="size-5 text-amber-700" />,
+        iconClassName: "bg-amber-50",
+      },
+      {
+        title: "Closed & resolved",
+        value: counts.closed,
+        subtitle: "Post-incident review completed",
+        subtitleColor: "text-emerald-700",
+        icon: <CheckCircle2 className="size-5 text-emerald-700" />,
+        iconClassName: "bg-emerald-50",
+      },
+    ],
+    [counts],
+  );
+
   if (isLoading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center font-sans">
+      <Card
+        variant="surface"
+        className="py-20 flex flex-col items-center justify-center font-sans"
+      >
         <Loader2 className="size-8 animate-spin text-primary mb-3" />
         <Text size="sm" variant="muted">
           Loading incident records…
         </Text>
-      </div>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-6 font-sans">
       {/* 3 KPI Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 space-y-1 shadow-2xs">
-          <span className="text-md font-bold text-slate-600">Total incidents</span>
-          <div className="text-2xl font-extrabold text-slate-900">{counts.total}</div>
-          <p className="text-md text-slate-500">Recorded for this person</p>
-        </div>
-
-        <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-5 space-y-1 shadow-2xs">
-          <span className="text-md font-bold text-amber-900">Open / Under review</span>
-          <div className="text-2xl font-extrabold text-amber-800">{counts.open}</div>
-          <p className="text-md text-amber-700">Active safeguarding or follow-up</p>
-        </div>
-
-        <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-5 space-y-1 shadow-2xs">
-          <span className="text-md font-bold text-emerald-900">Closed & resolved</span>
-          <div className="text-2xl font-extrabold text-emerald-800">{counts.closed}</div>
-          <p className="text-md text-emerald-700">Post-incident review completed</p>
-        </div>
-      </div>
+      <SummaryCardsGrid
+        cards={summaryCards}
+        className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3"
+      />
 
       {/* Incidents Table Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
+      <Card variant="surface" className="p-5 sm:p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="size-4 text-primary" />
+          <div className="flex items-center gap-2.5">
+            <ShieldAlert className="size-4 text-primary shrink-0" />
             <div>
-              <h3 className="text-base font-bold text-slate-900">
+              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Incidents & Safeguarding Log
-              </h3>
-              <p className="text-md text-slate-500">
+              </Text>
+              <Text size="sm" variant="muted">
                 All reported accidents, behavioural triggers, and safeguarding events
-              </p>
+              </Text>
             </div>
           </div>
 
           <Button
             variant="primary"
             onClick={() => router.push(`${baseRoute}?residentId=${resident.id}`)}
-            className="font-semibold text-md rounded-xl h-10 px-4 inline-flex items-center gap-1.5 cursor-pointer"
+            className="gap-1.5"
           >
             <Plus className="size-4" />
             Add Incident
@@ -100,91 +138,97 @@ export function ResidentIncidentsTab({
         </div>
 
         {residentIncidents.length === 0 ? (
-          <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 rounded-2xl">
-            <AlertTriangle className="size-7 text-slate-400 mx-auto" />
-            <p className="text-md font-semibold text-slate-800">No incidents recorded</p>
-            <p className="text-md text-slate-500">
-              There are no open or historical incident reports for this person.
-            </p>
-          </div>
+          <Card variant="white" border="secondary" className="p-4">
+            <EmptyState
+              icon={<AlertTriangle className="size-5 text-slate-400" />}
+              title="No incidents recorded"
+              description="There are no open or historical incident reports for this person."
+            />
+          </Card>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 text-md font-semibold text-slate-500">
-                  <th className="py-3 px-3">Ref #</th>
-                  <th className="py-3 px-3">Incident</th>
-                  <th className="py-3 px-3">Category</th>
-                  <th className="py-3 px-3">Severity</th>
-                  <th className="py-3 px-3">Date & Reporter</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-md">
+          <Card variant="white" border="secondary" className="overflow-hidden p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="px-4">Ref #</TableHead>
+                  <TableHead>Incident</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Severity</TableHead>
+                  <TableHead>Date & Reporter</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="px-4 text-right">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {residentIncidents.map((inc) => {
-                  const statusCls =
+                  const statusState =
                     inc.status === "Closed"
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                      ? "success"
                       : inc.status === "Open"
-                        ? "bg-red-50 text-red-700 border-red-200"
-                        : "bg-amber-50 text-amber-800 border-amber-200";
+                        ? "danger"
+                        : "warning";
 
-                  const sevCls =
+                  const sevState =
                     inc.priority === "High"
-                      ? "bg-red-50 text-red-700 border-red-200"
+                      ? "danger"
                       : inc.priority === "Medium"
-                        ? "bg-amber-50 text-amber-800 border-amber-200"
-                        : "bg-slate-100 text-slate-700 border-slate-200";
+                        ? "warning"
+                        : "inactive";
 
                   return (
-                    <tr key={inc.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-4 px-3 font-mono font-semibold text-slate-600">
+                    <TableRow key={inc.id}>
+                      <TableCell className="px-4 font-mono text-slate-600">
                         {inc.incidentNumber}
-                      </td>
-                      <td className="py-4 px-3 font-bold text-slate-900">{inc.title}</td>
-                      <td className="py-4 px-3 text-slate-700">{inc.category}</td>
-                      <td className="py-4 px-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold border ${sevCls}`}
-                        >
+                      </TableCell>
+                      <TableCell>
+                        <Text size="sm" weight="medium" className="text-slate-900">
+                          {inc.title}
+                        </Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text size="sm" className="text-slate-700">
+                          {inc.category}
+                        </Text>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" state={sevState} className="border">
                           {inc.severity || inc.priority}
-                        </span>
-                      </td>
-                      <td className="py-4 px-3">
-                        <div className="font-semibold text-slate-800">
-                          {new Date(inc.incidentDate).toLocaleDateString("en-GB")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <Text size="sm" weight="medium" className="text-slate-800">
+                            {new Date(inc.incidentDate).toLocaleDateString("en-GB")}
+                          </Text>
+                          <Text size="xs" variant="muted">
+                            {inc.reportedBy?.fullName ?? "Support Staff"}
+                          </Text>
                         </div>
-                        <div className="text-slate-400">
-                          {inc.reportedBy?.fullName ?? "Support Staff"}
-                        </div>
-                      </td>
-                      <td className="py-4 px-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold border ${statusCls}`}
-                        >
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" state={statusState} className="border">
                           {inc.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-3 text-right">
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 text-right">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => router.push(`${baseRoute}/${inc.id}`)}
-                          className="border-slate-200 text-slate-700 rounded-xl h-8 px-3 text-md font-semibold inline-flex items-center gap-1 cursor-pointer"
+                          className="gap-1"
                         >
                           View
                           <ExternalLink className="size-3" />
                         </Button>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </Card>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

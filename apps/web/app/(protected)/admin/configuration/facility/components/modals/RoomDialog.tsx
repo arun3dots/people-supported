@@ -176,7 +176,7 @@ export function RoomDialog({
         {!showSuccess ? (
           <div className="p-6">
             <DialogHeader className="pb-4 border-b border-slate-100">
-              <DialogTitle className="text-lg font-bold text-slate-900">
+              <DialogTitle className="text-lg font-semibold text-slate-900">
                 {title}
               </DialogTitle>
             </DialogHeader>

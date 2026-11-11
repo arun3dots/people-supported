@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@repo/ui/components/ui/Button";
+import { Button, Text } from "@repo/ui/components/ui";
 import { Plus, ChevronRight } from "lucide-react";
 
 interface FacilitySuccessPromptProps {
@@ -44,18 +44,18 @@ export function FacilitySuccessPrompt({
 
       {/* Headings */}
       <div className="space-y-1">
-        <h3 className="text-xl font-bold text-slate-900 font-sans">
+        <Text as="h3" size="lg" weight="semibold" className="text-slate-900 font-sans">
           {title}
-        </h3>
-        <p className="text-md text-slate-500 font-normal font-sans">
+        </Text>
+        <Text size="md" variant="muted" className="font-sans">
           {description}
-        </p>
+        </Text>
       </div>
 
       {!isEdit && (
-        <p className="text-md font-semibold text-slate-700 pt-1">
+        <Text size="md" weight="medium" className="text-slate-700 pt-1">
           What would you like to do next?
-        </p>
+        </Text>
       )}
 
       {/* Responsive action row; wrap instead of overflowing narrow dialogs */}
@@ -66,7 +66,7 @@ export function FacilitySuccessPrompt({
             type="button"
             onClick={onAddNext}
             variant="primary"
-            className="h-10 w-full sm:w-auto px-3.5 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 text-sm sm:text-md whitespace-nowrap"
+            className="h-10 w-full sm:w-auto px-3.5 sm:px-4 gap-1.5 whitespace-nowrap"
           >
             {addNextLabel} <ChevronRight className="size-3.5" />
           </Button>
@@ -78,18 +78,18 @@ export function FacilitySuccessPrompt({
             type="button"
             onClick={onAddAnother}
             variant="outline"
-            className="h-10 w-full sm:w-auto px-3.5 sm:px-4 rounded-xl flex items-center justify-center gap-1.5 text-sm sm:text-md whitespace-nowrap border border-slate-300 text-slate-700 hover:bg-slate-50"
+            className="h-10 w-full sm:w-auto px-3.5 sm:px-4 gap-1.5 whitespace-nowrap"
           >
             <Plus className="size-3.5" /> {addAnotherLabel}
           </Button>
         )}
 
-        {/* Finish for Now / Done (Green Outline Cancel Button) */}
+        {/* Finish for Now / Done (Outline Button) */}
         <Button
           type="button"
           onClick={onFinish}
           variant="outline"
-          className="h-10 w-full sm:w-auto px-3.5 sm:px-4 rounded-xl bg-white hover:bg-[#4A706A]/10 !border-2 !border-[#4A706A] !text-[#4A706A] transition-colors cursor-pointer font-medium text-sm sm:text-md whitespace-nowrap shadow-none"
+          className="h-10 w-full sm:w-auto px-3.5 sm:px-4 whitespace-nowrap"
         >
           {isEdit ? "Done" : "Finish for Now"}
         </Button>

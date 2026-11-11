@@ -231,8 +231,9 @@ export default function PrivacyPolicyPage() {
               CQC Regulation 17 and DSPT forensic audit requirements.
             </li>
             <li>
-              <strong>Authentication Tokens &amp; OTPs:</strong> Access tokens expire
-              after 15 minutes; refresh tokens after 7 days; password/MFA reset OTPs
+              <strong>Authentication Tokens &amp; OTPs:</strong> Fully authenticated
+              access tokens expire after 5 hours; pending-MFA access tokens after 15
+              minutes; refresh tokens after 7 days; password/MFA reset OTPs
               expire after 10 minutes.
             </li>
           </ul>

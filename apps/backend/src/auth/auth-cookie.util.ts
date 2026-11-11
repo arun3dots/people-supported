@@ -1,15 +1,19 @@
 import { prisma } from '@repo/db';
 import { SafeUser } from './auth.service';
+import { ACCESS_TOKEN_MAX_AGE_MS } from './auth.constants';
 
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || undefined;
 
-export const ACCESS_COOKIE_OPTIONS = (isProduction: boolean) => ({
+export const ACCESS_COOKIE_OPTIONS = (
+  isProduction: boolean,
+  maxAge = ACCESS_TOKEN_MAX_AGE_MS,
+) => ({
   httpOnly: true,
   secure: isProduction,
   sameSite: 'strict' as const,
   path: '/',
   domain: COOKIE_DOMAIN,
-  maxAge: 15 * 60 * 1000,
+  maxAge,
 });
 
 export const REFRESH_COOKIE_OPTIONS = (isProduction: boolean) => ({

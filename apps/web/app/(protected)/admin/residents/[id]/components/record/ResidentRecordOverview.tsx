@@ -7,18 +7,10 @@ import {
   Home,
   Heart,
   Target,
-  Users,
-  Zap,
-  Stethoscope,
   Pencil,
   CheckCircle2,
-  Phone,
-  MessageSquare,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
-import { Button, Spinner, Text } from "@repo/ui/components/ui";
+import { Button, Card, InfoField, Spinner, Text } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
 import type { SupportedLivingDetailsDTO, SupportedLivingOutcomeDTO } from "@repo/schema";
 import {
@@ -26,12 +18,11 @@ import {
   useUpdateSupportedLivingMutation,
 } from "../../../../../../../lib/queries/residents";
 import { useGetPreAdmissionQuery } from "../../../../../../../lib/queries/pre-admission";
-import { hydrateParts } from "../../../../../resident/admit/pre-admission/partsState";
-import { PreAdmissionSummary } from "../../../../../resident/admit/pre-admission/review/PreAdmissionSummary";
 import {
   SupportedLivingProfileEditModal,
   type ProfileEditSection,
 } from "./SupportedLivingProfileEditModal";
+import { ResidentRecordSecondaryCards } from "./ResidentRecordSecondaryCards";
 
 interface ResidentRecordOverviewProps {
   residentId: string;
@@ -49,13 +40,12 @@ export function ResidentRecordOverview({
   const updateSlMutation = useUpdateSupportedLivingMutation();
 
   const [editSection, setEditSection] = useState<ProfileEditSection>(null);
-  const [showPreAdmission, setShowPreAdmission] = useState(false);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-72">
+      <Card variant="surface" className="flex items-center justify-center min-h-72 p-6">
         <Spinner />
-      </div>
+      </Card>
     );
   }
 
@@ -126,58 +116,41 @@ export function ResidentRecordOverview({
   const nokPhone = resident?.nextOfKin?.phoneNumber || "07700 900321";
   const allergiesList = resident?.careProfile?.allergies ?? [];
 
-  const renderDefinitionRows = (rows: { label: string; value: React.ReactNode; bold?: boolean }[]) => (
-    <dl className="space-y-2.5 text-md">
-      {rows.map((r) => (
-        <div key={r.label} className="grid grid-cols-3 gap-2">
-          <dt className="text-slate-500 font-medium">{r.label}</dt>
-          <dd className={cn("col-span-2 text-slate-900", r.bold ? "font-bold" : "font-medium")}>
-            {r.value}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-
   return (
     <div className="space-y-6 font-sans">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. Personal Details */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
+        <Card variant="surface" className="p-6 space-y-4">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <User className="size-4 text-primary" />
-              <Text size="md" weight="semibold" className="text-slate-900">
+              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Personal Details
               </Text>
             </div>
             {canEdit && (
               <Link href={`/admin/residents/admit?id=${residentId}&step=1`}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 gap-1.5 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50"
-                >
-                  <Pencil className="size-3" /> Edit
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Pencil className="size-3.5" /> Edit
                 </Button>
               </Link>
             )}
           </div>
-          {renderDefinitionRows([
-            { label: "Address:", value: addressVal },
-            { label: "Phone:", value: phoneVal },
-            { label: "Email:", value: emailVal },
-            { label: "Preferred name:", value: preferredName },
-            { label: "Gender:", value: genderVal },
-          ])}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InfoField label="Address" value={addressVal} multiline className="sm:col-span-2" />
+            <InfoField label="Phone" value={phoneVal} />
+            <InfoField label="Email" value={emailVal} multiline />
+            <InfoField label="Preferred name" value={preferredName} />
+            <InfoField label="Gender" value={genderVal} />
+          </div>
+        </Card>
 
         {/* 2. Tenancy Information */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
+        <Card variant="surface" className="p-6 space-y-4">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Home className="size-4 text-primary" />
-              <Text size="md" weight="semibold" className="text-slate-900">
+              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Tenancy Information
               </Text>
             </div>
@@ -186,27 +159,27 @@ export function ResidentRecordOverview({
                 variant="outline"
                 size="sm"
                 onClick={() => setEditSection("tenancy")}
-                className="h-9 gap-1.5 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50"
+                className="gap-1.5"
               >
-                <Pencil className="size-3" /> Edit
+                <Pencil className="size-3.5" /> Edit
               </Button>
             )}
           </div>
-          {renderDefinitionRows([
-            { label: "Tenancy Start Date:", value: tenancyStart },
-            { label: "Landlord:", value: landlordVal },
-            { label: "Tenancy Type:", value: tenancyTypeVal },
-            { label: "Housing Benefit:", value: housingBenefitVal },
-            { label: "Weekly Rent:", value: weeklyRentVal, bold: true },
-          ])}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InfoField label="Tenancy Start Date" value={tenancyStart} />
+            <InfoField label="Landlord" value={landlordVal} multiline />
+            <InfoField label="Tenancy Type" value={tenancyTypeVal} multiline />
+            <InfoField label="Housing Benefit" value={housingBenefitVal} />
+            <InfoField label="Weekly Rent" value={weeklyRentVal} />
+          </div>
+        </Card>
 
         {/* 3. Support Needs */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
+        <Card variant="surface" className="p-6 space-y-4">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Heart className="size-4 text-primary fill-primary" />
-              <Text size="md" weight="semibold" className="text-slate-900">
+              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Support Needs
               </Text>
             </div>
@@ -215,27 +188,29 @@ export function ResidentRecordOverview({
                 variant="outline"
                 size="sm"
                 onClick={() => setEditSection("needs")}
-                className="h-9 gap-1.5 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50"
+                className="gap-1.5"
               >
-                <Pencil className="size-3" /> Edit
+                <Pencil className="size-3.5" /> Edit
               </Button>
             )}
           </div>
-          <ul className="space-y-2 text-md text-slate-800 list-disc pl-5">
+          <ul className="space-y-2 list-disc pl-5 text-slate-800">
             {supportNeedsList.map((item: string, idx: number) => (
-              <li key={idx} className="font-medium">
-                {item}
+              <li key={idx}>
+                <Text as="span" size="md" weight="normal" className="text-slate-800">
+                  {item}
+                </Text>
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* 4. Support Goals */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
+        <Card variant="surface" className="p-6 space-y-4">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Target className="size-4 text-primary" />
-              <Text size="md" weight="semibold" className="text-slate-900">
+              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Support Goals
               </Text>
             </div>
@@ -244,23 +219,30 @@ export function ResidentRecordOverview({
                 variant="outline"
                 size="sm"
                 onClick={() => setEditSection("goals")}
-                className="h-9 gap-1.5 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50"
+                className="gap-1.5"
               >
-                <Pencil className="size-3" /> Edit
+                <Pencil className="size-3.5" /> Edit
               </Button>
             )}
           </div>
           <div className="space-y-3.5">
             {goalsList.map((goal: SupportedLivingOutcomeDTO) => (
               <div key={goal.id} className="space-y-1.5">
-                <div className="flex items-center justify-between text-md">
-                  <span className="inline-flex items-center gap-1.5 font-medium text-slate-800">
+                <div className="flex items-center justify-between gap-2">
+                  <Text
+                    as="span"
+                    size="md"
+                    weight="normal"
+                    className="inline-flex items-center gap-1.5 text-slate-800"
+                  >
                     <CheckCircle2 className="size-3.5 text-emerald-700 shrink-0" />
                     {goal.title}
-                  </span>
-                  <span className="font-semibold text-slate-500">{goal.progress}%</span>
+                  </Text>
+                  <Text as="span" size="sm" weight="medium" variant="muted">
+                    {goal.progress}%
+                  </Text>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-white overflow-hidden border border-slate-200/70">
                   <div
                     className={cn(
                       "h-full rounded-full transition-all",
@@ -272,139 +254,23 @@ export function ResidentRecordOverview({
               </div>
             ))}
           </div>
-        </div>
-
-        {/* 5. Compatibility */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="size-4 text-primary" />
-              <Text size="md" weight="semibold" className="text-slate-900">
-                Compatibility
-              </Text>
-            </div>
-            {canEdit && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setEditSection("compatibility")}
-                className="h-9 gap-1.5 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                <Pencil className="size-3" /> Edit
-              </Button>
-            )}
-          </div>
-          {renderDefinitionRows([
-            { label: "Housemates:", value: housematesVal, bold: true },
-            { label: "Preferred Environment:", value: preferredEnvVal },
-            { label: "Known Triggers:", value: triggersVal },
-            { label: "Likes & Interests:", value: interestsVal },
-          ])}
-        </div>
-
-        {/* 6. Quick Actions */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2">
-            <Zap className="size-4 text-primary" />
-            <Text size="md" weight="semibold" className="text-slate-900">
-              Quick Actions
-            </Text>
-          </div>
-          <div className="grid grid-cols-2 gap-3 pt-1">
-            {[
-              { label: "View Support Plan", tab: "careplan" },
-              { label: "Record Daily Log", tab: "timeline" },
-              { label: "Add Incident", tab: "incidents" },
-              { label: "Update Medication", tab: "mar" },
-            ].map((act) => (
-              <Button
-                key={act.tab}
-                type="button"
-                variant="outline"
-                onClick={() => onNavigateTab?.(act.tab)}
-                className="h-10 rounded-xl border-slate-200 text-md font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                {act.label}
-              </Button>
-            ))}
-          </div>
-        </div>
+        </Card>
       </div>
 
-      {/* 7. Health & Contacts */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-        <div className="flex items-center gap-2">
-          <Stethoscope className="size-4 text-primary" />
-          <Text size="md" weight="semibold" className="text-slate-900">
-            Health & Contacts
-          </Text>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="rounded-xl bg-slate-50/80 border border-slate-200/70 p-4 space-y-1">
-            <p className="text-md text-slate-500">GP practice</p>
-            <p className="text-md font-semibold text-slate-900">
-              York Medical Practice — Dr A. Malik
-            </p>
-          </div>
-          <div className="rounded-xl bg-slate-50/80 border border-slate-200/70 p-4 space-y-1">
-            <p className="text-md text-slate-500">Next of kin</p>
-            <p className="text-md font-semibold text-slate-900">{nokName}</p>
-            <p className="text-md text-slate-500 inline-flex items-center gap-1">
-              <Phone className="size-3" /> {nokPhone}
-            </p>
-          </div>
-          <div className="rounded-xl bg-slate-50/80 border border-slate-200/70 p-4 space-y-1">
-            <p className="text-md text-slate-500 inline-flex items-center gap-1">
-              <MessageSquare className="size-3" /> Communication
-            </p>
-            <p className="text-md font-medium text-slate-800">
-              Verbal. Short sentences and visual timetable help.
-            </p>
-          </div>
-          <div className="rounded-xl bg-red-50/60 border border-red-200/70 p-4 space-y-1">
-            <p className="text-md text-red-700 font-semibold inline-flex items-center gap-1">
-              <AlertTriangle className="size-3" /> Allergies
-            </p>
-            <p className="text-md font-semibold text-red-800">
-              {allergiesList.length > 0 ? allergiesList.join(", ") : "Penicillin"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {record && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs">
-          <button
-            type="button"
-            onClick={() => setShowPreAdmission((prev) => !prev)}
-            className="w-full flex items-center justify-between text-left px-2 py-1 cursor-pointer"
-          >
-            <div>
-              <Text size="md" weight="semibold" className="text-slate-800">
-                Onboarding & Pre-Admission Assessment Record (v{record.versionNumber})
-              </Text>
-              <Text size="md" className="text-slate-500">
-                Click to {showPreAdmission ? "hide" : "view"} full pre-admission clinical &
-                baseline details
-              </Text>
-            </div>
-            {showPreAdmission ? (
-              <ChevronUp className="size-4 text-slate-500" />
-            ) : (
-              <ChevronDown className="size-4 text-slate-500" />
-            )}
-          </button>
-          {showPreAdmission && (
-            <div className="pt-4 mt-3 border-t border-slate-100">
-              <PreAdmissionSummary
-                parts={hydrateParts(record)}
-                residentId={residentId}
-                hasSavedAdls={Boolean(record.partD?.adlChecklist)}
-              />
-            </div>
-          )}
-        </div>
-      )}
+      <ResidentRecordSecondaryCards
+        residentId={residentId}
+        canEdit={canEdit}
+        onEditSection={setEditSection}
+        onNavigateTab={onNavigateTab}
+        housematesCount={housematesVal}
+        preferredEnvironment={preferredEnvVal}
+        knownTriggers={triggersVal}
+        likesAndInterests={interestsVal}
+        nokName={nokName}
+        nokPhone={nokPhone}
+        allergiesList={allergiesList}
+        preAdmissionRecord={record}
+      />
 
       <SupportedLivingProfileEditModal
         section={editSection}

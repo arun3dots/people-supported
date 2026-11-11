@@ -72,53 +72,57 @@ export function FacilityContainer() {
           onValueChange={handleTabChange}
           className="w-full"
         >
-          <Card className="flex items-start justify-start">
-            <TabsList className="p-1 rounded-xl h-auto inline-flex items-center gap-1 flex-wrap">
+          <div className="border-b border-slate-200">
+            <TabsList className="w-full justify-start bg-transparent p-0 h-auto rounded-none gap-6 flex-wrap">
               <TabsTrigger
                 value="properties"
-                className="flex items-center justify-center px-3 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-500 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+                className="flex items-center gap-1.5"
               >
-                <Building2 className="size-4 text-emerald-800" />
+                <Building2 className="size-4 text-primary" />
                 Properties ({properties?.length ?? 0})
               </TabsTrigger>
 
               <TabsTrigger
                 value="schemes"
-                className="flex items-center justify-center px-3 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-500 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+                className="flex items-center gap-1.5"
               >
-                <FolderKanban className="size-4 text-emerald-800" />
+                <FolderKanban className="size-4 text-primary" />
                 Schemes ({schemes?.length ?? 0})
               </TabsTrigger>
 
               <TabsTrigger
                 value="rooms"
-                className="flex items-center justify-center px-3 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-500 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+                className="flex items-center gap-1.5"
               >
-                <DoorOpen className="size-4 text-emerald-800" />
+                <DoorOpen className="size-4 text-primary" />
                 Rooms
               </TabsTrigger>
 
               <TabsTrigger
                 value="beds"
-                className="flex items-center justify-center px-3 py-1.5 gap-1.5 rounded-lg transition-all text-md font-semibold cursor-pointer border-0 data-[state=active]:border-0 data-[state=active]:border-b-0 text-slate-500 hover:text-slate-900 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs data-[state=active]:font-bold"
+                className="flex items-center gap-1.5"
               >
-                <BedDouble className="size-4 text-emerald-800" />
+                <BedDouble className="size-4 text-primary" />
                 Beds
               </TabsTrigger>
             </TabsList>
-          </Card>
+          </div>
 
           {hasFilter && (
-            <div className="mt-4 flex items-center justify-between bg-emerald-50/80 border border-emerald-200 rounded-xl px-4 py-2.5 text-md text-emerald-900">
+            <Card
+              variant="secondary"
+              border="secondary"
+              className="mt-4 px-4 py-2.5 flex flex-row items-center justify-between gap-3"
+            >
               <div className="flex items-center gap-2 flex-wrap">
-                <Text size="sm" weight="bold" className="text-emerald-800">
+                <Text size="sm" weight="medium" className="text-emerald-800">
                   Filtered view:
                 </Text>
                 {activeWing && (
                   <button
                     type="button"
                     onClick={() => navigate("properties")}
-                    className="hover:underline font-medium cursor-pointer text-emerald-800"
+                    className="hover:underline text-sm font-medium cursor-pointer text-emerald-800"
                   >
                     Property: {activeWing.name}
                   </button>
@@ -126,11 +130,7 @@ export function FacilityContainer() {
                 {activeRoom && (
                   <>
                     <ChevronRight className="size-3.5 text-emerald-500" />
-                    <Text
-                      size="sm"
-                      weight="semibold"
-                      className="text-emerald-900"
-                    >
+                    <Text size="sm" weight="medium" className="text-emerald-900">
                       Room: {activeRoom.roomNumber}
                     </Text>
                   </>
@@ -141,11 +141,11 @@ export function FacilityContainer() {
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="h-7 text-md text-emerald-800 hover:bg-emerald-100 hover:text-emerald-900 gap-1 cursor-pointer"
+                className="h-7 text-emerald-800 hover:bg-emerald-100 hover:text-emerald-900 gap-1"
               >
                 <X className="size-3.5" /> Clear Filter
               </Button>
-            </div>
+            </Card>
           )}
 
           <TabsContent

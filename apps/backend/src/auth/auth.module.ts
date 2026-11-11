@@ -11,6 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuditModule } from '../audit/audit.module';
 import { MailModule } from '../common/mail/mail.module';
 import { assertJwtSecretConfigured } from './jwt-secret.util';
+import { ACCESS_TOKEN_TTL } from './auth.constants';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { assertJwtSecretConfigured } from './jwt-secret.util';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: assertJwtSecretConfigured(),
-        signOptions: { expiresIn: '15m' },
+        signOptions: { expiresIn: ACCESS_TOKEN_TTL },
       }),
     }),
   ],

@@ -115,7 +115,7 @@ export function ResidentHeroBanner({
 
   return (
     <>
-      <Card className="rounded-2xl border border-slate-200/80 bg-white p-6 gap-5 shadow-xs font-sans">
+      <Card variant="surface" className="p-6 gap-5 font-sans">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* Left: Avatar + Name + Supported Living Metadata */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
@@ -127,7 +127,7 @@ export function ResidentHeroBanner({
                   className="object-cover size-full rounded-full"
                 />
               )}
-              <AvatarFallback className="bg-primary text-primary-foreground font-bold text-2xl rounded-full size-full">
+              <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-2xl rounded-full size-full">
                 {getInitials(resident.fullName)}
               </AvatarFallback>
             </Avatar>
@@ -136,91 +136,102 @@ export function ResidentHeroBanner({
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
                 <Text
                   as="h2"
-                  size="2xl"
-                  weight="bold"
-                  className="text-slate-900"
+                  size="xl"
+                  weight="semibold"
+                  className="text-slate-900 tracking-tight"
                 >
                   {resident.fullName}
                 </Text>
 
                 <Badge
-                  variant="outline"
-                  className={cn(
-                    "px-2.5 py-0.5 font-semibold text-md rounded-full",
+                  variant="secondary"
+                  state={
                     resident.status === "Active"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                      ? "success"
                       : resident.status === "Draft" || resident.isDraft
-                        ? "border-amber-200 bg-amber-50 text-amber-800"
-                        : "border-slate-200 bg-slate-50 text-slate-800",
-                  )}
+                        ? "warning"
+                        : "inactive"
+                  }
+                  className="px-2.5 py-0.5 shadow-none"
                 >
                   {resident.status === "Draft"
                     ? "In referral"
                     : resident.status || "Active"}
                 </Badge>
 
-                <span
-                  className={cn(
-                    "px-2.5 py-0.5 rounded-full text-md font-semibold border",
+                <Badge
+                  variant="secondary"
+                  state={
                     riskLevel === "High"
-                      ? "bg-red-50 text-red-700 border-red-200"
+                      ? "danger"
                       : riskLevel === "Low"
-                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                        : "bg-amber-50 text-amber-800 border-amber-200",
-                  )}
+                        ? "success"
+                        : "warning"
+                  }
+                  className="px-2.5 py-0.5 shadow-none"
                 >
                   {riskLevel} risk
-                </span>
+                </Badge>
               </div>
 
               {/* Row 1: Ref, DOB, Age, NHS */}
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-md font-medium text-slate-600">
-                <span className="inline-flex items-center gap-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1">
+                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
                   <CreditCard className="size-3.5 text-slate-400" />
-                  Ref: <strong className="text-slate-800">{refCode}</strong>
-                </span>
-                <span className="inline-flex items-center gap-1">
+                  Ref:{" "}
+                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                    {refCode}
+                  </Text>
+                </Text>
+                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
                   <Calendar className="size-3.5 text-slate-400" />
-                  DOB: <strong className="text-slate-800">{dobFormatted}</strong>
-                </span>
-                <span className="inline-flex items-center gap-1">
+                  DOB:{" "}
+                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                    {dobFormatted}
+                  </Text>
+                </Text>
+                <Text size="sm" variant="subdued" className="inline-flex items-center gap-1">
                   <User className="size-3.5 text-slate-400" />
                   Age:{" "}
-                  <strong className="text-slate-800">{ageVal ?? 41}</strong>
-                </span>
-                <span>
+                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                    {ageVal ?? 41}
+                  </Text>
+                </Text>
+                <Text size="sm" variant="subdued">
                   NHS{" "}
-                  <strong className="text-slate-800">
+                  <Text as="span" size="sm" weight="medium" className="text-slate-800">
                     {resident.nhsNumber ||
                       resident.profile?.nationalId ||
                       "485 777 3456"}
-                  </strong>
-                </span>
+                  </Text>
+                </Text>
               </div>
 
               {/* Row 2: Key worker · support hrs/wk · Funded by */}
-              <div className="text-md text-slate-500">
+              <Text size="sm" variant="subdued">
                 Key worker{" "}
-                <strong className="text-slate-800">
+                <Text as="span" size="sm" weight="medium" className="text-slate-800">
                   {resident.keyworker?.fullName || "Deborah Lee"}
-                </strong>{" "}
+                </Text>{" "}
                 · {supportHours} support hrs/wk · Funded by {fundedBy}
-              </div>
+              </Text>
 
               {(hasDnacpr || allergyList.length > 0) && (
                 <div className="flex flex-wrap items-center gap-2 pt-1">
                   {hasDnacpr && (
-                    <span className="border border-rose-700 bg-rose-600 text-white rounded-md px-2 py-0.5 text-md font-semibold">
+                    <Badge variant="destructive" className="px-2.5 py-0.5 shadow-none">
                       DNACPR
-                    </span>
+                    </Badge>
                   )}
                   {allergyList.map((allergy, idx) => (
-                    <span
+                    <Badge
                       key={idx}
-                      className="border border-red-200 bg-red-50 text-red-800 rounded-md px-2 py-0.5 text-md font-medium"
+                      variant="secondary"
+                      state="danger"
+                      className="px-2.5 py-0.5 shadow-none"
                     >
                       Allergy: {allergy}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               )}
@@ -228,35 +239,35 @@ export function ResidentHeroBanner({
           </div>
 
           {/* Right: Property / Scheme Box */}
-          <div className="rounded-2xl bg-primary/5 border border-primary/20 p-4 min-w-64 shrink-0">
-            <p className="text-md font-bold text-slate-600 mb-1.5">
+          <Card variant="white" border="secondary" className="p-4 min-w-64 shrink-0 gap-2">
+            <Text size="sm" weight="medium" variant="subdued">
               Property / Scheme
-            </p>
+            </Text>
             <div className="flex items-start gap-2.5">
-              <div className="size-8 rounded-xl bg-white border border-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
+              <div className="size-8 rounded-xl bg-surface-primary-light border border-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
                 <Building2 className="size-4" />
               </div>
               <div className="space-y-1">
-                <p className="text-md font-semibold text-slate-900 leading-tight">
+                <Text size="md" weight="medium" className="text-slate-900 leading-tight">
                   {propertyName}
-                </p>
-                <p className="text-md text-slate-600">
+                </Text>
+                <Text size="sm" variant="subdued">
                   {roomNum} · {schemeName}
-                </p>
+                </Text>
                 <Link
                   href={
                     propertyId
                       ? `/admin/configuration/facility?tab=properties&propertyId=${propertyId}`
                       : "/admin/configuration/facility?tab=properties"
                   }
-                  className="inline-flex items-center gap-1 text-md font-semibold text-primary hover:underline pt-0.5"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline pt-0.5"
                 >
                   <span>View property</span>
                   <ArrowRight className="size-3" />
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {(resident.isDraft || resident.status === "Draft") && (
@@ -264,19 +275,19 @@ export function ResidentHeroBanner({
         )}
       </Card>
 
-      {/* Pill-style Navigation Tabs matching Screenshots 2-5 */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-xs">
+      {/* Clean Underline Tabs matching Staff Profile & @repo/ui Tabs */}
+      <div className="w-full border-b border-slate-200/80">
         <Tabs
           value={activeTab}
           onValueChange={onTabChange}
           className="w-full overflow-x-auto"
         >
-          <TabsList className="bg-transparent h-auto p-0 gap-1.5 w-full justify-start min-w-max">
+          <TabsList className="bg-transparent h-auto p-0 gap-6 rounded-none border-b-0 w-full justify-start min-w-max">
             {TABS.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="px-4 py-2 text-md font-medium rounded-xl transition-all cursor-pointer border-0 text-slate-600 hover:text-slate-900 hover:bg-slate-50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:font-bold data-[state=active]:shadow-xs"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary-800 data-[state=active]:text-primary-900 data-[state=active]:font-medium rounded-none bg-transparent px-0 pb-3 text-md font-normal text-slate-500 hover:text-slate-900 border-b-2 border-transparent -mb-px shadow-none"
               >
                 {tab.label}
               </TabsTrigger>

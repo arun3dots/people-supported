@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
-import { Card, CardTitle } from "@repo/ui/components/ui/Card";
+import { Card, Text } from "@repo/ui/components/ui";
 
 export interface DistributionItem {
   label: string;
@@ -32,6 +32,8 @@ function parseColor(colorStr: string): string {
   const colorMap: Record<string, string> = {
     "bg-blue-500": "#0284c7",
     "bg-gray-300": "#94a3b8",
+    "bg-primary": "#0f766e",
+    "bg-amber-500": "#d97706",
     "bg-[#4A706A]": "#0f766e",
     "bg-[#D4A843]": "#d97706",
   };
@@ -84,12 +86,15 @@ export function FacilityDistributionCard({
   });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full font-['Outfit',sans-serif]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full font-sans">
       {/* Distribution Chart Card */}
-      <Card className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-h-[210px] w-full shadow-xs">
-        <CardTitle className="text-base font-semibold text-slate-900">
+      <Card
+        variant="surface"
+        className="p-5 flex flex-col justify-between min-h-[210px] w-full"
+      >
+        <Text as="h3" size="md" weight="semibold" className="text-slate-900">
           {title}
-        </CardTitle>
+        </Text>
 
         {/* Dynamic Fluid Content Wrapper */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-10 my-auto w-full">
@@ -126,12 +131,12 @@ export function FacilityDistributionCard({
             </svg>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-              <span className="font-bold text-2xl text-slate-900 leading-none">
+              <Text size="xl" weight="semibold" className="text-slate-900 leading-none">
                 {totalCount}
-              </span>
-              <span className="text-md font-medium text-slate-500 mt-1">
+              </Text>
+              <Text size="sm" variant="muted" className="mt-1">
                 {totalLabel}
-              </span>
+              </Text>
             </div>
           </div>
 
@@ -140,20 +145,20 @@ export function FacilityDistributionCard({
             {segments.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center justify-between text-md w-full"
+                className="flex items-center justify-between w-full"
               >
                 <div className="flex items-center gap-2">
                   <span
                     className="size-3 rounded-full shrink-0"
                     style={{ backgroundColor: item.parsedColor }}
                   />
-                  <span className="text-md text-slate-700 font-medium">
+                  <Text size="md" weight="medium" className="text-slate-700">
                     {item.label}
-                  </span>
+                  </Text>
                 </div>
-                <span className="text-md text-slate-500 font-normal text-right">
+                <Text size="md" variant="muted" className="text-right">
                   {item.value}
-                </span>
+                </Text>
               </div>
             ))}
           </div>
@@ -161,27 +166,35 @@ export function FacilityDistributionCard({
       </Card>
 
       {/* Quick Actions Card */}
-      <Card className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between min-h-[210px] w-full shadow-xs">
-        <CardTitle className="text-base font-semibold text-slate-900">
+      <Card
+        variant="surface"
+        className="p-5 flex flex-col justify-between min-h-[210px] w-full"
+      >
+        <Text as="h3" size="md" weight="semibold" className="text-slate-900">
           Quick Actions
-        </CardTitle>
+        </Text>
 
         {/* Responsive Grid with equal column distributions */}
         <div className="grid grid-cols-4 gap-2 w-full my-auto justify-items-center items-center">
           {quickActions.map((action, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={action.onClick}
               className="flex flex-col items-center justify-start gap-2 cursor-pointer border-0 bg-transparent p-0 outline-none group shrink-0"
             >
-              <div className="size-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-700 transition-all duration-200 group-hover:scale-105 group-hover:shadow-xs shrink-0">
+              <Card
+                variant="white"
+                border="secondary"
+                className="size-11 rounded-xl p-0 flex items-center justify-center text-slate-700 transition-all duration-200 group-hover:scale-105 shrink-0"
+              >
                 {action.icon}
-              </div>
+              </Card>
 
               <div className="flex flex-col items-center justify-center w-full">
-                <span className="text-md font-medium text-slate-700 text-center whitespace-nowrap">
+                <Text size="sm" weight="medium" className="text-slate-700 text-center whitespace-nowrap">
                   {action.label}
-                </span>
+                </Text>
               </div>
             </button>
           ))}

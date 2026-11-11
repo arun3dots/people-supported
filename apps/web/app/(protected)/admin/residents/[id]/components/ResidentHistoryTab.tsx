@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { CheckSquare, Clock, FileText } from "lucide-react";
+import { Button, Card } from "@repo/ui/components/ui";
 import type { Resident } from "../../../../../../lib/types/resident";
 import { ResidentTimelineTab } from "./ResidentTimelineTab";
 import { ResidentNotesTab } from "./ResidentNotesTab";
@@ -28,27 +29,25 @@ export function ResidentHistoryTab({
 
   return (
     <div className="space-y-5 font-sans">
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-3 flex flex-wrap items-center gap-2 shadow-2xs">
+      <Card variant="surface" className="p-2 flex flex-row flex-wrap items-center gap-2">
         {subTabs.map((item) => {
           const Icon = item.icon;
           const active = subTab === item.id;
           return (
-            <button
+            <Button
               key={item.id}
               type="button"
+              size="sm"
+              variant={active ? "primary" : "ghost"}
               onClick={() => setSubTab(item.id)}
-              className={`px-4 py-2 rounded-xl text-md font-bold inline-flex items-center gap-2 transition-all cursor-pointer ${
-                active
-                  ? "bg-primary text-primary-foreground shadow-2xs"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
+              className="gap-2"
             >
               <Icon className="size-3.5" />
               {item.label}
-            </button>
+            </Button>
           );
         })}
-      </div>
+      </Card>
 
       {subTab === "timeline" && <ResidentTimelineTab residentId={resident.id} />}
       {subTab === "notes" && (

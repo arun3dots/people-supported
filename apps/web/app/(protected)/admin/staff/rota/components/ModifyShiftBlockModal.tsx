@@ -61,7 +61,9 @@ export function ModifyShiftBlockModal({
 }: ModifyShiftBlockModalProps): React.JSX.Element {
   const { toast } = useToast();
 
-  const [careType, setCareType] = useState<string>("Shared Care (Core Support)");
+  const [careType, setCareType] = useState<string>(
+    "Shared Care (Core Support)",
+  );
   const [duration, setDuration] = useState<string>("8");
   const [shiftWindow, setShiftWindow] = useState<string>("07:00 - 15:00");
   const [notes, setNotes] = useState<string>("");
@@ -71,8 +73,18 @@ export function ModifyShiftBlockModal({
     if (!open) return;
     const initialCareType = shift?.careType || "Shared Care (Core Support)";
     setCareType(initialCareType);
-    setDuration(String(shift?.durationHours ?? CARE_TYPE_PRESETS[initialCareType]?.duration ?? 8));
-    setShiftWindow(shift?.shiftWindow || CARE_TYPE_PRESETS[initialCareType]?.window || "07:00 - 15:00");
+    setDuration(
+      String(
+        shift?.durationHours ??
+          CARE_TYPE_PRESETS[initialCareType]?.duration ??
+          8,
+      ),
+    );
+    setShiftWindow(
+      shift?.shiftWindow ||
+        CARE_TYPE_PRESETS[initialCareType]?.window ||
+        "07:00 - 15:00",
+    );
     setNotes(shift?.notes || "");
 
     const existingAssignedId =
@@ -91,7 +103,11 @@ export function ModifyShiftBlockModal({
   };
 
   const handleFormSubmit = async () => {
-    if (careType !== "Off / Rest Day" && !selectedResidentId && residents.length > 0) {
+    if (
+      careType !== "Off / Rest Day" &&
+      !selectedResidentId &&
+      residents.length > 0
+    ) {
       toast({
         variant: "destructive",
         title: "Validation Error",
@@ -117,7 +133,8 @@ export function ModifyShiftBlockModal({
       toast({
         variant: "destructive",
         title: "Failed to Save Shift",
-        description: err instanceof Error ? err.message : "Could not update shift block",
+        description:
+          err instanceof Error ? err.message : "Could not update shift block",
       });
     }
   };
@@ -125,46 +142,54 @@ export function ModifyShiftBlockModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md font-sans">
-        <DialogHeader>
+        <DialogHeader className="pb-3 border-b border-slate-100">
           <DialogTitle className="text-lg font-semibold text-slate-900">
             Modify Shift Care Type &amp; Hours
           </DialogTitle>
-          <DialogDescription className="text-md text-slate-500">
-            {staffName ? `${staffName} · ${dayLabel || "Selected Day"}` : "Configure shift allocation and timing."}
+          <DialogDescription className="text-sm text-slate-500">
+            {staffName
+              ? `${staffName} · ${dayLabel || "Selected Day"}`
+              : "Configure shift allocation and timing."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          {/* 1. Care Type Dropdown */}
+        <div className="space-y-3 py-2">
           <div className="space-y-1">
-            <Label className="text-md font-medium text-slate-800">Care Type</Label>
+            <Label className="text-md font-medium text-slate-700">
+              Care Type
+            </Label>
             <Select value={careType} onValueChange={handleCareTypeChange}>
-              <SelectTrigger className="h-10 rounded-xl border-slate-200">
+              <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Shared Care (Core Support)">Shared Care (Core Support)</SelectItem>
-                <SelectItem value="1:1 Dedicated Support">1:1 Dedicated Support</SelectItem>
-                <SelectItem value="Sleep-in (Overnight)">Sleep-in (Overnight)</SelectItem>
+                <SelectItem value="Shared Care (Core Support)">
+                  Shared Care (Core Support)
+                </SelectItem>
+                <SelectItem value="1:1 Dedicated Support">
+                  1:1 Dedicated Support
+                </SelectItem>
+                <SelectItem value="Sleep-in (Overnight)">
+                  Sleep-in (Overnight)
+                </SelectItem>
                 <SelectItem value="Waking Night">Waking Night</SelectItem>
                 <SelectItem value="Off / Rest Day">Off / Rest Day</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* 2. Person Supported Selector (When not Off Day) */}
           {careType !== "Off / Rest Day" && (
             <div className="space-y-1">
-              <Label className="text-md font-medium text-slate-800">
+              <Label required className="text-md font-medium text-slate-700">
                 {careType === "1:1 Dedicated Support"
-                  ? "Person Supported (1:1) *"
-                  : "Person Supported *"}
+                  ? "Person Supported (1:1)"
+                  : "Person Supported"}
               </Label>
               <Select
                 value={selectedResidentId}
                 onValueChange={setSelectedResidentId}
               >
-                <SelectTrigger className="h-10 rounded-xl border-slate-200">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select person supported" />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -191,45 +216,50 @@ export function ModifyShiftBlockModal({
             </div>
           )}
 
-          {/* 3. Duration & Shift Window Grid */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1">
             <div className="space-y-1">
-              <Label className="text-md font-medium text-slate-800">Duration (Hours)</Label>
+              <Label className="text-md font-medium text-slate-700">
+                Duration (Hours)
+              </Label>
               <Input
                 type="number"
                 min={0}
                 max={24}
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
-                className="h-10 rounded-xl"
               />
             </div>
             <div className="space-y-1">
-              <Label className="text-md font-medium text-slate-800">Shift Window (24h)</Label>
+              <Label className="text-md font-medium text-slate-700">
+                Shift Window (24h)
+              </Label>
               <Input
                 value={shiftWindow}
                 onChange={(e) => setShiftWindow(e.target.value)}
                 placeholder="07:00 - 15:00"
-                className="h-10 rounded-xl"
               />
             </div>
           </div>
 
-          {/* 4. Shift Handover Notes */}
           <div className="space-y-1">
-            <Label className="text-md font-medium text-slate-800">Shift Handover Notes</Label>
+            <Label className="text-md font-medium text-slate-700">
+              Shift Handover Notes
+            </Label>
             <Textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Early core shared support across Flats 1 and 2..."
-              className="rounded-xl border-slate-200"
             />
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0 pt-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl h-10 px-4 text-md">
+        <DialogFooter className="pt-3 border-t border-slate-100 gap-2">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
           <Button
@@ -237,7 +267,6 @@ export function ModifyShiftBlockModal({
             disabled={isSaving}
             variant="primary"
             size="lg"
-            className="rounded-xl px-5"
           >
             {isSaving ? "Saving..." : "Save shift block"}
           </Button>

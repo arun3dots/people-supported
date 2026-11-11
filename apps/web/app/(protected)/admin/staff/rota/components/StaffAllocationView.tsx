@@ -1,22 +1,42 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Building2, Home, RotateCcw, UserCheck, AlertTriangle, ArrowRightLeft } from "lucide-react";
-import { Button, Card, Text, Badge } from "@repo/ui/components/ui";
 import {
+  AlertTriangle,
+  Building2,
+  Home,
+  LayoutGrid,
+  List,
+  RotateCcw,
+  UserCheck,
+} from "lucide-react";
+import {
+  Button,
+  Card,
+  EmptyState,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@repo/ui/components/ui/Select";
-import type { SchemeItem, PropertyItem } from "../../../../../../lib/types/facility";
+  SummaryCardsGrid,
+  type SummaryCardItem,
+} from "@repo/ui/components/ui";
+import type {
+  SchemeItem,
+  PropertyItem,
+} from "../../../../../../lib/types/facility";
+import type { Shift } from "../../../../../../lib/types/shifts";
 import type { StaffMember } from "../../../../../../lib/types/staff";
+import { StaffAllocationCardGrid } from "./StaffAllocationCardGrid";
+import { StaffAllocationTable } from "./StaffAllocationTable";
+import { getShiftStaffIds, resolveStaffLocation } from "./rotaDataUtils";
 
 interface StaffAllocationViewProps {
   schemes: SchemeItem[];
   properties: PropertyItem[];
   staff: StaffMember[];
+  shifts: Shift[];
   activeCareType: string;
   onReassignStaff: (staff: StaffMember) => void;
 }
@@ -25,7 +45,7 @@ export function StaffAllocationView({
   schemes,
   properties,
   staff,
-  activeCareType,
+  shifts,
   onReassignStaff,
 }: StaffAllocationViewProps): React.JSX.Element {
   const [schemeFilter, setSchemeFilter] = useState("all");
@@ -35,89 +55,128 @@ export function StaffAllocationView({
 
   const filteredStaff = useMemo(() => {
     return staff.filter((m) => {
-      if (schemeFilter !== "all" && m.schemeId !== schemeFilter) return false;
-      if (propertyFilter !== "all" && m.propertyId !== propertyFilter) return false;
+      const loc = resolveStaffLocation(m, schemes, properties);
+      if (schemeFilter !== "all" && loc.schemeId !== schemeFilter) return false;
+      if (propertyFilter !== "all" && loc.propertyId !== propertyFilter) {
+        return false;
+      }
       if (staffFilter !== "all" && m.id !== staffFilter) return false;
       return true;
     });
-  }, [staff, schemeFilter, propertyFilter, staffFilter]);
+  }, [staff, schemes, properties, schemeFilter, propertyFilter, staffFilter]);
+
+  const metrics = useMemo(() => {
+    const coveredPropertyIds = new Set<string>();
+    let assignedStaffCount = 0;
+
+    staff.forEach((m) => {
+      const loc = resolveStaffLocation(m, schemes, properties);
+      if (loc.propertyId) coveredPropertyIds.add(loc.propertyId);
+      if (loc.propertyId || loc.schemeId) assignedStaffCount += 1;
+    });
+
+    const uncoveredPropertiesCount = properties.filter(
+      (p) => !coveredPropertyIds.has(p.id),
+    ).length;
+    const unassignedShiftsCount = shifts.filter(
+      (s) => getShiftStaffIds(s).length === 0,
+    ).length;
+
+    return {
+      totalStaff: staff.length,
+      assignedStaffCount,
+      activeSchemes: schemes.length,
+      coveredProperties: coveredPropertyIds.size,
+      unfilledCount: uncoveredPropertiesCount + unassignedShiftsCount,
+    };
+  }, [staff, schemes, properties, shifts]);
+
+  const kpiCards: SummaryCardItem[] = [
+    {
+      title: "Total Staff",
+      value: metrics.totalStaff,
+      subtitle: `${metrics.assignedStaffCount} assigned to scheme/property`,
+      icon: <UserCheck className="size-5 text-primary" />,
+      iconClassName: "bg-emerald-50",
+    },
+    {
+      title: "Active Schemes",
+      value: metrics.activeSchemes,
+      subtitle: "Supported living schemes",
+      icon: <Building2 className="size-5 text-slate-700" />,
+      iconClassName: "bg-slate-100",
+    },
+    {
+      title: "Properties Covered",
+      value: metrics.coveredProperties,
+      subtitle: `of ${properties.length} registered properties`,
+      icon: <Home className="size-5 text-primary" />,
+      iconClassName: "bg-emerald-50",
+    },
+    {
+      title: "Unfilled Assignments",
+      value: metrics.unfilledCount,
+      subtitle: "Properties & shifts needing cover",
+      subtitleColor:
+        metrics.unfilledCount > 0
+          ? "text-amber-700 font-medium"
+          : "text-slate-500",
+      icon: <AlertTriangle className="size-5 text-amber-600" />,
+      iconClassName: "bg-amber-50",
+    },
+  ];
 
   return (
     <div className="space-y-6 font-sans">
-      {/* 4 KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <Card variant="white" border="secondary" className="p-4 gap-1 shadow-xs">
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            <UserCheck className="size-4 text-primary" />
-            <Text size="md" weight="medium">Total Assigned Staff</Text>
-          </div>
-          <Text size="2xl" weight="semibold">{staff.length || 24}</Text>
-          <Text size="md" variant="subdued" className="text-slate-400 mt-0.5">Across all schemes and properties</Text>
-        </Card>
+      <SummaryCardsGrid
+        cards={kpiCards}
+        className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      />
 
-        <Card variant="white" border="secondary" className="p-4 gap-1 shadow-xs">
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            <Building2 className="size-4 text-primary" />
-            <Text size="md" weight="medium">Active Schemes</Text>
-          </div>
-          <Text size="2xl" weight="semibold">{schemes.length || 3}</Text>
-          <Text size="md" variant="subdued" className="text-slate-400 mt-0.5">Supported living schemes</Text>
-        </Card>
-
-        <Card variant="white" border="secondary" className="p-4 gap-1 shadow-xs">
-          <div className="flex items-center gap-2 text-slate-500 mb-1">
-            <Home className="size-4 text-primary" />
-            <Text size="md" weight="medium">Properties Covered</Text>
-          </div>
-          <Text size="2xl" weight="semibold">{properties.length || 6}</Text>
-          <Text size="md" variant="subdued" className="text-slate-400 mt-0.5">With allocated staff</Text>
-        </Card>
-
-        <Card variant="white" border="secondary" className="bg-amber-50/50 p-4 gap-1 shadow-xs">
-          <div className="flex items-center gap-2 text-amber-800 mb-1">
-            <AlertTriangle className="size-4 text-amber-600" />
-            <Text size="md" weight="medium" className="text-amber-800">Unfilled Assignments</Text>
-          </div>
-          <Text size="2xl" weight="semibold" className="text-amber-900">2</Text>
-          <Text size="md" className="text-amber-700 mt-0.5">Properties/shifts needing cover</Text>
-        </Card>
-      </div>
-
-      {/* Filter Row */}
-      <Card variant="white" border="secondary" className="p-4 flex-row flex-wrap items-center gap-3 justify-between">
+      <Card
+        variant="surface"
+        border="default"
+        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-3 border-none shadow-none"
+      >
         <div className="flex flex-wrap items-center gap-2.5">
           <Select value={schemeFilter} onValueChange={setSchemeFilter}>
-            <SelectTrigger className="w-44 h-10 rounded-xl text-md bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
               <SelectValue placeholder="All Schemes" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Schemes</SelectItem>
               {schemes.map((s) => (
-                <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select value={propertyFilter} onValueChange={setPropertyFilter}>
-            <SelectTrigger className="w-44 h-10 rounded-xl text-md bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
               <SelectValue placeholder="All Properties" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Properties</SelectItem>
               {properties.map((p) => (
-                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                <SelectItem key={p.id} value={p.id}>
+                  {p.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select value={staffFilter} onValueChange={setStaffFilter}>
-            <SelectTrigger className="w-40 h-10 rounded-xl text-md bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-40 h-10 rounded-xl bg-white">
               <SelectValue placeholder="All Staff" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Staff ({staff.length})</SelectItem>
               {staff.map((m) => (
-                <SelectItem key={m.id} value={m.id}>{m.fullName}</SelectItem>
+                <SelectItem key={m.id} value={m.id}>
+                  {m.fullName}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -125,21 +184,26 @@ export function StaffAllocationView({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => { setSchemeFilter("all"); setPropertyFilter("all"); setStaffFilter("all"); }}
-            className="h-10 px-2.5 text-md text-slate-600 hover:text-slate-900"
+            onClick={() => {
+              setSchemeFilter("all");
+              setPropertyFilter("all");
+              setStaffFilter("all");
+            }}
+            className="h-10 px-2.5 text-sm text-slate-600 hover:text-slate-900 font-medium"
           >
-            <RotateCcw className="size-3 mr-1" /> Reset
+            <RotateCcw className="size-3.5 mr-1" /> Reset
           </Button>
         </div>
 
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-md font-semibold">
+        <div className="flex items-center gap-1 bg-white p-1 rounded-xl">
           <Button
             type="button"
             onClick={() => setViewMode("table")}
             size="sm"
             variant={viewMode === "table" ? "primary" : "ghost"}
-            className="h-9 rounded-lg px-3 transition-all"
+            className="h-8 rounded-lg px-3 font-medium"
           >
+            <List className="size-3.5" />
             Table View
           </Button>
           <Button
@@ -147,115 +211,37 @@ export function StaffAllocationView({
             onClick={() => setViewMode("card")}
             size="sm"
             variant={viewMode === "card" ? "primary" : "ghost"}
-            className="h-9 rounded-lg px-3 transition-all"
+            className="h-8 rounded-lg px-3 font-medium"
           >
+            <LayoutGrid className="size-3.5" />
             Card View
           </Button>
         </div>
       </Card>
 
-      {/* Allocations Table */}
-      <Card variant="white" border="secondary" className="gap-0 overflow-hidden p-0 shadow-xs">
-        <div className="p-4 border-b border-slate-100">
-          <Text as="h2" size="md" weight="semibold">
-            Staff Allocation ({filteredStaff.length} shown of {staff.length})
-          </Text>
-          <Text size="md" variant="subdued">
-            Manage primary, secondary and night cover allocations across homes
-          </Text>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-md">
-            <thead>
-              <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-100">
-                <th className="py-3 px-4">#</th>
-                <th className="py-3 px-4">Staff Member</th>
-                <th className="py-3 px-4">Role</th>
-                <th className="py-3 px-4">Scheme</th>
-                <th className="py-3 px-4">Property</th>
-                <th className="py-3 px-4">Assignment Type</th>
-                <th className="py-3 px-4">Availability</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-              {filteredStaff.map((m, idx) => {
-                const initials = m.fullName.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
-                const schemeName = m.scheme?.name || "North Yorkshire Supported Living";
-                const propName = m.property?.name || "Oak House";
-                const isNight = m.role?.name?.toLowerCase().includes("night");
-
-                return (
-                  <tr key={m.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="py-3 px-4 font-medium text-slate-500">{idx + 1}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="size-8 rounded-full bg-primary text-primary-foreground font-semibold text-md flex items-center justify-center shrink-0">
-                          {initials}
-                        </div>
-                        <div>
-                          <Text size="md" weight="semibold">{m.fullName}</Text>
-                          <Text size="md" variant="subdued">STA-{m.id.slice(0, 3).toUpperCase()}</Text>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Badge
-                        variant={isNight ? "warning" : "success"}
-                        className={`border p-0 px-2 py-0.5 text-md font-medium ${isNight ? "border-amber-200/60" : "border-emerald-200/60"}`}
-                      >
-                        {m.role?.name || "Support Worker"}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 max-w-[180px] truncate text-slate-700">
-                        <Building2 className="size-3 text-slate-400 shrink-0" />
-                        <span className="truncate">{schemeName}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 max-w-[140px] truncate text-slate-700">
-                        <Home className="size-3 text-slate-400 shrink-0" />
-                        <span className="truncate">{propName}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Badge variant="outline" className="rounded-md border-0 bg-slate-100 p-0 px-2 py-0.5 text-md font-medium text-slate-700">
-                        {isNight ? "Night Cover" : "Primary"}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Text as="span" size="md" weight="medium" variant="primary" className="inline-flex items-center gap-1.5">
-                        <span className="size-1.5 rounded-full bg-primary" />
-                        Available
-                      </Text>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <Badge variant="success" className="border border-emerald-200/60 p-0 px-2 py-0.5 text-md font-medium">
-                        Active
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Button
-                          variant="ghost"
-                          size="default"
-                          onClick={() => onReassignStaff(m)}
-                          className="h-10 px-3 text-md text-slate-600 hover:text-primary"
-                        >
-                          <ArrowRightLeft className="size-4" /> Reassign
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      {filteredStaff.length === 0 ? (
+        <Card variant="surface" border="default" className="p-0 border-none shadow-none">
+          <EmptyState
+            title="No staff members found"
+            description="Add staff members in the Staff Directory or clear your filters to see allocations."
+          />
+        </Card>
+      ) : viewMode === "card" ? (
+        <StaffAllocationCardGrid
+          staffList={filteredStaff}
+          schemes={schemes}
+          properties={properties}
+          onReassignStaff={onReassignStaff}
+        />
+      ) : (
+        <StaffAllocationTable
+          filteredStaff={filteredStaff}
+          schemes={schemes}
+          properties={properties}
+          totalStaffCount={staff.length}
+          onReassignStaff={onReassignStaff}
+        />
+      )}
     </div>
   );
 }

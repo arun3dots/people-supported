@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Text } from "@repo/ui/components/ui";
-import { cn } from "@repo/ui/lib/utils";
+import { Badge, Text } from "@repo/ui/components/ui";
 import type { SchemeItem } from "../../../../../../../../lib/types/facility";
 import type { TableColumn } from "../../../../../../../../lib/components/shared/tableColumns";
 import { RowActions } from "../../../../../../../../lib/components/shared";
@@ -28,17 +27,17 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-md shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
                 {s.name.slice(0, 2).toUpperCase()}
               </div>
               <div className="flex flex-col min-w-0">
-                <Text size="sm" weight="bold" className="text-slate-900 truncate">
+                <Text size="sm" weight="medium" className="text-slate-900 truncate">
                   {s.name}
                 </Text>
-                <span className="text-md text-slate-500 truncate">
+                <Text size="xs" variant="muted" className="truncate">
                   Ref: {s.referenceId || s.id.slice(0, 8)} ·{" "}
                   {s.housingPartner || "Registered Housing Partner"}
-                </span>
+                </Text>
               </div>
             </div>
           );
@@ -52,12 +51,12 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-medium text-slate-900 truncate">
+              <Text size="sm" weight="medium" className="text-slate-900 truncate">
                 {s.location || "Regional Scheme"}
-              </span>
-              <span className="text-md text-slate-500 truncate">
+              </Text>
+              <Text size="xs" variant="muted" className="truncate">
                 {s.commissioningLa || "Local Authority Commissioned"}
-              </span>
+              </Text>
             </div>
           );
         },
@@ -67,9 +66,9 @@ export function useSchemeColumns({
         header: "Scheme Manager",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="text-sm font-medium text-slate-800">
+          <Text size="sm" weight="normal" className="text-slate-800">
             {row.original.schemeManagerName || "Assigned Manager"}
-          </span>
+          </Text>
         ),
       },
       {
@@ -77,11 +76,11 @@ export function useSchemeColumns({
         header: "Commissioned Hours",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="text-sm font-bold text-slate-800">
+          <Text size="sm" weight="medium" className="text-slate-800">
             {row.original.commissionedHours
               ? `${row.original.commissionedHours} hrs/wk`
               : "—"}
-          </span>
+          </Text>
         ),
       },
       {
@@ -92,12 +91,12 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-slate-900">
+              <Text size="sm" weight="medium" className="text-slate-900">
                 {s.totalProperties} properties
-              </span>
-              <span className="text-md text-slate-500">
+              </Text>
+              <Text size="xs" variant="muted">
                 {s.totalRooms} rooms · {s.totalBeds} beds
-              </span>
+              </Text>
             </div>
           );
         },
@@ -110,11 +109,13 @@ export function useSchemeColumns({
           const s = row.original;
           return (
             <div className="w-32 space-y-1">
-              <div className="flex items-center justify-between text-md">
-                <span className="font-bold text-slate-900">
+              <div className="flex items-center justify-between">
+                <Text size="sm" weight="medium" className="text-slate-900">
                   {s.occupiedBeds}/{s.totalBeds}
-                </span>
-                <span className="text-slate-500">{s.occupancyRate}%</span>
+                </Text>
+                <Text size="xs" variant="muted">
+                  {s.occupancyRate}%
+                </Text>
               </div>
               <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
                 <div
@@ -133,16 +134,13 @@ export function useSchemeColumns({
         cell: ({ row }) => {
           const s = row.original;
           return (
-            <span
-              className={cn(
-                "inline-flex items-center px-2.5 py-1 rounded-full text-md font-semibold",
-                s.status === "Active"
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : "bg-slate-100 text-slate-600 border border-slate-200",
-              )}
+            <Badge
+              variant="secondary"
+              state={s.status === "Active" ? "success" : "inactive"}
+              className="border"
             >
               {s.status || "Active"}
-            </span>
+            </Badge>
           );
         },
       },

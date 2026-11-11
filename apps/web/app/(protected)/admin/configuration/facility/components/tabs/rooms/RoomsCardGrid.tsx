@@ -49,7 +49,7 @@ export function RoomCard({
   return (
     <EntityCard
       avatar={
-        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-md shrink-0 overflow-hidden">
+        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-md shrink-0 overflow-hidden">
           {r.roomNumber.replace(/[^0-9]/g, "").slice(0, 3) || r.roomNumber.slice(0, 3)}
         </div>
       }

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { Button } from "@repo/ui/components/ui/Button";
+import { Button, Card, EmptyState, Text } from "@repo/ui/components/ui";
 import { useToast } from "@repo/ui/hooks";
 import { useGetResidentQuery } from "../../../../../../lib/queries/residents";
 import { useListNeedCarePlansQuery } from "../../../../../../lib/queries/care-journey";
@@ -125,55 +125,60 @@ export function ResidentProfileClient({ residentId }: ResidentProfileClientProps
 
   if (isLoading) {
     return (
-      <div className="min-h-96 flex flex-col items-center justify-center text-text-description font-sans">
+      <Card
+        variant="surface"
+        className="min-h-96 flex flex-col items-center justify-center p-8 text-text-description font-sans"
+      >
         <Loader2 className="size-8 animate-spin text-primary mb-3" />
-        <span className="text-md font-semibold">Loading person supported details…</span>
-      </div>
+        <Text size="md" weight="medium" variant="muted">
+          Loading person supported details…
+        </Text>
+      </Card>
     );
   }
 
   if (isError) {
     return (
-      <div className="p-12 text-center font-sans space-y-4">
-        <h2 className="text-xl font-bold text-text-heading">Unable to load record</h2>
-        <p className="text-md text-text-description font-medium">
-          There was an error communicating with the server while fetching this record.
-        </p>
-        <div className="flex items-center justify-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => refetch()}
-            className="bg-surface-neutral border border-border-secondary text-text-body font-medium rounded-md text-md inline-flex items-center gap-2 cursor-pointer"
-          >
-            Try Again
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/${roleBase}/residents`)}
-            className="bg-surface-neutral border border-border-secondary text-text-body font-medium rounded-md text-md inline-flex items-center gap-2 cursor-pointer"
-          >
-            <ArrowLeft className="size-4 text-icon-primary" /> Back to People Supported
-          </Button>
-        </div>
-      </div>
+      <Card variant="surface" className="p-8 font-sans">
+        <EmptyState
+          title="Unable to load record"
+          description="There was an error communicating with the server while fetching this record."
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Button variant="outline" onClick={() => refetch()}>
+                Try Again
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.push(`/${roleBase}/residents`)}
+              >
+                <ArrowLeft className="size-4" />
+                Back to People Supported
+              </Button>
+            </div>
+          }
+        />
+      </Card>
     );
   }
 
   if (!resident) {
     return (
-      <div className="p-12 text-center font-sans space-y-4">
-        <h2 className="text-xl font-bold text-text-heading">Record not found</h2>
-        <p className="text-md text-text-description font-medium">
-          The requested person supported record could not be found or has been removed.
-        </p>
-        <Button
-          variant="outline"
-          onClick={() => router.push(`/${roleBase}/residents`)}
-          className="bg-surface-neutral border border-border-secondary text-text-body font-medium rounded-md text-md lg:text-md inline-flex items-center gap-2 cursor-pointer"
-        >
-          <ArrowLeft className="size-4 text-icon-primary" /> Back to People Supported
-        </Button>
-      </div>
+      <Card variant="surface" className="p-8 font-sans">
+        <EmptyState
+          title="Record not found"
+          description="The requested person supported record could not be found or has been removed."
+          action={
+            <Button
+              variant="outline"
+              onClick={() => router.push(`/${roleBase}/residents`)}
+            >
+              <ArrowLeft className="size-4" />
+              Back to People Supported
+            </Button>
+          }
+        />
+      </Card>
     );
   }
 

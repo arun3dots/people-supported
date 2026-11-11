@@ -2,10 +2,36 @@
 
 import React from "react";
 import { Building2, Home } from "lucide-react";
-import { Badge, Card, Text } from "@repo/ui/components/ui";
+import {
+  Badge,
+  Card,
+  EmptyState,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Text,
+} from "@repo/ui/components/ui";
+import { roundHours } from "./rotaDataUtils";
+
+export interface HoursBreakdownRow {
+  key: string;
+  scheme: string;
+  property: string | null;
+  commissioned: number;
+  planned: number;
+  delivered: number;
+  variance: number;
+  coverage: string;
+  status: "On track" | "Shortfall" | "No data";
+}
 
 interface HoursSummaryTableProps {
   viewMode: "both" | "scheme" | "property";
+  rows: HoursBreakdownRow[];
   metrics: {
     required: number;
     planned: number;
@@ -15,129 +41,174 @@ interface HoursSummaryTableProps {
   };
 }
 
+function getStatusBadgeState(
+  status: HoursBreakdownRow["status"],
+): "success" | "warning" | "inactive" {
+  if (status === "On track") return "success";
+  if (status === "Shortfall") return "warning";
+  return "inactive";
+}
+
 export function HoursSummaryTable({
   viewMode,
+  rows,
   metrics,
 }: HoursSummaryTableProps): React.JSX.Element {
+  const totalVariance = roundHours(metrics.delivered - metrics.required);
+  const totalStatus: HoursBreakdownRow["status"] =
+    metrics.required === 0 && metrics.planned === 0
+      ? "No data"
+      : metrics.planned < metrics.required
+        ? "Shortfall"
+        : "On track";
+
   return (
-    <Card variant="white" border="secondary" className="gap-0 overflow-hidden p-0 shadow-xs">
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-        <div>
-          <Text as="h2" size="md" weight="semibold">
-            Hours Summary by Scheme & Property
-          </Text>
-          <Text size="md" variant="subdued">
-            Compare commissioned, planned and delivered weekly support hours
-          </Text>
-        </div>
+    <Card
+      variant="surface"
+      border="default"
+      className="p-5 lg:p-6 gap-0 border-none shadow-none"
+    >
+      <div className="pb-4 border-b border-border-secondary/50 mb-4">
+        <Text as="h2" size="md" weight="semibold" className="text-slate-900">
+          Hours Summary by Scheme &amp; Property
+        </Text>
+        <Text size="sm" variant="muted">
+          Compare commissioned, planned and delivered weekly support hours
+        </Text>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-md">
-          <thead>
-            <tr className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-100">
-              <th className="py-3 px-4">#</th>
-              <th className="py-3 px-4">Scheme</th>
-              {viewMode !== "scheme" && <th className="py-3 px-4">Property</th>}
-              <th className="py-3 px-4 text-right">Commissioned / Wk</th>
-              <th className="py-3 px-4 text-right">Planned / Wk</th>
-              <th className="py-3 px-4 text-right">Delivered / Wk</th>
-              <th className="py-3 px-4 text-right">Variance</th>
-              <th className="py-3 px-4 text-right">Coverage (%)</th>
-              <th className="py-3 px-4 text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-            <tr>
-              <td className="py-3 px-4 font-medium text-slate-500">1</td>
-              <td className="py-3 px-4">
-                <div className="flex items-center gap-2">
-                  <Building2 className="size-3.5 text-slate-400" />
-                  <span className="font-semibold text-slate-900">
-                    North Yorkshire Supported Living
-                  </span>
-                </div>
-              </td>
-              {viewMode !== "scheme" && (
-                <td className="py-3 px-4">
-                  <span className="flex items-center gap-1.5">
-                    <Home className="size-3 text-slate-400" /> Oak House
-                  </span>
-                </td>
-              )}
-              <td className="py-3 px-4 text-right">96 hrs</td>
-              <td className="py-3 px-4 text-right font-semibold text-slate-900">
-                92 hrs
-              </td>
-              <td className="py-3 px-4 text-right text-emerald-800">91 hrs</td>
-              <td className="py-3 px-4 text-right text-rose-600 font-semibold">
-                -5 hrs
-              </td>
-              <td className="py-3 px-4 text-right font-semibold">94.8%</td>
-              <td className="py-3 px-4 text-center">
-                <Badge variant="success" className="border border-emerald-200/60 p-0 px-2 py-0.5 text-md font-medium">
-                  On track
-                </Badge>
-              </td>
-            </tr>
-            <tr>
-              <td className="py-3 px-4 font-medium text-slate-500">2</td>
-              <td className="py-3 px-4">
-                <div className="flex items-center gap-2">
-                  <Building2 className="size-3.5 text-slate-400" />
-                  <span className="font-semibold text-slate-900">
-                    Wharfedale Community Homes
-                  </span>
-                </div>
-              </td>
-              {viewMode !== "scheme" && (
-                <td className="py-3 px-4">
-                  <span className="flex items-center gap-1.5">
-                    <Home className="size-3 text-slate-400" /> Birch Lane
-                  </span>
-                </td>
-              )}
-              <td className="py-3 px-4 text-right">52 hrs</td>
-              <td className="py-3 px-4 text-right font-semibold text-slate-900">
-                50 hrs
-              </td>
-              <td className="py-3 px-4 text-right text-emerald-800">50 hrs</td>
-              <td className="py-3 px-4 text-right text-rose-600 font-semibold">
-                -2 hrs
-              </td>
-              <td className="py-3 px-4 text-right font-semibold">96.2%</td>
-              <td className="py-3 px-4 text-center">
-                <Badge variant="success" className="border border-emerald-200/60 p-0 px-2 py-0.5 text-md font-medium">
-                  On track
-                </Badge>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr className="bg-slate-50 font-semibold text-slate-900 border-t border-slate-200">
-              <td className="py-3 px-4" colSpan={viewMode !== "scheme" ? 3 : 2}>
-                Total
-              </td>
-              <td className="py-3 px-4 text-right">{metrics.required} hrs</td>
-              <td className="py-3 px-4 text-right">{metrics.planned} hrs</td>
-              <td className="py-3 px-4 text-right text-emerald-800">
-                {metrics.delivered} hrs
-              </td>
-              <td className="py-3 px-4 text-right text-rose-600">
-                -{metrics.gap} hrs
-              </td>
-              <td className="py-3 px-4 text-right">
-                {metrics.coveragePercent}%
-              </td>
-              <td className="py-3 px-4 text-center">
-                <Badge variant="success" className="border border-emerald-200/60 p-0 px-2 py-0.5 text-md font-medium">
-                  On track
-                </Badge>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      {rows.length === 0 ? (
+        <EmptyState
+          title="No hours data available"
+          description="Add schemes, properties, or scheduled shifts to view weekly support hours."
+        />
+      ) : (
+        <div className="w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-border-secondary/50">
+                <TableHead className="pl-3 font-medium text-slate-500">#</TableHead>
+                <TableHead className="font-medium text-slate-500">Scheme</TableHead>
+                {viewMode !== "scheme" && (
+                  <TableHead className="font-medium text-slate-500">
+                    Property
+                  </TableHead>
+                )}
+                <TableHead className="text-right font-medium text-slate-500">
+                  Commissioned / Wk
+                </TableHead>
+                <TableHead className="text-right font-medium text-slate-500">
+                  Planned / Wk
+                </TableHead>
+                <TableHead className="text-right font-medium text-slate-500">
+                  Delivered / Wk
+                </TableHead>
+                <TableHead className="text-right font-medium text-slate-500">
+                  Variance
+                </TableHead>
+                <TableHead className="text-right font-medium text-slate-500">
+                  Coverage (%)
+                </TableHead>
+                <TableHead className="pr-3 text-center font-medium text-slate-500">
+                  Status
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {rows.map((row, idx) => (
+                <TableRow
+                  key={row.key}
+                  className="border-b border-border-secondary/40 hover:bg-white/50"
+                >
+                  <TableCell className="pl-3 text-slate-500">{idx + 1}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Building2 className="size-3.5 text-primary shrink-0" />
+                      <Text as="span" size="sm" weight="medium" className="text-slate-900">
+                        {row.scheme}
+                      </Text>
+                    </div>
+                  </TableCell>
+                  {viewMode !== "scheme" && (
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 text-slate-700">
+                        <Home className="size-3.5 text-slate-400" />
+                        {row.property || "Unassigned"}
+                      </span>
+                    </TableCell>
+                  )}
+                  <TableCell className="text-right text-slate-700">
+                    {row.commissioned} hrs
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-slate-900">
+                    {row.planned} hrs
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-primary">
+                    {row.delivered} hrs
+                  </TableCell>
+                  <TableCell
+                    className={`text-right font-medium ${
+                      row.variance < 0 ? "text-rose-600" : "text-slate-700"
+                    }`}
+                  >
+                    {row.variance > 0 ? `+${row.variance}` : row.variance} hrs
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-slate-900">
+                    {row.coverage}
+                  </TableCell>
+                  <TableCell className="pr-3 text-center">
+                    <Badge
+                      variant="secondary"
+                      state={getStatusBadgeState(row.status)}
+                    >
+                      {row.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+
+            <TableFooter className="bg-white/70 text-slate-900 border-t border-border-secondary/50">
+              <TableRow className="hover:bg-transparent">
+                <TableCell
+                  className="pl-3 font-semibold text-slate-900"
+                  colSpan={viewMode !== "scheme" ? 3 : 2}
+                >
+                  Total
+                </TableCell>
+                <TableCell className="text-right font-semibold text-slate-900">
+                  {metrics.required} hrs
+                </TableCell>
+                <TableCell className="text-right font-semibold text-slate-900">
+                  {metrics.planned} hrs
+                </TableCell>
+                <TableCell className="text-right font-semibold text-primary">
+                  {metrics.delivered} hrs
+                </TableCell>
+                <TableCell
+                  className={`text-right font-semibold ${
+                    totalVariance < 0 ? "text-rose-600" : "text-slate-700"
+                  }`}
+                >
+                  {totalVariance > 0 ? `+${totalVariance}` : totalVariance} hrs
+                </TableCell>
+                <TableCell className="text-right font-semibold text-slate-900">
+                  {metrics.coveragePercent}%
+                </TableCell>
+                <TableCell className="pr-3 text-center">
+                  <Badge
+                    variant="secondary"
+                    state={getStatusBadgeState(totalStatus)}
+                  >
+                    {totalStatus}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </div>
+      )}
     </Card>
   );
 }
