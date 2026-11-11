@@ -76,7 +76,9 @@ export class CareTaskDayService {
           },
         })
       : [];
-    const recordByTask = new Map(records.map((record) => [record.taskId, record]));
+    const recordByTask = new Map(
+      records.map((record) => [record.taskId, record]),
+    );
 
     const items: CareTaskBoardItemDTO[] = due.map((task) => {
       const record = recordByTask.get(task.id);

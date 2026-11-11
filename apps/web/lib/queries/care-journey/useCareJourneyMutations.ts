@@ -64,9 +64,14 @@ export function useCreateAssessmentMutation() {
   const refresh = useRefreshAssessment();
   return useMutation({
     mutationFn: (residentId: string) =>
-      makeAPICall<AssessmentRecordDTO>(CREATE_ASSESSMENT, {}, {}, {
-        id: residentId,
-      }),
+      makeAPICall<AssessmentRecordDTO>(
+        CREATE_ASSESSMENT,
+        {},
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: refresh,
     onError: failure("Could not start the assessment", "Please try again"),
   });
@@ -97,9 +102,14 @@ export function useCompleteAssessmentMutation() {
   const refresh = useRefreshAssessment();
   return useMutation({
     mutationFn: (residentId: string) =>
-      makeAPICall<AssessmentRecordDTO>(COMPLETE_ASSESSMENT, {}, {}, {
-        id: residentId,
-      }),
+      makeAPICall<AssessmentRecordDTO>(
+        COMPLETE_ASSESSMENT,
+        {},
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: refresh,
     onError: failure("Could not complete", "Completing the assessment failed"),
   });
@@ -135,7 +145,10 @@ export function useCreateNeedCarePlanMutation(residentId: string) {
         { id: residentId },
       ),
     onSuccess: refresh,
-    onError: failure("Could not create care plan", "Saving the care plan failed"),
+    onError: failure(
+      "Could not create care plan",
+      "Saving the care plan failed",
+    ),
   });
 }
 
@@ -298,9 +311,14 @@ export function useCreateShiftNoteMutation(residentId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateShiftNoteDTO) =>
-      makeAPICall<ShiftNoteDTO>(CREATE_SHIFT_NOTE, asPayload(data), {}, {
-        id: residentId,
-      }),
+      makeAPICall<ShiftNoteDTO>(
+        CREATE_SHIFT_NOTE,
+        asPayload(data),
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: careJourneyKeys.dayAll(residentId),
