@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy to Production
 
 on:
   workflow_run:
@@ -9,8 +9,6 @@ on:
     branches:
       - main
 
-  workflow_dispatch:
-
 permissions:
   contents: read
 
@@ -20,23 +18,14 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy Production
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    name: Deploy on EC2
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: [self-hosted, linux, x64, production]
 
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.5
+      - name: Deploy application
         env:
-          DEPLOY_COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT || 22 }}
-          envs: DEPLOY_COMMIT
-          command_timeout: 30m
-          script_stop: true
-          script: |
-            cd /home/ubuntu/apps/people-supported
-            bash deploy.sh
+          DEPLOY_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          cd /home/ubuntu/apps/people-supported
+          bash deploy.sh
