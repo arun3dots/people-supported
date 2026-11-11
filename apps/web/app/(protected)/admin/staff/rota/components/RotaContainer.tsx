@@ -32,6 +32,7 @@ export function RotaContainer(): React.JSX.Element {
   useEffect(() => {
     if (tabParam === "hours") setActiveView("hours");
     else if (tabParam === "allocation") setActiveView("allocation");
+    else setActiveView("rota");
   }, [tabParam]);
 
   // Modal States
@@ -177,6 +178,8 @@ export function RotaContainer(): React.JSX.Element {
 
           <RotaSummaryWidgets
             totalHours={metrics.commissionedHours}
+            onViewHours={() => setActiveView("hours")}
+            onViewAllocation={() => setActiveView("allocation")}
             onExportPdf={() => typeof window !== "undefined" && window.print()}
             onExportExcel={() => typeof window !== "undefined" && window.print()}
           />

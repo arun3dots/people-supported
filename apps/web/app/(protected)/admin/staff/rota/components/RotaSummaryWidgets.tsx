@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Clock,
-  Download,
   Edit3,
   FileSpreadsheet,
   FileText,
@@ -11,7 +10,17 @@ import {
   Unlock,
   Users,
 } from "lucide-react";
-import { Button, Card, Text } from "@repo/ui/components/ui";
+import {
+  Button,
+  Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Text,
+} from "@repo/ui/components/ui";
 
 interface StaffAllocItem {
   id: string;
@@ -24,6 +33,8 @@ interface RotaSummaryWidgetsProps {
   totalHours?: number;
   staffAllocations?: StaffAllocItem[];
   onLockToggle?: (isLocked: boolean) => void;
+  onViewHours?: () => void;
+  onViewAllocation?: () => void;
   onExportPdf?: () => void;
   onExportExcel?: () => void;
   onViewAudit?: () => void;
@@ -41,6 +52,8 @@ export function RotaSummaryWidgets({
   totalHours = 320,
   staffAllocations = DEFAULT_ALLOCATIONS,
   onLockToggle,
+  onViewHours,
+  onViewAllocation,
   onExportPdf,
   onExportExcel,
   onViewAudit,
@@ -53,43 +66,62 @@ export function RotaSummaryWidgets({
     onLockToggle?.(next);
   };
 
-  const sharedHours = 160;
-  const oneToOneHours = 120;
-  const sleepInHours = 28;
-  const wakingNightHours = 12;
+  const legendItems = [
+    {
+      label: "Shared Hours",
+      value: "160 hrs (50%)",
+      dotClass: "bg-slate-700",
+    },
+    {
+      label: "1:1 Hours",
+      value: "120 hrs (38%)",
+      dotClass: "bg-primary",
+    },
+    {
+      label: "Sleep-ins",
+      value: "28 hrs (9%)",
+      dotClass: "bg-amber-500",
+    },
+    {
+      label: "Waking Nights",
+      value: "12 hrs (4%)",
+      dotClass: "bg-rose-600",
+    },
+  ];
 
   return (
     <div className="space-y-4 font-sans">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* 1. Hours Summary Donut Chart Widget */}
-        <Card variant="white" border="secondary" className="p-5 shadow-2xs gap-4 justify-between">
+        <Card variant="surface" className="p-5 gap-4 justify-between">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="size-4 text-primary" />
-              <Text as="h2" size="md" weight="semibold">Hours Summary</Text>
+              <Text as="h2" size="md" weight="semibold" className="text-slate-900">
+                Hours Summary
+              </Text>
             </div>
             <Button
               type="button"
               variant="link"
               size="sm"
-              className="h-auto px-1 text-primary"
+              onClick={onViewHours}
+              className="h-auto px-1 text-primary font-medium"
             >
               View Details &rarr;
             </Button>
           </div>
 
           <div className="flex items-center gap-6 py-1">
-            {/* Donut representation */}
             <div className="relative size-28 shrink-0 flex items-center justify-center">
               <svg className="size-full -rotate-90" viewBox="0 0 36 36">
                 <path
-                  className="text-slate-100"
+                  className="text-slate-200"
                   strokeWidth="3.8"
                   stroke="currentColor"
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                {/* 50% Shared Care */}
                 <path
                   className="text-slate-700"
                   strokeDasharray="50, 100"
@@ -98,9 +130,8 @@ export function RotaSummaryWidgets({
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                {/* 38% 1:1 Care */}
                 <path
-                  className="text-emerald-700"
+                  className="text-primary"
                   strokeDasharray="38, 100"
                   strokeDashoffset="-50"
                   strokeWidth="4"
@@ -108,7 +139,6 @@ export function RotaSummaryWidgets({
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                {/* 9% Sleep-in */}
                 <path
                   className="text-amber-500"
                   strokeDasharray="9, 100"
@@ -118,7 +148,6 @@ export function RotaSummaryWidgets({
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                {/* 3% Waking Night */}
                 <path
                   className="text-rose-600"
                   strokeDasharray="3, 100"
@@ -130,118 +159,120 @@ export function RotaSummaryWidgets({
                 />
               </svg>
               <div className="absolute flex flex-col items-center justify-center text-center">
-                <Text as="span" size="xl" weight="semibold" className="leading-tight">
+                <Text as="span" size="xl" weight="semibold" className="leading-tight text-slate-900">
                   {totalHours}
                 </Text>
-                <Text as="span" size="md" weight="medium" variant="subdued" className="leading-none">
+                <Text as="span" size="xs" variant="muted" className="leading-none">
                   hrs / Week
                 </Text>
               </div>
             </div>
 
-            {/* Legend List */}
-            <div className="space-y-1.5 text-md flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-600 truncate">
-                  <span className="size-2 rounded-full bg-slate-700 shrink-0" />
-                  Shared Hours
-                </span>
-                <Text as="span" size="md" weight="semibold">{sharedHours} hrs (50%)</Text>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-600 truncate">
-                  <span className="size-2 rounded-full bg-emerald-700 shrink-0" />
-                  1:1 Hours
-                </span>
-                <Text as="span" size="md" weight="semibold">{oneToOneHours} hrs (38%)</Text>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-600 truncate">
-                  <span className="size-2 rounded-full bg-amber-500 shrink-0" />
-                  Sleep-ins
-                </span>
-                <Text as="span" size="md" weight="semibold">{sleepInHours} hrs (9%)</Text>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-slate-600 truncate">
-                  <span className="size-2 rounded-full bg-rose-600 shrink-0" />
-                  Waking Nights
-                </span>
-                <Text as="span" size="md" weight="semibold">{wakingNightHours} hrs (4%)</Text>
-              </div>
+            <div className="space-y-2 flex-1 min-w-0">
+              {legendItems.map((item) => (
+                <div key={item.label} className="flex items-center justify-between gap-2">
+                  <Text as="span" size="sm" variant="muted" className="flex items-center gap-1.5 truncate">
+                    <span className={`size-2 rounded-full ${item.dotClass} shrink-0`} />
+                    {item.label}
+                  </Text>
+                  <Text as="span" size="sm" weight="medium" className="text-slate-900 shrink-0">
+                    {item.value}
+                  </Text>
+                </div>
+              ))}
             </div>
           </div>
         </Card>
 
         {/* 2. Staff Allocation Mini-Table Widget */}
-        <Card variant="white" border="secondary" className="p-5 shadow-2xs gap-3 justify-between">
+        <Card variant="surface" className="p-5 gap-3 justify-between">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Users className="size-4 text-primary" />
-              <Text as="h2" size="md" weight="semibold">Staff Allocation</Text>
+              <Text as="h2" size="md" weight="semibold" className="text-slate-900">
+                Staff Allocation
+              </Text>
             </div>
             <Button
               type="button"
               variant="link"
               size="sm"
-              className="h-auto px-1 text-primary"
+              onClick={onViewAllocation}
+              className="h-auto px-1 text-primary font-medium"
             >
               All staff &rarr;
             </Button>
           </div>
 
-          <div className="overflow-x-auto text-md">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-slate-100 text-md text-slate-400 font-semibold">
-                  <th className="pb-1.5">Staff Member</th>
-                  <th className="pb-1.5">Allocated Hours</th>
-                  <th className="pb-1.5">Role</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-medium">
+          <Card variant="white" border="secondary" className="p-0 gap-0 overflow-hidden">
+            <Table>
+              <TableHeader className="bg-surface-card-grey/60">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+                    Staff Member
+                  </TableHead>
+                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+                    Hours
+                  </TableHead>
+                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+                    Role
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {staffAllocations.slice(0, 4).map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50/50">
-                    <td className="py-2 text-slate-800 font-semibold">{s.name}</td>
-                    <td className="py-2 text-slate-900">{s.hours} hrs</td>
-                    <td className="py-2 text-slate-500 truncate max-w-[120px]">{s.role}</td>
-                  </tr>
+                  <TableRow key={s.id}>
+                    <TableCell className="py-2 font-medium text-slate-900">
+                      {s.name}
+                    </TableCell>
+                    <TableCell className="py-2 text-slate-700">
+                      {s.hours} hrs
+                    </TableCell>
+                    <TableCell className="py-2 text-slate-500 truncate max-w-[120px]">
+                      {s.role}
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </Card>
         </Card>
 
         {/* 3. Rota Actions Card Widget */}
-        <Card variant="white" border="secondary" className="p-5 shadow-2xs gap-3 justify-between">
+        <Card variant="surface" className="p-5 gap-3 justify-between">
           <div className="flex items-center gap-2">
             <Edit3 className="size-4 text-primary" />
-            <Text as="h2" size="md" weight="semibold">Rota Actions</Text>
+            <Text as="h2" size="md" weight="semibold" className="text-slate-900">
+              Rota Actions
+            </Text>
           </div>
 
           <div className="space-y-2">
             <Button
               variant="outline"
+              size="sm"
               onClick={onExportPdf}
-              className="w-full justify-start gap-2 h-9 text-md rounded-xl border-slate-200 hover:bg-slate-50"
+              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
             >
-              <FileText className="size-3.5 text-slate-500" />
+              <FileText className="size-3.5 text-primary" />
               Export to PDF
             </Button>
             <Button
               variant="outline"
+              size="sm"
               onClick={onExportExcel}
-              className="w-full justify-start gap-2 h-9 text-md rounded-xl border-slate-200 hover:bg-slate-50"
+              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
             >
-              <FileSpreadsheet className="size-3.5 text-slate-500" />
+              <FileSpreadsheet className="size-3.5 text-primary" />
               Export to Excel
             </Button>
             <Button
               variant="outline"
+              size="sm"
               onClick={onViewAudit}
-              className="w-full justify-start gap-2 h-9 text-md rounded-xl border-slate-200 hover:bg-slate-50"
+              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
             >
-              <Clock className="size-3.5 text-slate-500" />
+              <Clock className="size-3.5 text-primary" />
               View Audit Log
             </Button>
           </div>
@@ -249,14 +280,18 @@ export function RotaSummaryWidgets({
       </div>
 
       {/* Bottom Lock / Unlock Banner */}
-      <Card variant="white" border="secondary" className="bg-primary/5 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+      <Card
+        variant="secondary"
+        border="secondary"
+        className="p-4 flex-col sm:flex-row sm:items-center justify-between gap-3"
+      >
         <div className="flex items-center gap-2.5 text-slate-700">
           {isLocked ? (
             <Lock className="size-4 text-primary shrink-0" />
           ) : (
             <Unlock className="size-4 text-primary shrink-0" />
           )}
-          <Text size="md" weight="medium">
+          <Text size="sm" weight="medium" className="text-slate-800">
             {isLocked
               ? "Rota is locked for editing. Rota changes are restricted until unlocked."
               : "Rota is currently unlocked for editing. Remember to lock the rota once shift allocations are finalised."}
@@ -264,12 +299,12 @@ export function RotaSummaryWidgets({
         </div>
 
         <Button
-          size="default"
+          size="sm"
           variant="outline"
           onClick={handleToggleLock}
-          className="rounded-xl h-10 px-3.5 shrink-0 shadow-2xs"
+          className="bg-white rounded-xl h-9 px-3.5 shrink-0 font-medium"
         >
-          {isLocked ? <Unlock className="size-4" /> : <Lock className="size-4" />}
+          {isLocked ? <Unlock className="size-3.5" /> : <Lock className="size-3.5" />}
           {isLocked ? "Unlock Rota" : "Lock Rota"}
         </Button>
       </Card>
