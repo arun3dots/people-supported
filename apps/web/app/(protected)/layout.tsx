@@ -28,7 +28,13 @@ export default async function ProtectedLayout({
         <NextTopLoader color="#4A706A" showSpinner={false} />
 
         {/* Sidebar Component */}
-        <AppSidebar />
+        <Suspense
+          fallback={
+            <div className="hidden md:block w-[260px] h-full bg-[#F7F7F7] border-r border-[#E5E5E5] shrink-0" />
+          }
+        >
+          <AppSidebar />
+        </Suspense>
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col h-full min-w-0 transition-all duration-300 relative">

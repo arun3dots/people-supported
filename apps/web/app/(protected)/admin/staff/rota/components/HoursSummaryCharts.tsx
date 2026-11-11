@@ -3,7 +3,7 @@
 import React from "react";
 import { Card, Text } from "@repo/ui/components/ui";
 
-interface DayHoursPoint {
+export interface DayHoursPoint {
   day: string;
   req: number;
   plan: number;
@@ -24,6 +24,16 @@ export function HoursSummaryCharts({
   days,
   metrics,
 }: HoursSummaryChartsProps): React.JSX.Element {
+  const maxDayHours = Math.max(
+    1,
+    ...days.flatMap((d) => [d.req, d.plan, d.del]),
+  );
+  const hasAnyHours = days.some((d) => d.req > 0 || d.plan > 0 || d.del > 0);
+  const clampedCoverage = Math.min(
+    100,
+    Math.max(0, Number.parseFloat(metrics.coveragePercent) || 0),
+  );
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
       <Card variant="surface" className="lg:col-span-2 p-5 gap-4">
@@ -51,33 +61,44 @@ export function HoursSummaryCharts({
 
         <Card
           variant="white"
-          border="secondary"
-          className="p-4 pt-6 flex-row items-end justify-between gap-3 h-52"
+          border="default"
+          className="p-4 pt-6 flex-row items-end justify-between gap-3 h-52 shadow-none"
         >
-          {days.map((d) => (
-            <div
-              key={d.day}
-              className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
-            >
-              <div className="w-full flex items-end justify-center gap-1.5 h-36">
-                <div
-                  style={{ height: `${(d.req / 50) * 100}%` }}
-                  className="w-3 bg-emerald-600 rounded-t-sm"
-                />
-                <div
-                  style={{ height: `${(d.plan / 50) * 100}%` }}
-                  className="w-3 bg-primary rounded-t-sm"
-                />
-                <div
-                  style={{ height: `${(d.del / 50) * 100}%` }}
-                  className="w-3 bg-blue-600 rounded-t-sm"
-                />
-              </div>
-              <Text as="span" size="xs" weight="medium" variant="muted">
-                {d.day}
+          {!hasAnyHours ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <Text size="sm" variant="muted">
+                No commissioned or scheduled hours recorded for this week.
               </Text>
             </div>
-          ))}
+          ) : (
+            days.map((d) => (
+              <div
+                key={d.day}
+                className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
+              >
+                <div className="w-full flex items-end justify-center gap-1.5 h-36">
+                  <div
+                    title={`Commissioned: ${d.req} hrs`}
+                    style={{ height: `${(d.req / maxDayHours) * 100}%` }}
+                    className="w-3 bg-emerald-600 rounded-t-sm"
+                  />
+                  <div
+                    title={`Planned: ${d.plan} hrs`}
+                    style={{ height: `${(d.plan / maxDayHours) * 100}%` }}
+                    className="w-3 bg-primary rounded-t-sm"
+                  />
+                  <div
+                    title={`Delivered: ${d.del} hrs`}
+                    style={{ height: `${(d.del / maxDayHours) * 100}%` }}
+                    className="w-3 bg-blue-600 rounded-t-sm"
+                  />
+                </div>
+                <Text as="span" size="xs" weight="medium" variant="muted">
+                  {d.day}
+                </Text>
+              </div>
+            ))
+          )}
         </Card>
       </Card>
 
@@ -101,15 +122,17 @@ export function HoursSummaryCharts({
                 fill="none"
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               />
-              <path
-                className="text-primary"
-                strokeDasharray={`${metrics.coveragePercent}, 100`}
-                strokeWidth="3.8"
-                strokeLinecap="round"
-                stroke="currentColor"
-                fill="none"
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
+              {clampedCoverage > 0 && (
+                <path
+                  className="text-primary"
+                  strokeDasharray={`${clampedCoverage}, 100`}
+                  strokeWidth="3.8"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              )}
             </svg>
             <div className="absolute flex flex-col items-center">
               <Text as="span" size="2xl" weight="semibold" className="text-slate-900">
@@ -122,7 +145,7 @@ export function HoursSummaryCharts({
           </div>
         </div>
 
-        <Card variant="white" border="secondary" className="p-3.5 gap-2">
+        <Card variant="white" border="default" className="p-3.5 gap-2 shadow-none">
           <div className="flex justify-between">
             <Text as="span" size="sm" variant="muted">
               Delivered Hours

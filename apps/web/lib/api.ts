@@ -83,8 +83,9 @@ export async function makeAPICall<T>(
     );
   }
 
-  // Access token most likely expired (15-minute TTL). Never attempt to refresh
-  // the refresh call itself, to avoid an infinite loop.
+  // Access token most likely expired. Fully authenticated tokens have a 5-hour
+  // TTL; pending-MFA tokens have a 15-minute TTL. Never attempt to refresh the
+  // refresh call itself, to avoid an infinite loop.
   const isAuthFlowRequest =
     endpoint.includes("/auth/") &&
     !endpoint.includes("/auth/switch-branch");

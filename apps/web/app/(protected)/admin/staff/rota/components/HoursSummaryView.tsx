@@ -27,16 +27,27 @@ import type {
   SchemeItem,
   PropertyItem,
 } from "../../../../../../lib/types/facility";
+import type { Resident } from "../../../../../../lib/types/resident";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import type { StaffMember } from "../../../../../../lib/types/staff";
 import { HoursSummaryCharts } from "./HoursSummaryCharts";
 import { HoursSummaryTable } from "./HoursSummaryTable";
+import type { DayColumnInfo } from "./WeeklyRotaScheduleTable";
+import { getShiftStaffIds, resolveShiftLocation } from "./rotaDataUtils";
+import {
+  buildDailyHoursPoints,
+  buildHoursBreakdownRows,
+  buildHoursSummaryMetrics,
+  getScopedCommissionedHours,
+} from "./hoursSummaryUtils";
 
 interface HoursSummaryViewProps {
   shifts: Shift[];
   schemes: SchemeItem[];
   properties: PropertyItem[];
   staff: StaffMember[];
+  residents: Resident[];
+  days: DayColumnInfo[];
   activeCareType: string;
 }
 
@@ -45,6 +56,8 @@ export function HoursSummaryView({
   schemes,
   properties,
   staff,
+  residents,
+  days,
   activeCareType,
 }: HoursSummaryViewProps): React.JSX.Element {
   const [schemeFilter, setSchemeFilter] = useState("all");
@@ -61,46 +74,75 @@ export function HoursSummaryView({
 
   const filteredShifts = useMemo(() => {
     return shifts.filter((s) => {
-      if (activeCareType !== "All Care Types" && s.careType !== activeCareType)
+      if (activeCareType !== "All Care Types" && s.careType !== activeCareType) {
         return false;
-      if (propertyFilter !== "all" && s.wingId !== propertyFilter) return false;
-      if (
-        staffFilter !== "all" &&
-        !s.assignments?.some((a) => a.userId === staffFilter)
-      )
+      }
+      const loc = resolveShiftLocation(s, properties, schemes, residents);
+      if (schemeFilter !== "all" && loc.schemeId !== schemeFilter) return false;
+      if (propertyFilter !== "all" && loc.propertyId !== propertyFilter) {
         return false;
+      }
+      if (staffFilter !== "all" && !getShiftStaffIds(s).includes(staffFilter)) {
+        return false;
+      }
       return true;
     });
-  }, [shifts, activeCareType, propertyFilter, staffFilter]);
+  }, [
+    shifts,
+    activeCareType,
+    schemeFilter,
+    propertyFilter,
+    staffFilter,
+    properties,
+    schemes,
+    residents,
+  ]);
 
-  const metrics = useMemo(() => {
-    const required = 320;
-    const planned =
-      filteredShifts.reduce((acc, s) => acc + (s.durationHours || 8), 0) || 298;
-    const delivered = Math.round(planned * 0.985);
-    const gap = Math.max(0, required - planned);
-    const overtime = 12;
+  const scopedCommissioned = useMemo(
+    () =>
+      getScopedCommissionedHours(
+        schemes,
+        properties,
+        residents,
+        schemeFilter,
+        propertyFilter,
+      ),
+    [schemes, properties, residents, schemeFilter, propertyFilter],
+  );
 
-    return {
-      required,
-      planned,
-      delivered,
-      gap,
-      overtime,
-      gapPercent: ((gap / required) * 100).toFixed(1),
-      coveragePercent: ((delivered / required) * 100).toFixed(1),
-    };
-  }, [filteredShifts]);
+  const metrics = useMemo(
+    () => buildHoursSummaryMetrics(scopedCommissioned, filteredShifts, staff),
+    [scopedCommissioned, filteredShifts, staff],
+  );
 
-  const days = [
-    { day: "Mon", req: 48, plan: 44, del: 44 },
-    { day: "Tue", req: 48, plan: 42, del: 42 },
-    { day: "Wed", req: 46, plan: 44, del: 43 },
-    { day: "Thu", req: 46, plan: 44, del: 44 },
-    { day: "Fri", req: 46, plan: 42, del: 42 },
-    { day: "Sat", req: 44, plan: 41, del: 40 },
-    { day: "Sun", req: 44, plan: 41, del: 40 },
-  ];
+  const dayPoints = useMemo(
+    () => buildDailyHoursPoints(days, filteredShifts, metrics.required),
+    [days, filteredShifts, metrics.required],
+  );
+
+  const breakdownRows = useMemo(
+    () =>
+      buildHoursBreakdownRows({
+        viewMode,
+        schemeFilter,
+        propertyFilter,
+        schemes,
+        properties,
+        filteredProperties,
+        filteredShifts,
+        residents,
+      }),
+    [
+      viewMode,
+      schemeFilter,
+      propertyFilter,
+      schemes,
+      properties,
+      filteredProperties,
+      filteredShifts,
+      residents,
+    ],
+  );
 
   const kpiCards: SummaryCardItem[] = [
     {
@@ -128,15 +170,19 @@ export function HoursSummaryView({
     {
       title: "Coverage Gap",
       value: `${metrics.gap} hrs`,
-      subtitle: `${metrics.gapPercent}% below required`,
-      subtitleColor: "text-amber-700 font-medium",
+      subtitle:
+        metrics.required > 0
+          ? `${metrics.gapPercent}% below required`
+          : "No commissioned target set",
+      subtitleColor:
+        metrics.gap > 0 ? "text-amber-700 font-medium" : "text-slate-500",
       icon: <AlertTriangle className="size-5 text-amber-600" />,
       iconClassName: "bg-amber-50",
     },
     {
       title: "Overtime",
       value: `${metrics.overtime} hrs`,
-      subtitle: "4.0% of planned hours",
+      subtitle: `${metrics.overtimePercent}% of planned hours`,
       subtitleColor: "text-purple-700 font-medium",
       icon: <TrendingUp className="size-5 text-purple-700" />,
       iconClassName: "bg-purple-50",
@@ -147,8 +193,8 @@ export function HoursSummaryView({
     <div className="space-y-6 font-sans">
       <Card
         variant="surface"
-        border="secondary"
-        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-4"
+        border="default"
+        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-4 border-none shadow-none"
       >
         <div className="flex flex-wrap items-center gap-2.5">
           <Select
@@ -241,9 +287,13 @@ export function HoursSummaryView({
         className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
       />
 
-      <HoursSummaryCharts days={days} metrics={metrics} />
+      <HoursSummaryCharts days={dayPoints} metrics={metrics} />
 
-      <HoursSummaryTable viewMode={viewMode} metrics={metrics} />
+      <HoursSummaryTable
+        viewMode={viewMode}
+        rows={breakdownRows}
+        metrics={metrics}
+      />
     </div>
   );
 }

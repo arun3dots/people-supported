@@ -16,7 +16,7 @@ When asked to add/change anything, follow these rules. They override any habit f
 3. **DTOs come from `@repo/schema`.** Do not define request/response shapes inline. If a DTO is missing, add it to `packages/schema/src/<domain>.ts` and re-export from `index.ts`.
 4. **Prisma client is `prisma` from `@repo/db`.** Do not `new PrismaClient()`. `rawPrisma` is exported but only for non-encrypted edge cases.
 5. **Tenant isolation is mandatory.** Every tenant-scoped query MUST filter by `tenantId` extracted from the JWT. Never trust `tenantId` from the request body.
-6. **Auth is cookie-based.** `access_token` cookie (15m) + `refresh_token` cookie (7d, path-scoped). **Never** read/write tokens in `localStorage` / `sessionStorage`.
+6. **Auth is cookie-based.** Fully authenticated `access_token` cookie (5h); pending-MFA access token (15m); `refresh_token` cookie (7d, path-scoped). **Never** read/write tokens in `localStorage` / `sessionStorage`.
 7. **Frontend API access is via `makeAPICall(KEY, payload?, params?, substitutions?)`.** Never call `fetch` directly to the backend. Add an entry under `apps/web/lib/endpoints/<domain>/index.ts` and use the KEY constant.
 8. **350-line file cap** (per AGENTS.md mandate). Split before exceeding.
 9. **Verify before claiming.** Before saying "X exists", grep for it. Before claiming a route works, check the controller decorator AND the web `endpoints/<domain>/index.ts` AND the matching `lib/queries/...` hook.
@@ -136,13 +136,13 @@ care-home/
 
 ```
 LOGIN (POST /api/auth/login)
-  → if user.mfaEnabled:  return { requiresMfa:true } (no tokens yet)
+  → if user.mfaEnabled:  return { requiresMfa:true } (15m access token; no refresh token)
   → else:                set access_token + refresh_token cookies, return user.
 
 MFA VERIFY (POST /api/auth/mfa/verify)
   → set access_token (mfaVerified:true) + refresh_token cookies.
 
-REFRESH (POST /api/auth/refresh, called silently every 12 min from web)
+REFRESH (POST /api/auth/refresh, called silently every 4h 55m from web)
   → reads refresh_token cookie, rotates it (family-based), sets new access_token cookie.
 
 LOGOUT (POST /api/auth/logout)
@@ -151,7 +151,7 @@ LOGOUT (POST /api/auth/logout)
 
 | Token | Storage | TTL | Cookie path | Notes |
 |---|---|---|---|---|
-| `access_token` | HttpOnly cookie | 15 min | `/` | JWT, signed with `JWT_SECRET`. Read by `JwtStrategy` and by web `middleware.ts` via `jose`. |
+| `access_token` | HttpOnly cookie | 5 hours (15 min pending MFA) | `/` | JWT, signed with `JWT_SECRET`. Read by `JwtStrategy` and by web `middleware.ts` via `jose`. |
 | `refresh_token` | HttpOnly cookie | 7 days | `/api/auth` | Stored in DB (`RefreshToken` model). Family-based rotation: rotated on use, family revoked on reuse. |
 
 ### JWT payload shape (single source of truth)
@@ -460,7 +460,8 @@ makeAPICall<T>(
   verifyMfaReset(code: string): Promise<void>,
 }
 ```
-- Silent refresh: every 12 minutes via `silentRefresh()` → `POST /api/auth/refresh`.
+- Silent refresh: every 4 hours 55 minutes via `silentRefresh()` → `POST /api/auth/refresh`, five minutes before the access token expires.
+- Inactivity timeout: 5 hours without browser activity.
 - Use via `useAuth()` from this file; no other auth surface exists.
 
 ### Web config notes

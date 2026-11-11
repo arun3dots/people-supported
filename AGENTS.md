@@ -15,7 +15,7 @@ Scope: `apps/backend`, `apps/web`, `packages/{db,schema,ui,eslint-config,typescr
 3. **DTOs only from `@repo/schema`.** Don't define request/response shapes inline. Missing DTO → add to `packages/schema/src/<domain>.ts` and barrel-export.
 4. **Prisma client is `prisma` from `@repo/db`.** Never `new PrismaClient()`. `rawPrisma` is for non-encrypted edge cases only.
 5. **Tenant isolation is mandatory.** Every tenant-scoped query MUST filter by `tenantId` from the JWT (`req.user.tenantId`), NEVER from the request body.
-6. **Auth = cookie-based.** `access_token` (15m, path `/`) + `refresh_token` (7d, path `/api/auth`). Never `localStorage` / `sessionStorage`.
+6. **Auth = cookie-based.** Fully authenticated `access_token` (5h, path `/`); pending-MFA access token (15m); `refresh_token` (7d, path `/api/auth`). Never `localStorage` / `sessionStorage`.
 7. **Frontend never calls `fetch` directly.** Use `makeAPICall(KEY, payload?, params?, substitutions?)` from `apps/web/lib/api.ts`. KEY must exist in `apps/web/lib/endpoints/<domain>/index.ts`.
 8. **350-line file cap** (hard). Split before exceeding.
 9. **Roles are case-sensitive in BE, uppercased on web.** Exact strings: `SuperAdmin`, `Admin`, `Manager`, `Nurse`, `Carer`, `Resident`. Web middleware compares `role.toUpperCase()`.

@@ -17,7 +17,7 @@ export interface AuthenticatedUser {
    * The branch currently "active" for this session. Selected at login
    * (defaults to the user's primary branch) and changeable via
    * POST /api/auth/switch-branch. Persisted across token refresh via
-   * RefreshToken.activeBranchId so it survives the 15m access token expiry.
+   * RefreshToken.activeBranchId so it survives the 5h access token expiry.
    */
   activeBranchId?: string;
   /**

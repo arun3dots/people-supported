@@ -26,14 +26,17 @@ import type {
   SchemeItem,
   PropertyItem,
 } from "../../../../../../lib/types/facility";
+import type { Shift } from "../../../../../../lib/types/shifts";
 import type { StaffMember } from "../../../../../../lib/types/staff";
 import { StaffAllocationCardGrid } from "./StaffAllocationCardGrid";
 import { StaffAllocationTable } from "./StaffAllocationTable";
+import { getShiftStaffIds, resolveStaffLocation } from "./rotaDataUtils";
 
 interface StaffAllocationViewProps {
   schemes: SchemeItem[];
   properties: PropertyItem[];
   staff: StaffMember[];
+  shifts: Shift[];
   activeCareType: string;
   onReassignStaff: (staff: StaffMember) => void;
 }
@@ -42,6 +45,7 @@ export function StaffAllocationView({
   schemes,
   properties,
   staff,
+  shifts,
   onReassignStaff,
 }: StaffAllocationViewProps): React.JSX.Element {
   const [schemeFilter, setSchemeFilter] = useState("all");
@@ -51,41 +55,72 @@ export function StaffAllocationView({
 
   const filteredStaff = useMemo(() => {
     return staff.filter((m) => {
-      if (schemeFilter !== "all" && m.schemeId !== schemeFilter) return false;
-      if (propertyFilter !== "all" && m.propertyId !== propertyFilter)
+      const loc = resolveStaffLocation(m, schemes, properties);
+      if (schemeFilter !== "all" && loc.schemeId !== schemeFilter) return false;
+      if (propertyFilter !== "all" && loc.propertyId !== propertyFilter) {
         return false;
+      }
       if (staffFilter !== "all" && m.id !== staffFilter) return false;
       return true;
     });
-  }, [staff, schemeFilter, propertyFilter, staffFilter]);
+  }, [staff, schemes, properties, schemeFilter, propertyFilter, staffFilter]);
+
+  const metrics = useMemo(() => {
+    const coveredPropertyIds = new Set<string>();
+    let assignedStaffCount = 0;
+
+    staff.forEach((m) => {
+      const loc = resolveStaffLocation(m, schemes, properties);
+      if (loc.propertyId) coveredPropertyIds.add(loc.propertyId);
+      if (loc.propertyId || loc.schemeId) assignedStaffCount += 1;
+    });
+
+    const uncoveredPropertiesCount = properties.filter(
+      (p) => !coveredPropertyIds.has(p.id),
+    ).length;
+    const unassignedShiftsCount = shifts.filter(
+      (s) => getShiftStaffIds(s).length === 0,
+    ).length;
+
+    return {
+      totalStaff: staff.length,
+      assignedStaffCount,
+      activeSchemes: schemes.length,
+      coveredProperties: coveredPropertyIds.size,
+      unfilledCount: uncoveredPropertiesCount + unassignedShiftsCount,
+    };
+  }, [staff, schemes, properties, shifts]);
 
   const kpiCards: SummaryCardItem[] = [
     {
-      title: "Total Assigned Staff",
-      value: staff.length || 24,
-      subtitle: "Across all schemes and properties",
+      title: "Total Staff",
+      value: metrics.totalStaff,
+      subtitle: `${metrics.assignedStaffCount} assigned to scheme/property`,
       icon: <UserCheck className="size-5 text-primary" />,
       iconClassName: "bg-emerald-50",
     },
     {
       title: "Active Schemes",
-      value: schemes.length || 3,
+      value: metrics.activeSchemes,
       subtitle: "Supported living schemes",
       icon: <Building2 className="size-5 text-slate-700" />,
       iconClassName: "bg-slate-100",
     },
     {
       title: "Properties Covered",
-      value: properties.length || 6,
-      subtitle: "With allocated staff",
+      value: metrics.coveredProperties,
+      subtitle: `of ${properties.length} registered properties`,
       icon: <Home className="size-5 text-primary" />,
       iconClassName: "bg-emerald-50",
     },
     {
       title: "Unfilled Assignments",
-      value: 2,
-      subtitle: "Properties/shifts needing cover",
-      subtitleColor: "text-amber-700 font-medium",
+      value: metrics.unfilledCount,
+      subtitle: "Properties & shifts needing cover",
+      subtitleColor:
+        metrics.unfilledCount > 0
+          ? "text-amber-700 font-medium"
+          : "text-slate-500",
       icon: <AlertTriangle className="size-5 text-amber-600" />,
       iconClassName: "bg-amber-50",
     },
@@ -100,8 +135,8 @@ export function StaffAllocationView({
 
       <Card
         variant="surface"
-        border="secondary"
-        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-3"
+        border="default"
+        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-3 border-none shadow-none"
       >
         <div className="flex flex-wrap items-center gap-2.5">
           <Select value={schemeFilter} onValueChange={setSchemeFilter}>
@@ -160,13 +195,13 @@ export function StaffAllocationView({
           </Button>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 bg-white p-1 rounded-xl">
           <Button
             type="button"
             onClick={() => setViewMode("table")}
             size="sm"
-            variant={viewMode === "table" ? "primary" : "outline"}
-            className="h-9 rounded-xl px-3 font-medium"
+            variant={viewMode === "table" ? "primary" : "ghost"}
+            className="h-8 rounded-lg px-3 font-medium"
           >
             <List className="size-3.5" />
             Table View
@@ -175,8 +210,8 @@ export function StaffAllocationView({
             type="button"
             onClick={() => setViewMode("card")}
             size="sm"
-            variant={viewMode === "card" ? "primary" : "outline"}
-            className="h-9 rounded-xl px-3 font-medium"
+            variant={viewMode === "card" ? "primary" : "ghost"}
+            className="h-8 rounded-lg px-3 font-medium"
           >
             <LayoutGrid className="size-3.5" />
             Card View
@@ -185,20 +220,24 @@ export function StaffAllocationView({
       </Card>
 
       {filteredStaff.length === 0 ? (
-        <Card variant="surface" className="p-0">
+        <Card variant="surface" border="default" className="p-0 border-none shadow-none">
           <EmptyState
-            title="No staff allocations match your filters"
-            description="Try clearing or adjusting the scheme, property, or staff member filter."
+            title="No staff members found"
+            description="Add staff members in the Staff Directory or clear your filters to see allocations."
           />
         </Card>
       ) : viewMode === "card" ? (
         <StaffAllocationCardGrid
           staffList={filteredStaff}
+          schemes={schemes}
+          properties={properties}
           onReassignStaff={onReassignStaff}
         />
       ) : (
         <StaffAllocationTable
           filteredStaff={filteredStaff}
+          schemes={schemes}
+          properties={properties}
           totalStaffCount={staff.length}
           onReassignStaff={onReassignStaff}
         />

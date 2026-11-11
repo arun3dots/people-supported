@@ -20,11 +20,13 @@ import {
   Text,
   type SummaryCardItem,
 } from "@repo/ui/components/ui";
+import { cn } from "@repo/ui/lib/utils";
 
 export interface RotaHeaderMetrics {
   peopleSupportedCount: number;
   commissionedHours: number;
   deliveredHours: number;
+  plannedHours: number;
   completionRate: number;
 }
 
@@ -73,15 +75,21 @@ export function SupportHoursRotaHeader({
     {
       title: "Commissioned / Week",
       value: `${metrics.commissionedHours} hrs`,
-      subtitle: "LA approved hours",
-      subtitleColor: "text-primary font-medium",
+      subtitle:
+        metrics.commissionedHours > 0
+          ? "LA approved hours"
+          : "No commissioned target set",
+      subtitleColor:
+        metrics.commissionedHours > 0
+          ? "text-primary font-medium"
+          : "text-slate-500",
       icon: <Heart className="size-5 text-primary" />,
       iconClassName: "bg-emerald-50",
     },
     {
       title: "Delivered / Week",
       value: `${metrics.deliveredHours} hrs`,
-      subtitle: "Planned roster hours",
+      subtitle: `${metrics.plannedHours} hrs planned this week`,
       subtitleColor: "text-slate-500",
       icon: <Calendar className="size-5 text-slate-700" />,
       iconClassName: "bg-slate-100",
@@ -89,8 +97,16 @@ export function SupportHoursRotaHeader({
     {
       title: "Completion Rate",
       value: `${metrics.completionRate}%`,
-      subtitle: "Staffing target met",
-      subtitleColor: "text-emerald-800 font-medium",
+      subtitle:
+        metrics.commissionedHours > 0
+          ? "vs commissioned hours"
+          : metrics.plannedHours > 0
+            ? "vs planned hours"
+            : "No shift hours logged",
+      subtitleColor:
+        metrics.completionRate >= 90
+          ? "text-emerald-800 font-medium"
+          : "text-slate-500",
       icon: <TrendingUp className="size-5 text-emerald-700" />,
       iconClassName: "bg-emerald-50",
     },
@@ -123,7 +139,7 @@ export function SupportHoursRotaHeader({
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <Badge
             variant="secondary"
-            className="h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium gap-1.5"
+            className="h-9 px-3 rounded-xl bg-surface-card-grey text-slate-700 font-medium gap-1.5"
           >
             <Calendar className="size-3.5 text-slate-500" />
             {selectedMonth}
@@ -131,16 +147,16 @@ export function SupportHoursRotaHeader({
 
           <Badge
             variant="secondary"
-            className="h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium"
+            className="h-9 px-3 rounded-xl bg-surface-card-grey text-slate-700 font-medium"
           >
             {selectedWeek}
           </Badge>
 
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={onExport}
-            className="h-9 rounded-xl px-3 font-medium"
+            className="h-9 rounded-xl px-3 bg-surface-card-grey hover:bg-slate-200/70 text-slate-700 font-medium"
           >
             <Download className="size-3.5" />
             Export Report
@@ -164,7 +180,7 @@ export function SupportHoursRotaHeader({
         className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
       />
 
-      {/* Underline Navigation Tabs + Care Type Filter Chips */}
+      {/* Underline Navigation Tabs + Borderless Care Type Filter Chips */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-200 pb-0">
         <Tabs
           value={activeView}
@@ -190,18 +206,24 @@ export function SupportHoursRotaHeader({
         </Tabs>
 
         <div className="flex flex-wrap items-center gap-1.5 pb-2.5">
-          {CARE_TYPE_FILTERS.map((f) => (
-            <Button
-              key={f.id}
-              type="button"
-              size="sm"
-              variant={activeCareType === f.id ? "primary" : "outline"}
-              onClick={() => onCareTypeChange(f.id)}
-              className="h-8 rounded-full px-3 text-xs font-medium transition-all"
-            >
-              {f.label}
-            </Button>
-          ))}
+          {CARE_TYPE_FILTERS.map((f) => {
+            const isActive = activeCareType === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => onCareTypeChange(f.id)}
+                className={cn(
+                  "h-8 rounded-full px-3.5 text-xs font-medium transition-colors cursor-pointer",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-surface-card-grey text-slate-600 hover:bg-slate-200/70 hover:text-slate-900",
+                )}
+              >
+                {f.label}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

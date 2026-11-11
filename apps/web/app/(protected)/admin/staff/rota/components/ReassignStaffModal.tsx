@@ -36,9 +36,11 @@ interface ReassignStaffModalProps {
   staff: {
     id: string;
     fullName: string;
+    email?: string;
     roleName?: string;
     currentScheme?: string;
     currentProperty?: string;
+    assignmentType?: string;
   } | null;
   schemes: SchemeItem[];
   properties: PropertyItem[];
@@ -134,7 +136,7 @@ export function ReassignStaffModal({
         </DialogHeader>
 
         {/* Current Staff Assignment Card */}
-        <Card variant="surface" border="secondary" className="p-4 gap-3">
+        <Card variant="surface" border="default" className="p-4 gap-3 shadow-none">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
               <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-sm shrink-0">
@@ -145,34 +147,43 @@ export function ReassignStaffModal({
                   {staff.fullName}
                 </Text>
                 <Text size="xs" variant="muted">
-                  STA-001 &middot; {staff.roleName || "Support Worker"}
+                  {[staff.roleName || "Staff", staff.email]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </Text>
               </div>
             </div>
             <Badge
               variant="secondary"
               state="success"
-              className="border gap-1.5 shrink-0"
+              className="gap-1.5 shrink-0"
             >
               <span className="size-1.5 rounded-full bg-emerald-600" />
-              Currently Assigned
+              {staff.currentScheme || staff.currentProperty
+                ? "Currently Assigned"
+                : "Unassigned"}
             </Badge>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2.5 border-t border-slate-200/70">
             <InfoField
               label="Scheme"
-              value={staff.currentScheme || "North Yorkshire Supported Living"}
+              value={staff.currentScheme || "Unassigned"}
               valueClassName="font-medium text-slate-900"
             />
             <InfoField
               label="Property"
-              value={staff.currentProperty || "Oak House"}
+              value={staff.currentProperty || "Unassigned"}
               valueClassName="font-medium text-slate-900"
             />
             <InfoField
               label="Assignment"
-              value="Primary"
+              value={
+                staff.assignmentType ||
+                (staff.currentScheme || staff.currentProperty
+                  ? "Assigned"
+                  : "Unassigned")
+              }
               valueClassName="font-medium text-slate-900"
             />
           </div>
@@ -264,43 +275,28 @@ export function ReassignStaffModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Covering staff leave">
-                    Covering staff leave
-                  </SelectItem>
-                  <SelectItem value="Emergency cover">
-                    Emergency cover
-                  </SelectItem>
-                  <SelectItem value="Shift rebalancing">
-                    Shift rebalancing
-                  </SelectItem>
-                  <SelectItem value="Staff request">Staff request</SelectItem>
-                  <SelectItem value="Permanent transfer">
-                    Permanent transfer
-                  </SelectItem>
+                  {[
+                    "Covering staff leave",
+                    "Emergency cover",
+                    "Shift rebalancing",
+                    "Staff request",
+                    "Permanent transfer",
+                  ].map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-1">
-              <Label required className="text-md font-medium text-slate-700">
-                Effective From
-              </Label>
-              <Input
-                type="date"
-                value={effectiveFrom}
-                onChange={(e) => setEffectiveFrom(e.target.value)}
-              />
+              <Label required className="text-md font-medium text-slate-700">Effective From</Label>
+              <Input type="date" value={effectiveFrom} onChange={(e) => setEffectiveFrom(e.target.value)} />
             </div>
-
             <div className="space-y-1">
-              <Label className="text-md font-medium text-slate-700">
-                End Date (Optional)
-              </Label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+              <Label className="text-md font-medium text-slate-700">End Date (Optional)</Label>
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
           </div>
 
@@ -324,11 +320,7 @@ export function ReassignStaffModal({
         </div>
 
         <DialogFooter className="pt-3 border-t border-slate-100 gap-2">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => onOpenChange(false)}
-          >
+          <Button variant="outline" size="lg" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button

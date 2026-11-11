@@ -51,8 +51,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const REFRESH_INTERVAL_MS = 12 * 60 * 1000; // 12 minutes (before 15m access token expires)
-const IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes of inactivity
+const ACCESS_TOKEN_LIFETIME_MS = 5 * 60 * 60 * 1000;
+const REFRESH_MARGIN_MS = 5 * 60 * 1000;
+const REFRESH_INTERVAL_MS = ACCESS_TOKEN_LIFETIME_MS - REFRESH_MARGIN_MS;
+const IDLE_TIMEOUT_MS = ACCESS_TOKEN_LIFETIME_MS; // 5 hours of inactivity
 const ACTIVITY_BROADCAST_INTERVAL_MS = 5000;
 const ACTIVITY_CHANNEL_NAME = "care-home-auth-activity";
 
@@ -227,7 +229,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const idleChecker = setInterval(() => {
       if (Date.now() - lastActivityRef.current >= IDLE_TIMEOUT_MS) {
-        console.warn("User session timed out due to 15 minutes of inactivity");
+        console.warn("User session timed out due to 5 hours of inactivity");
         void logout();
       }
     }, 15000);

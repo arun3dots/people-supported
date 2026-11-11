@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
+  ChevronRight,
   Clock,
   Edit3,
   FileSpreadsheet,
@@ -21,17 +22,18 @@ import {
   TableRow,
   Text,
 } from "@repo/ui/components/ui";
-
-interface StaffAllocItem {
-  id: string;
-  name: string;
-  hours: number;
-  role: string;
-}
+import type { Shift } from "../../../../../../lib/types/shifts";
+import type { StaffMember } from "../../../../../../lib/types/staff";
+import {
+  getCareTypeBreakdown,
+  getShiftPlannedHours,
+  getShiftStaffIds,
+  roundHours,
+} from "./rotaDataUtils";
 
 interface RotaSummaryWidgetsProps {
-  totalHours?: number;
-  staffAllocations?: StaffAllocItem[];
+  shifts?: Shift[];
+  staffList?: StaffMember[];
   onLockToggle?: (isLocked: boolean) => void;
   onViewHours?: () => void;
   onViewAllocation?: () => void;
@@ -40,17 +42,9 @@ interface RotaSummaryWidgetsProps {
   onViewAudit?: () => void;
 }
 
-const DEFAULT_ALLOCATIONS: StaffAllocItem[] = [
-  { id: "1", name: "Deborah Lee", hours: 48, role: "Support Worker" },
-  { id: "2", name: "Tom Reilly", hours: 34, role: "Senior Support Worker" },
-  { id: "3", name: "Sarah Jane", hours: 36, role: "Nurse" },
-  { id: "4", name: "Kieran Patel", hours: 40, role: "Night Support Worker" },
-  { id: "5", name: "Hannah Clarke", hours: 40, role: "Senior Support Worker" },
-];
-
 export function RotaSummaryWidgets({
-  totalHours = 320,
-  staffAllocations = DEFAULT_ALLOCATIONS,
+  shifts = [],
+  staffList = [],
   onLockToggle,
   onViewHours,
   onViewAllocation,
@@ -60,40 +54,97 @@ export function RotaSummaryWidgets({
 }: RotaSummaryWidgetsProps): React.JSX.Element {
   const [isLocked, setIsLocked] = useState(false);
 
-  const handleToggleLock = () => {
+  const handleToggleLock = (): void => {
     const next = !isLocked;
     setIsLocked(next);
     onLockToggle?.(next);
   };
 
-  const legendItems = [
-    {
-      label: "Shared Hours",
-      value: "160 hrs (50%)",
-      dotClass: "bg-slate-700",
-    },
-    {
-      label: "1:1 Hours",
-      value: "120 hrs (38%)",
-      dotClass: "bg-primary",
-    },
-    {
-      label: "Sleep-ins",
-      value: "28 hrs (9%)",
-      dotClass: "bg-amber-500",
-    },
-    {
-      label: "Waking Nights",
-      value: "12 hrs (4%)",
-      dotClass: "bg-rose-600",
-    },
+  const breakdown = useMemo(() => getCareTypeBreakdown(shifts), [shifts]);
+
+  const legendItems = useMemo(() => {
+    const total = breakdown.totalHours;
+    const toPercent = (val: number): number =>
+      total > 0 ? Math.round((val / total) * 100) : 0;
+
+    return [
+      {
+        label: "Shared Hours",
+        hours: breakdown.sharedHours,
+        percent: toPercent(breakdown.sharedHours),
+        strokeClass: "text-slate-700",
+        dotClass: "bg-slate-700",
+      },
+      {
+        label: "1:1 Hours",
+        hours: breakdown.oneToOneHours,
+        percent: toPercent(breakdown.oneToOneHours),
+        strokeClass: "text-primary",
+        dotClass: "bg-primary",
+      },
+      {
+        label: "Sleep-ins",
+        hours: breakdown.sleepInHours,
+        percent: toPercent(breakdown.sleepInHours),
+        strokeClass: "text-amber-500",
+        dotClass: "bg-amber-500",
+      },
+      {
+        label: "Waking Nights",
+        hours: breakdown.wakingNightHours,
+        percent: toPercent(breakdown.wakingNightHours),
+        strokeClass: "text-rose-600",
+        dotClass: "bg-rose-600",
+      },
+    ];
+  }, [breakdown]);
+
+  const donutSegments = useMemo(() => {
+    const total = breakdown.totalHours;
+    if (total <= 0) return [];
+    let cumulative = 0;
+    return legendItems
+      .filter((item) => item.hours > 0)
+      .map((item) => {
+        const arc = (item.hours / total) * 100;
+        const offset = -cumulative;
+        cumulative += arc;
+        return { ...item, arc, offset };
+      });
+  }, [legendItems, breakdown.totalHours]);
+
+  const staffAllocations = useMemo(() => {
+    const hoursByStaff = new Map<string, number>();
+    shifts.forEach((shift) => {
+      const hours = getShiftPlannedHours(shift);
+      if (hours <= 0) return;
+      getShiftStaffIds(shift).forEach((staffId) => {
+        hoursByStaff.set(staffId, roundHours((hoursByStaff.get(staffId) ?? 0) + hours));
+      });
+    });
+
+    return staffList
+      .map((member) => ({
+        id: member.id,
+        name: member.fullName,
+        hours: hoursByStaff.get(member.id) ?? 0,
+        role: member.role?.name || "Staff",
+      }))
+      .sort((a, b) => b.hours - a.hours)
+      .slice(0, 4);
+  }, [staffList, shifts]);
+
+  const rotaActions = [
+    { label: "Export to PDF", icon: FileText, onClick: onExportPdf },
+    { label: "Export to Excel", icon: FileSpreadsheet, onClick: onExportExcel },
+    { label: "View Audit Log", icon: Clock, onClick: onViewAudit },
   ];
 
   return (
     <div className="space-y-4 font-sans">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* 1. Hours Summary Donut Chart Widget */}
-        <Card variant="surface" className="p-5 gap-4 justify-between">
+        <Card variant="surface" border="default" className="p-5 gap-4 justify-between">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="size-4 text-primary" />
@@ -122,45 +173,22 @@ export function RotaSummaryWidgets({
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-                <path
-                  className="text-slate-700"
-                  strokeDasharray="50, 100"
-                  strokeWidth="4"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-primary"
-                  strokeDasharray="38, 100"
-                  strokeDashoffset="-50"
-                  strokeWidth="4"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-amber-500"
-                  strokeDasharray="9, 100"
-                  strokeDashoffset="-88"
-                  strokeWidth="4"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-rose-600"
-                  strokeDasharray="3, 100"
-                  strokeDashoffset="-97"
-                  strokeWidth="4"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
+                {donutSegments.map((seg) => (
+                  <path
+                    key={seg.label}
+                    className={seg.strokeClass}
+                    strokeDasharray={`${seg.arc}, 100`}
+                    strokeDashoffset={`${seg.offset}`}
+                    strokeWidth="4"
+                    stroke="currentColor"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                ))}
               </svg>
               <div className="absolute flex flex-col items-center justify-center text-center">
                 <Text as="span" size="xl" weight="semibold" className="leading-tight text-slate-900">
-                  {totalHours}
+                  {breakdown.totalHours}
                 </Text>
                 <Text as="span" size="xs" variant="muted" className="leading-none">
                   hrs / Week
@@ -176,7 +204,7 @@ export function RotaSummaryWidgets({
                     {item.label}
                   </Text>
                   <Text as="span" size="sm" weight="medium" className="text-slate-900 shrink-0">
-                    {item.value}
+                    {item.hours} hrs ({item.percent}%)
                   </Text>
                 </div>
               ))}
@@ -185,8 +213,8 @@ export function RotaSummaryWidgets({
         </Card>
 
         {/* 2. Staff Allocation Mini-Table Widget */}
-        <Card variant="surface" className="p-5 gap-3 justify-between">
-          <div className="flex items-center justify-between">
+        <Card variant="surface" border="default" className="p-5 gap-3 justify-between">
+          <div className="flex items-center justify-between pb-2 border-b border-border-secondary/50">
             <div className="flex items-center gap-2">
               <Users className="size-4 text-primary" />
               <Text as="h2" size="md" weight="semibold" className="text-slate-900">
@@ -204,42 +232,51 @@ export function RotaSummaryWidgets({
             </Button>
           </div>
 
-          <Card variant="white" border="secondary" className="p-0 gap-0 overflow-hidden">
+          {staffAllocations.length === 0 ? (
+            <div className="py-6 text-center">
+              <Text size="sm" variant="muted">
+                No staff members available yet.
+              </Text>
+            </div>
+          ) : (
             <Table>
-              <TableHeader className="bg-surface-card-grey/60">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+              <TableHeader>
+                <TableRow className="border-b border-border-secondary/40 hover:bg-transparent">
+                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
                     Staff Member
                   </TableHead>
-                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
                     Hours
                   </TableHead>
-                  <TableHead className="h-9 py-1.5 text-xs font-medium text-slate-500">
+                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
                     Role
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {staffAllocations.slice(0, 4).map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell className="py-2 font-medium text-slate-900">
+                {staffAllocations.map((s) => (
+                  <TableRow
+                    key={s.id}
+                    className="border-b border-border-secondary/30 hover:bg-white/60"
+                  >
+                    <TableCell className="px-1 py-2 font-medium text-slate-900">
                       {s.name}
                     </TableCell>
-                    <TableCell className="py-2 text-slate-700">
+                    <TableCell className="px-1 py-2 text-slate-700">
                       {s.hours} hrs
                     </TableCell>
-                    <TableCell className="py-2 text-slate-500 truncate max-w-[120px]">
+                    <TableCell className="px-1 py-2 text-slate-500 truncate max-w-[120px]">
                       {s.role}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </Card>
+          )}
         </Card>
 
         {/* 3. Rota Actions Card Widget */}
-        <Card variant="surface" className="p-5 gap-3 justify-between">
+        <Card variant="surface" border="default" className="p-5 gap-3 justify-between">
           <div className="flex items-center gap-2">
             <Edit3 className="size-4 text-primary" />
             <Text as="h2" size="md" weight="semibold" className="text-slate-900">
@@ -247,34 +284,28 @@ export function RotaSummaryWidgets({
             </Text>
           </div>
 
-          <div className="space-y-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExportPdf}
-              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
-            >
-              <FileText className="size-3.5 text-primary" />
-              Export to PDF
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onExportExcel}
-              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
-            >
-              <FileSpreadsheet className="size-3.5 text-primary" />
-              Export to Excel
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onViewAudit}
-              className="w-full justify-start gap-2 h-10 bg-white rounded-xl font-medium"
-            >
-              <Clock className="size-3.5 text-primary" />
-              View Audit Log
-            </Button>
+          <div className="flex flex-col gap-2">
+            {rotaActions.map((action) => {
+              const Icon = action.icon;
+              return (
+                <button
+                  key={action.label}
+                  type="button"
+                  onClick={action.onClick}
+                  className="flex items-center justify-between w-full h-11 px-3 rounded-xl bg-white hover:bg-slate-50 transition-colors group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-7 rounded-full bg-surface-primary-light flex items-center justify-center text-primary shrink-0">
+                      <Icon className="size-3.5" />
+                    </div>
+                    <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                      {action.label}
+                    </Text>
+                  </div>
+                  <ChevronRight className="size-4 text-primary group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </button>
+              );
+            })}
           </div>
         </Card>
       </div>
@@ -282,7 +313,7 @@ export function RotaSummaryWidgets({
       {/* Bottom Lock / Unlock Banner */}
       <Card
         variant="secondary"
-        border="secondary"
+        border="default"
         className="p-4 flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
         <div className="flex items-center gap-2.5 text-slate-700">
@@ -300,9 +331,9 @@ export function RotaSummaryWidgets({
 
         <Button
           size="sm"
-          variant="outline"
+          variant="secondary"
           onClick={handleToggleLock}
-          className="bg-white rounded-xl h-9 px-3.5 shrink-0 font-medium"
+          className="bg-white hover:bg-slate-50 text-slate-800 rounded-xl h-9 px-3.5 shrink-0 font-medium"
         >
           {isLocked ? <Unlock className="size-3.5" /> : <Lock className="size-3.5" />}
           {isLocked ? "Unlock Rota" : "Lock Rota"}
