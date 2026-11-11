@@ -1,21 +1,42 @@
 name: Deploy to Server
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
     branches:
-      - develop
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: people-supported-production-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    name: Deploy Production
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.5
+        env:
+          DEPLOY_COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          envs: DEPLOY_COMMIT
+          command_timeout: 30m
+          script_stop: true
           script: |
-            cd /opt/app
+            cd /home/ubuntu/apps/people-supported
             bash deploy.sh
