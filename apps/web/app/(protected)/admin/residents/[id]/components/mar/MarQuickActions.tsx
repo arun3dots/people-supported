@@ -7,6 +7,7 @@ import {
   Text,
   Badge,
   Button,
+  Card,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -48,9 +49,9 @@ export function MarQuickActions({
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+      <Card variant="surface" className="p-5 flex flex-col justify-between">
         <div>
-          <Text as="h3" size="base" weight="medium" className="text-slate-900 text-base font-medium mb-4">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900 mb-4">
             Quick Actions
           </Text>
 
@@ -114,11 +115,13 @@ export function MarQuickActions({
         </div>
 
         {/* Bottom Audit Info */}
-        <div className="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm text-slate-500 mt-4">
+        <Card variant="white" border="secondary" className="flex items-center gap-2 p-3 mt-4">
           <Info className="size-4 shrink-0 text-slate-400" />
-          <span>All actions are logged and update the compliance checklist</span>
-        </div>
-      </div>
+          <Text size="sm" variant="muted">
+            All actions are logged and update the compliance checklist
+          </Text>
+        </Card>
+      </Card>
 
       {/* Modal 1: Allergies & Contraindications */}
       <Dialog open={isAllergiesOpen} onOpenChange={setIsAllergiesOpen}>
@@ -127,7 +130,7 @@ export function MarQuickActions({
             <DialogTitle className="text-base font-semibold text-slate-900">
               Allergies &amp; Contraindications
             </DialogTitle>
-            <DialogDescription className="text-[12px] text-slate-500">
+            <DialogDescription className="text-sm text-slate-500">
               Critical contraindications and recorded drug allergies for this resident.
             </DialogDescription>
           </DialogHeader>

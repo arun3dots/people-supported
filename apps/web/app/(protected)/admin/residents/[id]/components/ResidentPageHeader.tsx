@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Download, Edit2, LogOut, Printer } from "lucide-react";
-import { Button } from "@repo/ui/components/ui";
+import { Button, Text } from "@repo/ui/components/ui";
 
 interface ResidentSummary {
   id?: string;
@@ -35,17 +35,23 @@ export function ResidentPageHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-6 font-sans">
       {/* Left: Breadcrumb Back Link */}
-      <div className="flex items-center gap-2 text-md font-medium text-slate-500">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => router.push(`/${roleBase}/residents`)}
-          className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-md text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
         >
           <ArrowLeft className="size-3.5" />
-          <span>People Supported</span>
+          <Text as="span" size="md" variant="muted">
+            People Supported
+          </Text>
         </button>
-        <span>›</span>
-        <span className="font-bold text-slate-900">{fullName}</span>
+        <Text as="span" size="md" variant="muted">
+          ›
+        </Text>
+        <Text as="span" size="md" weight="medium" className="text-slate-900">
+          {fullName}
+        </Text>
       </div>
 
       {/* Right: Action Buttons (Print summary, SAR Export, Edit Profile & Discharge) */}
@@ -54,9 +60,9 @@ export function ResidentPageHeader({
           type="button"
           variant="outline"
           onClick={() => typeof window !== "undefined" && window.print()}
-          className="h-10 rounded-xl border-slate-200 bg-white px-3.5 text-md font-semibold text-slate-700 hover:bg-slate-50 inline-flex items-center gap-1.5"
+          className="h-10 rounded-xl px-3.5 text-md inline-flex items-center gap-1.5"
         >
-          <Printer className="size-3.5 text-slate-700" />
+          <Printer className="size-3.5" />
           <span>Print summary</span>
         </Button>
 
@@ -66,9 +72,9 @@ export function ResidentPageHeader({
             variant="outline"
             disabled={isExportingSar}
             onClick={onExportSarClick}
-            className="h-10 rounded-xl border-slate-200 bg-white px-3.5 text-md font-semibold text-slate-700 hover:bg-slate-50 inline-flex items-center gap-1.5"
+            className="h-10 rounded-xl px-3.5 text-md inline-flex items-center gap-1.5"
           >
-            <Download className="size-3.5 text-slate-700" />
+            <Download className="size-3.5" />
             <span>{isExportingSar ? "Exporting SAR…" : "Export SAR"}</span>
           </Button>
         )}
@@ -78,9 +84,9 @@ export function ResidentPageHeader({
             type="button"
             variant="primary"
             onClick={onEditClick}
-            className="h-10 rounded-xl px-3.5 text-md font-semibold inline-flex items-center gap-1.5"
+            className="h-10 rounded-xl px-3.5 text-md inline-flex items-center gap-1.5"
           >
-            <Edit2 className="size-3.5 text-white" />
+            <Edit2 className="size-3.5" />
             <span>Edit Admission</span>
           </Button>
         )}
@@ -92,9 +98,9 @@ export function ResidentPageHeader({
               type="button"
               variant="destructive"
               onClick={onDischargeClick}
-              className="rounded-xl h-10 px-3.5 text-md font-semibold inline-flex items-center gap-1.5"
+              className="rounded-xl h-10 px-3.5 text-md inline-flex items-center gap-1.5"
             >
-              <LogOut className="size-3.5 text-white" />
+              <LogOut className="size-3.5" />
               <span>Discharge</span>
             </Button>
           )}

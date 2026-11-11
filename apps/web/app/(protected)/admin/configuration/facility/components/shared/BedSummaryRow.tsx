@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Clock, Utensils, FileText, Wrench } from "lucide-react";
-import { Card } from "@repo/ui/components/ui/Card";
+import { Card, Text } from "@repo/ui/components/ui";
 
 interface BedSummaryRowProps {
   totalBeds?: number;
@@ -87,12 +87,15 @@ export function BedSummaryRow({
   ];
 
   return (
-    <Card className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-0 items-stretch min-h-[160px] shadow-xs">
+    <Card
+      variant="surface"
+      className="w-full p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-0 items-stretch min-h-[160px]"
+    >
       {/* Column 1: Bed Status Summary */}
       <div className="w-full flex flex-col items-start gap-2.5 p-0 select-none pb-4 sm:pb-0 border-b sm:border-b-0 sm:border-r border-slate-200 pr-0 sm:pr-4">
-        <h3 className="font-semibold text-md text-slate-900">
+        <Text as="h3" size="md" weight="semibold" className="text-slate-900">
           Bed Status Summary
-        </h3>
+        </Text>
 
         {/* Inner Content Layout */}
         <div className="w-full flex flex-row items-center gap-3 flex-1">
@@ -190,18 +193,18 @@ export function BedSummaryRow({
 
           {/* Value Row */}
           <div className="flex items-baseline gap-1.5 my-2">
-            <span className="font-bold text-2xl text-slate-900">
+            <Text size="xl" weight="semibold" className="text-slate-900">
               {metric.value}
-            </span>
-            <span className="text-md font-normal text-slate-500">
+            </Text>
+            <Text size="md" variant="muted">
               {metric.unit}
-            </span>
+            </Text>
           </div>
 
           {/* Subtitle Footer */}
-          <span className="text-md text-slate-500">
+          <Text size="sm" variant="muted">
             {metric.subtitle}
-          </span>
+          </Text>
         </div>
       ))}
     </Card>

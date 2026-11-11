@@ -137,8 +137,8 @@ export function FilterSection({
               className={cn(
                 "pb-2.5 border-b-2 transition-colors whitespace-nowrap cursor-pointer text-md",
                 active
-                  ? "border-emerald-800 text-emerald-900 font-bold"
-                  : "border-transparent text-slate-500 hover:text-slate-800 font-medium",
+                  ? "border-primary-800 text-primary-900 font-medium"
+                  : "border-transparent text-slate-500 hover:text-slate-800 font-normal",
               )}
             >
               {tab.label}

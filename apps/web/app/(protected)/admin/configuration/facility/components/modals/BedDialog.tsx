@@ -179,7 +179,7 @@ export function BedDialog({
           {step <= 3 && (
             <div className="mb-4">
               <DialogHeader className="pb-2">
-                <DialogTitle className="text-xl font-bold text-slate-900">
+                <DialogTitle className="text-lg font-semibold text-slate-900">
                   {title}
                 </DialogTitle>
               </DialogHeader>

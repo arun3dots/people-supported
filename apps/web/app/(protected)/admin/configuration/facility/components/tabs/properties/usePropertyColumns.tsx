@@ -2,8 +2,7 @@
 
 import React, { useMemo } from "react";
 import { Eye, DoorOpen, CheckCircle2, AlertTriangle } from "lucide-react";
-import { Text } from "@repo/ui/components/ui";
-import { cn } from "@repo/ui/lib/utils";
+import { Badge, Text } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../../lib/types/facility";
 import { RowActions } from "../../../../../../../../lib/components/shared/RowActions";
 import type { TableColumn } from "../../../../../../../../lib/components/shared/tableColumns";
@@ -52,20 +51,20 @@ export function usePropertyColumns({
               onClick={() => onSelectProperty(p)}
               className="flex items-center gap-3 text-left group cursor-pointer"
             >
-              <div className="size-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-md shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
                 {getInitials(p.name)}
               </div>
               <div className="flex flex-col min-w-0">
                 <Text
                   size="sm"
-                  weight="bold"
-                  className="text-slate-900 group-hover:text-emerald-800 transition-colors truncate"
+                  weight="medium"
+                  className="text-slate-900 group-hover:text-primary transition-colors truncate"
                 >
                   {p.name}
                 </Text>
-                <span className="text-md text-slate-500 truncate max-w-[230px]">
+                <Text size="xs" variant="muted" className="truncate max-w-[230px]">
                   {addr || p.description || "Supported Living Home"} · ID: {refId}
-                </span>
+                </Text>
               </div>
             </button>
           );
@@ -87,12 +86,12 @@ export function usePropertyColumns({
             pd.unitConfiguration || pd.propertyType || "Self-contained flats";
           return (
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-bold text-slate-900 truncate">
+              <Text size="sm" weight="medium" className="text-slate-900 truncate">
                 {schemeName}
-              </span>
-              <span className="text-md text-slate-500 truncate max-w-[240px]">
+              </Text>
+              <Text size="xs" variant="muted" className="truncate max-w-[240px]">
                 {partner} · {unitType}
-              </span>
+              </Text>
             </div>
           );
         },
@@ -109,12 +108,12 @@ export function usePropertyColumns({
             "Assigned Lead";
           return (
             <div className="flex items-center gap-2">
-              <div className="size-7 rounded-full bg-emerald-800 text-white text-md font-bold flex items-center justify-center shrink-0">
+              <div className="size-7 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center shrink-0">
                 {getInitials(leader)}
               </div>
-              <span className="text-sm font-medium text-slate-800 truncate">
+              <Text size="sm" weight="normal" className="text-slate-800 truncate">
                 {leader}
-              </span>
+              </Text>
             </div>
           );
         },
@@ -127,11 +126,13 @@ export function usePropertyColumns({
           const p = row.original;
           return (
             <div className="w-32 space-y-1">
-              <div className="flex items-center justify-between text-md">
-                <span className="font-bold text-slate-900">
+              <div className="flex items-center justify-between">
+                <Text size="sm" weight="medium" className="text-slate-900">
                   {p.occupiedBeds}/{p.totalBeds}
-                </span>
-                <span className="text-slate-500">{p.occupancyRate}%</span>
+                </Text>
+                <Text size="xs" variant="muted">
+                  {p.occupancyRate}%
+                </Text>
               </div>
               <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
                 <div
@@ -151,9 +152,9 @@ export function usePropertyColumns({
           const p = row.original;
           const { assignedCount, requiredCount } = p.staffToday;
           return (
-            <span className="text-md font-bold text-slate-800">
+            <Text size="sm" weight="medium" className="text-slate-800">
               {assignedCount}/{requiredCount} on shift
-            </span>
+            </Text>
           );
         },
       },
@@ -164,24 +165,17 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const p = row.original;
           const st = p.safetyEvidenceStatus;
+          const state =
+            st === "On track" ? "success" : st === "Due soon" ? "warning" : "danger";
           return (
-            <span
-              className={cn(
-                "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-md font-semibold",
-                st === "On track"
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : st === "Due soon"
-                    ? "bg-amber-50 text-amber-800 border border-amber-200"
-                    : "bg-red-50 text-red-700 border border-red-200",
-              )}
-            >
+            <Badge variant="secondary" state={state} className="border gap-1">
               {st === "On track" ? (
                 <CheckCircle2 className="size-3" />
               ) : (
                 <AlertTriangle className="size-3" />
               )}
               {st}
-            </span>
+            </Badge>
           );
         },
       },
@@ -193,19 +187,16 @@ export function usePropertyColumns({
           const p = row.original;
           const label =
             p.status === "Maintenance" ? "Under maintenance" : p.status || "Active";
+          const state =
+            p.status === "Active"
+              ? "success"
+              : p.status === "Maintenance"
+                ? "warning"
+                : "inactive";
           return (
-            <span
-              className={cn(
-                "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-md font-semibold",
-                p.status === "Active"
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : p.status === "Maintenance"
-                    ? "bg-amber-50 text-amber-800 border border-amber-200"
-                    : "bg-slate-100 text-slate-700 border border-slate-200",
-              )}
-            >
+            <Badge variant="secondary" state={state} className="border">
               {label}
-            </span>
+            </Badge>
           );
         },
       },

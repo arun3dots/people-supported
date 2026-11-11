@@ -64,15 +64,15 @@ export function AssignResidentDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent size="md">
         <DialogHeader className="pb-3 border-b border-slate-100">
-          <DialogTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <UserCheck className="size-5 text-emerald-600" />
+          <DialogTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <UserCheck className="size-5 text-primary" />
             Assign Resident to Bed
           </DialogTitle>
-          <DialogDescription className="text-md text-slate-500">
+          <DialogDescription className="text-sm text-slate-500">
             Assign an active resident to Bed{" "}
-            <strong className="text-slate-700">
+            <span className="font-medium text-slate-700">
               {bed?.number || bed?.code || ""}
-            </strong>{" "}
+            </span>{" "}
             {bed?.roomNumber ? `(Room ${bed.roomNumber})` : ""}.
           </DialogDescription>
         </DialogHeader>

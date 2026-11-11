@@ -21,6 +21,7 @@ import { PropertiesSchemeStats } from "../shared/PropertiesSchemeStats";
 import { AddPropertyModal } from "../modals/AddPropertyModal";
 import { PropertyDetailDrawer } from "../modals/PropertyDetailDrawer";
 import { usePropertyColumns } from "./properties/usePropertyColumns";
+import { buildPropertyFilterDropdowns } from "./properties/propertyFilters";
 import { Button, toast } from "@repo/ui/components/ui";
 
 interface PropertiesTabProps {
@@ -170,63 +171,18 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
         stats={<PropertiesSchemeStats properties={allProperties} schemes={allSchemes} />}
         filters={
           <FacilityFilterBar
-            filters={[
-              {
-                value: schemeFilter,
-                onChange: (val) => {
-                  setSchemeFilter(val);
-                  setPage(1);
-                },
-                placeholder: "All Schemes",
-                options: [
-                  { value: "All Schemes", label: "All Schemes" },
-                  ...allSchemes.map((s) => ({ value: s.id, label: s.name })),
-                ],
-              },
-              {
-                value: statusFilter,
-                onChange: (val) => {
-                  setStatusFilter(val);
-                  setPage(1);
-                },
-                placeholder: "All Status",
-                options: [
-                  { value: "All Status", label: "All Status" },
-                  { value: "Active", label: "Active" },
-                  { value: "Void", label: "Void" },
-                  { value: "Maintenance", label: "Under maintenance" },
-                ],
-              },
-              {
-                value: unitTypeFilter,
-                onChange: (val) => {
-                  setUnitTypeFilter(val);
-                  setPage(1);
-                },
-                placeholder: "All Unit Types",
-                options: [
-                  { value: "All Unit Types", label: "All Unit Types" },
-                  { value: "Self-contained flats", label: "Self-contained flats" },
-                  { value: "Cluster flats", label: "Cluster flats" },
-                  { value: "Shared house", label: "Shared house" },
-                  { value: "Bungalow", label: "Bungalow" },
-                ],
-              },
-              {
-                value: safetyFilter,
-                onChange: (val) => {
-                  setSafetyFilter(val);
-                  setPage(1);
-                },
-                placeholder: "All Safety Evidence",
-                options: [
-                  { value: "All Safety Evidence", label: "All Safety Evidence" },
-                  { value: "On track", label: "On track" },
-                  { value: "Due soon", label: "Due soon" },
-                  { value: "Overdue", label: "Overdue" },
-                ],
-              },
-            ]}
+            filters={buildPropertyFilterDropdowns({
+              schemeFilter,
+              setSchemeFilter,
+              statusFilter,
+              setStatusFilter,
+              unitTypeFilter,
+              setUnitTypeFilter,
+              safetyFilter,
+              setSafetyFilter,
+              allSchemes,
+              onResetPage: () => setPage(1),
+            })}
             searchValue={searchInput}
             onSearchChange={(val) => {
               setSearchInput(val);
@@ -243,7 +199,7 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
           <EntityCard
             key={p.id}
             avatar={
-              <div className="size-11 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-sm shrink-0">
+              <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
                 {p.name.slice(0, 2).toUpperCase()}
               </div>
             }

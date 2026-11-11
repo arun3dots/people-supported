@@ -315,26 +315,30 @@ export function AddBedStep1({
 
         {/* Capacity Alert Banner */}
         {selectedRoom && (
-          <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-emerald-50/90 border border-emerald-200 rounded-xl text-md mt-1">
-            <AlertCircle className="size-4 shrink-0 text-emerald-700" />
-            <div className="flex items-center gap-1.5 flex-wrap text-emerald-900">
-              <Text size="md" weight="medium" className="text-emerald-800">
+          <Card
+            variant="secondary"
+            border="secondary"
+            className="flex-row items-center gap-2.5 px-3.5 py-2.5 rounded-xl mt-1"
+          >
+            <AlertCircle className="size-4 shrink-0 text-primary" />
+            <div className="flex items-center gap-1.5 flex-wrap text-slate-700">
+              <Text size="sm" weight="medium" className="text-slate-700">
                 Room capacity:{" "}
-                <span className="font-bold text-emerald-950">
+                <span className="font-semibold text-slate-900">
                   {selectedRoom.totalBeds} beds
                 </span>
               </Text>
-              <span className="text-emerald-300">|</span>
-              <Text size="md" weight="medium" className="text-emerald-800">
+              <span className="text-slate-300">|</span>
+              <Text size="sm" weight="medium" className="text-slate-700">
                 Occupied:{" "}
-                <span className="font-bold text-emerald-950">
+                <span className="font-semibold text-slate-900">
                   {selectedRoom.occupiedBeds}
                 </span>
               </Text>
-              <span className="text-emerald-300">|</span>
-              <Text size="md" weight="medium" className="text-emerald-800">
+              <span className="text-slate-300">|</span>
+              <Text size="sm" weight="medium" className="text-slate-700">
                 Available:{" "}
-                <span className="font-bold text-emerald-950">
+                <span className="font-semibold text-slate-900">
                   {Math.max(
                     0,
                     selectedRoom.totalBeds - selectedRoom.occupiedBeds
@@ -342,7 +346,7 @@ export function AddBedStep1({
                 </span>
               </Text>
             </div>
-          </div>
+          </Card>
         )}
       </Card>
 

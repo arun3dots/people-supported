@@ -166,7 +166,7 @@ export function ResidentDirectoryClient({
             variant="outline"
             size="sm"
             onClick={handleExport}
-            className="h-10 px-3.5 rounded-xl border-slate-200 text-md font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-none"
+            className="h-10 px-3.5 rounded-xl border-slate-200 text-md font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-none"
           >
             <Download className="size-3.5" />
             Export

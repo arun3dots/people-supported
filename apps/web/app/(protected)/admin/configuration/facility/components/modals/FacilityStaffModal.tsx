@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Card,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -46,13 +47,17 @@ export function FacilityStaffModal({
         </DialogHeader>
 
         <div className="py-4">
-          <div className="rounded-xl border border-gray-100 overflow-hidden">
+          <Card
+            variant="white"
+            border="secondary"
+            className="overflow-hidden p-0 rounded-xl"
+          >
             <Table>
-              <TableHeader className="bg-gray-50/50">
+              <TableHeader className="bg-surface-card-grey/60">
                 <TableRow>
-                  <TableHead className="font-bold">Staff Member</TableHead>
-                  <TableHead className="font-bold">Role</TableHead>
-                  <TableHead className="font-bold">Contact</TableHead>
+                  <TableHead className="font-medium">Staff Member</TableHead>
+                  <TableHead className="font-medium">Role</TableHead>
+                  <TableHead className="font-medium">Contact</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -73,10 +78,10 @@ export function FacilityStaffModal({
                     >
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-md font-bold">
+                          <div className="w-8 h-8 rounded-full bg-surface-primary-light flex items-center justify-center text-primary text-sm font-medium">
                             {member.fullName.charAt(0)}
                           </div>
-                          <span className="font-medium text-md">
+                          <span className="font-medium text-sm text-slate-800">
                             {member.fullName}
                           </span>
                         </div>
@@ -107,7 +112,7 @@ export function FacilityStaffModal({
                 )}
               </TableBody>
             </Table>
-          </div>
+          </Card>
         </div>
 
         <div className="flex justify-end pt-2">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { Eye, DoorOpen, BedDouble, Calendar } from "lucide-react";
@@ -38,7 +38,7 @@ export function WingCard({
   return (
     <EntityCard
       avatar={
-        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-md shrink-0 overflow-hidden">
+        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-md shrink-0 overflow-hidden">
           {w.name.slice(0, 2).toUpperCase()}
         </div>
       }

@@ -1,101 +1,33 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { CheckCircle2, ClipboardList, Plus } from "lucide-react";
-import { Button } from "@repo/ui/components/ui";
+import { AlertCircle, CheckCircle2, Clock, Plus } from "lucide-react";
+import { Button, Card, SummaryCardsGrid } from "@repo/ui/components/ui";
 import { useGetRiskAssessmentsQuery } from "../../../../../../lib/queries/risk";
 import type { Resident } from "../../../../../../lib/types/resident";
 import { RiskAssessmentTab } from "../../../../../shared/components/risk-assessment";
 import { ObservationTab } from "../../../../../shared/components/ObservationTab";
 import { BodyMapTab } from "../../../../../shared/components/body-map";
 import { FluidIntakeTab } from "../../../../../shared/components/FluidIntakeTab";
-
-interface UnifiedAssessmentRow {
-  id: string;
-  title: string;
-  category: "Risk" | "Health" | "Functional" | "Capacity" | "Nutrition";
-  result: string;
-  completedDate: string;
-  assessor: string;
-  nextDueDate: string;
-  status: "In date" | "Due soon" | "Overdue";
-}
-
-const DEFAULT_ASSESSMENT_ROWS: UnifiedAssessmentRow[] = [
-  {
-    id: "def-1",
-    title: "Falls risk assessment",
-    category: "Risk",
-    result: "Low risk",
-    completedDate: "12/08/2026",
-    assessor: "Tom Reilly",
-    nextDueDate: "12/02/2027",
-    status: "In date",
-  },
-  {
-    id: "def-2",
-    title: "MUST nutrition screening",
-    category: "Nutrition",
-    result: "Score 0 — low risk",
-    completedDate: "03/10/2026",
-    assessor: "Sarah Jane (Nurse)",
-    nextDueDate: "03/01/2027",
-    status: "In date",
-  },
-  {
-    id: "def-3",
-    title: "Mental Capacity Assessment — finances",
-    category: "Capacity",
-    result: "Lacks capacity — best interests decision recorded",
-    completedDate: "18/05/2026",
-    assessor: "Ben Cannon",
-    nextDueDate: "18/05/2027",
-    status: "In date",
-  },
-  {
-    id: "def-4",
-    title: "Waterlow pressure area assessment",
-    category: "Health",
-    result: "Score 8 — not at risk",
-    completedDate: "15/09/2026",
-    assessor: "Sarah Jane (Nurse)",
-    nextDueDate: "15/11/2026",
-    status: "Due soon",
-  },
-  {
-    id: "def-5",
-    title: "Independent living skills (functional)",
-    category: "Functional",
-    result: "12 of 20 skills independent",
-    completedDate: "01/07/2026",
-    assessor: "Tom Reilly",
-    nextDueDate: "01/01/2027",
-    status: "In date",
-  },
-  {
-    id: "def-6",
-    title: "Behaviour & environmental risk",
-    category: "Risk",
-    result: "Medium — strategies in place",
-    completedDate: "21/10/2026",
-    assessor: "Hannah Clarke",
-    nextDueDate: "21/01/2027",
-    status: "In date",
-  },
-];
-
-const CATEGORY_BADGE_MAP: Record<UnifiedAssessmentRow["category"], string> = {
-  Risk: "bg-amber-50 text-amber-800 border-amber-200",
-  Nutrition: "bg-orange-50 text-orange-800 border-orange-200",
-  Capacity: "bg-slate-100 text-slate-700 border-slate-200",
-  Health: "bg-emerald-50 text-emerald-800 border-emerald-200",
-  Functional: "bg-teal-50 text-teal-800 border-teal-200",
-};
+import {
+  AssessmentRegisterSection,
+  DEFAULT_ASSESSMENT_ROWS,
+  type UnifiedAssessmentRow,
+} from "./AssessmentRegisterSection";
 
 interface ResidentAssessmentsTabProps {
   resident: Resident;
   initialSubView?: "register" | "risk-matrix" | "observations" | "bodymap" | "fluid-intake";
 }
+
+const CATEGORIES = ["All", "Risk", "Health", "Functional", "Capacity", "Nutrition"] as const;
+
+const CLINICAL_TOOLS = [
+  { id: "risk-matrix", label: "Interactive Risk Matrix" },
+  { id: "observations", label: "Observations" },
+  { id: "bodymap", label: "Body Map" },
+  { id: "fluid-intake", label: "Fluid Intake" },
+] as const;
 
 export function ResidentAssessmentsTab({
   resident,
@@ -113,16 +45,16 @@ export function ResidentAssessmentsTab({
       .filter((r) => r.status !== "Archived")
       .map((r) => {
         const titleLower = r.title.toLowerCase();
-        const cat: UnifiedAssessmentRow["category"] = titleLower.includes("nutrition") ||
-          titleLower.includes("must")
-          ? "Nutrition"
-          : titleLower.includes("capacity")
-            ? "Capacity"
-            : titleLower.includes("waterlow") || titleLower.includes("clinical")
-              ? "Health"
-              : titleLower.includes("functional") || titleLower.includes("mobility")
-                ? "Functional"
-                : "Risk";
+        const cat: UnifiedAssessmentRow["category"] =
+          titleLower.includes("nutrition") || titleLower.includes("must")
+            ? "Nutrition"
+            : titleLower.includes("capacity")
+              ? "Capacity"
+              : titleLower.includes("waterlow") || titleLower.includes("clinical")
+                ? "Health"
+                : titleLower.includes("functional") || titleLower.includes("mobility")
+                  ? "Functional"
+                  : "Risk";
 
         const reviewDateObj = r.nextReviewDate ? new Date(r.nextReviewDate) : null;
         const now = new Date();
@@ -167,81 +99,90 @@ export function ResidentAssessmentsTab({
     return rows.filter((r) => r.category === categoryFilter);
   }, [rows, categoryFilter]);
 
-  const categories = ["All", "Risk", "Health", "Functional", "Capacity", "Nutrition"];
+  const summaryCards = useMemo(
+    () => [
+      {
+        title: "In date",
+        value: counts.inDate,
+        subtitle: "Current assessments",
+        icon: <CheckCircle2 className="size-5 text-emerald-700" />,
+        iconClassName: "bg-emerald-50",
+      },
+      {
+        title: "Due within 30 days",
+        value: counts.dueSoon,
+        subtitle: "Reviews scheduled",
+        subtitleColor: counts.dueSoon > 0 ? "text-amber-700" : undefined,
+        icon: <Clock className="size-5 text-amber-700" />,
+        iconClassName: "bg-amber-50",
+      },
+      {
+        title: "Overdue",
+        value: counts.overdue,
+        subtitle: counts.overdue > 0 ? "Requires action" : "All up to date",
+        subtitleColor: counts.overdue > 0 ? "text-text-error" : undefined,
+        icon: <AlertCircle className="size-5 text-red-700" />,
+        iconClassName: "bg-red-50",
+      },
+    ],
+    [counts],
+  );
 
   return (
     <div className="space-y-6 font-sans">
       {/* 3 Top Summary KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-5 space-y-1">
-          <span className="text-md font-bold text-emerald-900">In date</span>
-          <div className="text-2xl font-extrabold text-emerald-800">{counts.inDate}</div>
-        </div>
-        <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-5 space-y-1">
-          <span className="text-md font-bold text-amber-900">Due within 30 days</span>
-          <div className="text-2xl font-extrabold text-amber-800">{counts.dueSoon}</div>
-        </div>
-        <div className="bg-red-50/70 border border-red-200/80 rounded-2xl p-5 space-y-1">
-          <span className="text-md font-bold text-red-900">Overdue</span>
-          <div className="text-2xl font-extrabold text-red-700">{counts.overdue}</div>
-        </div>
-      </div>
+      <SummaryCardsGrid
+        cards={summaryCards}
+        className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3"
+      />
 
       {/* Main Surface Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-2xs space-y-5">
+      <Card variant="surface" className="p-5 sm:p-6 space-y-5">
         {/* Filter Pills + Clinical Sub-tools + New Assessment CTA */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            {categories.map((cat) => {
+            {CATEGORIES.map((cat) => {
               const active = subView === "register" && categoryFilter === cat;
               return (
-                <button
+                <Button
                   key={cat}
                   type="button"
+                  size="sm"
+                  variant={active ? "primary" : "outline"}
                   onClick={() => {
                     setSubView("register");
                     setCategoryFilter(cat);
                   }}
-                  className={`px-3.5 py-1.5 rounded-full text-md font-semibold transition-all cursor-pointer ${
-                    active
-                      ? "bg-primary text-primary-foreground shadow-2xs"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
-                  }`}
+                  className={active ? "rounded-full" : "rounded-full bg-white"}
                 >
                   {cat}
-                </button>
+                </Button>
               );
             })}
 
-            <span className="h-4 w-px bg-slate-200 mx-1" />
+            <span className="h-4 w-px bg-slate-300 mx-1" />
 
-            {(
-              [
-                { id: "risk-matrix", label: "Interactive Risk Matrix" },
-                { id: "observations", label: "Observations" },
-                { id: "bodymap", label: "Body Map" },
-                { id: "fluid-intake", label: "Fluid Intake" },
-              ] as const
-            ).map((tool) => (
-              <button
-                key={tool.id}
-                type="button"
-                onClick={() => setSubView(tool.id)}
-                className={`px-3.5 py-1.5 rounded-full text-md font-semibold transition-all cursor-pointer ${
-                  subView === tool.id
-                    ? "bg-primary text-primary-foreground shadow-2xs"
-                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                {tool.label}
-              </button>
-            ))}
+            {CLINICAL_TOOLS.map((tool) => {
+              const active = subView === tool.id;
+              return (
+                <Button
+                  key={tool.id}
+                  type="button"
+                  size="sm"
+                  variant={active ? "primary" : "outline"}
+                  onClick={() => setSubView(tool.id)}
+                  className={active ? "rounded-full" : "rounded-full bg-white"}
+                >
+                  {tool.label}
+                </Button>
+              );
+            })}
           </div>
 
           <Button
             variant="primary"
             onClick={() => setSubView("risk-matrix")}
-            className="font-semibold text-md rounded-xl h-10 px-4 inline-flex items-center gap-1.5 cursor-pointer"
+            className="gap-1.5"
           >
             <Plus className="size-4" />
             New assessment
@@ -250,91 +191,10 @@ export function ResidentAssessmentsTab({
 
         {/* Sub-view Display */}
         {subView === "register" && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-100 text-md font-semibold text-slate-500">
-                  <th className="py-3 px-3">Assessment</th>
-                  <th className="py-3 px-3">Category</th>
-                  <th className="py-3 px-3">Result</th>
-                  <th className="py-3 px-3">Completed</th>
-                  <th className="py-3 px-3">Next due</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-md">
-                {filteredRows.map((row) => {
-                  const isDueOrOverdue = row.status !== "In date";
-                  const statusBadgeCls =
-                    row.status === "Overdue"
-                      ? "bg-red-50 text-red-700 border-red-200"
-                      : row.status === "Due soon"
-                        ? "bg-amber-50 text-amber-800 border-amber-200"
-                        : "bg-emerald-50 text-emerald-800 border-emerald-200";
-
-                  return (
-                    <tr key={row.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-4 px-3 font-bold text-slate-900">
-                        <div className="flex items-center gap-2.5">
-                          <ClipboardList className="size-4 text-slate-500 shrink-0" />
-                          <span>{row.title}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold border ${CATEGORY_BADGE_MAP[row.category]}`}
-                        >
-                          {row.category}
-                        </span>
-                      </td>
-                      <td className="py-4 px-3 font-medium text-slate-700">{row.result}</td>
-                      <td className="py-4 px-3">
-                        <div className="font-semibold text-slate-800">{row.completedDate}</div>
-                        <div className="text-slate-400">{row.assessor}</div>
-                      </td>
-                      <td
-                        className={`py-4 px-3 font-bold ${
-                          isDueOrOverdue ? "text-amber-700" : "text-slate-800"
-                        }`}
-                      >
-                        {row.nextDueDate}
-                      </td>
-                      <td className="py-4 px-3">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold border ${statusBadgeCls}`}
-                        >
-                          {row.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-3 text-right">
-                        {isDueOrOverdue ? (
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => setSubView("risk-matrix")}
-                            className="rounded-xl h-8 px-3 text-md font-semibold inline-flex items-center gap-1 cursor-pointer"
-                          >
-                            <CheckCircle2 className="size-3.5" />
-                            Complete
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSubView("risk-matrix")}
-                            className="border-slate-200 text-slate-700 rounded-xl h-8 px-3 text-md font-semibold cursor-pointer"
-                          >
-                            View
-                          </Button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <AssessmentRegisterSection
+            rows={filteredRows}
+            onOpenRiskMatrix={() => setSubView("risk-matrix")}
+          />
         )}
 
         {subView === "risk-matrix" && (
@@ -364,7 +224,7 @@ export function ResidentAssessmentsTab({
             isDraft={resident.isDraft}
           />
         )}
-      </div>
+      </Card>
     </div>
   );
 }

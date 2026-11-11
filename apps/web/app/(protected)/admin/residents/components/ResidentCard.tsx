@@ -119,13 +119,13 @@ export function ResidentCard({
           </Badge>
 
           {resident.dnarStatus && (
-            <Badge variant="secondary" state="danger" className="px-2 py-0.5 shadow-none text-md font-semibold">
+            <Badge variant="secondary" state="danger" className="px-2 py-0.5 shadow-none">
               DNAR
             </Badge>
           )}
 
           {hasActiveHighRisk && (
-            <Badge variant="secondary" state="danger" className="px-2 py-0.5 flex items-center gap-1 shadow-none text-md">
+            <Badge variant="secondary" state="danger" className="px-2 py-0.5 flex items-center gap-1 shadow-none">
               <ShieldAlert className="size-3" /> High Risk
             </Badge>
           )}
@@ -136,7 +136,7 @@ export function ResidentCard({
           <Button
             size="sm"
             variant="outline"
-            className="gap-1.5 rounded-xl h-8 text-md font-semibold hover:bg-slate-50 cursor-pointer"
+            className="gap-1.5 rounded-xl h-8 hover:bg-slate-50 cursor-pointer"
           >
             <Eye className="size-3.5 text-emerald-800" />
             View

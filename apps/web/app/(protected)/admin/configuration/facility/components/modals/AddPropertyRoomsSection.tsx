@@ -4,7 +4,9 @@ import React, { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import {
   Button,
+  Card,
   Input,
+  Label,
   Select,
   SelectContent,
   SelectItem,
@@ -73,7 +75,9 @@ export function TagMultiSelect({
 
   return (
     <div className="space-y-2">
-      <label className="text-md font-bold text-slate-800 block">{label}</label>
+      <Label className="text-md font-medium text-slate-700 block">
+        {label}
+      </Label>
       <div className="flex flex-wrap gap-2">
         {allOptions.map((item) => {
           const isSelected = selected.includes(item);
@@ -83,10 +87,10 @@ export function TagMultiSelect({
               type="button"
               onClick={() => toggleItem(item)}
               className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-semibold border transition-all cursor-pointer",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-all cursor-pointer",
                 isSelected
-                  ? "bg-emerald-800 text-white border-emerald-800 shadow-xs"
-                  : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100",
+                  ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                  : "bg-surface-card-grey text-slate-700 border-slate-200 hover:bg-slate-100",
               )}
             >
               <span>{item}</span>
@@ -164,10 +168,10 @@ export function AddPropertyRoomsSection({
     <div className="space-y-3 pt-2 border-t border-slate-200">
       <div className="flex items-center justify-between">
         <div>
-          <Text size="md" weight="bold" className="text-slate-800">
-            Rooms, Flats & Bed Allocation ({rooms.length})
+          <Text size="md" weight="semibold" className="text-slate-900">
+            Rooms, Flats &amp; Bed Allocation ({rooms.length})
           </Text>
-          <Text size="md" className="text-slate-500">
+          <Text size="sm" variant="muted">
             Each unit creates a Room and its corresponding Beds for tenancy
             assignment.
           </Text>
@@ -185,9 +189,11 @@ export function AddPropertyRoomsSection({
 
       <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
         {rooms.map((room, idx) => (
-          <div
+          <Card
             key={idx}
-            className="grid grid-cols-12 gap-2 items-center bg-slate-50/90 border border-slate-200/80 rounded-xl p-2.5 [&_[data-slot=input-error]]:hidden"
+            variant="surface"
+            border="secondary"
+            className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl [&_[data-slot=input-error]]:hidden"
           >
             <div className="col-span-3">
               <label className="text-md font-medium text-slate-600 block mb-0.5">
@@ -263,14 +269,14 @@ export function AddPropertyRoomsSection({
             </div>
 
             <div className="col-span-2 flex items-center justify-between pt-4 pl-1">
-              <label className="inline-flex items-center gap-1.5 text-md font-medium text-slate-700 cursor-pointer">
+              <label className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={Boolean(room.isAccessible)}
                   onChange={(e) =>
                     updateRoom(idx, { isAccessible: e.target.checked })
                   }
-                  className="rounded border-slate-300 text-emerald-700 focus:ring-emerald-700"
+                  className="rounded border-slate-300 text-primary focus:ring-primary"
                 />
                 Accessible
               </label>
@@ -285,7 +291,7 @@ export function AddPropertyRoomsSection({
                 </button>
               )}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

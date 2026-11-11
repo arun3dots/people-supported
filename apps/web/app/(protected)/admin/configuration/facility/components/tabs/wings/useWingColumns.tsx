@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo } from "react";
 import { DoorOpen, BedDouble, Eye } from "lucide-react";
@@ -41,7 +41,7 @@ export function useWingColumns({
           const w = row.original;
           return (
             <div className="flex items-center gap-3">
-              <div className="size-9 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-md shrink-0">
+              <div className="size-9 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-md shrink-0">
                 {w.name.charAt(0).toUpperCase()}
               </div>
               <div className="flex flex-col min-w-0">

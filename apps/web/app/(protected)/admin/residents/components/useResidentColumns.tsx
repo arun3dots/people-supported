@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { format } from "date-fns";
 import { Building2, Calendar } from "lucide-react";
-import { cn } from "@repo/ui/lib/utils";
+import { Badge, Text } from "@repo/ui/components/ui";
 import type { Resident } from "../../../../../lib/types/resident";
 import type {
   TableColumn,
@@ -126,10 +126,12 @@ export function useResidentColumns({
             <div className="flex items-start gap-2">
               <Building2 className="size-4 text-slate-400 mt-0.5 shrink-0" />
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-slate-900">
+                <Text size="sm" weight="medium" className="text-slate-900">
                   {propName}
-                </span>
-                <span className="text-xs text-slate-500">{roomNum}</span>
+                </Text>
+                <Text size="xs" variant="muted">
+                  {roomNum}
+                </Text>
               </div>
             </div>
           );
@@ -148,9 +150,13 @@ export function useResidentColumns({
             r.fundingType ||
             "Supported living";
           return (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
+            <Badge
+              variant="secondary"
+              state="inactive"
+              className="border font-normal text-xs"
+            >
               {need}
-            </span>
+            </Badge>
           );
         },
       },
@@ -171,10 +177,12 @@ export function useResidentColumns({
           const oneToOne = r.supportedLivingDetails?.oneToOneHoursPerWeek ?? 6;
           return (
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-slate-900">
+              <Text size="sm" weight="medium" className="text-slate-900">
                 {totalHrs} hrs/wk
-              </span>
-              <span className="text-xs text-slate-500">{oneToOne}h 1:1</span>
+              </Text>
+              <Text size="xs" variant="muted">
+                {oneToOne}h 1:1
+              </Text>
             </div>
           );
         },
@@ -192,19 +200,20 @@ export function useResidentColumns({
               : r.careProfile?.careComplexity === "Low"
                 ? "Low"
                 : "Medium");
+          const riskState =
+            risk === "High"
+              ? "danger"
+              : risk === "Low"
+                ? "success"
+                : "warning";
           return (
-            <span
-              className={cn(
-                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold",
-                risk === "High"
-                  ? "bg-red-50 text-red-700 border border-red-200"
-                  : risk === "Low"
-                    ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                    : "bg-amber-50 text-amber-800 border border-amber-200",
-              )}
+            <Badge
+              variant="secondary"
+              state={riskState}
+              className="border text-xs"
             >
               {risk}
-            </span>
+            </Badge>
           );
         },
       },
@@ -226,25 +235,31 @@ export function useResidentColumns({
               ? format(parsedDate, "dd/MM/yyyy")
               : "18/02/2027";
           const planStatus = planHeader?.status || "In date";
+          const planState =
+            planStatus === "Overdue"
+              ? "danger"
+              : planStatus === "Due soon"
+                ? "warning"
+                : "success";
 
           return (
             <div className="flex items-center gap-2">
-              <span
-                className={cn(
-                  "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold",
-                  planStatus === "Overdue"
-                    ? "bg-red-50 text-red-700 border border-red-200"
-                    : planStatus === "Due soon"
-                      ? "bg-amber-50 text-amber-800 border border-amber-200"
-                      : "bg-emerald-50 text-emerald-800 border border-emerald-200",
-                )}
+              <Badge
+                variant="secondary"
+                state={planState}
+                className="border text-xs"
               >
                 {planStatus}
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs text-slate-600">
+              </Badge>
+              <Text
+                as="span"
+                size="xs"
+                variant="muted"
+                className="inline-flex items-center gap-1"
+              >
                 <Calendar className="size-3 text-slate-400" />
                 {dateLabel}
-              </span>
+              </Text>
             </div>
           );
         },

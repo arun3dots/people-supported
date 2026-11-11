@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { BedDouble, LogOut, UserPlus, Calendar, Layers } from "lucide-react";
@@ -62,7 +62,7 @@ export function BedCard({
   return (
     <EntityCard
       avatar={
-        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-bold text-icon-primary text-md shrink-0 overflow-hidden">
+        <div className="size-11 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-icon-primary text-md shrink-0 overflow-hidden">
           {isOccupied ? initials : <BedDouble className="size-5 text-icon-primary" />}
         </div>
       }

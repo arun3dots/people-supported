@@ -43,7 +43,7 @@ export function ResidentInsights() {
   ];
 
   return (
-    <div className="space-y-3 w-full font-['Outfit',sans-serif]">
+    <div className="space-y-3 w-full font-sans">
       <Text as="h3" size="sm" weight="medium" className="text-slate-900">
         Resident Insights
       </Text>
@@ -65,7 +65,7 @@ export function ResidentInsights() {
                 <Icon className="size-4" />
               </div>
               <div className="space-y-0.5 min-w-0">
-                <Text size="sm" weight="semibold" className="truncate text-slate-900 block">
+                <Text size="sm" weight="medium" className="truncate text-slate-900 block">
                   {item.title}
                 </Text>
                 <Text size="sm" weight="regular" className="truncate text-slate-500 block">
@@ -84,7 +84,7 @@ export function ResidentInsights() {
             className="flex items-center justify-center gap-2 h-full w-full"
           >
             <LineChart className="size-5 text-emerald-800 shrink-0" />
-            <Text size="sm" weight="semibold" className="text-emerald-800">
+            <Text size="sm" weight="medium" className="text-emerald-800">
               View Analytics
             </Text>
           </Link>

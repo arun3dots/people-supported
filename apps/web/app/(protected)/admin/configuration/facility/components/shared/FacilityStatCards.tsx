@@ -22,6 +22,7 @@ export function FacilityStatCards({ cards, extra, className }: FacilityStatCards
     subtitle: card.subtitle,
     subtitleColor: card.subtitleColor || card.textColor || "text-slate-500",
     icon: card.icon,
+    iconClassName: card.iconClassName || card.bgIcon,
   }));
 
   return (
