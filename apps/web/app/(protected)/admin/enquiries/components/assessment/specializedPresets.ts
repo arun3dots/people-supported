@@ -1,0 +1,61 @@
+import type { NeedsAssessmentDataDTO } from "@repo/schema";
+
+export const dementiaAssessmentPreset: Partial<NeedsAssessmentDataDTO> = {
+  mobilityStatus: "Supervised walking (needs prompt)",
+  transferDependency: "Requires supervision / 1 carer stand-by",
+  fallHistory: "Yes — 1 to 2 falls (past 6 months)",
+  cognitiveDiagnoses: ["Dementia (Alzheimer's / Vascular / Mixed)"],
+  orientationLevels: ["Person (Recognise family)"],
+  riskBehaviors: ["Wandering / exit-seeking", "Sundowning / evening agitation"],
+  dietTexture: "Normal/Standard Diet",
+  swallowingChokingSafety: "No",
+  eatingAssistanceLevel: "Prompting / set-up only",
+  bathingShoweringAssistance: "Assistance of 1 carer required",
+  bladderContinence: "Occasionally Incontinent (e.g. at night)",
+  skinIntegrityRisk: "No",
+  medicationAdminCapacity: "Requires full nurse / senior carer administration and recording",
+  specializedMedicalInterventions: [],
+  recommendedCareAllocationLevel: "Dementia",
+  recommendedRoomFeatures: "Memory care wing, ground floor, enclosed garden access, low profiling bed",
+};
+
+export const respiteCarePreset: Partial<NeedsAssessmentDataDTO> = {
+  mobilityStatus: "Walking with mobility frame / stick",
+  transferDependency: "Requires assistance of 1 carer",
+  fallHistory: "No",
+  cognitiveDiagnoses: ["None"],
+  orientationLevels: ["Time (Day/Night)", "Place (Where they are)", "Person (Recognise family)"],
+  riskBehaviors: [],
+  dietTexture: "Normal/Standard Diet",
+  swallowingChokingSafety: "No",
+  eatingAssistanceLevel: "Independent",
+  bathingShoweringAssistance: "Assistance of 1 carer required",
+  bladderContinence: "Fully Continent",
+  skinIntegrityRisk: "No",
+  medicationAdminCapacity: "Requires prompted / scheduled administration by trained staff",
+  specializedMedicalInterventions: [],
+  recommendedCareAllocationLevel: "Respite",
+  recommendedRoomFeatures: "Standard en-suite, close to lounge and lift",
+};
+
+export const highDependencyPreset: Partial<NeedsAssessmentDataDTO> = {
+  mobilityStatus: "Wheelchair dependent (transfers with assistance)",
+  transferDependency: "Requires hoist transfer (2 carers)",
+  fallHistory: "Yes — frequent / high risk",
+  cognitiveDiagnoses: ["None"],
+  orientationLevels: ["Time (Day/Night)", "Place (Where they are)", "Person (Recognise family)"],
+  riskBehaviors: [],
+  dietTexture: "Pureed Diet (IDDSI Level 4)",
+  swallowingChokingSafety: "Yes — dysphagia / choking risk identified",
+  fluidThickenersRequired: "Yes — Moderately thick (Level 3)",
+  eatingAssistanceLevel: "Full feeding assistance required (1-to-1)",
+  bathingShoweringAssistance: "Full assist of 2 carers (bed bath / shower trolley)",
+  bladderContinence: "Doubly Incontinent (catheter / full pad management)",
+  bowelContinence: "Doubly Incontinent (catheter / full pad management)",
+  skinIntegrityRisk: "Yes — active pressure sore or very high Waterlow risk",
+  medicationAdminCapacity: "Requires full nurse / senior carer administration and recording",
+  specializedMedicalInterventions: ["Catheter care", "Wound dressings", "PEG tube feeding"],
+  recommendedCareAllocationLevel: "Nursing",
+  recommendedRoomFeatures: "Ceiling track hoist, profiling airflow mattress, oxygen port",
+};
+

@@ -1,0 +1,75 @@
+{
+  "name": "@repo/schema",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "default": "./dist/auth.js"
+    },
+    "./tenant": {
+      "types": "./dist/tenant.d.ts",
+      "default": "./dist/tenant.js"
+    },
+    "./staff": {
+      "types": "./dist/staff.d.ts",
+      "default": "./dist/staff.js"
+    },
+    "./facility": {
+      "types": "./dist/facility.d.ts",
+      "default": "./dist/facility.js"
+    },
+    "./role": {
+      "types": "./dist/role.d.ts",
+      "default": "./dist/role.js"
+    },
+    "./medication": {
+      "types": "./dist/medication.d.ts",
+      "default": "./dist/medication.js"
+    },
+    "./resident": {
+      "types": "./dist/resident.d.ts",
+      "default": "./dist/resident.js"
+    },
+    "./observation": {
+      "types": "./dist/observation.d.ts",
+      "default": "./dist/observation.js"
+    },
+    "./care-plan": {
+      "types": "./dist/care-plan.d.ts",
+      "default": "./dist/care-plan.js"
+    },
+    "./enquiry": {
+      "types": "./dist/enquiry.d.ts",
+      "default": "./dist/enquiry.js"
+    },
+    "./incident": {
+      "types": "./dist/incident.d.ts",
+      "default": "./dist/incident.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.3"
+  }
+}

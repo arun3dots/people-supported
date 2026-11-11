@@ -1,0 +1,74 @@
+{
+  "expo": {
+    "name": "Cantra",
+    "slug": "cantra",
+    "version": "1.0.0",
+    "scheme": "cantra",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "runtimeVersion": "1.0.0",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Cantra to use Face ID for secure point-of-care resident record access."
+        }
+      ],
+      "expo-updates"
+    ],
+    "orientation": "default",
+    "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF",
+      "translucent": false
+    },
+    "ios": {
+      "icon": "./assets/icon.png",
+      "bundleIdentifier": "com.carehome.mobile",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow Cantra to use Face ID for secure point-of-care resident record access.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.carehome.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "aa1299ef-2f9f-4203-8312-1fd4cc3509c3"
+      }
+    },
+    "owner": "arun3dots",
+    "updates": {
+      "url": "https://u.expo.dev/aa1299ef-2f9f-4203-8312-1fd4cc3509c3"
+    }
+  }
+}

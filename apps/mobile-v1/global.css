@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 175 21% 10%;
+    --card: 0 0% 97%;
+    --card-foreground: 175 21% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 175 21% 10%;
+    --primary: 171 20% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 168 18% 97%;
+    --secondary-foreground: 171 20% 36%;
+    --muted: 168 18% 97%;
+    --muted-foreground: 0 0% 36%;
+    --accent: 168 18% 97%;
+    --accent-foreground: 171 20% 36%;
+    --destructive: 4 100% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 165 20% 78%;
+    --input: 165 20% 78%;
+    --ring: 171 20% 36%;
+    --radius: 0.75rem;
+    --color-surface-card-grey: #f7f7f7;
+  }
+
+  body,
+  input,
+  textarea,
+  button {
+    font-family: 'Outfit_400Regular', 'Outfit', system-ui, -apple-system, sans-serif;
+  }
+}

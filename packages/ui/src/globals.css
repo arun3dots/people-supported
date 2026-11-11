@@ -1,0 +1,348 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+/* Scan these apps for tailwind utility classes */
+@source "../../../apps/web";
+@source "../../../apps/docs";
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #141f1e;
+
+  --color-primary: #4a706a;
+  --color-primary-foreground: #ffffff;
+
+  /* Primary Color Scale */
+  --color-primary-50: #f5f8f7;
+  --color-primary-100: #e4ecea;
+  --color-primary-200: #bcd3cd;
+  --color-primary-300: #96b8b0;
+  --color-primary-400: #6f9b93;
+  --color-primary-500: #4a706a;
+  --color-primary-600: #4a706a;
+  --color-primary-700: #324d49;
+  --color-primary-800: #283e3b;
+  --color-primary-900: #1d2f2d;
+  --color-primary-950: #141f1e;
+
+  --color-primary-light: #f5f8f7;
+  --color-primary-dark: #324d49;
+
+  --color-secondary-200: #e8d2c0;
+  --color-secondary-400: #c9906e;
+
+  --color-brand-1-50: #f7f6ef;
+  --color-brand-1-100: #ece7d5;
+  --color-brand-2-50: #faf7ec;
+  --color-brand-2-100: #ded3ba;
+  --color-brand-3-50: #f7f2ef;
+  --color-brand-3-100: #f1e8e3;
+  --color-orange-50: #faf5f2;
+
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #f7f7f7;
+  --color-black-600: #5d5d5d;
+  --color-black-950: #000000;
+
+  --color-error-50: #fff2f1;
+  --color-error-500: #ff3b2f;
+  --color-warning-50: #fdfbe9;
+  --color-warning-600: #c38c0b;
+  --color-success-50: #f1fcf3;
+  --color-success-800: #1d5e2e;
+  --color-info-50: #eef8ff;
+  --color-info-500: #3294ff;
+
+  --color-matdash-primary: #4a706a;
+  --color-matdash-accent: #f5f8f7;
+
+  --color-brand: #4a706a;
+
+  --color-matdash-text: #141f1e;
+  --color-matdash-border: #bcd3cd;
+  --color-matdash-subtext: #5d5d5d;
+
+  --color-sidebar: #ffffff;
+  --color-sidebar-foreground: #141f1e;
+  --color-sidebar-primary: #4a706a;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #f5f8f7;
+  --color-sidebar-accent-foreground: #4a706a;
+  --color-sidebar-border: #bcd3cd;
+  --color-sidebar-ring: #4a706a;
+
+  --sidebar-width: 240px;
+  --sidebar-width-icon: 70px;
+
+  --color-border: #bcd3cd;
+  --color-input: #bcd3cd;
+  --color-ring: #4a706a;
+
+  /* Custom Shadow for the MatDash Glow */
+  --shadow-matdash: 0 4px 20px 0 rgba(74, 112, 106, 0.3);
+  --shadow-matdash-intense: 0 6px 30px 0 rgba(74, 112, 106, 0.5);
+
+  --animate-fade-in: fade-in 0.5s ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+  --radius-2xl: 1rem;
+  /* 16px */
+  --radius-3xl: 1.5rem;
+  /* 24px */
+  --radius-4xl: 2rem;
+  /* 32px */
+
+  --font-sans: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-display: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-heading: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-title: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-subtitle: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-body: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-description: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-icon-label: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-number: var(--font-outfit),
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+
+  /* Typography Font Sizes - Headings */
+  --text-h1: 3.75rem;
+  /* 60px */
+  --text-h2: 3rem;
+  /* 48px */
+  --text-h3: 2.5rem;
+  /* 40px */
+  --text-h4: 2rem;
+  /* 32px */
+  --text-h5: 1.5rem;
+  /* 24px */
+  --text-h6: 1.25rem;
+  /* 20px */
+  --text-h7: 1rem;
+  /* 16px */
+
+  /* Typography Font Sizes - Standard Scale */
+  --text-3xs: 0.625rem;
+  /* 4px */
+  --text-2xs: 0.625rem;
+  /* 6px */
+  --text-xs: 0.625rem;
+  /* 10px */
+  --text-sm: 0.75rem;
+  /* 12px */
+  --text-md: 0.88rem;
+  /* 16px */
+  --text-base: 0.88rem;
+  /* 16px */
+  --text-lg: 1.25rem;
+  /* 20px */
+  --text-xl: 1.5rem;
+  /* 24px */
+  --text-2xl: 1.75rem;
+  /* 28px */
+  --text-3xl: 2rem;
+  /* 32px */
+  --text-4xl: 2.25rem;
+  /* 36px */
+  --text-5xl: 2.5rem;
+  /* 40px */
+  --text-6xl: 3rem;
+  /* 48px */
+  --text-7xl: 3.5rem;
+  /* 56px */
+
+  /* Figma Surface Color Tokens */
+  --color-surface-primary: #4A706A;
+  --color-surface-primary-light: #F5F8F7;
+  --color-surface-card-grey: #F7F7F7;
+  --color-surface-error: #FFF2F1;
+  --color-surface-warning: #FDFBE9;
+  --color-surface-success: #C0F2CC;
+  --color-surface-info: #EEF8FF;
+  --color-surface-brand-1: #F7F6EF;
+  --color-surface-brand-2: #FAF7EC;
+  --color-surface-brand-3: #F7F2EF;
+  --color-surface-orange: #FAF5F2;
+  --color-surface-neutral: #FFFFFF;
+  --color-surface-bg: #FFFFFF;
+  --color-surface-icon-bg: #FFFFFF;
+  --color-surface-secondary: #FFFFFF;
+
+  /* Figma Text Color Tokens */
+  --color-text-heading: #000000;
+  --color-text-body: #141F1E;
+  --color-text-primary: #4A706A;
+  --color-text-description: #5D5D5D;
+  --color-text-warning: #C38C0B;
+  --color-text-success: #1D5E2E;
+  --color-text-info: #3294FF;
+  --color-text-error: #FF3B2F;
+  --color-text-action: #FFFFFF;
+
+  /* Figma Icon Color Tokens */
+  --color-icon-primary: #4A706A;
+  --color-icon-secondary: #C9906E;
+  --color-icon-brand-1: #ECE7D5;
+  --color-icon-brand-2: #DED3BA;
+  --color-icon-brand-3: #F1E8E3;
+  --color-icon-warning: #C38C0B;
+  --color-icon-success: #1D5E2E;
+  --color-icon-info: #3294FF;
+  --color-icon-error: #FF3B2F;
+  --color-icon-white: #FFFFFF;
+  --color-icon-black: #141F1E;
+  --color-icon-description: #5D5D5D;
+
+  /* Figma Border Color Tokens */
+  --color-border-primary: #4A706A;
+  --color-border-secondary: #BCD3CD;
+  --color-border-brand-1: #ECE7D5;
+  --color-border-brand-2: #DED3BA;
+  --color-border-brand-3: #F1E8E3;
+  --color-border-warning: #C38C0B;
+  --color-border-success: #1D5E2E;
+  --color-border-info: #3294FF;
+  --color-border-error: #FF3B2F;
+  --color-border-light: #E8D2C0;
+  --color-border-description: #5D5D5D;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 171 20% 36%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 171 20% 36%;
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 171 20% 36%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 170 60% 96%;
+    --sidebar-accent-foreground: 171 20% 36%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 171 20% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Global Smooth & Sleek Thin Scrollbar */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 112, 106, 0.3) transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(74, 112, 106, 0.6) transparent;
+}
+
+/* WebKit & Blink Browsers (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(74, 112, 106, 0.25);
+  border-radius: 9999px;
+  transition: background 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 112, 106, 0.55);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(74, 112, 106, 0.8);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Custom Scrollbar utility to hide it while allowing scroll */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+  }
+}

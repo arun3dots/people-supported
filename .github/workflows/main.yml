@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  code_lint:
+    name: Code Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/care_home?schema=public"
+
+      - name: Build packages
+        run: pnpm --filter "@repo/*" build
+
+      - name: Lint
+        run: pnpm run lint
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/care_home?schema=public"
+
+      - name: Build Project
+        run: pnpm run build
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/care_home?schema=public"
+          ENCRYPTION_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+          JWT_SECRET: "ci-dummy-jwt-secret-key-12345678"
+          NEXT_PUBLIC_API_URL: "http://localhost:4400/api"

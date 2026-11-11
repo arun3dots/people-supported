@@ -1,0 +1,194 @@
+{
+  "titles": [
+    { "value": "Mrs", "label": "Mrs" },
+    { "value": "Mr", "label": "Mr" },
+    { "value": "Ms", "label": "Ms" },
+    { "value": "Dr", "label": "Dr" }
+  ],
+  "genders": [
+    { "value": "Female", "label": "Female" },
+    { "value": "Male", "label": "Male" },
+    { "value": "Other", "label": "Other" }
+  ],
+  "maritalStatuses": [
+    { "value": "Widowed", "label": "Widowed" },
+    { "value": "Single", "label": "Single" },
+    { "value": "Married", "label": "Married" },
+    { "value": "Divorced", "label": "Divorced" }
+  ],
+  "preferredCommunications": [
+    { "value": "Verbal", "label": "Verbal" },
+    { "value": "Written", "label": "Written" },
+    { "value": "Email", "label": "Email" }
+  ],
+  "preferredLanguages": [
+    { "value": "English", "label": "English" },
+    { "value": "Spanish", "label": "Spanish" },
+    { "value": "French", "label": "French" }
+  ],
+  "religions": [
+    { "value": "Christian", "label": "Christian" },
+    { "value": "Muslim", "label": "Muslim" },
+    { "value": "Hindu", "label": "Hindu" },
+    { "value": "None", "label": "None" }
+  ],
+  "admissionTypes": [
+    { "value": "Residential", "label": "Residential" },
+    { "value": "Nursing", "label": "Nursing" },
+    { "value": "Respite", "label": "Respite" },
+    { "value": "Dementia", "label": "Dementia" }
+  ],
+  "admissionSourcesStep1": [
+    { "value": "Hospital", "label": "Hospital" },
+    { "value": "Home", "label": "Home" },
+    { "value": "Transfer", "label": "Transfer" },
+    { "value": "Other", "label": "Other" }
+  ],
+  "admissionSourcesStep2": [
+    { "value": "GP / Healthcare Professional", "label": "GP / Healthcare Professional" },
+    { "value": "Hospital Discharge", "label": "Hospital Discharge" },
+    { "value": "Self Referral", "label": "Self Referral" }
+  ],
+  "assignedManagers": [
+    { "value": "Sarah Black", "label": "Sarah Black" },
+    { "value": "John Smith", "label": "John Smith" }
+  ],
+  "keyworkers": [
+    { "value": "Emma Thompson", "label": "Emma Thompson" },
+    { "value": "David Miller", "label": "David Miller" }
+  ],
+  "countries": [
+    { "value": "United Kingdom", "label": "United Kingdom" },
+    { "value": "Ireland", "label": "Ireland" }
+  ],
+  "admissionReasons": [
+    { "value": "Long Term Care", "label": "Long Term Care" },
+    { "value": "Short Stay / Respite", "label": "Short Stay / Respite" },
+    { "value": "Rehabilitation", "label": "Rehabilitation" }
+  ],
+  "fundingTypes": [
+    { "value": "Local Authority", "label": "Local Authority" },
+    { "value": "NHS Continuing Healthcare", "label": "NHS Continuing Healthcare" },
+    { "value": "Private", "label": "Private / Self Funded" },
+    { "value": "Long-term care insurance", "label": "Long-term care insurance" }
+  ],
+  "localAuthorities": [
+    { "value": "Brimigham City Council", "label": "Birmingham City Council" },
+    { "value": "London Borough Council", "label": "London Borough Council" }
+  ],
+  "roomTypePreferences": [
+    { "value": "Single Room", "label": "Single Room" },
+    { "value": "En-Suite Room", "label": "En-Suite Room" },
+    { "value": "Shared Room", "label": "Shared Room" }
+  ],
+  "floorPreferences": [
+    { "value": "Ground Floor", "label": "Ground Floor" },
+    { "value": "First Floor", "label": "First Floor" },
+    { "value": "Second Floor", "label": "Second Floor" }
+  ],
+  "payers": [
+    { "value": "Local Authority", "label": "Local Authority" },
+    { "value": "Family", "label": "Family" },
+    { "value": "Self", "label": "Self" }
+  ],
+  "paymentFrequencies": [
+    { "value": "Weekly", "label": "Weekly" },
+    { "value": "Monthly", "label": "Monthly" },
+    { "value": "Four-Weekly", "label": "Four-Weekly" }
+  ],
+  "careCategories": [
+    { "value": "Residential Care", "label": "Residential Care" },
+    { "value": "Nursing Care", "label": "Nursing Care" },
+    { "value": "Dementia Care", "label": "Dementia Care" }
+  ],
+  "primaryCareNeeds": [
+    { "value": "Physical Support", "label": "Physical Support" },
+    { "value": "Memory & Cognition", "label": "Memory & Cognition" },
+    { "value": "Sensory Support", "label": "Sensory Support" }
+  ],
+  "careComplexities": [
+    { "value": "High", "label": "High" },
+    { "value": "Medium", "label": "Medium" },
+    { "value": "Low", "label": "Low" }
+  ],
+  "mobilities": [
+    { "value": "Uses Wheelchair", "label": "Uses Wheelchair" },
+    { "value": "Independent", "label": "Independent" },
+    { "value": "Walking Stick", "label": "Walking Stick" }
+  ],
+  "continences": [
+    { "value": "Occasional Incontinence", "label": "Occasional Incontinence" },
+    { "value": "Continent", "label": "Continent" },
+    { "value": "Incontinent", "label": "Incontinent" }
+  ],
+  "feedingAssistances": [
+    { "value": "Yes", "label": "Yes" },
+    { "value": "No", "label": "No" },
+    { "value": "Supervised", "label": "Supervised" }
+  ],
+  "gpPractices": [
+    { "value": "Greenfield medical Centre", "label": "Greenfield Medical Centre" },
+    { "value": "St. Mary Practice", "label": "St. Mary Practice" }
+  ],
+  "gpNames": [
+    { "value": "Dr. James Patel", "label": "Dr. James Patel" },
+    { "value": "Dr. Sarah Williams", "label": "Dr. Sarah Williams" }
+  ],
+  "hospitalConsultants": [
+    { "value": "Dr. Sarah Williams", "label": "Dr. Sarah Williams" },
+    { "value": "Dr. James Patel", "label": "Dr. James Patel" }
+  ],
+  "hospitals": [
+    { "value": "City Hospital Brimigham", "label": "City Hospital Birmingham" },
+    { "value": "St. Thomas Hospital", "label": "St. Thomas Hospital" }
+  ],
+  "vaccineStatuses": [
+    { "value": "Yes", "label": "Yes" },
+    { "value": "No", "label": "No" }
+  ],
+  "medicationNames": [
+    { "value": "Metformin 500mg", "label": "Metformin 500mg" },
+    { "value": "Amlodipine 5mg", "label": "Amlodipine 5mg" },
+    { "value": "Paracetamol 500mg", "label": "Paracetamol 500mg" },
+    { "value": "Atorvastatin 20mg", "label": "Atorvastatin 20mg" },
+    { "value": "Vitamin D3 Drops", "label": "Vitamin D3 Drops" },
+    { "value": "Donepezil 5mg", "label": "Donepezil 5mg" },
+    { "value": "Omeprazole 20mg", "label": "Omeprazole 20mg" },
+    { "value": "Aspirin 75mg", "label": "Aspirin 75mg" }
+  ],
+  "dosages": [
+    { "value": "500 mg", "label": "500 mg" },
+    { "value": "5 mg", "label": "5 mg" },
+    { "value": "10 mg", "label": "10 mg" },
+    { "value": "20 mg", "label": "20 mg" },
+    { "value": "500 IU", "label": "500 IU" },
+    { "value": "1 Tablet", "label": "1 Tablet" },
+    { "value": "2 Tablets", "label": "2 Tablets" },
+    { "value": "5 ml", "label": "5 ml" }
+  ],
+  "frequencies": [
+    { "value": "Daily Once", "label": "Daily Once" },
+    { "value": "Twice Daily", "label": "Twice Daily" },
+    { "value": "Three Times Daily", "label": "Three Times Daily" },
+    { "value": "Four Times Daily", "label": "Four Times Daily" },
+    { "value": "Every 8 Hours", "label": "Every 8 Hours" },
+    { "value": "At Bedtime", "label": "At Bedtime" },
+    { "value": "As needed (PRN)", "label": "As needed (PRN)" }
+  ],
+  "prescribedBys": [
+    { "value": "Dr. James Patel", "label": "Dr. James Patel" },
+    { "value": "Dr. Sarah Williams", "label": "Dr. Sarah Williams" },
+    { "value": "Dr. Elizabeth Blackwell", "label": "Dr. Elizabeth Blackwell" },
+    { "value": "Hospital Specialist", "label": "Hospital Specialist" },
+    { "value": "GP Practice", "label": "GP Practice" }
+  ],
+  "consentSignedBys": [
+    { "value": "Margaret Ashworth", "label": "Margaret Ashworth" },
+    { "value": "Sarah Johnson", "label": "Sarah Johnson" }
+  ],
+  "consentRelationships": [
+    { "value": "Resident", "label": "Resident" },
+    { "value": "Next of Kin", "label": "Next of Kin" },
+    { "value": "Power of Attorney", "label": "Power of Attorney" }
+  ]
+}

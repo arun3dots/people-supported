@@ -1,0 +1,284 @@
+"use client";
+
+import React, { useMemo } from "react";
+import { format } from "date-fns";
+import { Building2, Calendar } from "lucide-react";
+import { cn } from "@repo/ui/lib/utils";
+import type { Resident } from "../../../../../lib/types/resident";
+import type {
+  TableColumn,
+  BadgeState,
+} from "../../../../../lib/components/shared/tableColumns";
+
+interface UseResidentColumnsProps {
+  roleBase?: string;
+}
+
+export function calculateResidentAge(dobString?: string): number | string {
+  if (!dobString) return "N/A";
+  const birthDate = new Date(dobString);
+  if (isNaN(birthDate.getTime())) return "N/A";
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+export function formatResidentDOB(dobString?: string): string {
+  if (!dobString) return "N/A";
+  const date = new Date(dobString);
+  return isNaN(date.getTime()) ? "N/A" : format(date, "dd MMM yyyy");
+}
+
+export function getResidentStatusBadgeState(
+  status: string,
+  isDraft?: boolean,
+): BadgeState {
+  if (status === "Active" || status === "Admitted") return "success";
+  if (status === "Draft" || (isDraft && !status)) return "warning";
+  switch (status) {
+    case "Hospitalized":
+      return "danger";
+    case "On Leave":
+    case "Pending":
+      return "info";
+    case "Discharged":
+      return "inactive";
+    default:
+      return isDraft ? "warning" : "inactive";
+  }
+}
+
+export function getResidentCareTypeBadgeState(type: string): BadgeState {
+  switch (type) {
+    case "Nursing":
+    case "Nursing Care":
+      return "info";
+    case "Dementia":
+    case "Dementia Care":
+      return "warning";
+    case "Residential":
+    case "Resident Care":
+      return "success";
+    case "Respite":
+    case "Respite Care":
+      return "info";
+    default:
+      return "inactive";
+  }
+}
+
+function getInitials(fullName?: string): string {
+  if (!fullName) return "?";
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return `${parts[0]?.[0] ?? ""}${parts[1]?.[0] ?? ""}`.toUpperCase();
+  }
+  return fullName.slice(0, 2).toUpperCase();
+}
+
+export function useResidentColumns({
+  roleBase = "admin",
+}: UseResidentColumnsProps = {}): TableColumn<Resident>[] {
+  void roleBase;
+  return useMemo<TableColumn<Resident>[]>(
+    () => [
+      {
+        kind: "index",
+        id: "index",
+        header: "#",
+      },
+      {
+        kind: "person",
+        id: "resident",
+        accessorKey: "fullName",
+        header: "Person",
+        avatar: true,
+        maxWidthClassName: "max-w-60",
+        getTitle: (r) => r.fullName || "—",
+        getSubtitle: (r) => {
+          const ref =
+            r.supportedLivingDetails?.referenceCode ||
+            `SL-${r.id.slice(0, 5).toUpperCase()}`;
+          return `${ref} · NHS ${r.nhsNumber || "N/A"}`;
+        },
+        getInitials: (r) => getInitials(r.fullName),
+        getImageUrl: (r) => r.photoUrl || null,
+      },
+      {
+        id: "propertyRoom",
+        header: "Property / Room",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const r = row.original;
+          const propName =
+            r.bed?.wingName || r.bed?.room?.wing?.name || "Unassigned";
+          const roomNum = r.bed?.room?.roomNumber
+            ? /^(flat|room)\b/i.test(r.bed.room.roomNumber.trim())
+              ? r.bed.room.roomNumber.trim()
+              : `Flat ${r.bed.room.roomNumber.trim()}`
+            : "No Unit";
+
+          return (
+            <div className="flex items-start gap-2">
+              <Building2 className="size-4 text-slate-400 mt-0.5 shrink-0" />
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-slate-900">
+                  {propName}
+                </span>
+                <span className="text-xs text-slate-500">{roomNum}</span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: "primaryNeed",
+        header: "Primary Need",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const r = row.original;
+          const need =
+            r.supportedLivingDetails?.primaryNeed ||
+            r.careProfile?.primaryCareNeed ||
+            r.careProfile?.primaryDiagnosis ||
+            r.fundingType ||
+            "Supported living";
+          return (
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
+              {need}
+            </span>
+          );
+        },
+      },
+      {
+        kind: "person",
+        id: "keyworker",
+        header: "Key Worker",
+        avatar: false,
+        getTitle: (r) => r.keyworker?.fullName || "Unassigned",
+      },
+      {
+        id: "supportHours",
+        header: "Support Hours",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const r = row.original;
+          const totalHrs = r.supportedLivingDetails?.supportHoursPerWeek ?? 28;
+          const oneToOne = r.supportedLivingDetails?.oneToOneHoursPerWeek ?? 6;
+          return (
+            <div className="flex flex-col">
+              <span className="text-sm font-bold text-slate-900">
+                {totalHrs} hrs/wk
+              </span>
+              <span className="text-xs text-slate-500">{oneToOne}h 1:1</span>
+            </div>
+          );
+        },
+      },
+      {
+        id: "riskLevel",
+        header: "Risk",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const r = row.original;
+          const risk =
+            r.supportedLivingDetails?.riskLevel ||
+            (r.careProfile?.careComplexity === "High"
+              ? "High"
+              : r.careProfile?.careComplexity === "Low"
+                ? "Low"
+                : "Medium");
+          return (
+            <span
+              className={cn(
+                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold",
+                risk === "High"
+                  ? "bg-red-50 text-red-700 border border-red-200"
+                  : risk === "Low"
+                    ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                    : "bg-amber-50 text-amber-800 border border-amber-200",
+              )}
+            >
+              {risk}
+            </span>
+          );
+        },
+      },
+      {
+        id: "supportPlan",
+        header: "Support Plan",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const r = row.original;
+          const latestPlan = r.carePlans?.[0];
+          const planHeader = r.supportedLivingDetails?.supportPlanHeader;
+          const rawReviewDate =
+            planHeader?.nextReviewDate ||
+            latestPlan?.reviewDate ||
+            (latestPlan as { nextReviewDate?: string })?.nextReviewDate;
+          const parsedDate = rawReviewDate ? new Date(rawReviewDate) : null;
+          const dateLabel =
+            parsedDate && !isNaN(parsedDate.getTime())
+              ? format(parsedDate, "dd/MM/yyyy")
+              : "18/02/2027";
+          const planStatus = planHeader?.status || "In date";
+
+          return (
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold",
+                  planStatus === "Overdue"
+                    ? "bg-red-50 text-red-700 border border-red-200"
+                    : planStatus === "Due soon"
+                      ? "bg-amber-50 text-amber-800 border border-amber-200"
+                      : "bg-emerald-50 text-emerald-800 border border-emerald-200",
+                )}
+              >
+                {planStatus}
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs text-slate-600">
+                <Calendar className="size-3 text-slate-400" />
+                {dateLabel}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        kind: "badge",
+        id: "status",
+        accessorKey: "status",
+        header: "Status",
+        getState: (r) =>
+          getResidentStatusBadgeState(
+            r.status || (r.isDraft ? "Draft" : "Active"),
+            r.isDraft,
+          ),
+        getLabel: (r) => {
+          const st = r.status || (r.isDraft ? "Draft" : "Active");
+          if (st === "Draft" || st === "Pending") return "In referral";
+          if (st === "Hospitalized") return "In hospital";
+          return st;
+        },
+      },
+      {
+        kind: "person",
+        id: "ageDob",
+        accessorKey: "dob",
+        header: "Age / DOB",
+        avatar: false,
+        getTitle: (r) => {
+          const age = calculateResidentAge(r.dob);
+          return age !== "N/A" ? `${age} yrs` : "—";
+        },
+        getSubtitle: (r) => formatResidentDOB(r.dob),
+      },
+    ],
+    [],
+  );
+}

@@ -1,0 +1,6 @@
+Error: listen EADDRINUSE: address already in use 0.0.0.0:4400
+Error: listen EADDRINUSE: address already in use 0.0.0.0:4400
+    at Server.setupListenHandle [as _listen2] (node:net:2016:16)
+    at listenInCluster (node:net:2073:12)
+    at node:net:2282:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)

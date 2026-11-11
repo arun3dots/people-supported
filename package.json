@@ -1,0 +1,36 @@
+{
+  "name": "care-home",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "dev:backend:debug": "pnpm --filter backend start:debug",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "db:generate": "pnpm --filter @repo/db db:generate",
+    "db:push": "pnpm --filter @repo/db db:push",
+    "db:seed": "pnpm --filter @repo/db db:seed",
+    "refactor:ui": "powershell -ExecutionPolicy Bypass -File ./scripts/refactor-ui.ps1",
+    "eas-build-post-install": "pnpm --filter @repo/schema build && pnpm --filter @repo/endpoints build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-react-jsx": "^7.25.9",
+    "babel-preset-expo": "~58.0.19",
+    "dotenv-cli": "^11.0.0",
+    "prettier": "^3.7.4",
+    "turbo": "^2.9.4",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.3.0",
+      "@types/react-dom": "19.3.0"
+    }
+  }
+}

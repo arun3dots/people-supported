@@ -1,0 +1,19 @@
+# Expo & Native builds
+.expo/
+dist/
+web-build/
+android/
+ios/
+.gradle/
+build/
+
+# Native keys & certificates
+*.jks
+*.p8
+*.p12
+*.key
+*.keystore
+*.mobileprovision
+*.orig.*
+
+tasks.md

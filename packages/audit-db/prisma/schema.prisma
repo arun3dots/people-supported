@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUDIT_DATABASE_URL")
+}
+
+// ============================================================
+// CQC / NHS DSP Toolkit — Append-Only Audit Log
+//
+// IMPORTANT: This table is protected by a database-level trigger
+// (see migrations/001_immutable_trigger.sql) that blocks all
+// UPDATE and DELETE operations.  Only INSERT is permitted.
+//
+// Retention: minimum 8 years per CQC / DSPT requirement.
+//            Older partitions are archived, never deleted.
+//
+// categoryType values:
+//   AUTH        - Login, logout, failed login, password reset, role change, MFA
+//   PAGE_VIEW   - Who viewed which page and when
+//   MEDICATION  - Every MAR entry: dose given/missed/refused
+//   CARE_PLAN   - Before/after for all care plan modifications
+//   SAFEGUARDING - Incident chain of custody
+//   DATA_ACCESS - Who read which resident record, from where
+//   CLINICAL_DOC - Risk assessment, body map, care note changes
+//   STAFF_ACTIVITY - Shift handover, task delegation
+//   CONSENT     - Photography, data sharing consent changes
+//   SYSTEM      - Data exports, permission changes
+//   LEGACY      - Migrated from old TenantAuditLog table
+// ============================================================
+model CqcAuditLog {
+  // Primary identity
+  id             String   @id @default(uuid())
+  tenantId       String?  // Nullable: platform-level events (e.g. failed login) have no tenant
+  userId         String?  // Nullable: system-generated events (e.g. cron cleanup) have no user
+  userEmail      String?  // Denormalised - retained even if user is deleted
+  userFullName   String?  // Denormalised - retained even if user is deleted
+  userRoleName   String?  // Denormalised role at the time of the event
+
+  // Event classification
+  categoryType   String   // AUTH | PAGE_VIEW | MEDICATION | CARE_PLAN | SAFEGUARDING | DATA_ACCESS | CLINICAL_DOC | STAFF_ACTIVITY | CONSENT | SYSTEM | LEGACY
+  actionType     String   // LOGIN | LOGOUT | FAILED_LOGIN | DOSE_GIVEN | CARE_PLAN_UPDATED | etc.
+
+  // Target entity
+  entityType     String?  // "Resident" | "User" | "CarePlan" | "MedicationRound" | "Page" | etc.
+  entityId       String?  // ID of the entity affected
+  entityLabel    String?  // Human-readable label (e.g. resident full name) — denormalised
+
+  // Payload
+  oldValue       Json?    // Before state (for CRU events)
+  newValue       Json?    // After state (for CRU events)
+  metadata       Json?    // Category-specific extra fields (e.g. witness ID for medication)
+
+  // Network context
+  ipAddress      String?
+  userAgent      String?
+
+  // Geolocation — best-effort client-reported GPS (only PAGE_VIEW populates these)
+  latitude       Float?
+  longitude      Float?
+  locationName   String?   // Reverse-geocoded place name (best-effort, PAGE_VIEW)
+
+  // Integrity
+  recordHash     String   // SHA-256 HMAC of the record content (computed before insert)
+  previousHash   String?  // Hash of the previous record in the chain (enables chain verification)
+
+  // Timestamps (immutable — no updatedAt)
+  timestamp      DateTime @default(now())
+
+  @@index([tenantId, timestamp])
+  @@index([categoryType, timestamp])
+  @@index([entityId, timestamp])
+  @@index([userId, timestamp])
+  @@map("cqc_audit_logs")
+}
+
+// ============================================================
+// Hash chain integrity blocks
+// Every 1,000 audit records, an integrity block is written that
+// captures the cumulative SHA-256 hash of all records in that
+// batch.  This allows offline verification that no records have
+// been tampered with since the block was written.
+// ============================================================
+model AuditIntegrityBlock {
+  id              String   @id @default(uuid())
+  tenantId        String?
+  blockNumber     Int
+  startRecordId   String
+  endRecordId     String
+  recordCount     Int
+  cumulativeHash  String   // SHA-256 of all record hashes in this block
+  timestamp       DateTime @default(now())
+
+  @@index([tenantId, blockNumber])
+  @@map("audit_integrity_blocks")
+}
