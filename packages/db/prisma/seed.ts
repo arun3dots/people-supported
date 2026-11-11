@@ -4,6 +4,7 @@ import { seedTenant, seedTenantFinancials, MAIN_BRANCH_ID } from "./seeds/tenant
 import { seedAssessmentTemplates } from "./seeds/assessment-templates.seed";
 import { seedUsers } from "./seeds/users.seed";
 import { seedShifts } from "./seeds/shifts.seed";
+import { seedResidents } from "./seeds/residents.seed";
 import { seedClinical } from "./seeds/clinical.seed";
 
 const prisma = new PrismaClient();
@@ -41,7 +42,7 @@ async function main() {
   await seedShifts(prisma);
 
   // 5. Residents, Profiles, and Bed Allocation
-  // await seedResidents(prisma);
+  await seedResidents(prisma);
 
   // 6. Clinical Care Plans, Escalations, MCA/DoLS & Risks
   await seedClinical(prisma);

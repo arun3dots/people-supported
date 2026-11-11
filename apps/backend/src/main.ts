@@ -136,12 +136,7 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  try {
-    await app.listen(4400, '::');
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code !== 'EAFNOSUPPORT') throw err;
-    await app.listen(4400, '0.0.0.0');
-  }
+  await app.listen(4400, '127.0.0.1');
   logger.log('Server is listening on port 4400');
 }
 

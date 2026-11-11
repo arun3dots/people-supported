@@ -1,37 +1,45 @@
-
 module.exports = {
   apps: [
     {
       name: 'backend',
-      cwd: '/opt/app/apps/backend',
+      cwd: '/home/ubuntu/apps/people-supported/apps/backend',
       script: 'dist/main.js',
-      env_file: '/opt/app/apps/backend/.env',
+      interpreter: 'node',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
       max_memory_restart: '700M',
+      env: {
+        NODE_ENV: 'production',
+      },
     },
     {
       name: 'web',
-      cwd: '/opt/app/apps/web',
-      script: 'pnpm',
-      args: 'run start',
-      env_file: '/opt/app/apps/web/.env',
+      cwd: '/home/ubuntu/apps/people-supported/apps/web',
+      script: '/home/ubuntu/apps/people-supported/node_modules/next/dist/bin/next',
+      args: 'start --hostname 127.0.0.1 --port 3000',
+      interpreter: 'node',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
       max_memory_restart: '500M',
+      env: {
+        NODE_ENV: 'production',
+      },
     },
     {
       name: 'superadmin',
-      cwd: '/opt/app/apps/superadmin',
-      script: 'pnpm',
-      args: 'run start --port 3001',
-      env_file: '/opt/app/apps/superadmin/.env',
+      cwd: '/home/ubuntu/apps/people-supported/apps/superadmin',
+      script: '/home/ubuntu/apps/people-supported/node_modules/next/dist/bin/next',
+      args: 'start --hostname 127.0.0.1 --port 3001',
+      interpreter: 'node',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
       max_memory_restart: '500M',
+      env: {
+        NODE_ENV: 'production',
+      },
     },
   ],
 };

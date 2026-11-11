@@ -2,8 +2,22 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET || "secretKey";
-const secret = new TextEncoder().encode(JWT_SECRET);
+function getJwtSecretBytes(): Uint8Array {
+  const rawSecret = process.env.JWT_SECRET;
+
+  if (
+    !rawSecret ||
+    rawSecret.trim() === "" ||
+    rawSecret === "secretKey" ||
+    rawSecret.length < 32
+  ) {
+    throw new Error(
+      "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET must be set to a strong secret of at least 32 characters.",
+    );
+  }
+
+  return new TextEncoder().encode(rawSecret);
+}
 
 /**
  * Route gate for the SuperAdmin control panel. Mirrors `apps/web`'s middleware
@@ -26,7 +40,7 @@ export async function middleware(req: NextRequest) {
     // Already-authenticated SuperAdmins skip the login screen.
     if (token && (pathname === "/login" || pathname === "/")) {
       try {
-        const { payload } = await jwtVerify(token, secret);
+        const { payload } = await jwtVerify(token, getJwtSecretBytes());
         const role = (payload.roleName as string)?.toUpperCase();
         if (role === "SUPERADMIN") {
           return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -45,7 +59,7 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, getJwtSecretBytes());
     const role = (payload.roleName as string)?.toUpperCase();
 
     // 3. Only SuperAdmins may access the control panel.

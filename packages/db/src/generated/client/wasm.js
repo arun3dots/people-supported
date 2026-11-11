@@ -2191,7 +2191,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\workspace\\care_home\\packages\\db\\src\\generated\\client",
+      "value": "/home/ubuntu/apps/people-supported/packages/db/src/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -2200,17 +2200,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\workspace\\care_home\\packages\\db\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/ubuntu/apps/people-supported/packages/db/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.19.3",
