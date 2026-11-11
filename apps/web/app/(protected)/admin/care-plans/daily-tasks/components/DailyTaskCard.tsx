@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import { Card, Badge, Button, Text } from "@repo/ui/components/ui";
 import type { CareTaskBoardItemDTO } from "@repo/schema";
@@ -24,18 +23,24 @@ export function DailyTaskCard({
   const roleState = task.role === "Nurse" ? "warning" : "inactive";
 
   return (
-    <Card
-      className="p-4 space-y-2.5 bg-white border border-slate-200 rounded-2xl shadow-none hover:shadow-xs transition-all font-['Outfit',sans-serif]"
-    >
+    <Card className="p-4 space-y-2.5 bg-white border border-slate-200 rounded-2xl shadow-none hover:shadow-xs transition-all font-['Outfit',sans-serif]">
       <div className="flex items-start justify-between gap-1.5">
         <Text size="md" weight="bold" className="text-slate-900 leading-snug">
           {task.title}
         </Text>
         <div className="flex items-center gap-1 shrink-0">
-          <Badge variant="secondary" state={shiftState} className="px-1.5 py-0.5 shadow-none">
+          <Badge
+            variant="secondary"
+            state={shiftState}
+            className="px-1.5 py-0.5 shadow-none"
+          >
             {task.timeSlot} shift
           </Badge>
-          <Badge variant="secondary" state={roleState} className="px-1.5 py-0.5 shadow-none">
+          <Badge
+            variant="secondary"
+            state={roleState}
+            className="px-1.5 py-0.5 shadow-none"
+          >
             {task.role}
           </Badge>
         </div>
@@ -43,12 +48,17 @@ export function DailyTaskCard({
 
       <div className="flex items-center justify-between">
         <Text size="md" weight="regular" className="text-slate-500">
-          Resident: <span className="font-semibold text-slate-800">{task.resident.fullName}</span>
+          Resident:{" "}
+          <span className="font-semibold text-slate-800">
+            {task.resident.fullName}
+          </span>
         </Text>
         {task.targetTime && (
           <div className="flex items-center gap-1">
             <Clock className="size-3 text-slate-400" />
-            <Text size="md" weight="regular" className="text-slate-500">{task.targetTime}</Text>
+            <Text size="md" weight="regular" className="text-slate-500">
+              {task.targetTime}
+            </Text>
           </div>
         )}
       </div>
@@ -59,8 +69,13 @@ export function DailyTaskCard({
 
       {task.instructions && (
         <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-          <Text size="md" weight="regular" className="text-slate-500 line-clamp-2 leading-relaxed">
-            <span className="font-semibold text-slate-700">Instructions:</span> {task.instructions}
+          <Text
+            size="md"
+            weight="regular"
+            className="text-slate-500 line-clamp-2 leading-relaxed"
+          >
+            <span className="font-semibold text-slate-700">Instructions:</span>{" "}
+            {task.instructions}
           </Text>
         </div>
       )}

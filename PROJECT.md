@@ -250,6 +250,7 @@ Plus `organization.controller.ts` for tenant self-service (own profile read/upda
 | `GET  /:id/documents` | Admin, Manager, Carer, Nurse |
 | `GET  /:id/documents/upload-url`, `POST /:id/documents`, `POST /:id/documents/upload`, `DELETE /documents/:id`, `GET /documents/:id/download` | Admin, Manager, Nurse |
 | `POST /:id/photo` (FileInterceptor) | Admin, Manager, Nurse |
+| `GET  /care-tasks/board` | `CareTaskDayService.getBoard` (active tasks from current agreed plans) | Admin, Manager, Nurse |
 
 #### `care-plan/` — prefix `/api/care-plan`
 | Endpoint | Service |
