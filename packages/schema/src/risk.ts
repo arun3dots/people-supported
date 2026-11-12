@@ -21,16 +21,6 @@ export type RiskStatus = z.infer<typeof riskStatusSchema>;
 export const riskLevelSchema = z.enum(["Low", "Moderate", "High", "Extreme"]);
 export type RiskLevel = z.infer<typeof riskLevelSchema>;
 
-export const reviewFrequencySchema = z.enum([
-  "Weekly",
-  "Monthly",
-  "Quarterly",
-  "SixMonthly",
-  "Annual",
-  "AfterIncident",
-]);
-export type ReviewFrequency = z.infer<typeof reviewFrequencySchema>;
-
 export const riskControlStatusSchema = z.enum([
   "Pending",
   "InProgress",
@@ -49,35 +39,6 @@ export function riskLevelFromScore(score: number): RiskLevel {
   if (score >= 12) return "High";
   if (score >= 6) return "Moderate";
   return "Low";
-}
-
-export function nextReviewDateFrom(
-  base: Date,
-  frequency: ReviewFrequency,
-): Date {
-  const d = new Date(base);
-  switch (frequency) {
-    case "Weekly":
-      d.setDate(d.getDate() + 7);
-      break;
-    case "Monthly":
-      d.setMonth(d.getMonth() + 1);
-      break;
-    case "Quarterly":
-      d.setMonth(d.getMonth() + 3);
-      break;
-    case "SixMonthly":
-      d.setMonth(d.getMonth() + 6);
-      break;
-    case "Annual":
-      d.setFullYear(d.getFullYear() + 1);
-      break;
-    case "AfterIncident":
-      // Marker — review on demand. Set a long horizon so cron does not spam.
-      d.setFullYear(d.getFullYear() + 5);
-      break;
-  }
-  return d;
 }
 
 // ---------- Risk Control schemas ----------
@@ -102,6 +63,13 @@ export type CompleteRiskControlDTO = z.infer<typeof completeRiskControlSchema>;
 
 // ---------- Risk Assessment schemas ----------
 const oneToFive = z.coerce.number().int().min(1).max(5);
+const nextReviewDateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD")
+  .refine((value) => {
+    const date = new Date(value + "T00:00:00.000Z");
+    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+  }, "Enter a valid next review date");
 
 export const createRiskAssessmentSchema = z.object({
   residentId: z.string().min(1),
@@ -113,7 +81,7 @@ export const createRiskAssessmentSchema = z.object({
   likelihood: oneToFive,
   severity: oneToFive,
   status: riskStatusSchema.optional(),
-  reviewFrequency: reviewFrequencySchema.default("Quarterly"),
+  nextReviewDate: nextReviewDateSchema,
   factors: z.array(z.string()).optional(),
   // Inline initial controls (optional — controls can also be added afterwards).
   controls: z.array(createRiskControlSchema).optional(),
@@ -130,7 +98,7 @@ export const updateRiskAssessmentSchema = z.object({
   residualLikelihood: oneToFive.optional().nullable(),
   residualSeverity: oneToFive.optional().nullable(),
   status: riskStatusSchema.optional(),
-  reviewFrequency: reviewFrequencySchema.optional(),
+  nextReviewDate: nextReviewDateSchema.optional(),
   factors: z.array(z.string()).optional(),
 });
 export type UpdateRiskAssessmentDTO = z.infer<typeof updateRiskAssessmentSchema>;

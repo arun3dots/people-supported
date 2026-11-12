@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, type MutableRefObject } from "react";
 import { Check } from "lucide-react";
 import {
+  ASSESSMENT_MAX_NEEDS,
   normaliseToolResult,
-  type AssessmentAreaKey,
-  type CareAreaKey,
+  type AssessmentNeedDTO,
 } from "@repo/schema";
 import {
   Alert,
@@ -22,23 +22,34 @@ import {
   useSaveAssessmentMutation,
 } from "../../../../../../lib/queries/care-journey";
 import { useGetRiskAssessmentsQuery } from "../../../../../../lib/queries/risk";
-import { NeedsTable } from "../../../care-journey/assessment/NeedsTable";
-import { buildAreaRiskChips } from "../../../care-journey/assessment/riskAreaMapping";
 import { hasToolValue } from "../../../care-journey/assessment/ToolCard";
 import { useAssessmentDraft } from "../../../care-journey/assessment/useAssessmentDraft";
 import { CarePlanModal } from "../../../care-journey/care-plans/CarePlanModal";
 import { PartCard } from "../shared/PartCard";
+import { AddCustomNeedDialog } from "./AddCustomNeedDialog";
+import {
+  TrackedRiskAssessmentCards,
+} from "./TrackedRiskAssessmentCards";
+import {
+  buildTrackedNeedCards,
+  type TrackedNeedCardData,
+} from "./trackedRiskNeeds.utils";
 
 interface PreAdmissionAssessmentStepProps {
   residentId: string | null;
   onGoToStepOne: () => void;
+  onGoToRiskStep?: () => void;
   flushRef?: MutableRefObject<(() => Promise<void>) | null>;
+  /** Rendered inside an existing surface (resident record): no extra grey wrapper. */
+  embedded?: boolean;
 }
 
 export function PreAdmissionAssessmentStep({
   residentId,
   onGoToStepOne,
+  onGoToRiskStep,
   flushRef,
+  embedded = false,
 }: PreAdmissionAssessmentStepProps) {
   const safeId = residentId ?? "";
   const query = useGetAssessmentQuery(safeId);
@@ -55,7 +66,8 @@ export function PreAdmissionAssessmentStep({
   const draft = useAssessmentDraft(record);
   const initAttempted = useRef<string | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const [modalArea, setModalArea] = useState<AssessmentAreaKey | null>(null);
+  const [modalCard, setModalCard] = useState<TrackedNeedCardData | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
 
   // Automatically start the ResidentAssessment draft on first visit once residentId exists.
   useEffect(() => {
@@ -65,7 +77,7 @@ export function PreAdmissionAssessmentStep({
     create.mutate(residentId);
   }, [residentId, query.isLoading, query.data, create]);
 
-  // Debounced autosave while editing findings or support levels.
+  // Debounced autosave while editing findings or associated risks.
   useEffect(() => {
     if (!residentId || !record?.id || !draft.dirty) return;
     const savedRevision = draft.currentRevision();
@@ -81,7 +93,7 @@ export function PreAdmissionAssessmentStep({
       );
     }, 800);
     return () => clearTimeout(timer);
-  }, [residentId, record?.id, draft.dirty, draft.payload, save.mutate]);
+  }, [residentId, record?.id, draft.dirty, draft.payload, save]);
 
   // Expose flush callback so "Save and continue" persists immediately without waiting for debounce.
   useEffect(() => {
@@ -102,7 +114,7 @@ export function PreAdmissionAssessmentStep({
     return (
       <PartCard
         title="Care needs assessment"
-        description="Review findings from the risk assessments, record support levels, and create care plans."
+        description="Review findings from the risk assessments and create support plans."
       >
         <Alert className="rounded-xl border-amber-200 bg-amber-50 p-6 text-center">
           <AlertDescription className="justify-items-center gap-3 text-amber-900">
@@ -124,7 +136,7 @@ export function PreAdmissionAssessmentStep({
     );
   }
 
-  if (query.isLoading || (create.isPending && !record)) {
+  if (query.isLoading || riskQuery.isLoading || (create.isPending && !record)) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <Spinner />
@@ -152,53 +164,116 @@ export function PreAdmissionAssessmentStep({
     );
   }
 
-  const scored = draft.tools.filter(hasToolValue).map(normaliseToolResult);
   const riskAssessments = riskQuery.data ?? [];
   const plans = plansQuery.data ?? [];
   const tasks = tasksQuery.data ?? [];
-  const chipsByArea = buildAreaRiskChips(riskAssessments, scored);
+  const cards = buildTrackedNeedCards(riskAssessments, draft.needs, plans);
 
-  const activeNeed = modalArea
-    ? (draft.needs.find((n) => n.areaKey === modalArea) ?? null)
+  const handleOpenCarePlan = async (card: TrackedNeedCardData) => {
+    const patch = {
+      found: card.displayedFound || null,
+      associatedRisk: card.selectedRisk || null,
+      toolKey: card.toolKey,
+      source: card.need?.source ?? card.source,
+    };
+
+    const needsSync =
+      !card.need ||
+      (card.need.found ?? "") !== card.displayedFound ||
+      (card.need.associatedRisk ?? "") !== card.selectedRisk;
+
+    if (needsSync) {
+      draft.upsertNeed(card.areaKey, card.customAreaLabel, patch);
+    }
+
+    if (draft.dirty || needsSync) {
+      const existing = draft.needs.find((n) => n.areaKey === card.areaKey);
+      const patchedNeed: AssessmentNeedDTO = existing
+        ? { ...existing, ...patch }
+        : card.customAreaLabel && card.areaKey.startsWith("custom:")
+          ? {
+              areaKey: card.areaKey as `custom:${string}`,
+              customAreaLabel: card.customAreaLabel,
+              supportLevel: null,
+              becomesCarePlan: false,
+              ...patch,
+            }
+          : {
+              areaKey: card.areaKey as Exclude<typeof card.areaKey, `custom:${string}`>,
+              supportLevel: null,
+              becomesCarePlan: false,
+              ...patch,
+            };
+
+      const nextNeeds = draft.payload.needs.some((n) => n.areaKey === card.areaKey)
+        ? draft.payload.needs.map((n) => (n.areaKey === card.areaKey ? patchedNeed : n))
+        : [...draft.payload.needs, patchedNeed];
+
+      const savedRevision = draft.currentRevision();
+      await save.mutateAsync({
+        residentId,
+        data: {
+          tools: draft.tools.filter(hasToolValue).map(normaliseToolResult),
+          needs: nextNeeds,
+          dols: record.dols ?? null,
+        },
+      });
+      draft.markSaved(savedRevision);
+      setSavedAt(new Date());
+    }
+
+    setModalCard(card);
+  };
+
+  const activeModalNeed: AssessmentNeedDTO | null = modalCard
+    ? (draft.needs.find((n) => n.areaKey === modalCard.areaKey) ??
+        modalCard.need ?? {
+          ...(modalCard.customAreaLabel && modalCard.areaKey.startsWith("custom:")
+            ? {
+                areaKey: modalCard.areaKey as `custom:${string}`,
+                customAreaLabel: modalCard.customAreaLabel,
+                becomesCarePlan: false,
+              }
+            : {
+                areaKey: modalCard.areaKey as Exclude<
+                  typeof modalCard.areaKey,
+                  `custom:${string}`
+                >,
+                becomesCarePlan: false,
+              }),
+          supportLevel: null,
+          found: modalCard.displayedFound || null,
+          source: modalCard.source,
+          toolKey: modalCard.toolKey,
+          associatedRisk: modalCard.selectedRisk || null,
+        })
     : null;
-  const activePlan = modalArea
-    ? (plans.find((p) => p.areaKey === modalArea) ?? null)
-    : null;
-  const activeRisk = modalArea
-    ? (chipsByArea[modalArea as CareAreaKey]?.[0]?.planRisk ?? null)
+
+  const activePlan = modalCard
+    ? (plans.find((p) => p.areaKey === modalCard.areaKey) ?? null)
     : null;
 
   return (
     <div className="space-y-6 font-sans">
-      <PartCard
-        title="Care needs assessment"
-        description="Link risk assessment findings from Risk to each area of need, choose the support level, and add or edit a care plan."
+      <div
+        className={
+          embedded
+            ? "space-y-4"
+            : "bg-surface-card-grey rounded-2xl p-5 space-y-4 shadow-none border-none"
+        }
       >
-        <NeedsTable
-          needs={draft.needs}
-          tools={scored}
-          riskAssessments={riskAssessments}
-          plans={plans}
-          onChange={draft.setNeed}
-          onAddCustomNeed={draft.addCustomNeed}
-          onRemoveCustomNeed={draft.removeCustomNeed}
-          onOpenCarePlan={(areaKey) => {
-            if (!draft.dirty) {
-              setModalArea(areaKey);
-              return;
-            }
-            const savedRevision = draft.currentRevision();
-            save.mutate(
-              { residentId, data: draft.payload },
-              {
-                onSuccess: () => {
-                  draft.markSaved(savedRevision);
-                  setSavedAt(new Date());
-                  setModalArea(areaKey);
-                },
-              },
-            );
+        <TrackedRiskAssessmentCards
+          cards={cards}
+          onChangeCard={(card, patch) =>
+            draft.upsertNeed(card.areaKey, card.customAreaLabel, patch)
+          }
+          onOpenCarePlan={(card) => {
+            void handleOpenCarePlan(card);
           }}
+          onGoToRiskStep={onGoToRiskStep}
+          onAddCustomNeed={() => setAddOpen(true)}
+          onRemoveCard={(card) => draft.removeCustomNeed(card.areaKey)}
+          addDisabled={draft.needs.length >= ASSESSMENT_MAX_NEEDS}
         />
 
         {savedAt && !save.isPending && (
@@ -213,23 +288,31 @@ export function PreAdmissionAssessmentStep({
             </Text>
           </div>
         )}
-      </PartCard>
+      </div>
+
+      <AddCustomNeedDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onAdd={({ label, associatedRisk, found }) =>
+          draft.addCustomNeed(label, { associatedRisk, found })
+        }
+      />
 
       <CarePlanModal
-        open={modalArea !== null}
+        open={modalCard !== null}
         onOpenChange={(open) => {
-          if (!open) setModalArea(null);
+          if (!open) setModalCard(null);
         }}
         residentId={residentId}
-        areaKey={modalArea}
-        need={activeNeed}
-        linkedRisk={activeRisk}
+        areaKey={modalCard?.areaKey ?? null}
+        need={activeModalNeed}
+        linkedRisk={modalCard?.linkedRisk ?? null}
         existingPlan={activePlan}
         tasks={
-          modalArea ? tasks.filter((t) => t.areaKey === modalArea) : []
+          modalCard ? tasks.filter((t) => t.areaKey === modalCard.areaKey) : []
         }
         onPlanSaved={(areaKey, savedLevel) => {
-          draft.setNeed(areaKey, {
+          draft.upsertNeed(areaKey, modalCard?.customAreaLabel, {
             becomesCarePlan: true,
             ...(savedLevel ? { supportLevel: savedLevel } : {}),
           });

@@ -18,7 +18,7 @@ import { useAuth } from "../../../../lib/context/AuthContext";
 import { RiskMatrixGrid } from "./RiskMatrixGrid";
 import { RiskWorkflowBadge } from "./RiskWorkflowBadge";
 import { RiskControlsList } from "./RiskControlsList";
-import { formatReviewFrequency } from "./risk-utils";
+import { formatReviewDate } from "./risk-utils";
 
 interface Props {
   open: boolean;
@@ -47,8 +47,7 @@ export function RiskAssessmentDetailPanel({ open, onOpenChange, assessment }: Pr
               </DialogTitle>
               <DialogDescription className="text-md text-[#5D5D5D] mt-1">
                 Category: {assessment.category} · Tool:{" "}
-                {assessment.tool ?? "No tool specified"} · Review:{" "}
-                {formatReviewFrequency(assessment.reviewFrequency)}
+                {assessment.tool ?? "No tool specified"}
               </DialogDescription>
             </div>
           </div>
@@ -112,7 +111,7 @@ export function RiskAssessmentDetailPanel({ open, onOpenChange, assessment }: Pr
             <p>
               Next review date:{" "}
               <strong className="text-[#141F1E] font-semibold">
-                {new Date(assessment.nextReviewDate).toLocaleDateString()}
+                {formatReviewDate(assessment.nextReviewDate)}
               </strong>
             </p>
             {assessment.approver && assessment.approvedAt && (

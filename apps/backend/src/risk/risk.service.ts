@@ -9,18 +9,13 @@ import { toJsonValue } from '../common/utils/json.util';
 import { AuditService } from '../audit/audit.service';
 import { RiskAlertsService } from './risk-alerts.service';
 import { RiskAssessmentSyncService } from './risk-assessment-sync.service';
-import {
-  calculateRiskScore,
-  riskLevelFromScore,
-  nextReviewDateFrom,
-} from '@repo/schema';
+import { calculateRiskScore, riskLevelFromScore } from '@repo/schema';
 import type {
   CreateRiskAssessmentDTO,
   UpdateRiskAssessmentDTO,
   TransitionRiskStatusDTO,
   RiskListFilters,
   RiskStatus,
-  ReviewFrequency,
 } from '@repo/schema';
 import {
   type ActorContext,
@@ -109,8 +104,7 @@ export class RiskService {
 
     const inherentScore = calculateRiskScore(dto.likelihood, dto.severity);
     const inherentLevel = riskLevelFromScore(inherentScore);
-    const reviewFrequency: ReviewFrequency = dto.reviewFrequency ?? 'Quarterly';
-    const nextReviewDate = nextReviewDateFrom(new Date(), reviewFrequency);
+    const nextReviewDate = new Date(dto.nextReviewDate + 'T00:00:00.000Z');
     const status: RiskStatus = dto.status ?? 'Active';
 
     const created = await prisma.riskAssessment.create({
@@ -130,7 +124,6 @@ export class RiskService {
         status,
         approvedById: status === 'Active' ? actor.userId : null,
         approvedAt: status === 'Active' ? new Date() : null,
-        reviewFrequency,
         nextReviewDate,
         factors: dto.factors ? toJsonValue(dto.factors) : undefined,
         createdById: actor.userId,
@@ -217,10 +210,9 @@ export class RiskService {
     const inherentLevel = riskLevelFromScore(inherentScore);
 
     const { residualScore, residualLevel } = resolveResidual(dto, existing);
-    const reviewFrequency = dto.reviewFrequency ?? existing.reviewFrequency;
     const nextReviewDate =
-      dto.reviewFrequency && dto.reviewFrequency !== existing.reviewFrequency
-        ? nextReviewDateFrom(new Date(), reviewFrequency as ReviewFrequency)
+      dto.nextReviewDate !== undefined
+        ? new Date(dto.nextReviewDate + 'T00:00:00.000Z')
         : existing.nextReviewDate;
 
     const status = dto.status ?? existing.status;
@@ -250,7 +242,6 @@ export class RiskService {
         status: dto.status ?? undefined,
         approvedById: isActivating ? actor.userId : undefined,
         approvedAt: isActivating ? new Date() : undefined,
-        reviewFrequency,
         nextReviewDate,
         factors:
           dto.factors === undefined ? undefined : toJsonValue(dto.factors),

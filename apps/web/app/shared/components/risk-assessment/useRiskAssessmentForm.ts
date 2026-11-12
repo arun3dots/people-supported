@@ -141,7 +141,7 @@ export function useRiskAssessmentForm({
             likelihood: dto.likelihood,
             severity: dto.severity,
             status: "Active",
-            reviewFrequency: dto.reviewFrequency,
+            nextReviewDate: dto.nextReviewDate,
             factors: dto.factors,
           },
         },

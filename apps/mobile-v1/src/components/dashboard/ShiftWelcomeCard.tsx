@@ -91,11 +91,11 @@ export function ShiftWelcomeCard({
             | {careHomeName}
           </Text>
         </View>
-        {hasShift && !isShiftStarted && !isCompleted ? (
+        {/* {hasShift && !isShiftStarted && !isCompleted ? (
           <Text className="text-[11px] text-muted-foreground shrink-0" numberOfLines={1}>
             Not started yet
           </Text>
-        ) : null}
+        ) : null} */}
       </View>
 
       {/* Main Greeting & Action Row */}

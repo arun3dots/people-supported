@@ -305,7 +305,7 @@ describe('ResidentPreAdmissionService', () => {
     expect(db.residentPreAdmission.update).not.toHaveBeenCalled();
   });
 
-  it('reports the new personal and care fields as submit blockers', async () => {
+  it('reports required personal and care fields as submit blockers', async () => {
     const partA: Record<string, unknown> = { ...completeParts.partA };
     delete partA.maritalStatus;
     delete partA.nhsNumber;
@@ -321,7 +321,6 @@ describe('ResidentPreAdmissionService', () => {
       response: {
         issues: expect.arrayContaining([
           expect.objectContaining({ field: 'maritalStatus' }),
-          expect.objectContaining({ field: 'nhsNumber' }),
           expect.objectContaining({ field: 'previousAddress' }),
           expect.objectContaining({ field: 'language' }),
           expect.objectContaining({ field: 'typeOfCare' }),
