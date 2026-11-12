@@ -290,23 +290,23 @@ export function getCareBlockAppearance(
   const isOff = cType.includes("Off");
 
   if (cType.includes("2:1")) {
-    return { cellClassName: "bg-indigo-50 text-indigo-900 hover:bg-indigo-100/70", shortLabel: "2:1", subLabel: "2:1 Support", isSleepIn, isNight, isOff };
+    return { cellClassName: "bg-indigo-50 text-indigo-900 border border-indigo-200/70 hover:bg-indigo-100/70", shortLabel: "2:1", subLabel: "2:1 Support", isSleepIn, isNight, isOff };
   }
   if (cType.includes("1:1")) {
-    return { cellClassName: "bg-surface-primary-light text-primary hover:bg-emerald-100/70", shortLabel: "1:1", subLabel: "1:1 Support", isSleepIn, isNight, isOff };
+    return { cellClassName: "bg-emerald-50 text-emerald-900 border border-emerald-200/70 hover:bg-emerald-100/70", shortLabel: "1:1", subLabel: "1:1 Support", isSleepIn, isNight, isOff };
   }
   if (isSleepIn) {
-    return { cellClassName: "bg-amber-50 text-amber-900 hover:bg-amber-100/70", shortLabel: "Sleep-in", subLabel: "Overnight", isSleepIn, isNight, isOff };
+    return { cellClassName: "bg-amber-50 text-amber-900 border border-amber-200/70 hover:bg-amber-100/70", shortLabel: "Sleep-in", subLabel: "Overnight", isSleepIn, isNight, isOff };
   }
   if (isNight) {
-    return { cellClassName: "bg-rose-50 text-rose-900 hover:bg-rose-100/70", shortLabel: "Night", subLabel: "Waking Night", isSleepIn, isNight, isOff };
+    return { cellClassName: "bg-rose-50 text-rose-900 border border-rose-200/70 hover:bg-rose-100/70", shortLabel: "Night", subLabel: "Waking Night", isSleepIn, isNight, isOff };
   }
   if (isOff) {
-    return { cellClassName: "bg-white/60 text-slate-500 hover:bg-white", shortLabel: "Off", subLabel: "Rest Day", isSleepIn, isNight, isOff };
+    return { cellClassName: "bg-slate-100/80 text-slate-500 border border-slate-200/60 hover:bg-slate-100", shortLabel: "Off", subLabel: "Rest Day", isSleepIn, isNight, isOff };
   }
 
   return {
-    cellClassName: "bg-white text-slate-800 hover:bg-slate-50",
+    cellClassName: "bg-sky-50 text-sky-900 border border-sky-200/70 hover:bg-sky-100/70",
     shortLabel: "Shared",
     subLabel: residentCount > 0 ? `${residentCount} ${residentCount === 1 ? "person" : "people"}` : "Shared Care",
     isSleepIn,
