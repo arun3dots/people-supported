@@ -15,6 +15,8 @@ interface DeleteConfirmDialogProps {
   title: string;
   description: string;
   confirmText?: string;
+  cancelText?: string;
+  hideConfirm?: boolean;
   isDeleting?: boolean;
 }
 
@@ -25,6 +27,8 @@ export function DeleteConfirmDialog({
   title,
   description,
   confirmText,
+  cancelText,
+  hideConfirm,
   isDeleting,
 }: DeleteConfirmDialogProps) {
   return (
@@ -40,15 +44,17 @@ export function DeleteConfirmDialog({
             onClick={() => onOpenChange(false)}
             disabled={isDeleting}
           >
-            Cancel
+            {cancelText || "Cancel"}
           </Button>
-          <Button
-            variant="destructive"
-            onClick={onConfirm}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Processing..." : (confirmText || "Delete")}
-          </Button>
+          {!hideConfirm && (
+            <Button
+              variant="destructive"
+              onClick={onConfirm}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Processing..." : (confirmText || "Delete")}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

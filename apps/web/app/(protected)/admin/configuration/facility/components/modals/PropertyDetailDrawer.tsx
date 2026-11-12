@@ -14,6 +14,11 @@ import {
 } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../lib/types/facility";
 import { PropertyDrawerSections } from "./PropertyDrawerSections";
+import {
+  getPropertyManagerLabel,
+  getPropertyPartnerLabel,
+  getPropertySchemeLabel,
+} from "../tabs/properties/propertyDisplay";
 
 interface PropertyDetailDrawerProps {
   property: PropertyItem | null;
@@ -44,12 +49,8 @@ export function PropertyDetailDrawer({
 
   const pd = property.parsedPropertyDetails ?? {};
   const certs = pd.safetyCertificates ?? [];
-  const housingPartner =
-    pd.landlordDetails?.name ||
-    property.scheme?.housingPartner ||
-    "Yorkshire Housing Association";
-  const teamLeader =
-    pd.propertyManagerName || property.primaryContact || "Assigned Lead";
+  const housingPartner = getPropertyPartnerLabel(property);
+  const teamLeader = getPropertyManagerLabel(property);
   const coreCharge = pd.landlordDetails?.coreChargePerWeek ?? 198;
   const addressLabel = [pd.streetAddress, pd.postcode]
     .filter(Boolean)
@@ -83,7 +84,7 @@ export function PropertyDetailDrawer({
               <div className="flex items-center gap-1.5 text-md font-medium text-slate-500">
                 <Building2 className="size-3.5 text-primary" />
                 <span>
-                  {property.scheme?.name || "Supported Living Scheme"} · ID:{" "}
+                  {getPropertySchemeLabel(property)} · ID:{" "}
                   {pd.referenceId || property.code || property.id.slice(0, 8)}
                 </span>
               </div>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, DoorOpen, BedDouble, Eye, ShieldCheck } from "lucide-react";
+import { Plus, DoorOpen, BedDouble, ShieldCheck } from "lucide-react";
 import { GET_PROPERTIES, GET_WINGS, GET_ROOMS, GET_BEDS, GET_SCHEMES } from "@repo/endpoints";
 import {
   useGetPropertiesQuery,
@@ -44,6 +44,12 @@ export function PropertiesTab() {
   const [limit, setLimit] = useState(10);
 
   const { data: allProperties = [], isLoading, isError } = useGetPropertiesQuery();
+  const { data: archivedProperties = [], isLoading: isArchivedLoading } =
+    useGetPropertiesQuery(
+      undefined,
+      { enabled: statusFilter === "Archived" },
+      "Archived",
+    );
   const { data: allSchemes = [] } = useGetSchemesQuery();
 
   const urlPropertyId = searchParams.get("propertyId");
@@ -93,19 +99,30 @@ export function PropertiesTab() {
     onSuccess: () => {
       invalidateAllFacility();
       setDeleteId(null);
-      toast({ title: "Property deleted", description: "Property has been removed." });
+      toast({
+        title: "Property archived",
+        description: "Property and its vacant rooms have been archived.",
+      });
     },
     onError: (err) => {
       toast({
-        title: "Error",
-        description: err.message || "Cannot delete property with existing rooms",
+        title: "Cannot archive property",
+        description: err.message || "Failed to archive property",
         variant: "destructive",
       });
     },
   });
 
+  const deleteTarget = useMemo(
+    () => allProperties.find((p) => p.id === deleteId) ?? null,
+    [allProperties, deleteId],
+  );
+
+  const sourceProperties =
+    statusFilter === "Archived" ? archivedProperties : allProperties;
+
   const filteredProperties = useMemo(() => {
-    return allProperties.filter((p) => {
+    return sourceProperties.filter((p) => {
       if (schemeFilter !== "All Schemes" && p.schemeId !== schemeFilter) return false;
       if (statusFilter !== "All Status" && p.status !== statusFilter) return false;
       const unitType =
@@ -132,7 +149,7 @@ export function PropertiesTab() {
       }
       return true;
     });
-  }, [allProperties, schemeFilter, statusFilter, unitTypeFilter, safetyFilter, searchInput]);
+  }, [sourceProperties, schemeFilter, statusFilter, unitTypeFilter, safetyFilter, searchInput]);
 
   const paginatedProperties = useMemo(() => {
     const start = (page - 1) * limit;
@@ -190,6 +207,7 @@ export function PropertiesTab() {
         data={filteredProperties}
         paginatedData={paginatedProperties}
         columns={columns}
+        onRowClick={setSelectedProperty}
         renderCard={(p, idx) => (
           <EntityCard
             key={p.id}
@@ -230,18 +248,11 @@ export function PropertiesTab() {
                 editLabel={`Edit ${p.name}`}
                 onDelete={() => setDeleteId(p.id)}
                 deleteLabel={`Delete ${p.name}`}
-                extra={[
-                  {
-                    label: "View Tenancies & Safety",
-                    icon: Eye,
-                    onClick: () => setSelectedProperty(p),
-                  },
-                ]}
               />
             }
           />
         )}
-        isLoading={isLoading}
+        isLoading={statusFilter === "Archived" ? isArchivedLoading : isLoading}
         isError={isError}
         emptyTitle="No properties found"
         emptyDescription="Add your first supported living property to configure rooms, beds, and tenancies."
@@ -294,8 +305,23 @@ export function PropertiesTab() {
       <DeleteConfirmDialog
         isOpen={Boolean(deleteId)}
         onOpenChange={(open) => !open && setDeleteId(null)}
-        title="Delete Property?"
-        description="This action cannot be undone if the property has no rooms."
+        title={
+          deleteTarget && deleteTarget.occupiedBeds > 0
+            ? "Cannot Archive Property"
+            : "Archive Property?"
+        }
+        description={
+          deleteTarget && deleteTarget.occupiedBeds > 0
+            ? `Cannot archive "${deleteTarget.name}" because ${deleteTarget.occupiedBeds} room(s) are currently occupied.`
+            : deleteTarget && deleteTarget.totalRooms > 0
+              ? `Archive "${deleteTarget.name}" and its ${deleteTarget.totalRooms} vacant room(s)? It will be hidden from active lists, while past records stay saved.`
+              : `Archive "${deleteTarget?.name ?? "this property"}"? It will be hidden from active lists, while past records stay saved.`
+        }
+        confirmText="Archive"
+        cancelText={
+          deleteTarget && deleteTarget.occupiedBeds > 0 ? "Close" : "Cancel"
+        }
+        hideConfirm={Boolean(deleteTarget && deleteTarget.occupiedBeds > 0)}
         onConfirm={() => {
           if (deleteId) deleteMutation.mutate(deleteId);
         }}

@@ -6,6 +6,11 @@ import { Badge, Text } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../../lib/types/facility";
 import { RowActions } from "../../../../../../../../lib/components/shared/RowActions";
 import type { TableColumn } from "../../../../../../../../lib/components/shared/tableColumns";
+import {
+  getPropertyManagerLabel,
+  getPropertyPartnerLabel,
+  getPropertySchemeLabel,
+} from "./propertyDisplay";
 
 interface UsePropertyColumnsProps {
   onSelectProperty: (property: PropertyItem) => void;
@@ -75,11 +80,8 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const p = row.original;
           const pd = p.parsedPropertyDetails ?? {};
-          const schemeName = p.scheme?.name || "Supported Living Scheme";
-          const partner =
-            pd.landlordDetails?.name ||
-            p.scheme?.housingPartner ||
-            "Yorkshire Housing Association";
+          const schemeName = getPropertySchemeLabel(p);
+          const partner = getPropertyPartnerLabel(p);
           const unitType =
             pd.unitConfiguration || pd.propertyType || "Self-contained flats";
           return (
@@ -99,11 +101,7 @@ export function usePropertyColumns({
         header: "Team Leader",
         enableSorting: false,
         cell: ({ row }) => {
-          const p = row.original;
-          const leader =
-            p.parsedPropertyDetails?.propertyManagerName ||
-            p.primaryContact ||
-            "Assigned Lead";
+          const leader = getPropertyManagerLabel(row.original);
           return (
             <div className="flex items-center gap-2">
               <div className="size-7 rounded-full bg-primary text-primary-foreground text-md font-medium flex items-center justify-center shrink-0">
@@ -205,19 +203,15 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const p = row.original;
           return (
-            <div className="flex justify-center gap-2">
+            <div
+              className="flex justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               <RowActions
                 onEdit={() => onEdit(p)}
                 editLabel={`Edit ${p.name}`}
                 onDelete={() => onDelete(p.id)}
                 deleteLabel={`Delete ${p.name}`}
-                extra={[
-                  {
-                    label: "View Tenancies & Safety",
-                    icon: Eye,
-                    onClick: () => onSelectProperty(p),
-                  },
-                ]}
               />
             </div>
           );
