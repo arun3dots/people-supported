@@ -13,7 +13,7 @@ import {
 import { useAuth } from "../../../../lib/context/AuthContext";
 import { RiskAssessmentDialog } from "./RiskAssessmentDialog";
 import { RiskAssessmentDetailPanel } from "./RiskAssessmentDetailPanel";
-import { getRiskLevelStyle, getStatusStyle } from "./risk-utils";
+import { formatReviewDate, getRiskLevelStyle, getStatusStyle } from "./risk-utils";
 import { RISK_CATEGORIES_CONFIG, type RiskCategoryConfigItem } from "./risk-categories.config";
 import { canCreateRiskAssessment } from "./risk-access";
 import type { RiskCategory } from "@repo/schema";
@@ -135,7 +135,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
           const ss = matching ? getStatusStyle(matching.status) : null;
           const score = matching ? (matching.residualScore ?? matching.inherentScore) : null;
           const nextReview = matching?.nextReviewDate
-            ? new Date(matching.nextReviewDate).toLocaleDateString()
+            ? formatReviewDate(matching.nextReviewDate)
             : null;
           const createdTime = matching?.createdAt
             ? (() => {

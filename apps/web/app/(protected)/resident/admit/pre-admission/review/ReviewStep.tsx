@@ -62,7 +62,6 @@ export function ReviewStep({
 
   const status = record?.status ?? "Draft";
   const decided = record?.managerDecision;
-  const hasBed = Boolean(parts.roomAllocation.bedId);
 
   return (
     <div className="space-y-6 font-sans">
@@ -169,17 +168,12 @@ export function ReviewStep({
       )}
 
       {status === "Accepted" && (
-        <div className="flex flex-col items-end gap-2">
-          {!hasBed && (
-            <Text size="md" className="text-amber-700">
-              Choose a room and bed in the Room step before admitting.
-            </Text>
-          )}
+        <div className="flex justify-end">
           <Button
             type="button"
             variant="primary"
             size="lg"
-            disabled={!hasBed || isAdmitting}
+            disabled={isAdmitting}
             onClick={onAdmit}
             className="rounded-xl font-semibold shadow-none"
           >
