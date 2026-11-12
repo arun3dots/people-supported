@@ -116,4 +116,109 @@ export class ReportsController {
 
     return result;
   }
+
+  private sendCsvOrJson(
+    req: AuthenticatedRequest,
+    res: Response,
+    result: ReportCsvResponseDTO,
+  ): ReportCsvResponseDTO | StreamableFile {
+    if (req.headers['accept']?.includes('text/csv')) {
+      res.set({
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${result.filename}"`,
+      });
+      return new StreamableFile(Buffer.from(result.content, 'utf-8'));
+    }
+    return result;
+  }
+
+  @Get('occupancy/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportOccupancy(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportOccupancyCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
+
+  @Get('medications/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportMedications(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportMedicationsCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
+
+  @Get('care-plans/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportCarePlans(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportCarePlansCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
+
+  @Get('shifts/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportShifts(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportShiftsCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
+
+  @Get('cqc-compliance/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportCqcCompliance(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportCqcComplianceCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
+
+  @Get('invoices/csv')
+  @Roles('Admin', 'Manager', 'Nurse')
+  async exportInvoices(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Query(new ZodValidationPipe(reportExportQuerySchema))
+    query?: ReportExportQueryDTO,
+  ): Promise<ReportCsvResponseDTO | StreamableFile> {
+    const result = await this.reportsService.exportInvoicesCsv(
+      req.user.tenantId!,
+      resolveBranchId(req, query?.branchId),
+    );
+    return this.sendCsvOrJson(req, res, result);
+  }
 }

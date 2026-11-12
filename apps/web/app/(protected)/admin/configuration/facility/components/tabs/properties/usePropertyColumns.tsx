@@ -103,14 +103,9 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const leader = getPropertyManagerLabel(row.original);
           return (
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-full bg-primary text-primary-foreground text-md font-medium flex items-center justify-center shrink-0">
-                {getInitials(leader)}
-              </div>
-              <Text size="md" weight="normal" className="text-slate-800 truncate">
-                {leader}
-              </Text>
-            </div>
+            <Text size="md" weight="normal" className="text-slate-800 truncate">
+              {leader}
+            </Text>
           );
         },
       },
