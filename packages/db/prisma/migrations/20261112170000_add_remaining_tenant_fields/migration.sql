@@ -1,0 +1,5 @@
+ALTER TABLE "Tenant"
+ADD COLUMN IF NOT EXISTS "registeredProvider" TEXT,
+ADD COLUMN IF NOT EXISTS "establishedDate" TEXT,
+ADD COLUMN IF NOT EXISTS "website" TEXT,
+ADD COLUMN IF NOT EXISTS "primaryContactRole" TEXT;
