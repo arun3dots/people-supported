@@ -1,5 +1,9 @@
 import { Bed } from "./facility";
-import type { SupportedLivingDetailsDTO } from "@repo/schema";
+import type {
+  PreAdmissionPartCDTO,
+  PreAdmissionStatus,
+  SupportedLivingDetailsDTO,
+} from "@repo/schema";
 
 export interface ResidentProfileType {
   title?: string | null;
@@ -94,6 +98,12 @@ export interface Resident {
   };
   profile?: ResidentProfileType | null;
   careProfile?: ResidentCareProfileType | null;
+  preAdmissions?: Array<{
+    id: string;
+    status?: PreAdmissionStatus;
+    isCurrent?: boolean;
+    partC?: Partial<PreAdmissionPartCDTO> | null;
+  }> | null;
   admission?: ResidentAdmissionType | null;
   nextOfKin?: {
     name?: string;

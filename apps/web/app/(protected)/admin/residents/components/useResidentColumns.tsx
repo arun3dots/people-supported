@@ -143,7 +143,10 @@ export function useResidentColumns({
         enableSorting: false,
         cell: ({ row }) => {
           const r = row.original;
+          const partC = r.preAdmissions?.[0]?.partC;
           const need =
+            partC?.primaryDiagnosis?.trim() ||
+            partC?.diagnoses?.[0]?.trim() ||
             r.supportedLivingDetails?.primaryNeed ||
             r.careProfile?.primaryCareNeed ||
             r.careProfile?.primaryDiagnosis ||
