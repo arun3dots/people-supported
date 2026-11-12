@@ -135,7 +135,7 @@ export function WingsTab({ onNavigate }: WingsTabProps) {
     <>
       <EntityListView<Wing>
         title="Wing Management"
-        description="Create, configure and manage wings within your care home units."
+        description="Create, configure and manage wings within your supported living locations."
         overviewTitle="Wing Overview"
         onAdd={() => setIsAddModalOpen(true)}
         addLabel="Add Wing"

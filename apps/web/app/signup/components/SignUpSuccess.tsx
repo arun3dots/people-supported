@@ -93,7 +93,7 @@ export function SignUpSuccess({
               Payment Successful!
             </h2>
             <p className="text-md text-slate-500 font-medium leading-relaxed">
-              Your subscription is now active. We are setting up your care home workspace.
+              Your subscription is now active. We are setting up your supported living workspace.
             </p>
           </div>
 

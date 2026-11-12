@@ -32,7 +32,7 @@ export function EnquirerContactSection({ register, errors, watch, setValue }: Fo
             Enquirer Contact Details
           </Text>
           <Text size="md" variant="muted" className="text-slate-500">
-            Person contacting the care home on behalf of the resident
+            Person contacting the supported living service on behalf of the resident
           </Text>
         </div>
       </div>

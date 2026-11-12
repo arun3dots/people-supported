@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import * as Schema from '@repo/schema';
 
 export class CreateBranchDto implements Schema.CreateBranchDTO {
-  @ApiProperty({ example: 'Riverside Care Home' })
+  @ApiProperty({ example: 'Riverside Supported Living' })
   name!: string;
 
   @ApiProperty({ example: 'BR-001', required: false })
@@ -29,7 +29,7 @@ export class CreateBranchDto implements Schema.CreateBranchDTO {
 }
 
 export class UpdateBranchDto implements Schema.UpdateBranchDTO {
-  @ApiProperty({ example: 'Riverside Care Home North', required: false })
+  @ApiProperty({ example: 'Riverside Supported Living North', required: false })
   name?: string;
 
   @ApiProperty({ example: 'BR-001A', required: false })

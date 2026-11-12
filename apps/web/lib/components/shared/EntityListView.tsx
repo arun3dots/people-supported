@@ -188,7 +188,7 @@ export function EntityListView<T>({
       {/* 1. Page Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <Text size="xl" weight="bold" className="tracking-tight">
+          <Text size="lg" weight="bold" className="tracking-tight">
             {title}
           </Text>
           {description && (

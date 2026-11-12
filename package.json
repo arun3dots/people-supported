@@ -8,7 +8,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "db:generate": "pnpm --filter @repo/db db:generate",
+    "db:generate": "pnpm --filter @repo/db db:generate && pnpm --filter @repo/audit-db db:generate",
     "db:push": "pnpm --filter @repo/db db:push",
     "db:seed": "pnpm --filter @repo/db db:seed",
     "refactor:ui": "powershell -ExecutionPolicy Bypass -File ./scripts/refactor-ui.ps1",

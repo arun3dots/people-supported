@@ -24,11 +24,7 @@ import { usePropertyColumns } from "./properties/usePropertyColumns";
 import { buildPropertyFilterDropdowns } from "./properties/propertyFilters";
 import { Button, toast } from "@repo/ui/components/ui";
 
-interface PropertiesTabProps {
-  onNavigate: (tab: string, extra?: Record<string, string>) => void;
-}
-
-export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
+export function PropertiesTab() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
@@ -147,7 +143,6 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
     onSelectProperty: setSelectedProperty,
     onEdit: setEditProperty,
     onDelete: setDeleteId,
-    onNavigate,
   });
 
   const resetFilters = () => {
@@ -241,11 +236,6 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
                     icon: Eye,
                     onClick: () => setSelectedProperty(p),
                   },
-                  {
-                    label: "Manage Rooms",
-                    icon: DoorOpen,
-                    onClick: () => onNavigate("rooms", { wingId: p.id }),
-                  },
                 ]}
               />
             }
@@ -299,7 +289,6 @@ export function PropertiesTab({ onNavigate }: PropertiesTabProps) {
         property={selectedProperty}
         onClose={() => setSelectedProperty(null)}
         onEditProperty={(p) => setEditProperty(p)}
-        onViewRooms={(p) => onNavigate("rooms", { wingId: p.id })}
       />
 
       <DeleteConfirmDialog

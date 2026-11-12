@@ -44,17 +44,17 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
       icon: LayoutDashboard,
       items: [{ title: "Overview", url: "/admin/dashboard", icon: LayoutDashboard }],
     },
-    {
-      category: "ENQUIRIES",
-      icon: UserPlus,
-      items: [
-        {
-          title: "Enquiry Directory",
-          url: "/admin/enquiries",
-          icon: UserPlus,
-        },
-      ],
-    },
+    // {
+    //   category: "ENQUIRIES",
+    //   icon: UserPlus,
+    //   items: [
+    //     {
+    //       title: "Enquiry Directory",
+    //       url: "/admin/enquiries",
+    //       icon: UserPlus,
+    //     },
+    //   ],
+    // },
     {
       category: "PEOPLE SUPPORTED",
       icon: Heart,
@@ -63,7 +63,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           title: "People Supported",
           url: "/admin/residents",
           icon: Heart,
-          hasSubmenu: true,
+          hasSubmenu: false,
           subItems: [
             { title: "People Supported Directory", url: "/admin/residents" },
             { title: "Daily Tasks Board", url: "/admin/care-plans/daily-tasks" },
@@ -82,10 +82,8 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           icon: Building2,
           hasSubmenu: true,
           subItems: [
-            { title: "Properties Directory", url: "/admin/configuration/facility?tab=properties" },
-            { title: "Supported Living Schemes", url: "/admin/configuration/facility?tab=schemes" },
-            { title: "Room Management", url: "/admin/configuration/facility?tab=rooms" },
-            { title: "Bed Management", url: "/admin/configuration/facility?tab=beds" },
+            { title: "Properties Directory", url: "/admin/configuration/facility/properties" },
+            { title: "Supported Living Schemes", url: "/admin/configuration/facility/schemes" },
           ],
         },
       ],
@@ -157,18 +155,19 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           subItems: [
             { title: "Audit Log", url: "/admin/audit-log" },
             { title: "Reports", url: "/admin/reports" },
+            { title: "Reviews", url: "/admin/escalations" },
           ],
         },
-        {
-          title: "Resources",
-          url: "/admin/configuration/risk-templates",
-          icon: ShieldAlert,
-          hasSubmenu: true,
-          subItems: [
-            { title: "Risk Templates", url: "/admin/configuration/risk-templates" },
-            { title: "Assessment Templates", url: "/admin/enquiries/templates" },
-          ],
-        },
+        // {
+        //   title: "Resources",
+        //   url: "/admin/configuration/risk-templates",
+        //   icon: ShieldAlert,
+        //   hasSubmenu: true,
+        //   subItems: [
+        //     { title: "Risk Templates", url: "/admin/configuration/risk-templates" },
+        //     { title: "Assessment Templates", url: "/admin/enquiries/templates" },
+        //   ],
+        // },
       ],
     },
     {
@@ -183,8 +182,8 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           subItems: [
             { title: "Profile", url: "/profile" },
             { title: "Organisation Profile", url: "/admin/settings/organization" },
-            { title: "Roles & Permissions", url: "/admin/settings/roles" },
-            { title: "Subscription Management", url: "/subscriptions" },
+            // { title: "Roles & Permissions", url: "/admin/settings/roles" },
+            // { title: "Subscription Management", url: "/subscriptions" },
           ],
         },
       ],

@@ -17,9 +17,9 @@ export default function AccessibilityStatementPage() {
             Accessibility Statement
           </h1>
           <p className="text-md text-slate-600">
-            CantraCare is committed to making our Care Home Management Platform
-            accessible to all users, including care workers, registered nurses,
-            care home managers, residents, and visitors with disabilities, in
+            CantraCare is committed to making our Supported Living Management Platform
+            accessible to all users, including support workers, registered nurses,
+            supported living service managers, residents, and visitors with disabilities, in
             accordance with the Web Content Accessibility Guidelines (WCAG) 2.2
             at Level AA.
           </p>

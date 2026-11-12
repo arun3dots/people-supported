@@ -361,7 +361,7 @@ export function RecordIncidentClient({
             Record Incident
           </Text>
           <Text variant="subdued" size="md" weight="regular">
-            Record care home incidents, clinical injuries, and immediate actions
+            Record supported living incidents, clinical injuries, and immediate actions
             taken for audit and CQC governance.
           </Text>
         </div>
