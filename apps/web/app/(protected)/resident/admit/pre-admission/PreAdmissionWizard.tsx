@@ -120,6 +120,7 @@ export function PreAdmissionWizard() {
           <PreAdmissionAssessmentStep
             residentId={w.residentId}
             onGoToStepOne={() => w.goToStep(1)}
+            onGoToRiskStep={() => w.goToStep(5)}
             flushRef={w.assessmentFlushRef}
           />
         )}

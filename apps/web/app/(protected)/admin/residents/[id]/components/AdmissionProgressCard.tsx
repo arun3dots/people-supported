@@ -111,11 +111,13 @@ export function AdmissionProgressCard({ resident }: AdmissionProgressCardProps) 
       resident.dnarStatus
     );
 
-    // 10. Room and belongings (roomAllocation)
+    // 10. Room and belongings (roomAllocation) — a bed assignment is not required
     const roomAlloc = preAdmission?.roomAllocation;
     const step10Complete = Boolean(
-      roomAlloc?.bedId ||
-      resident.bed?.id
+      roomAlloc?.roomNumber ||
+        roomAlloc?.bedId ||
+        resident.bed?.id ||
+        (preAdmission && preAdmission.status !== "Draft")
     );
 
     const list: StepItem[] = [
@@ -188,7 +190,7 @@ export function AdmissionProgressCard({ resident }: AdmissionProgressCardProps) 
         step: 10,
         title: "Room and belongings",
         isComplete: step10Complete,
-        statusText: step10Complete ? "Complete" : "Not started — room/bed unassigned",
+        statusText: step10Complete ? "Complete" : "Not started — room number pending",
         variant: step10Complete ? "complete" : "warning",
       },
     ];

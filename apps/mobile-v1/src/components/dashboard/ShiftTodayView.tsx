@@ -72,7 +72,7 @@ export function ShiftTodayView({
           </View>
           <Text className="text-lg font-bold text-foreground">{scheduledStartTime || 'Scheduled'}</Text>
           <Text className="text-xs text-muted-foreground mt-0.5">
-            {isShiftStarted ? `Started at ${actualStartedTime || scheduledStartTime}` : 'Not started yet'}
+            {isShiftStarted ? `Started at ${actualStartedTime || scheduledStartTime}` : ''}
           </Text>
         </View>
 

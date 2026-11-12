@@ -3,9 +3,8 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Download } from "lucide-react";
+import { Plus } from "lucide-react";
 import { GET_STAFF } from "@repo/endpoints";
-import { Button } from "@repo/ui/components/ui/Button";
 import { toast } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
 import {
@@ -234,17 +233,6 @@ export function StaffDirectory() {
         description="Manage staff profiles, roles, qualifications, training and compliance records."
         overviewTitle="Staff Directory"
         storageKey="staff_directory_view_mode"
-        headerActions={
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => window.print()}
-            className="h-10 px-3.5 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-md font-medium text-slate-700 flex items-center gap-1.5 shadow-none"
-          >
-            <Download className="size-3.5" />
-            Export
-          </Button>
-        }
         onAdd={() => setIsAddModalOpen(true)}
         addLabel="Add Staff"
         addIcon={<Plus className="size-4" />}

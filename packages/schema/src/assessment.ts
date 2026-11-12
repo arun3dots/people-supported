@@ -73,6 +73,17 @@ export const ASSESSMENT_RATINGS = ["none", "low", "med", "high"] as const;
 export const AssessmentRatingEnum = z.enum(ASSESSMENT_RATINGS);
 export type AssessmentRating = z.infer<typeof AssessmentRatingEnum>;
 
+export const ASSESSMENT_RISK_OPTIONS = [
+  "Fall Risk",
+  "Pressure Ulcer Risk",
+  "Malnutrition Risk",
+  "Dehydration Risk",
+  "Choking Risk",
+  "Infection Risk",
+  "No associated risk",
+] as const;
+export type AssessmentRiskOption = (typeof ASSESSMENT_RISK_OPTIONS)[number];
+
 /** The risk tool whose result feeds each area's "what the assessment found". */
 export const CARE_AREA_TOOL: Partial<Record<CareAreaKey, AssessmentToolKey>> = {
   mobility: "falls",
@@ -103,6 +114,7 @@ const AssessmentNeedFields = {
   found: text,
   source: text,
   toolKey: AssessmentToolKeyEnum.nullable().optional(),
+  associatedRisk: text,
 };
 
 export const AssessmentNeedSchema = z.union([
@@ -123,7 +135,12 @@ export type AssessmentNeedDTO = z.infer<typeof AssessmentNeedSchema>;
 export type AssessmentNeedPatchDTO = Partial<
   Pick<
     AssessmentNeedDTO,
-    "supportLevel" | "found" | "source" | "toolKey" | "becomesCarePlan"
+    | "supportLevel"
+    | "found"
+    | "source"
+    | "toolKey"
+    | "associatedRisk"
+    | "becomesCarePlan"
   >
 >;
 

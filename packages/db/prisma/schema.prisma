@@ -1146,7 +1146,7 @@ model RiskAssessment {
   residualScore      Int?
   residualLevel      String?
   status             String        @default("Draft")
-  reviewFrequency    String        @default("Quarterly")
+  reviewFrequency    String        @default("Quarterly") // Legacy compatibility; scheduling uses nextReviewDate.
   nextReviewDate     DateTime
   factors            Json?
   reviewedById       String?

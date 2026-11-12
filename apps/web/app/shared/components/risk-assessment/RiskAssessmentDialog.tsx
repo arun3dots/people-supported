@@ -19,10 +19,10 @@ import {
   Textarea,
 } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
-import type { RiskCategory, ReviewFrequency } from "@repo/schema";
+import type { RiskCategory } from "@repo/schema";
 import type { RiskAssessmentResponse } from "../../../../lib/queries/risk";
 import { RiskMatrixGrid } from "./RiskMatrixGrid";
-import { CATEGORIES, FREQUENCIES } from "./risk-dialog.types";
+import { CATEGORIES } from "./risk-dialog.types";
 import { useRiskAssessmentForm } from "./useRiskAssessmentForm";
 
 interface Props {
@@ -171,26 +171,24 @@ export function RiskAssessmentDialog(props: Props) {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-md font-semibold text-[#141F1E]">
-                Review frequency
-              </Label>
-              <Select
-                value={state.reviewFrequency}
-                onValueChange={(v) =>
-                  setState((s) => ({ ...s, reviewFrequency: v as ReviewFrequency }))
-                }
+              <Label
+                htmlFor="risk-next-review-date"
+                className="text-md font-semibold text-[#141F1E]"
+                required
               >
-                <SelectTrigger className="w-full rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] text-md bg-white">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent className="bg-white rounded-xl shadow-lg border border-slate-200">
-                  {FREQUENCIES.map((f) => (
-                    <SelectItem key={f} value={f} className="text-md cursor-pointer hover:bg-slate-50">
-                      {f}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                Next review date
+              </Label>
+              <Input
+                id="risk-next-review-date"
+                type="date"
+                value={state.nextReviewDate}
+                onChange={(e) => {
+                  setState((s) => ({ ...s, nextReviewDate: e.target.value }));
+                  setErrors((errors) => ({ ...errors, nextReviewDate: undefined }));
+                }}
+                className="w-full rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] text-md bg-white"
+                errorMessage={errors.nextReviewDate}
+              />
             </div>
           </div>
 

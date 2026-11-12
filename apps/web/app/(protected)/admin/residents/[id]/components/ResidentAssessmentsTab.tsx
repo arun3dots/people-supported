@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { AlertCircle, CheckCircle2, Clock, Plus } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock } from "lucide-react";
 import { Button, Card, SummaryCardsGrid } from "@repo/ui/components/ui";
 import { useGetRiskAssessmentsQuery } from "../../../../../../lib/queries/risk";
 import type { Resident } from "../../../../../../lib/types/resident";
@@ -9,34 +9,39 @@ import { RiskAssessmentTab } from "../../../../../shared/components/risk-assessm
 import { ObservationTab } from "../../../../../shared/components/ObservationTab";
 import { BodyMapTab } from "../../../../../shared/components/body-map";
 import { FluidIntakeTab } from "../../../../../shared/components/FluidIntakeTab";
+import { PreAdmissionAssessmentStep } from "../../../../resident/admit/pre-admission/parts/PreAdmissionAssessmentStep";
 import {
   AssessmentRegisterSection,
   DEFAULT_ASSESSMENT_ROWS,
   type UnifiedAssessmentRow,
 } from "./AssessmentRegisterSection";
 
+type AssessmentSubView =
+  | "register"
+  | "care-needs"
+  | "risk-matrix"
+  | "observations"
+  | "bodymap"
+  | "fluid-intake";
+
 interface ResidentAssessmentsTabProps {
   resident: Resident;
-  initialSubView?: "register" | "risk-matrix" | "observations" | "bodymap" | "fluid-intake";
+  initialSubView?: AssessmentSubView;
 }
 
-const CATEGORIES = ["All", "Risk", "Health", "Functional", "Capacity", "Nutrition"] as const;
-
 const CLINICAL_TOOLS = [
+  { id: "care-needs", label: "Care Needs" },
   { id: "risk-matrix", label: "Interactive Risk Matrix" },
-  { id: "observations", label: "Observations" },
-  { id: "bodymap", label: "Body Map" },
-  { id: "fluid-intake", label: "Fluid Intake" },
+  // { id: "observations", label: "Observations" },
+  // { id: "bodymap", label: "Body Map" },
+  // { id: "fluid-intake", label: "Fluid Intake" },
 ] as const;
 
 export function ResidentAssessmentsTab({
   resident,
   initialSubView = "register",
 }: ResidentAssessmentsTabProps): React.JSX.Element {
-  const [categoryFilter, setCategoryFilter] = useState<string>("All");
-  const [subView, setSubView] = useState<
-    "register" | "risk-matrix" | "observations" | "bodymap" | "fluid-intake"
-  >(initialSubView);
+  const [subView, setSubView] = useState<AssessmentSubView>(initialSubView);
 
   const { data: liveRisks } = useGetRiskAssessmentsQuery({ residentId: resident.id });
 
@@ -94,11 +99,6 @@ export function ResidentAssessmentsTab({
     return { inDate, dueSoon, overdue };
   }, [rows]);
 
-  const filteredRows = useMemo(() => {
-    if (categoryFilter === "All") return rows;
-    return rows.filter((r) => r.category === categoryFilter);
-  }, [rows, categoryFilter]);
-
   const summaryCards = useMemo(
     () => [
       {
@@ -138,30 +138,9 @@ export function ResidentAssessmentsTab({
 
       {/* Main Surface Card */}
       <Card variant="surface" className="p-5 sm:p-6 space-y-5">
-        {/* Filter Pills + Clinical Sub-tools + New Assessment CTA */}
+        {/* Clinical Sub-tools */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            {CATEGORIES.map((cat) => {
-              const active = subView === "register" && categoryFilter === cat;
-              return (
-                <Button
-                  key={cat}
-                  type="button"
-                  size="sm"
-                  variant={active ? "primary" : "outline"}
-                  onClick={() => {
-                    setSubView("register");
-                    setCategoryFilter(cat);
-                  }}
-                  className={active ? "rounded-full" : "rounded-full bg-white"}
-                >
-                  {cat}
-                </Button>
-              );
-            })}
-
-            <span className="h-4 w-px bg-slate-300 mx-1" />
-
             {CLINICAL_TOOLS.map((tool) => {
               const active = subView === tool.id;
               return (
@@ -179,21 +158,22 @@ export function ResidentAssessmentsTab({
             })}
           </div>
 
-          <Button
-            variant="primary"
-            onClick={() => setSubView("risk-matrix")}
-            className="gap-1.5"
-          >
-            <Plus className="size-4" />
-            New assessment
-          </Button>
         </div>
 
         {/* Sub-view Display */}
         {subView === "register" && (
           <AssessmentRegisterSection
-            rows={filteredRows}
+            rows={rows}
             onOpenRiskMatrix={() => setSubView("risk-matrix")}
+          />
+        )}
+
+        {subView === "care-needs" && (
+          <PreAdmissionAssessmentStep
+            residentId={resident.id}
+            embedded
+            onGoToStepOne={() => setSubView("register")}
+            onGoToRiskStep={() => setSubView("risk-matrix")}
           />
         )}
 
