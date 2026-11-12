@@ -61,6 +61,8 @@ yarn-error.log*
 # Claude
 .claude
 
+
+./generated/*
 packages/db/src/generated
 cookies.txt
 *dead-letter*.jsonl

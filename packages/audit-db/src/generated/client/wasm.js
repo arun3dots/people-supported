@@ -171,7 +171,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ubuntu/apps/people-supported/packages/audit-db/src/generated/client",
+      "value": "D:\\workspace\\3Dots\\people-supported\\packages\\audit-db\\src\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -180,16 +180,17 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/ubuntu/apps/people-supported/packages/audit-db/prisma/schema.prisma",
+    "sourceFilePath": "D:\\workspace\\3Dots\\people-supported\\packages\\audit-db\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.19.3",
@@ -198,7 +199,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
