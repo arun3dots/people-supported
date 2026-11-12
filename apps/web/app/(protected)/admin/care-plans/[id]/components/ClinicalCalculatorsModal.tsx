@@ -203,7 +203,7 @@ export function ClinicalCalculatorsModal({
                   ? "Action Required: Refer to Dietitian / GP. Initiate daily food intake charting and fluid balance monitoring. Consider fortified meals and prescribed supplements."
                   : mustResult.riskCategory === "Medium"
                     ? "Action Required: Monitor food & fluid intake for 3 days. Re-weigh weekly and re-screen monthly."
-                    : "Action Required: Low Risk. Repeat screening monthly for care home residents."}
+                    : "Action Required: Low Risk. Repeat screening monthly for people receiving supported living support."}
               </p>
             </div>
           </TabsContent>

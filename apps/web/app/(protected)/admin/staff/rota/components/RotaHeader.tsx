@@ -55,7 +55,7 @@ export function RotaHeader({
             Shift Planner
           </Text>
           <Text size="md" weight="regular" className="text-slate-500 mt-1">
-            Plan, manage, and publish care home staff rotas, resident pairings, and bed assignments.
+            Plan, manage, and publish supported living staff rotas, resident pairings, and bed assignments.
           </Text>
         </div>
 

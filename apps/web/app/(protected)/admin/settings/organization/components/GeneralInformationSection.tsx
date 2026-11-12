@@ -42,7 +42,7 @@ export function GeneralInformationSection({
       <div className="flex flex-col gap-[20px]">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
-            label="Care Home Name"
+            label="Supported Living Service Name"
             value={profile?.name || "Care & Love Haven"}
           />
           <InfoField
@@ -50,8 +50,12 @@ export function GeneralInformationSection({
             value={profile?.cqcNumber || "0000016857"}
           />
           <InfoField
-            label="Care Home Type"
-            value={profile?.careHomeType || "Residential Care Home"}
+            label="Supported Living Service Type"
+            value={
+              profile?.careHomeType === "Residential Care Home"
+                ? "Supported Living"
+                : profile?.careHomeType || "Supported Living"
+            }
           />
         </div>
 

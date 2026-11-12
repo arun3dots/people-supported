@@ -167,7 +167,7 @@ export function UserDetailView({ user, roles, onBack, onEdit }: UserDetailViewPr
             </div>
             <div>
               <span className="text-slate-500 block text-md font-medium">Work Location</span>
-              <span className="font-semibold text-slate-900 text-md sm:text-md block truncate">Main Care Home</span>
+              <span className="font-semibold text-slate-900 text-md sm:text-md block truncate">Main Supported Living Service</span>
             </div>
             <div>
               <span className="text-slate-500 block text-md font-medium">Time Zone</span>

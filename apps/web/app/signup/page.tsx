@@ -275,16 +275,16 @@ export default function SignUpPage() {
 
   const headTitle =
     step === 1
-      ? "Set up your care home"
+      ? "Set up your supported living service"
       : step === 2
         ? "Your admin account"
         : "Choose a plan";
   const headSubtitle =
     step === 1
-      ? "Tell us a little about your care home."
+      ? "Tell us a little about your supported living service."
       : step === 2
         ? "Create the first administrator account."
-        : "Pick the best plan to start managing your care home.";
+        : "Pick the best plan to start managing your supported living service.";
 
   return (
     <div className="flex min-h-screen w-full bg-[#F7FAF9] font-sans overflow-x-hidden">
@@ -383,10 +383,10 @@ export default function SignUpPage() {
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="md:col-span-2 flex flex-col gap-1.5">
-                    <Label required>Care Home Name</Label>
+                    <Label required>Supported Living Service Name</Label>
                     <Input
                       type="text"
-                      placeholder="Enter your care home name"
+                      placeholder="Enter your supported living service name"
                       autoComplete="organization"
                       errorMessage={errors.name?.message}
                       {...register("name")}

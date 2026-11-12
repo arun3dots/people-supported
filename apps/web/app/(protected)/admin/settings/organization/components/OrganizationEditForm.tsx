@@ -141,7 +141,7 @@ export function OrganizationEditForm({
       case "location":
         return "Edit Location & Address";
       default:
-        return `Edit Organisation: ${profile?.name ?? "Care Home"}`;
+        return `Edit Organisation: ${profile?.name ?? "Supported Living"}`;
     }
   };
 
@@ -153,7 +153,7 @@ export function OrganizationEditForm({
             {getDialogTitle()}
           </DialogTitle>
           <DialogDescription className="mt-1">
-            Update identity, contact information, and physical address for this care home.
+            Update identity, contact information, and physical address for this supported living service.
           </DialogDescription>
         </DialogHeader>
 

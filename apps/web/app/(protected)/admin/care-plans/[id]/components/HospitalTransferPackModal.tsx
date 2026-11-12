@@ -46,7 +46,7 @@ export function HospitalTransferPackModal({
                 </h1>
               </div>
               <p className="text-md text-red-100">
-                Statutory Care Home Transfer Document • NICE & CQC Reg 12 Compliant
+                Resident Hospital Transfer Pack • NICE & CQC Reg 12 Compliant
               </p>
             </div>
             <div className="text-right text-md">
@@ -67,7 +67,7 @@ export function HospitalTransferPackModal({
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Top Details: Resident & Care Home */}
+              {/* Top Details: Resident & Service */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Resident Box with NHS Number */}
                 <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-md">
@@ -95,7 +95,7 @@ export function HospitalTransferPackModal({
                   </div>
                 </div>
 
-                {/* Care Home Box */}
+                {/* Supported Living Service Details */}
                 <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-md">
                   <div className="flex items-center gap-1.5 font-bold text-slate-900">
                     <Building2 className="w-3.5 h-3.5 text-slate-500" />

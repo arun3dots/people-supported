@@ -12,7 +12,7 @@ export const RELATIONSHIPS = [
 export const LOCATIONS = [
   "Home",
   "Hospital",
-  "Another Care Home",
+  "Another Supported Living Service",
   "Rehabilitation",
   "Other",
 ] as const;

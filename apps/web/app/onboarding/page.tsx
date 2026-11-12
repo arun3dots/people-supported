@@ -206,14 +206,14 @@ export default function OnboardingPage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">
-                    {step === 1 && "Care home details"}
+                    {step === 1 && "Supported living service details"}
                     {step === 2 && "Location"}
                     {step === 3 && "Administrator account"}
                     {step === 4 && "Choose a plan"}
                   </h2>
                   <p className="text-md text-muted-foreground">
                     {step === 1 && "Your brand and unique subdomain."}
-                    {step === 2 && "Where your care home is located."}
+                    {step === 2 && "Where your supported living service is located."}
                     {step === 3 && "The first admin who manages this account."}
                     {step === 4 && "Pick a subscription package."}
                   </p>
@@ -228,7 +228,7 @@ export default function OnboardingPage() {
 
               {step === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <Field label="Care home name" error={errors.name?.message}>
+                  <Field label="Supported living service name" error={errors.name?.message}>
                     <Input placeholder="Willow Creek Manor" {...register("name")} />
                   </Field>
                   <Field label="Subdomain" error={errors.subdomain?.message}>

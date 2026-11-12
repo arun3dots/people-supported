@@ -257,8 +257,8 @@ export function ResidentHeroBanner({
                 <Link
                   href={
                     propertyId
-                      ? `/admin/configuration/facility?tab=properties&propertyId=${propertyId}`
-                      : "/admin/configuration/facility?tab=properties"
+                      ? `/admin/configuration/facility/properties?propertyId=${propertyId}`
+                      : "/admin/configuration/facility/properties"
                   }
                   className="inline-flex items-center gap-1 text-md font-medium text-primary hover:underline pt-0.5"
                 >

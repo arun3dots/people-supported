@@ -119,15 +119,15 @@ echo "===== BUILD APPLICATIONS ====="
 pnpm build
 
 # Apply existing migrations only. No db push or seeding.
-# echo
-# echo "===== APPLY MAIN DATABASE MIGRATIONS ====="
+echo
+echo "===== APPLY MAIN DATABASE MIGRATIONS ====="
 
-# pnpm --filter @repo/db exec prisma migrate deploy --schema=prisma/schema.prisma
+pnpm --filter @repo/db exec prisma migrate deploy --schema=prisma/schema.prisma
 
-# echo
-# echo "===== APPLY AUDIT DATABASE MIGRATIONS ====="
+echo
+echo "===== APPLY AUDIT DATABASE MIGRATIONS ====="
 
-# pnpm --filter @repo/audit-db exec prisma migrate deploy --schema=prisma/schema.prisma
+pnpm --filter @repo/audit-db exec prisma migrate deploy --schema=prisma/schema.prisma
 
 # Restart the running production applications.
 echo

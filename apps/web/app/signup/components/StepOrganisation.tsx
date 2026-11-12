@@ -14,15 +14,15 @@ export function StepOrganisation({ register, errors }: StepOrganisationProps) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
-        {/* Care Home Name */}
+        {/* Supported Living Service Name */}
         <div className="md:col-span-2 space-y-1.5">
           <Label htmlFor="org-name" required>
-            Care Home Name
+            Supported Living Service Name
           </Label>
           <Input
             id="org-name"
             type="text"
-            placeholder="Enter your care home name"
+            placeholder="Enter your supported living service name"
             autoComplete="organization"
             errorMessage={errors.name?.message}
             {...register("name")}
