@@ -62,6 +62,7 @@ yarn-error.log*
 .claude
 
 packages/db/src/generated
+packages/audit-db/src/generated
 cookies.txt
 *dead-letter*.jsonl
 apps/backend/audit-dead-letter.jsonl
