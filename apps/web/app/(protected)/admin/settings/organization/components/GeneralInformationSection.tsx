@@ -30,7 +30,7 @@ export function GeneralInformationSection({
           <Button
             variant="ghost"
             size="icon"
-            className="w-[36px] h-[36px] bg-white rounded-full p-2 shadow-md flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
+            className="w-[36px] h-[36px] p-2 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
             title="Edit general information"
             onClick={onEditClick}
           >
@@ -43,34 +43,30 @@ export function GeneralInformationSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Supported Living Service Name"
-            value={profile?.name || "Care & Love Haven"}
+            value={profile?.name || "-"}
           />
           <InfoField
             label="CQC Registration Number"
-            value={profile?.cqcNumber || "0000016857"}
+            value={profile?.cqcNumber || "-"}
           />
           <InfoField
             label="Supported Living Service Type"
-            value={
-              profile?.careHomeType === "Residential Care Home"
-                ? "Supported Living"
-                : profile?.careHomeType || "Supported Living"
-            }
+            value={profile?.careHomeType || "-"}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Registered Provider"
-            value={profile?.registeredProvider || "Care & Love Services Ltd."}
+            value={profile?.registeredProvider || "-"}
           />
           <InfoField
             label="Established Date"
-            value={profile?.establishedDate || "15 Jan 2018"}
+            value={profile?.establishedDate || "-"}
           />
           <InfoField
             label="Website"
-            value={profile?.website || "www.careandlovehaven.com"}
+            value={profile?.website || "-"}
           />
         </div>
       </div>
