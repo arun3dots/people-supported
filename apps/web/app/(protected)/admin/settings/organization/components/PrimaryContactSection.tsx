@@ -29,7 +29,7 @@ export function PrimaryContactSection({
           <Button
             variant="ghost"
             size="icon"
-            className="w-[36px] h-[36px] bg-white rounded-full p-2 shadow-md flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
+            className="w-[36px] h-[36px]  p-2 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
             title="Edit primary contact"
             onClick={onEditClick}
           >
@@ -42,22 +42,22 @@ export function PrimaryContactSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Contact Name"
-            value={profile?.primaryContactName || "Eleanor Vance"}
+            value={profile?.primaryContactName || "-"}
           />
           <InfoField
             label="Job Title"
-            value={profile?.jobTitle || profile?.primaryContactRole || "Administrator"}
+            value={profile?.primaryContactRole || profile?.jobTitle || "-"}
           />
           <InfoField
             label="Contact Phone"
-            value={profile?.primaryContactPhone || "+44 7700 900888"}
+            value={profile?.primaryContactPhone || "-"}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Contact Email"
-            value={profile?.primaryContactEmail || "eleanor@example.com"}
+            value={profile?.primaryContactEmail || "-"}
             multiline
           />
         </div>

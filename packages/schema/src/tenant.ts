@@ -20,6 +20,11 @@ export const createTenantSchema = z.object({
   cqcNumber: z.string().optional().nullable(),
   cqcProviderId: z.string().optional().nullable(),
   cqcLocationId: z.string().optional().nullable(),
+  careHomeType: z.string().max(100).optional().nullable(),
+  registeredProvider: z.string().max(150).optional().nullable(),
+  establishedDate: z.string().max(50).optional().nullable(),
+  website: z.string().max(200).optional().nullable(),
+  primaryContactRole: z.string().max(100).optional().nullable(),
   addressLine1: z
     .string()
     .min(3, "Address must be at least 3 characters")
@@ -102,6 +107,11 @@ export const updateTenantSchema = z.object({
   cqcNumber: z.string().optional().nullable(),
   cqcProviderId: z.string().optional().nullable(),
   cqcLocationId: z.string().optional().nullable(),
+  careHomeType: z.string().max(100).optional().nullable(),
+  registeredProvider: z.string().max(150).optional().nullable(),
+  establishedDate: z.string().max(50).optional().nullable(),
+  website: z.string().max(200).optional().nullable(),
+  primaryContactRole: z.string().max(100).optional().nullable(),
   addressLine1: z
     .string()
     .min(3, "Address must be at least 3 characters")

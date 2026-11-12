@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateTenantSchema, type UpdateTenantDTO } from "@repo/schema";
 import {
@@ -56,7 +56,7 @@ export function OrganizationEditForm({
       });
       onOpenChange(false);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast({
         variant: "destructive",
         title: "Error",
@@ -66,20 +66,50 @@ export function OrganizationEditForm({
   });
 
   const [jobTitle, setJobTitle] = useState(
-    profile?.jobTitle ?? profile?.primaryContactRole ?? "Administrator"
+    profile?.primaryContactRole ?? profile?.jobTitle ?? ""
   );
   const [careHomeType, setCareHomeType] = useState(
-    profile?.careHomeType ?? "Residential Care Home"
+    profile?.careHomeType ?? ""
   );
   const [registeredProvider, setRegisteredProvider] = useState(
-    profile?.registeredProvider ?? "Care & Love Services Ltd."
+    profile?.registeredProvider ?? ""
   );
   const [establishedDate, setEstablishedDate] = useState(
-    profile?.establishedDate ?? "15 Jan 2018"
+    profile?.establishedDate ?? ""
   );
   const [website, setWebsite] = useState(
-    profile?.website ?? "www.careandlovehaven.com"
+    profile?.website ?? ""
   );
+
+  const showGeneral = mode === "all" || mode === "general";
+  const showContact = mode === "all" || mode === "contact";
+  const showLocation = mode === "all" || mode === "location";
+
+  const activeResolver: Resolver<UpdateTenantDTO> = (values, context, options) => {
+    const schema =
+      mode === "general"
+        ? updateTenantSchema.pick({ name: true, cqcNumber: true })
+        : mode === "contact"
+          ? updateTenantSchema.pick({
+              primaryContactName: true,
+              primaryContactPhone: true,
+              primaryContactEmail: true,
+            })
+          : mode === "location"
+            ? updateTenantSchema.pick({
+                addressLine1: true,
+                addressLine2: true,
+                city: true,
+                postcode: true,
+              })
+            : updateTenantSchema;
+
+    return (zodResolver(schema as typeof updateTenantSchema) as Resolver<UpdateTenantDTO>)(
+      values,
+      context,
+      options,
+    );
+  };
 
   const {
     register,
@@ -87,7 +117,7 @@ export function OrganizationEditForm({
     reset,
     formState: { errors },
   } = useForm<UpdateTenantDTO>({
-    resolver: zodResolver(updateTenantSchema),
+    resolver: activeResolver,
     defaultValues: {
       name: profile?.name ?? "",
       cqcNumber: profile?.cqcNumber ?? "",
@@ -102,35 +132,59 @@ export function OrganizationEditForm({
   });
 
   useEffect(() => {
-    if (open && profile) {
+    if (open) {
       reset({
-        name: profile.name ?? "",
-        cqcNumber: profile.cqcNumber ?? "",
-        primaryContactName: profile.primaryContactName ?? "",
-        primaryContactPhone: profile.primaryContactPhone ?? "",
-        primaryContactEmail: profile.primaryContactEmail ?? "",
-        addressLine1: profile.addressLine1 ?? "",
-        addressLine2: profile.addressLine2 ?? "",
-        city: profile.city ?? "",
-        postcode: profile.postcode ?? "",
+        name: profile?.name ?? "",
+        cqcNumber: profile?.cqcNumber ?? "",
+        primaryContactName: profile?.primaryContactName ?? "",
+        primaryContactPhone: profile?.primaryContactPhone ?? "",
+        primaryContactEmail: profile?.primaryContactEmail ?? "",
+        addressLine1: profile?.addressLine1 ?? "",
+        addressLine2: profile?.addressLine2 ?? "",
+        city: profile?.city ?? "",
+        postcode: profile?.postcode ?? "",
       });
-      setJobTitle(
-        profile.jobTitle ?? profile.primaryContactRole ?? "Administrator"
-      );
-      setCareHomeType(profile.careHomeType ?? "Residential Care Home");
-      setRegisteredProvider(profile.registeredProvider ?? "Care & Love Services Ltd.");
-      setEstablishedDate(profile.establishedDate ?? "15 Jan 2018");
-      setWebsite(profile.website ?? "www.careandlovehaven.com");
+      setJobTitle(profile?.primaryContactRole ?? profile?.jobTitle ?? "");
+      setCareHomeType(profile?.careHomeType ?? "");
+      setRegisteredProvider(profile?.registeredProvider ?? "");
+      setEstablishedDate(profile?.establishedDate ?? "");
+      setWebsite(profile?.website ?? "");
     }
   }, [profile, open, reset]);
 
-  const onFormSubmit = (data: UpdateTenantDTO) => {
-    mutation.mutate(data);
+  const toNullable = (val?: string | null) => {
+    const trimmed = val?.trim();
+    return trimmed ? trimmed : null;
   };
 
-  const showGeneral = mode === "all" || mode === "general";
-  const showContact = mode === "all" || mode === "contact";
-  const showLocation = mode === "all" || mode === "location";
+  const onFormSubmit = (data: UpdateTenantDTO) => {
+    const payload: UpdateTenantDTO = {};
+
+    if (showGeneral) {
+      payload.name = data.name;
+      payload.cqcNumber = toNullable(data.cqcNumber);
+      payload.careHomeType = toNullable(careHomeType);
+      payload.registeredProvider = toNullable(registeredProvider);
+      payload.establishedDate = toNullable(establishedDate);
+      payload.website = toNullable(website);
+    }
+
+    if (showContact) {
+      payload.primaryContactName = data.primaryContactName;
+      payload.primaryContactRole = toNullable(jobTitle);
+      payload.primaryContactPhone = data.primaryContactPhone;
+      payload.primaryContactEmail = toNullable(data.primaryContactEmail);
+    }
+
+    if (showLocation) {
+      payload.addressLine1 = data.addressLine1;
+      payload.addressLine2 = toNullable(data.addressLine2);
+      payload.city = data.city;
+      payload.postcode = data.postcode;
+    }
+
+    mutation.mutate(payload);
+  };
 
   const getDialogTitle = () => {
     switch (mode) {
@@ -141,7 +195,9 @@ export function OrganizationEditForm({
       case "location":
         return "Edit Location & Address";
       default:
-        return `Edit Organisation: ${profile?.name ?? "Supported Living"}`;
+        return profile?.name
+          ? `Edit Organisation: ${profile.name}`
+          : "Edit Organisation";
     }
   };
 
