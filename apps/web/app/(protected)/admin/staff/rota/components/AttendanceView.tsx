@@ -229,6 +229,8 @@ export function AttendanceView({
         <div className="lg:col-span-1">
           <AttendanceSidebar
             records={records}
+            shifts={shifts}
+            referenceDateStr={selectedDateStr}
             onRecordReason={(record) => setAdjustingRecord(record)}
           />
         </div>

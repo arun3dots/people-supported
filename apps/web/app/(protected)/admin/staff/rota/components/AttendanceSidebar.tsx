@@ -1,13 +1,18 @@
 "use client";
 
-import React from "react";
-import { AlertCircle, Phone, RotateCcw, UserPlus } from "lucide-react";
+import React, { useMemo } from "react";
+import { format, subDays } from "date-fns";
+import { AlertCircle, Phone, UserPlus } from "lucide-react";
 import { Badge, Button, Card, Text } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
+import type { Shift } from "../../../../../../lib/types/shifts";
 import type { AttendanceRecord } from "./AttendanceTable";
+import { getShiftDateStr, getShiftStaffIds } from "./rotaDataUtils";
 
 interface AttendanceSidebarProps {
   records: AttendanceRecord[];
+  shifts?: Shift[];
+  referenceDateStr?: string;
   onRecordReason: (record: AttendanceRecord) => void;
   onArrangeCover?: (record: AttendanceRecord) => void;
 }
@@ -21,6 +26,8 @@ interface DayAttendanceSummary {
 
 export function AttendanceSidebar({
   records,
+  shifts = [],
+  referenceDateStr,
   onRecordReason,
   onArrangeCover,
 }: AttendanceSidebarProps): React.JSX.Element {
@@ -28,15 +35,50 @@ export function AttendanceSidebar({
     (r) => r.status === "Late" || r.status === "Absent" || r.status === "Left early",
   );
 
-  const past7DaysData: DayAttendanceSummary[] = [
-    { dayName: "Wed", onTimeCount: 8, lateCount: 1, absentCount: 1 },
-    { dayName: "Thu", onTimeCount: 9, lateCount: 2, absentCount: 0 },
-    { dayName: "Fri", onTimeCount: 10, lateCount: 1, absentCount: 1 },
-    { dayName: "Sat", onTimeCount: 8, lateCount: 0, absentCount: 0 },
-    { dayName: "Sun", onTimeCount: 9, lateCount: 1, absentCount: 1 },
-    { dayName: "Mon", onTimeCount: 10, lateCount: 2, absentCount: 0 },
-    { dayName: "Tue", onTimeCount: 7, lateCount: 2, absentCount: 1 },
-  ];
+  const past7DaysData: DayAttendanceSummary[] = useMemo(() => {
+    const anchor = referenceDateStr ? new Date(`${referenceDateStr}T12:00:00`) : new Date();
+    const nowMs = Date.now();
+    const GRACE_MS = 10 * 60 * 1000;
+
+    return Array.from({ length: 7 }, (_, idx) => {
+      const day = subDays(anchor, 6 - idx);
+      const dateStr = format(day, "yyyy-MM-dd");
+      const dayName = format(day, "EEE");
+      let onTimeCount = 0;
+      let lateCount = 0;
+      let absentCount = 0;
+
+      shifts.forEach((shift) => {
+        if (shift.status === "Cancelled" || shift.careType?.includes("Off")) return;
+        if (getShiftDateStr(shift) !== dateStr) return;
+
+        const staffIds = getShiftStaffIds(shift);
+        const shiftStartMs = new Date(shift.startTime).getTime();
+        const shiftEndMs = new Date(shift.endTime).getTime();
+
+        staffIds.forEach((uid) => {
+          const log = shift.staffLogs?.find((l) => l.userId === uid);
+          if (log?.actualStartTime) {
+            const actualStartMs = new Date(log.actualStartTime).getTime();
+            if (actualStartMs > shiftStartMs + GRACE_MS) {
+              lateCount += 1;
+            } else {
+              onTimeCount += 1;
+            }
+          } else if (shiftEndMs < nowMs) {
+            absentCount += 1;
+          }
+        });
+      });
+
+      return { dayName, onTimeCount, lateCount, absentCount };
+    });
+  }, [shifts, referenceDateStr]);
+
+  const maxScale = Math.max(
+    1,
+    ...past7DaysData.map((d) => d.onTimeCount + d.lateCount + d.absentCount),
+  );
 
   return (
     <div className="space-y-5 font-sans">
@@ -144,8 +186,6 @@ export function AttendanceSidebar({
         <div className="pt-2">
           <div className="flex items-end justify-between gap-2 h-44 px-2">
             {past7DaysData.map((d) => {
-              const total = d.onTimeCount + d.lateCount + d.absentCount;
-              const maxScale = 12;
               const onTimeHeight = (d.onTimeCount / maxScale) * 100;
               const lateHeight = (d.lateCount / maxScale) * 100;
               const absentHeight = (d.absentCount / maxScale) * 100;

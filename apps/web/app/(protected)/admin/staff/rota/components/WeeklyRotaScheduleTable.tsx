@@ -15,7 +15,6 @@ import {
   getCareBlockAppearance, getShiftAssignedResidentIds,
   getShiftDateStr, resolveStaffLocation,
 } from "./rotaDataUtils";
-import { WeeklyRotaDailyCoverageFooter } from "./WeeklyRotaDailyCoverageFooter";
 
 export interface DayColumnInfo {
   key: string;
@@ -43,11 +42,11 @@ interface WeeklyRotaScheduleTableProps {
 }
 
 const LEGEND_ITEMS = [
-  { label: "Shared", dotClass: "bg-slate-700" },
-  { label: "1:1", dotClass: "bg-primary" },
-  { label: "2:1", dotClass: "bg-indigo-600" },
+  { label: "Shared", dotClass: "bg-sky-500" },
+  { label: "1:1", dotClass: "bg-emerald-500" },
+  { label: "2:1", dotClass: "bg-indigo-500" },
   { label: "Sleep-in", dotClass: "bg-amber-500" },
-  { label: "Waking Night", dotClass: "bg-rose-600" },
+  { label: "Waking Night", dotClass: "bg-rose-500" },
 ];
 
 export function WeeklyRotaScheduleTable({
@@ -339,8 +338,6 @@ export function WeeklyRotaScheduleTable({
                 );
               })}
             </TableBody>
-
-            <WeeklyRotaDailyCoverageFooter days={days} shifts={shifts} />
           </Table>
         </div>
       )}
