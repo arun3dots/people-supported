@@ -29,7 +29,7 @@ export interface RotaHeaderMetrics {
 
 interface SupportHoursRotaHeaderProps {
   metrics: RotaHeaderMetrics;
-  activeView: "rota" | "hours" | "allocation";
+  activeView: "rota" | "hours";
   selectedMonth: string;
   selectedWeek: string;
   draftShiftCount?: number;
@@ -54,8 +54,6 @@ export function SupportHoursRotaHeader({
     switch (activeView) {
       case "hours":
         return "Hours Summary";
-      case "allocation":
-        return "Staff Allocation";
       default:
         return "Support Hours & Rota";
     }
@@ -143,7 +141,7 @@ export function SupportHoursRotaHeader({
             {selectedWeek}
           </Badge>
 
-          <Button
+          {/*<Button
             variant="secondary"
             size="sm"
             onClick={onExport}
@@ -151,7 +149,7 @@ export function SupportHoursRotaHeader({
           >
             <Download className="size-3.5" />
             Export Report
-          </Button>
+          </Button>*/}
 
           {draftShiftCount > 0 && onPublishRota && (
             <Button

@@ -128,6 +128,9 @@ export function computeDailyCoverage(dayShifts: Shift[]): DayCoverageMetrics {
   } else if (activeStaffCount === 1) {
     status = "warning";
     statusLabel = "Single Cover";
+  } else if (roundedHours < 16) {
+    status = "warning";
+    statusLabel = "Partial Cover";
   } else {
     status = "optimal";
     statusLabel = "Full Cover";
