@@ -164,7 +164,7 @@ export function BedsTab({ onNavigate }: BedsTabProps) {
     <>
       <EntityListView<Bed>
         title="Bed Management"
-        description="Create, configure and manage beds within your care home facility."
+        description="Create, configure and manage beds within your supported living service."
         overviewTitle="Bed Overview"
         onAdd={() => setIsAddModalOpen(true)}
         addLabel="Add Bed"

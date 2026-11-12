@@ -76,7 +76,7 @@ export function PrimaryContactFields({
           <Input
             id="primaryContactEmail"
             type="email"
-            placeholder="e.g. eleanor@carehome.com"
+            placeholder="e.g. eleanor@example.com"
             {...register("primaryContactEmail")}
             errorMessage={errors.primaryContactEmail?.message}
           />

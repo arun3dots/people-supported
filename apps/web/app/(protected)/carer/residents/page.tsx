@@ -3,7 +3,7 @@ import { ResidentDirectoryClient } from "../../admin/residents/components/Reside
 import { CarerShiftGate } from "../components/CarerShiftGate";
 
 export const metadata = {
-  title: "Residents | Care Home",
+  title: "Residents | Supported Living",
   description: "View and manage residents under care.",
 };
 

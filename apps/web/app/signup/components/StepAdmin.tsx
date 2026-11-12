@@ -61,7 +61,7 @@ export function StepAdmin({
           <Input
             id="admin-email"
             type="email"
-            placeholder="admin@carehome.co.uk"
+            placeholder="admin@example.com"
             autoComplete="email"
             errorMessage={errors.primaryContactEmail?.message}
             {...register("primaryContactEmail")}

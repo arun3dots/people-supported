@@ -317,7 +317,7 @@ export default function CarerHandoverPage() {
           <Card variant="white" className="p-8 text-center rounded-2xl border-slate-200">
             <EmptyState
               title="No residents registered"
-              description="No active residents are currently registered in your care home wing."
+              description="No active residents are currently registered in your supported living service."
             />
           </Card>
         ) : (

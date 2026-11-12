@@ -82,7 +82,7 @@ export function useBillingColumns({
           return (
             <div className="flex flex-col min-w-0 gap-0.5 max-w-56">
               <Text size="md" weight="regular" className="text-slate-900 truncate">
-                {payment.packageName ?? "Care Home Subscription"}
+                {payment.packageName ?? "Supported Living Subscription"}
                 {payment.isRenewal ? " · Renewal" : ""}
               </Text>
               {failed && payment.failureReason && (

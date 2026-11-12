@@ -25,7 +25,7 @@ export function InvoicePaymentFooter() {
           BANK DETAILS
         </Text>
         <Text size="md" weight="semibold" className="text-slate-800 block">
-          Cantra Care Home Ltd
+          Cantra Supported Living Ltd
         </Text>
         <Text size="md" weight="regular" className="text-slate-600 block">
           Sort Code: 20-33-22

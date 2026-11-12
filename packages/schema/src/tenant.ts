@@ -4,11 +4,11 @@ import { customPackageSchema } from "./billing";
 export const createTenantSchema = z.object({
   name: z
     .string()
-    .min(2, "Care home name must be at least 2 characters")
-    .max(100, "Care home name must not exceed 100 characters")
+    .min(2, "Supported living service name must be at least 2 characters")
+    .max(100, "Supported living service name must not exceed 100 characters")
     .regex(
       /^(?!\s*$)[a-zA-Z0-9\s\-'.&()]+$/,
-      "Care home name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
+      "Supported living service name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
     ),
   subdomain: z
     .string()
@@ -82,11 +82,11 @@ export const createTenantSchema = z.object({
 export const updateTenantSchema = z.object({
   name: z
     .string()
-    .min(2, "Care home name must be at least 2 characters")
-    .max(100, "Care home name must not exceed 100 characters")
+    .min(2, "Supported living service name must be at least 2 characters")
+    .max(100, "Supported living service name must not exceed 100 characters")
     .regex(
       /^(?!\s*$)[a-zA-Z0-9\s\-'.&()]+$/,
-      "Care home name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
+      "Supported living service name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
     )
     .optional(),
   subdomain: z

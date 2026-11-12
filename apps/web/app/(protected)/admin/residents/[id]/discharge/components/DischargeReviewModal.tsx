@@ -82,7 +82,7 @@ export function DischargeReviewModal({
   const bedNumberStr = resident?.bed?.number ? `Bed ${resident.bed.number}` : "Bed A";
 
   const rows = [
-    { label: "Reason for Discharge", value: formData.reason || "Moving to another care home" },
+    { label: "Reason for Discharge", value: formData.reason || "Moving to another supported living service" },
     { label: "Discharge Type", value: formData.dischargeType || "Planned" },
     {
       label: "Discharge Date & Time",

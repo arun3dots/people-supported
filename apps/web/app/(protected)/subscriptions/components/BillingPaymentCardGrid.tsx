@@ -54,7 +54,7 @@ export function BillingPaymentCard({
   showRightDivider = false,
   onViewDetail,
 }: BillingPaymentCardProps) {
-  const packageName = payment.packageName ?? "Care Home Subscription";
+  const packageName = payment.packageName ?? "Supported Living Subscription";
   const initial = packageName.charAt(0).toUpperCase();
   const state = getBillingStatusBadgeState(payment);
   const label = getBillingStatusLabel(payment);

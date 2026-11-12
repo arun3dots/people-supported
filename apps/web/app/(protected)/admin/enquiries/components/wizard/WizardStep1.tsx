@@ -47,7 +47,7 @@ export function WizardStep1({
       {/* Enquirer Contact Details Section */}
       <Card className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3 shadow-none">
         <Text size="md" weight="semibold" className="text-slate-900 tracking-wider">
-          Enquirer Contact Details (Person Contacting the Care Home)
+          Enquirer Contact Details (Person Contacting the Supported Living Service)
         </Text>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div className="space-y-1.5">

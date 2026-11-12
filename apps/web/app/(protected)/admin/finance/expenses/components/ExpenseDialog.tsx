@@ -114,7 +114,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
       <DialogContent size="lg">
         <DialogHeader className="pb-3 border-b border-slate-100">
           <DialogTitle className="text-xl font-bold text-slate-900">
-            Record Care Home Expense
+            Record Supported Living Expense
           </DialogTitle>
           <Text size="md" variant="muted" className="mt-0.5">
             Log medical equipment, utilities, catering, or agency staffing expenses.

@@ -1,7 +1,7 @@
 import { ResidentAnalyticsClient } from "./components/ResidentAnalyticsClient";
 
 export const metadata = {
-  title: "Resident Analytics | Care Home",
+  title: "Resident Analytics | Supported Living",
   description: "Insights and trends about your residents and care population.",
 };
 

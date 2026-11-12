@@ -52,7 +52,7 @@ export function OrganizationProfile() {
             Organisational Profile
           </Text>
           <Text size={'md'} weight={'regular'} className="text-slate-500">
-            Manage your care home&apos;s identity, contact information, and physical address
+            Manage your supported living service&apos;s identity, contact information, and physical address
           </Text>
         </div>
 
