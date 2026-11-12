@@ -24,6 +24,7 @@ export interface CareTypeBreakdown {
   totalHours: number;
   sharedHours: number;
   oneToOneHours: number;
+  twoToOneHours: number;
   sleepInHours: number;
   wakingNightHours: number;
 }
@@ -200,9 +201,38 @@ export function getCommissionedHours(
   return getResidentCommissionedHours(residents);
 }
 
+export function computeRotaMetrics(
+  schemes: SchemeItem[],
+  residents: Resident[],
+  weekShifts: Shift[],
+) {
+  const commissionedHours = getCommissionedHours(schemes, residents);
+  let deliveredHours = 0;
+  let plannedHours = 0;
+  weekShifts.forEach((s) => {
+    deliveredHours += getShiftDeliveredHours(s);
+    plannedHours += getShiftPlannedHours(s);
+  });
+  deliveredHours = roundHours(deliveredHours);
+  plannedHours = roundHours(plannedHours);
+  const targetHours = commissionedHours > 0 ? commissionedHours : plannedHours;
+  const completionRate =
+    targetHours > 0
+      ? Math.min(100, Math.round((deliveredHours / targetHours) * 100))
+      : 0;
+  return {
+    peopleSupportedCount: residents.length,
+    commissionedHours,
+    deliveredHours,
+    plannedHours,
+    completionRate,
+  };
+}
+
 export function getCareTypeBreakdown(shifts: Shift[]): CareTypeBreakdown {
   let sharedHours = 0;
   let oneToOneHours = 0;
+  let twoToOneHours = 0;
   let sleepInHours = 0;
   let wakingNightHours = 0;
 
@@ -210,7 +240,9 @@ export function getCareTypeBreakdown(shifts: Shift[]): CareTypeBreakdown {
     const hours = getShiftPlannedHours(shift);
     if (hours <= 0) return;
     const careType = shift.careType || "Shared Care (Core Support)";
-    if (careType.includes("1:1")) {
+    if (careType.includes("2:1")) {
+      twoToOneHours += hours;
+    } else if (careType.includes("1:1")) {
       oneToOneHours += hours;
     } else if (careType.includes("Sleep-in")) {
       sleepInHours += hours;
@@ -223,15 +255,17 @@ export function getCareTypeBreakdown(shifts: Shift[]): CareTypeBreakdown {
 
   const roundedShared = roundHours(sharedHours);
   const roundedOneToOne = roundHours(oneToOneHours);
+  const roundedTwoToOne = roundHours(twoToOneHours);
   const roundedSleepIn = roundHours(sleepInHours);
   const roundedWakingNight = roundHours(wakingNightHours);
 
   return {
     totalHours: roundHours(
-      roundedShared + roundedOneToOne + roundedSleepIn + roundedWakingNight,
+      roundedShared + roundedOneToOne + roundedTwoToOne + roundedSleepIn + roundedWakingNight,
     ),
     sharedHours: roundedShared,
     oneToOneHours: roundedOneToOne,
+    twoToOneHours: roundedTwoToOne,
     sleepInHours: roundedSleepIn,
     wakingNightHours: roundedWakingNight,
   };
@@ -251,57 +285,32 @@ export function getCareBlockAppearance(
   residentCount = 0,
 ): CareBlockAppearance {
   const cType = careType || "Shared Care (Core Support)";
+  const isSleepIn = cType.includes("Sleep-in");
+  const isNight = cType.includes("Waking Night");
+  const isOff = cType.includes("Off");
+
+  if (cType.includes("2:1")) {
+    return { cellClassName: "bg-indigo-50 text-indigo-900 hover:bg-indigo-100/70", shortLabel: "2:1", subLabel: "2:1 Support", isSleepIn, isNight, isOff };
+  }
   if (cType.includes("1:1")) {
-    return {
-      cellClassName:
-        "bg-surface-primary-light text-primary hover:bg-emerald-100/70",
-      shortLabel: "1:1",
-      subLabel: "1:1 Support",
-      isSleepIn: false,
-      isNight: false,
-      isOff: false,
-    };
+    return { cellClassName: "bg-surface-primary-light text-primary hover:bg-emerald-100/70", shortLabel: "1:1", subLabel: "1:1 Support", isSleepIn, isNight, isOff };
   }
-  if (cType.includes("Sleep-in")) {
-    return {
-      cellClassName: "bg-amber-50 text-amber-900 hover:bg-amber-100/70",
-      shortLabel: "Sleep-in",
-      subLabel: "Overnight",
-      isSleepIn: true,
-      isNight: false,
-      isOff: false,
-    };
+  if (isSleepIn) {
+    return { cellClassName: "bg-amber-50 text-amber-900 hover:bg-amber-100/70", shortLabel: "Sleep-in", subLabel: "Overnight", isSleepIn, isNight, isOff };
   }
-  if (cType.includes("Waking Night")) {
-    return {
-      cellClassName: "bg-rose-50 text-rose-900 hover:bg-rose-100/70",
-      shortLabel: "Night",
-      subLabel: "Waking Night",
-      isSleepIn: false,
-      isNight: true,
-      isOff: false,
-    };
+  if (isNight) {
+    return { cellClassName: "bg-rose-50 text-rose-900 hover:bg-rose-100/70", shortLabel: "Night", subLabel: "Waking Night", isSleepIn, isNight, isOff };
   }
-  if (cType.includes("Off")) {
-    return {
-      cellClassName: "bg-white/60 text-slate-500 hover:bg-white",
-      shortLabel: "Off",
-      subLabel: "Rest Day",
-      isSleepIn: false,
-      isNight: false,
-      isOff: true,
-    };
+  if (isOff) {
+    return { cellClassName: "bg-white/60 text-slate-500 hover:bg-white", shortLabel: "Off", subLabel: "Rest Day", isSleepIn, isNight, isOff };
   }
 
   return {
     cellClassName: "bg-white text-slate-800 hover:bg-slate-50",
     shortLabel: "Shared",
-    subLabel:
-      residentCount > 0
-        ? `${residentCount} ${residentCount === 1 ? "person" : "people"}`
-        : "Shared Care",
-    isSleepIn: false,
-    isNight: false,
-    isOff: false,
+    subLabel: residentCount > 0 ? `${residentCount} ${residentCount === 1 ? "person" : "people"}` : "Shared Care",
+    isSleepIn,
+    isNight,
+    isOff,
   };
 }

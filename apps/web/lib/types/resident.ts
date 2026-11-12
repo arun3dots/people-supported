@@ -66,6 +66,9 @@ export interface Resident {
   keyworkerId?: string;
   admissionDate: string;
   photoUrl?: string;
+  preferredCarerIds?: string[];
+  doNotAssignIds?: string[];
+  requiredCertifications?: string[];
   supportedLivingDetails?: SupportedLivingDetailsDTO | null;
   carePlans?: Array<{
     id: string;

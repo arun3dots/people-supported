@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { format, startOfWeek, addDays } from "date-fns";
+import { format, startOfWeek, addDays, subWeeks, addWeeks } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Spinner, Text } from "@repo/ui/components/ui";
+import { useToast } from "@repo/ui/hooks";
 import {
   useGetShiftsQuery,
   useUpdateShiftMutation,
@@ -15,7 +16,6 @@ import {
   useGetPropertiesQuery,
 } from "../../../../../../lib/queries/facility";
 import { useGetResidentsQuery } from "../../../../../../lib/queries/residents";
-import type { Resident } from "../../../../../../lib/types/resident";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import type { StaffMember } from "../../../../../../lib/types/staff";
 import {
@@ -23,48 +23,60 @@ import {
   type RotaHeaderMetrics,
 } from "./SupportHoursRotaHeader";
 import {
+  RotaUnifiedFilterBar,
+  type RotaFilterState,
+} from "./RotaUnifiedFilterBar";
+import {
   WeeklyRotaScheduleTable,
   type DayColumnInfo,
 } from "./WeeklyRotaScheduleTable";
 import { RotaSummaryWidgets } from "./RotaSummaryWidgets";
-import { ShiftDetailsModal } from "./ShiftDetailsModal";
-import {
-  ModifyShiftBlockModal,
-  type ShiftBlockFormData,
-} from "./ModifyShiftBlockModal";
-import { ReassignStaffModal } from "./ReassignStaffModal";
+import { RotaModalsContainer } from "./RotaModalsContainer";
+import type { ShiftBlockFormData } from "./ModifyShiftBlockModal";
 import { HoursSummaryView } from "./HoursSummaryView";
 import { StaffAllocationView } from "./StaffAllocationView";
+import { AttendanceView } from "./AttendanceView";
+import { executeSaveShiftBlock } from "./useShiftSaveHandler";
 import {
-  getCommissionedHours,
+  computeRotaMetrics,
   getShiftDateStr,
-  getShiftDeliveredHours,
-  getShiftPlannedHours,
   resolveStaffLocation,
-  roundHours,
 } from "./rotaDataUtils";
 
+const INITIAL_FILTERS: RotaFilterState = {
+  schemeId: "all",
+  propertyId: "all",
+  dayOfWeek: "all",
+  staffId: "all",
+  careType: "All Care Types",
+};
+
 export function RotaContainer(): React.JSX.Element {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const tabParam = searchParams?.get("tab");
 
-  const [currentWeekStart] = useState<Date>(() =>
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() =>
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
-  const [activeView, setActiveView] = useState<"rota" | "hours" | "allocation">(
-    "rota",
-  );
-  const [activeCareType, setActiveCareType] = useState<string>("All Care Types");
+  const [activeView, setActiveView] = useState<
+    "rota" | "hours" | "allocation" | "attendance"
+  >("rota");
+
+  const [filters, setFilters] = useState<RotaFilterState>(INITIAL_FILTERS);
 
   useEffect(() => {
     if (tabParam === "hours") setActiveView("hours");
     else if (tabParam === "allocation") setActiveView("allocation");
+    else if (tabParam === "attendance") setActiveView("attendance");
     else setActiveView("rota");
   }, [tabParam]);
 
-  const handleViewChange = (nextView: "rota" | "hours" | "allocation"): void => {
+  const handleViewChange = (
+    nextView: "rota" | "hours" | "allocation" | "attendance",
+  ): void => {
     setActiveView(nextView);
     const params = new URLSearchParams(searchParams?.toString() ?? "");
     if (nextView === "rota") params.delete("tab");
@@ -74,16 +86,9 @@ export function RotaContainer(): React.JSX.Element {
   };
 
   const [detailsShift, setDetailsShift] = useState<Shift | null>(null);
-  const [detailsContext, setDetailsContext] = useState<{
-    staffName: string;
-    staffRole?: string;
-    dayLabel: string;
-  }>({ staffName: "", dayLabel: "" });
+  const [detailsContext, setDetailsContext] = useState<{ staffName: string; staffRole?: string; dayLabel: string }>({ staffName: "", dayLabel: "" });
   const [editingShift, setEditingShift] = useState<Shift | null>(null);
-  const [slotToAdd, setSlotToAdd] = useState<{
-    staff: StaffMember;
-    day: DayColumnInfo;
-  } | null>(null);
+  const [slotToAdd, setSlotToAdd] = useState<{ staff: StaffMember; day: DayColumnInfo } | null>(null);
   const [reassignStaff, setReassignStaff] = useState<StaffMember | null>(null);
 
   const { data: shiftsData, isLoading: isShiftsLoading } = useGetShiftsQuery();
@@ -95,128 +100,85 @@ export function RotaContainer(): React.JSX.Element {
   const updateShiftMutation = useUpdateShiftMutation();
   const createShiftMutation = useCreateShiftMutation();
 
-  const shifts: Shift[] = useMemo(
-    () => (Array.isArray(shiftsData) ? shiftsData : []),
-    [shiftsData],
-  );
-  const staffList: StaffMember[] = useMemo(
-    () => (Array.isArray(staffData) ? staffData : []),
-    [staffData],
-  );
-  const residents: Resident[] = useMemo(
-    () => (Array.isArray(residentsData) ? residentsData : []),
-    [residentsData],
-  );
+  const shifts: Shift[] = useMemo(() => (Array.isArray(shiftsData) ? shiftsData : []), [shiftsData]);
+  const staffList: StaffMember[] = useMemo(() => (Array.isArray(staffData) ? staffData : []), [staffData]);
+  const residents = useMemo(() => (Array.isArray(residentsData) ? residentsData : []), [residentsData]);
 
-  const days: DayColumnInfo[] = useMemo(
-    () =>
-      Array.from({ length: 7 }, (_, i) => {
-        const d = addDays(currentWeekStart, i);
-        return {
-          key: format(d, "yyyy-MM-dd"),
-          dayName: format(d, "EEE"),
-          dayNumber: format(d, "dd MMM"),
-          dateStr: format(d, "yyyy-MM-dd"),
-        };
-      }),
-    [currentWeekStart],
-  );
+  const days: DayColumnInfo[] = useMemo(() => {
+    return Array.from({ length: 7 }, (_, i) => {
+      const dayDate = addDays(currentWeekStart, i);
+      return {
+        key: `day-${i}`,
+        dayName: format(dayDate, "EEE"),
+        dayNumber: format(dayDate, "dd MMM"),
+        dateStr: format(dayDate, "yyyy-MM-dd"),
+      };
+    });
+  }, [currentWeekStart]);
 
   const weekShifts = useMemo(() => {
-    const dayDateSet = new Set(days.map((d) => d.dateStr));
-    return shifts.filter((s) => dayDateSet.has(getShiftDateStr(s)));
+    const weekDateStrings = new Set(days.map((d) => d.dateStr));
+    return shifts.filter((s) => {
+      const dStr = getShiftDateStr(s);
+      return dStr ? weekDateStrings.has(dStr) : false;
+    });
   }, [shifts, days]);
 
-  const metrics: RotaHeaderMetrics = useMemo(() => {
-    const commissionedHours = getCommissionedHours(schemes, residents);
-    const plannedHours = roundHours(
-      weekShifts.reduce((sum, s) => sum + getShiftPlannedHours(s), 0),
-    );
-    const deliveredHours = roundHours(
-      weekShifts.reduce((sum, s) => sum + getShiftDeliveredHours(s), 0),
-    );
-    const completionRate =
-      commissionedHours > 0
-        ? Math.min(100, Math.round((deliveredHours / commissionedHours) * 100))
-        : plannedHours > 0
-          ? Math.min(100, Math.round((deliveredHours / plannedHours) * 100))
-          : 0;
+  const metrics: RotaHeaderMetrics = useMemo(
+    () => computeRotaMetrics(schemes, residents, weekShifts),
+    [schemes, residents, weekShifts],
+  );
 
-    return {
-      peopleSupportedCount: residents.length,
-      commissionedHours,
-      deliveredHours,
-      plannedHours,
-      completionRate,
-    };
-  }, [schemes, residents, weekShifts]);
-
+  // Filter shifts based on active care type and day of week
   const filteredShifts = useMemo(() => {
-    if (activeCareType === "All Care Types") return weekShifts;
-    return weekShifts.filter((s) => s.careType === activeCareType);
-  }, [weekShifts, activeCareType]);
+    return weekShifts.filter((s) => {
+      if (filters.careType !== "All Care Types" && s.careType !== filters.careType) {
+        return false;
+      }
+      if (filters.dayOfWeek !== "all") {
+        const dStr = getShiftDateStr(s);
+        const matchDay = days.find((d) => d.dateStr === dStr);
+        if (matchDay) {
+          const fullDayName = format(new Date(matchDay.dateStr), "EEEE");
+          if (fullDayName !== filters.dayOfWeek) return false;
+        }
+      }
+      return true;
+    });
+  }, [weekShifts, filters.careType, filters.dayOfWeek, days]);
+
+  // Filter staff based on scheme, property, and staff filters
+  const filteredStaffList = useMemo(() => {
+    return staffList.filter((m) => {
+      const loc = resolveStaffLocation(m, schemes, properties);
+      if (filters.schemeId !== "all" && loc.schemeId !== filters.schemeId) return false;
+      if (filters.propertyId !== "all" && loc.propertyId !== filters.propertyId) return false;
+      if (filters.staffId !== "all" && m.id !== filters.staffId) return false;
+      return true;
+    });
+  }, [staffList, schemes, properties, filters.schemeId, filters.propertyId, filters.staffId]);
+
+  const draftShifts = useMemo(
+    () => weekShifts.filter((s) => s.status === "Draft" || !s.status),
+    [weekShifts],
+  );
+
+  const handlePublishRota = async () => {
+    if (draftShifts.length === 0) return;
+    try {
+      await Promise.all(
+        draftShifts.map((s) => updateShiftMutation.mutateAsync({ id: s.id, status: "Published" })),
+      );
+      toast({ title: "Rota published successfully", description: `${draftShifts.length} shift(s) published.` });
+    } catch {
+      toast({ title: "Publication failed", description: "Could not publish shifts. Check for conflicts.", variant: "destructive" });
+    }
+  };
 
   const handleSaveShiftBlock = async (formData: ShiftBlockFormData) => {
-    const residentIds = formData.residentIds ?? [];
-
-    const resolveShiftDateTimes = (baseDateStr: string, windowStr?: string, durationHours?: number) => {
-      let startDt = new Date(`${baseDateStr}T08:00:00Z`);
-      let endDt = new Date(`${baseDateStr}T16:00:00Z`);
-
-      const windowMatch = windowStr?.match(/(\d{1,2}):(\d{2})\s*[-–—]\s*(\d{1,2}):(\d{2})/);
-      if (windowMatch) {
-        const [, sh, sm, eh, em] = windowMatch;
-        const startH = sh!.padStart(2, "0");
-        const startM = sm!;
-        const endH = eh!.padStart(2, "0");
-        const endM = em!;
-        startDt = new Date(`${baseDateStr}T${startH}:${startM}:00Z`);
-        const isOvernight =
-          Number(endH) < Number(startH) ||
-          (Number(endH) === Number(startH) && Number(endM) <= Number(startM));
-        if (isOvernight) {
-          const nextDay = addDays(startDt, 1);
-          endDt = new Date(`${format(nextDay, "yyyy-MM-dd")}T${endH}:${endM}:00Z`);
-        } else {
-          endDt = new Date(`${baseDateStr}T${endH}:${endM}:00Z`);
-        }
-      } else if (durationHours && durationHours > 0) {
-        endDt = new Date(startDt.getTime() + durationHours * 3600 * 1000);
-      }
-      return { startTime: startDt.toISOString(), endTime: endDt.toISOString() };
-    };
-
-    if (editingShift) {
-      const shiftDate = getShiftDateStr(editingShift) || format(new Date(editingShift.startTime), "yyyy-MM-dd");
-      const { startTime, endTime } = resolveShiftDateTimes(shiftDate, formData.shiftWindow, formData.durationHours);
-      await updateShiftMutation.mutateAsync({
-        id: editingShift.id,
-        careType: formData.careType,
-        shiftWindow: formData.shiftWindow,
-        durationHours: formData.durationHours,
-        notes: formData.handoverNotes,
-        residentIds,
-        residentAssignmentConfirmed: true,
-        startTime,
-        endTime,
-      });
-      setEditingShift(null);
-    } else if (slotToAdd) {
-      const { startTime, endTime } = resolveShiftDateTimes(slotToAdd.day.dateStr, formData.shiftWindow, formData.durationHours);
-      await createShiftMutation.mutateAsync({
-        status: "Published",
-        startTime,
-        endTime,
-        careType: formData.careType,
-        shiftWindow: formData.shiftWindow,
-        durationHours: formData.durationHours,
-        notes: formData.handoverNotes,
-        userIds: [slotToAdd.staff.id],
-        residentIds,
-        residentAssignmentConfirmed: true,
-      });
-      setSlotToAdd(null);
-    }
+    await executeSaveShiftBlock({ formData, editingShift, slotToAdd, createShiftMutation, updateShiftMutation });
+    setEditingShift(null);
+    setSlotToAdd(null);
   };
 
   if (isShiftsLoading || isStaffLoading) {
@@ -230,55 +192,66 @@ export function RotaContainer(): React.JSX.Element {
     );
   }
 
+  // When tab=attendance is active, render Attendance View (Image 5)
+  if (activeView === "attendance") {
+    return (
+      <AttendanceView
+        shifts={shifts}
+        staff={staffList}
+        schemes={schemes}
+        properties={properties}
+      />
+    );
+  }
+
   const selectedMonth = format(currentWeekStart, "MMMM yyyy");
   const selectedWeek = `${format(currentWeekStart, "dd MMM")} - ${format(addDays(currentWeekStart, 6), "dd MMM yyyy")}`;
-
-  const reassignStaffData = reassignStaff
-    ? (() => {
-        const loc = resolveStaffLocation(reassignStaff, schemes, properties);
-        return {
-          id: reassignStaff.id,
-          fullName: reassignStaff.fullName,
-          email: reassignStaff.email,
-          roleName: reassignStaff.role?.name,
-          currentScheme: loc.schemeName ?? undefined,
-          currentProperty: loc.propertyName ?? undefined,
-          assignmentType: reassignStaff.contractType ?? undefined,
-        };
-      })()
-    : null;
 
   return (
     <div className="space-y-6 pb-12 font-sans animate-in fade-in duration-300">
       <SupportHoursRotaHeader
         metrics={metrics}
         activeView={activeView}
-        onViewChange={handleViewChange}
-        activeCareType={activeCareType}
-        onCareTypeChange={setActiveCareType}
         selectedMonth={selectedMonth}
         selectedWeek={selectedWeek}
+        draftShiftCount={draftShifts.length}
+        onPublishRota={handlePublishRota}
+        isPublishing={updateShiftMutation.isPending}
         onCreateShift={() => {
-          if (staffList[0] && days[0]) {
-            setSlotToAdd({ staff: staffList[0], day: days[0] });
-          }
+          const todayDateStr = format(new Date(), "yyyy-MM-dd");
+          const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
+          if (staffList[0] && targetDay) setSlotToAdd({ staff: staffList[0], day: targetDay });
         }}
         onExport={() => typeof window !== "undefined" && window.print()}
+      />
+
+      <RotaUnifiedFilterBar
+        activeView={activeView}
+        onViewChange={handleViewChange}
+        filters={filters}
+        onFilterChange={(updates) => setFilters((prev) => ({ ...prev, ...updates }))}
+        onResetFilters={() => setFilters(INITIAL_FILTERS)}
+        schemes={schemes}
+        properties={properties}
+        staff={staffList}
       />
 
       {activeView === "rota" && (
         <>
           <WeeklyRotaScheduleTable
             days={days}
-            staffList={staffList}
+            staffList={filteredStaffList}
             shifts={filteredShifts}
             schemes={schemes}
             properties={properties}
-            activeCareTypeFilter={activeCareType}
+            activeCareTypeFilter={filters.careType}
+            currentDate={currentWeekStart}
+            onPreviousWeek={() => setCurrentWeekStart((prev) => subWeeks(prev, 1))}
+            onNextWeek={() => setCurrentWeekStart((prev) => addWeeks(prev, 1))}
+            onCurrentWeek={() => setCurrentWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
+            onSelectDate={(d) => setCurrentWeekStart(startOfWeek(d, { weekStartsOn: 1 }))}
             onSelectShift={(shift, staffName, dayLabel) => {
-              const matchedStaff = staffList.find(
-                (m) => m.fullName === staffName,
-              );
+              const matchedStaff = staffList.find((m) => m.fullName === staffName);
               setDetailsShift(shift);
               setDetailsContext({
                 staffName,
@@ -313,7 +286,10 @@ export function RotaContainer(): React.JSX.Element {
           staff={staffList}
           residents={residents}
           days={days}
-          activeCareType={activeCareType}
+          activeCareType={filters.careType}
+          schemeFilter={filters.schemeId}
+          propertyFilter={filters.propertyId}
+          staffFilter={filters.staffId}
         />
       )}
 
@@ -323,55 +299,34 @@ export function RotaContainer(): React.JSX.Element {
           properties={properties}
           staff={staffList}
           shifts={weekShifts}
-          activeCareType={activeCareType}
+          activeCareType={filters.careType}
+          schemeFilter={filters.schemeId}
+          propertyFilter={filters.propertyId}
+          staffFilter={filters.staffId}
           onReassignStaff={(staff) => setReassignStaff(staff)}
         />
       )}
 
-      <ShiftDetailsModal
-        open={Boolean(detailsShift)}
-        onOpenChange={(open) => !open && setDetailsShift(null)}
-        shift={detailsShift}
-        staffName={detailsContext.staffName}
-        staffRole={detailsContext.staffRole}
-        dayLabel={detailsContext.dayLabel}
-        residents={residents}
-        schemes={schemes}
-        properties={properties}
-        onEditShift={(shift) => {
+      <RotaModalsContainer
+        detailsShift={detailsShift}
+        onCloseDetails={() => setDetailsShift(null)}
+        detailsContext={detailsContext}
+        onEditFromDetails={(shift) => {
           setDetailsShift(null);
           setEditingShift(shift);
         }}
-      />
-
-      <ModifyShiftBlockModal
-        open={Boolean(editingShift || slotToAdd)}
-        onOpenChange={(open) => {
-          if (!open) {
-            setEditingShift(null);
-            setSlotToAdd(null);
-          }
+        editingShift={editingShift}
+        slotToAdd={slotToAdd}
+        onCloseModify={() => {
+          setEditingShift(null);
+          setSlotToAdd(null);
         }}
-        shift={editingShift}
-        staffName={
-          editingShift ? detailsContext.staffName : slotToAdd?.staff.fullName
-        }
-        dayLabel={
-          editingShift
-            ? detailsContext.dayLabel
-            : slotToAdd
-              ? `${slotToAdd.day.dayName} ${slotToAdd.day.dayNumber}`
-              : ""
-        }
+        onSaveShiftBlock={handleSaveShiftBlock}
+        isSavingShift={createShiftMutation.isPending || updateShiftMutation.isPending}
+        reassignStaff={reassignStaff}
+        onCloseReassign={() => setReassignStaff(null)}
+        staffList={staffList}
         residents={residents}
-        onSave={handleSaveShiftBlock}
-        isSaving={updateShiftMutation.isPending || createShiftMutation.isPending}
-      />
-
-      <ReassignStaffModal
-        open={Boolean(reassignStaff)}
-        onOpenChange={(open) => !open && setReassignStaff(null)}
-        staff={reassignStaffData}
         schemes={schemes}
         properties={properties}
       />

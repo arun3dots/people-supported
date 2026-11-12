@@ -1,25 +1,66 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@repo/db";
 import { CreateLeaveRequestDTO, UpdateLeaveRequestStatusDTO } from "@repo/schema";
+import { ShiftRequestsService } from "../shift-requests.service";
 
 @Injectable()
 export class LeaveRequestService {
+  constructor(private readonly shiftRequestsService: ShiftRequestsService) { }
+
   async getAll(tenantId: string) {
-    return prisma.leaveRequest.findMany({
-      where: { tenantId },
-      include: {
-        staff: {
-          select: {
-            id: true,
-            fullName: true,
-            email: true,
-            role: { select: { name: true } },
-            profile: { select: { profilePhotoUrl: true, phoneNumber: true } },
+    const [leaveRequests, shiftLeaveRequests] = await Promise.all([
+      prisma.leaveRequest.findMany({
+        where: { tenantId },
+        include: {
+          staff: {
+            select: {
+              id: true,
+              fullName: true,
+              email: true,
+              role: { select: { name: true } },
+              profile: { select: { profilePhotoUrl: true, phoneNumber: true } },
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.shiftRequest.findMany({
+        where: { tenantId, type: "Leave" },
+        include: {
+          user: {
+            select: {
+              id: true,
+              fullName: true,
+              email: true,
+              role: { select: { name: true } },
+              profile: { select: { profilePhotoUrl: true, phoneNumber: true } },
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    const mappedShiftRequests = shiftLeaveRequests.map((sr) => ({
+      id: sr.id,
+      tenantId: sr.tenantId,
+      staffId: sr.userId,
+      type: "Annual Leave",
+      startDate: sr.startTime,
+      endDate: sr.endTime ?? sr.startTime,
+      reason: sr.reason,
+      status: sr.status,
+      adminNotes: sr.notes,
+      createdAt: sr.createdAt,
+      updatedAt: sr.updatedAt,
+      createdById: sr.userId,
+      updatedById: null,
+      staff: sr.user,
+    }));
+
+    return [...leaveRequests, ...mappedShiftRequests].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
   }
 
   async create(tenantId: string, userId: string, dto: CreateLeaveRequestDTO) {
@@ -56,17 +97,33 @@ export class LeaveRequestService {
       where: { id, tenantId },
     });
 
-    if (!existing) {
-      throw new NotFoundException(`Leave request not found`);
+    if (existing) {
+      return prisma.leaveRequest.update({
+        where: { id },
+        data: {
+          status: dto.status,
+          adminNotes: dto.adminNotes,
+          updatedById: userId,
+        },
+      });
     }
 
-    return prisma.leaveRequest.update({
-      where: { id },
-      data: {
-        status: dto.status,
-        adminNotes: dto.adminNotes,
-        updatedById: userId,
-      },
+    const shiftRequest = await prisma.shiftRequest.findFirst({
+      where: { id, tenantId, type: "Leave" },
+      select: { id: true },
     });
+
+    if (shiftRequest) {
+      const mappedStatus: "Pending" | "Approved" | "Rejected" =
+        dto.status === "Approved" ? "Approved" : "Rejected";
+      return this.shiftRequestsService.updateStatus(
+        id,
+        { status: mappedStatus, adminNotes: dto.adminNotes },
+        tenantId,
+        userId,
+      );
+    }
+
+    throw new NotFoundException(`Leave request not found`);
   }
 }

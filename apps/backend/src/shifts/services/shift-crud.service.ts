@@ -18,6 +18,10 @@ import {
   getUkDayBoundaries,
   getUkDayOfWeek,
 } from '../../common/utils/time.util';
+import {
+  assertShiftCompliance,
+  checkRestPeriodCompliance,
+} from './shift-compliance.util';
 
 @Injectable()
 export class ShiftCrudService {
@@ -54,10 +58,11 @@ export class ShiftCrudService {
       where: {
         tenantId,
         deletedAt: null,
+        status: { not: 'Cancelled' },
         ...(excludedShiftId ? { id: { not: excludedShiftId } } : {}),
         startTime: { lt: endTime },
         endTime: { gt: startTime },
-        assignments: { some: { userId: { in: userIds } } },
+        assignments: { some: { userId: { in: userIds }, deletedAt: null } },
       },
       select: { id: true },
     });
@@ -285,18 +290,30 @@ export class ShiftCrudService {
     const careTypeVal = (data as unknown as Record<string, unknown>)
       .careType as string | undefined;
     const isOffDay = careTypeVal === 'Off / Rest Day';
+    const isPersonSpecific =
+      careTypeVal === '1:1 Dedicated Support' ||
+      careTypeVal === '2:1 Dedicated Support';
+    const hasExplicitProperty = Boolean(wingId && wingId !== 'none');
 
     if (!isOffDay && rawUserIds.length > 0 && resIds.length === 0) {
-      const fallbackResident = await prisma.resident.findFirst({
-        where: { tenantId, deletedAt: null },
-        select: { id: true },
-      });
-      if (fallbackResident) {
-        resIds.push(fallbackResident.id);
-      } else {
+      if (isPersonSpecific) {
         throw new BadRequestException(
-          'At least one resident must be assigned when scheduling staff on a shift.',
+          'At least one person supported must be assigned for 1:1 or 2:1 support.',
         );
+      }
+      // Allow property-based shared support when a property/wing is specified
+      if (!hasExplicitProperty) {
+        const fallbackResident = await prisma.resident.findFirst({
+          where: { tenantId, deletedAt: null },
+          select: { id: true },
+        });
+        if (fallbackResident) {
+          resIds.push(fallbackResident.id);
+        } else {
+          throw new BadRequestException(
+            'At least one resident or property must be assigned when scheduling staff on a shift.',
+          );
+        }
       }
     }
 
@@ -380,6 +397,14 @@ export class ShiftCrudService {
         currentStart,
         currentEnd,
       );
+      await assertShiftCompliance({
+        tenantId,
+        userIds: rawUserIds,
+        residentIds: resIds,
+        startTime: currentStart,
+        endTime: currentEnd,
+        careType: careTypeVal,
+      });
       await this.ensureNoDuplicateResidentAssignment(
         tenantId,
         resIds,
@@ -389,26 +414,14 @@ export class ShiftCrudService {
         residentAssignmentConfirmed,
       );
 
-      // CQC Regulation 18 & Working Time Regulations rest interval check
-      let complianceWarning: string | null = null;
-      if (rawUserIds.length > 0) {
-        const minRestHours = 11;
-        const restWindowStart = new Date(
-          currentStart.getTime() - minRestHours * 3600 * 1000,
-        );
-        const priorShift = await prisma.shift.findFirst({
-          where: {
-            tenantId,
-            deletedAt: null,
-            assignments: { some: { userId: { in: rawUserIds } } },
-            endTime: { gte: restWindowStart, lte: currentStart },
-          },
-        });
-        if (priorShift) {
-          complianceWarning =
-            'Working Time Regulations alert: Less than 11 hours rest between shifts.';
-        }
-      }
+      // CQC Regulation 18 & Working Time Regulations rest interval check (before & after)
+      const complianceWarning = await checkRestPeriodCompliance({
+        tenantId,
+        userIds: rawUserIds,
+        startTime: currentStart,
+        endTime: currentEnd,
+        careType: careTypeVal,
+      });
 
       const shift = await prisma.shift.create({
         data: {
@@ -746,7 +759,19 @@ export class ShiftCrudService {
       );
     }
 
+    const effectiveCareType = (data.careType ?? existing.careType) as
+      | string
+      | undefined;
+    const isOffDay = effectiveCareType === 'Off / Rest Day';
+    const hasExplicitProperty = Boolean(
+      (wingId && wingId !== 'none') || existing.wingId,
+    );
+    const isSharedWithProperty =
+      effectiveCareType === 'Shared Care (Core Support)' && hasExplicitProperty;
+
     if (
+      !isOffDay &&
+      !isSharedWithProperty &&
       (residentIds !== undefined || assignedResidentIds !== undefined) &&
       resIds.length === 0 &&
       (rawUserIds ? rawUserIds.length > 0 : existing.assignments.length > 0)
@@ -811,6 +836,23 @@ export class ShiftCrudService {
       nextEnd,
       id,
     );
+    await assertShiftCompliance({
+      tenantId,
+      userIds: effectiveUserIds,
+      residentIds: resIds.length > 0 ? resIds : targetResIds,
+      startTime: nextStart,
+      endTime: nextEnd,
+      careType: (data.careType || existing.careType) as string | undefined,
+      excludedShiftId: id,
+    });
+    const updateComplianceWarning = await checkRestPeriodCompliance({
+      tenantId,
+      userIds: effectiveUserIds,
+      startTime: nextStart,
+      endTime: nextEnd,
+      careType: (data.careType || existing.careType) as string | undefined,
+      excludedShiftId: id,
+    });
     await this.ensureNoDuplicateResidentAssignment(
       tenantId,
       resIds,
@@ -834,6 +876,8 @@ export class ShiftCrudService {
             createdById: userId,
             assignedResidentIds: resIds,
             assignedRoomIds: roomIds,
+            flagCompliance: Boolean(updateComplianceWarning),
+            overrideReason: updateComplianceWarning || undefined,
           })),
         });
 

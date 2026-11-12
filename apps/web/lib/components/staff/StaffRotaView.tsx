@@ -96,7 +96,7 @@ export function StaffRotaView() {
   // Handle open Request Leave dialog
   const handleOpenLeaveDialog = () => {
     setTargetShiftForRequest(null);
-    setRequestDialogType(undefined);
+    setRequestDialogType("Leave");
     setIsRequestDialogOpen(true);
   };
 
