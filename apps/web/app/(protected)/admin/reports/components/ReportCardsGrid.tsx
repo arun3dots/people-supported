@@ -9,7 +9,6 @@ import {
   CalendarCheck,
   Receipt,
   AlertTriangle,
-  FileSpreadsheet,
   Download,
   FileText,
 } from "lucide-react";
@@ -26,69 +25,76 @@ export interface ReportDefinition {
   | "Operations";
   description: string;
   frequency: string;
-  formats: ("PDF" | "Excel" | "CSV")[];
+  formats: ("CSV")[];
+  detailHref: string;
   icon: React.ElementType;
 }
 
 export const REPORT_DEFINITIONS: ReportDefinition[] = [
   {
     id: "cqc-compliance",
-    title: "CQC Quality & Compliance Pack",
+    title: "CQC Quality & Compliance Pack (RM-01)",
     category: "Compliance & CQC",
     description:
-      "Statutory evidence binder including incident summaries, risk matrices, and care delivery records.",
+      "Combined statutory evidence log across incidents, safeguarding referrals, and complaints.",
     frequency: "Monthly / On-Demand",
-    formats: ["PDF", "Excel"],
+    formats: ["CSV"],
+    detailHref: "/admin/incidents",
     icon: ShieldCheck,
   },
   {
     id: "resident-occupancy",
-    title: "Occupancy & Admissions Ledger",
+    title: "Occupancy & Admissions Ledger (RM-13)",
     category: "Operations",
     description:
-      "Room utilisation, pending admissions, funding splits, and length-of-stay tracking.",
-    frequency: "Weekly",
-    formats: ["Excel", "CSV", "PDF"],
+      "Property, room and bed utilisation, void status, resident admissions, and funding splits.",
+    frequency: "Weekly / On-Demand",
+    formats: ["CSV"],
+    detailHref: "/admin/configuration/facility/properties",
     icon: Users,
   },
   {
     id: "medication-mar",
-    title: "eMAR Medication & Drug Rounds",
+    title: "eMAR Medication & Drug Rounds (NU-01)",
     category: "Clinical & Care",
     description:
-      "Medication administration compliance, omitted doses, PRN usage, and stock reconciliation.",
-    frequency: "Daily / Weekly",
-    formats: ["PDF", "Excel"],
+      "Medication round schedules, administration status, omitted doses, and PRN records.",
+    frequency: "Daily / On-Demand",
+    formats: ["CSV"],
+    detailHref: "/admin/residents",
     icon: Pill,
   },
   {
     id: "care-plan-reviews",
-    title: "Care Plan & Risk Review Matrix",
+    title: "Care Plan & Risk Review Matrix (RM-06)",
     category: "Clinical & Care",
     description:
-      "Upcoming and overdue care plan reviews, DNR status, and multidisciplinary assessments.",
-    frequency: "Monthly",
-    formats: ["PDF", "Excel"],
+      "Active care plan versions, review schedules, overdue reviews, and consent basis.",
+    frequency: "Monthly / On-Demand",
+    formats: ["CSV"],
+    detailHref: "/admin/care-plans",
     icon: ClipboardList,
   },
   {
     id: "staff-rota-attendance",
-    title: "Staff Rota, Hours & Agency Report",
+    title: "Staff Rota, Hours & Agency Report (RM-07)",
     category: "Staffing & HR",
     description:
-      "Scheduled vs worked hours, sickness absences, agency dependency, and overtime breakdown.",
-    frequency: "Weekly / Monthly",
-    formats: ["Excel", "CSV"],
+      "Scheduled shifts, care types, property allocations, durations, and assigned staff.",
+    frequency: "Weekly / On-Demand",
+    formats: ["CSV"],
+    detailHref: "/admin/staff/rota",
     icon: CalendarCheck,
   },
   {
     id: "finance-invoicing",
-    title: "Invoicing & Revenue Settlement",
+    title: "Invoicing & Revenue Settlement (AD-03)",
     category: "Finance & Billing",
     description:
-      "Fee billings, council contributions, private top-ups, and outstanding aged debtors.",
-    frequency: "Monthly",
-    formats: ["Excel", "PDF"],
+      "Resident fee invoices, issued/due dates, payment status, and settlement tracking.",
+    frequency: "Monthly / On-Demand",
+    formats: ["CSV"],
+    detailHref: "/admin/finance/invoices",
     icon: Receipt,
   },
   {
@@ -98,7 +104,8 @@ export const REPORT_DEFINITIONS: ReportDefinition[] = [
     description:
       "Room allocations, NEWS2 score, falls risk, nutrition MUST, Waterlow, and active clinical alerts.",
     frequency: "Weekly / On-Demand",
-    formats: ["CSV", "PDF"],
+    formats: ["CSV"],
+    detailHref: "/admin/residents",
     icon: ClipboardList,
   },
   {
@@ -108,7 +115,8 @@ export const REPORT_DEFINITIONS: ReportDefinition[] = [
     description:
       "Falls analysis, injury severity, CQC statutory notifications, and root-cause actions.",
     frequency: "Monthly / On-Demand",
-    formats: ["CSV", "PDF"],
+    formats: ["CSV"],
+    detailHref: "/admin/incidents",
     icon: AlertTriangle,
   },
   {
@@ -118,18 +126,9 @@ export const REPORT_DEFINITIONS: ReportDefinition[] = [
     description:
       "Acute deterioration, 999 ambulance transfers, SBAR triage notes, and post-fall reviews.",
     frequency: "Daily / On-Demand",
-    formats: ["CSV", "PDF"],
+    formats: ["CSV"],
+    detailHref: "/admin/escalations",
     icon: ShieldCheck,
-  },
-  {
-    id: "expenses-operations",
-    title: "Operational Costs & Supplies",
-    category: "Finance & Billing",
-    description:
-      "Medical consumables, catering spend, utilities, and vendor invoice settlements.",
-    frequency: "Monthly",
-    formats: ["Excel", "CSV"],
-    icon: FileSpreadsheet,
   },
 ];
 
@@ -233,9 +232,7 @@ export function ReportCardsGrid({
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  onClick={() =>
-                    onGenerateReport(report, report.formats[0] ?? "PDF")
-                  }
+                  onClick={() => onGenerateReport(report, "CSV")}
                   className="rounded-xl h-9 px-3 text-md font-semibold gap-1.5 shadow-none border-slate-200 bg-white hover:bg-slate-50"
                 >
                   <Download className="size-3.5" />

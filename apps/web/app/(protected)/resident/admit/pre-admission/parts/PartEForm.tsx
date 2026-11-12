@@ -72,7 +72,7 @@ export function PartEForm({ value, onChange, errors }: PartFormProps<PreAdmissio
   return (
     <div className="space-y-6 font-sans">
       <PartCard
-        title="G · Capacity for the decision to move"
+        title="Capacity for the decision to move"
         description="Record the capacity assessment and, if they lack capacity, the best-interests decision."
       >
         <FieldGrid cols={3}>
@@ -156,7 +156,7 @@ export function PartEForm({ value, onChange, errors }: PartFormProps<PreAdmissio
         <TextAreaField label="Their wishes" placeholder="e.g. Accepts the move; wants to be near family" value={value.wishes} onChange={(v) => onChange({ wishes: v })} />
       </PartCard>
 
-      <PartCard title="G · Deprivation of Liberty (DoLS) screen">
+      <PartCard title="Deprivation of Liberty (DoLS) screen">
         <FieldGrid cols={3}>
           <SelectField
             label="Outcome"
@@ -170,7 +170,7 @@ export function PartEForm({ value, onChange, errors }: PartFormProps<PreAdmissio
         <TextAreaField label="Rationale" value={dols.rationale} onChange={(v) => setDols({ rationale: v })} />
       </PartCard>
 
-      <PartCard title="G · Consents">
+      <PartCard title="Consents">
         <RepeatableList<Consent>
           items={value.consents}
           onChange={(consents) => onChange({ consents })}

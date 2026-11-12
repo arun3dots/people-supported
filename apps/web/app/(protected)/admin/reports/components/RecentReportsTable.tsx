@@ -13,7 +13,8 @@ import {
   Pagination,
   Text,
 } from "@repo/ui/components/ui";
-import { Download, FileText, CheckCircle2, History } from "lucide-react";
+import { Download, FileText, CheckCircle2, History, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export interface GeneratedReportLog {
   id: string;
@@ -21,9 +22,12 @@ export interface GeneratedReportLog {
   category: string;
   generatedDate: string;
   generatedBy: string;
-  format: "PDF" | "Excel" | "CSV" | string;
+  format: "CSV" | string;
   status: "Ready" | "Generating" | "Failed" | string;
   fileSize: string;
+  filename?: string;
+  content?: string;
+  detailHref?: string;
 }
 
 export interface RecentReportsTableProps {
@@ -154,15 +158,26 @@ export function RecentReportsTable({
 
                 {/* Action */}
                 <TableCell className="py-3.5 text-right">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onDownload(log)}
-                    className="rounded-xl gap-1.5 shadow-none border-slate-200 bg-white hover:bg-slate-50 cursor-pointer"
-                  >
-                    <Download className="size-3.5" />
-                    Download
-                  </Button>
+                  <div className="inline-flex items-center gap-2">
+                    {log.detailHref && (
+                      <Link
+                        href={log.detailHref}
+                        className="inline-flex items-center gap-1.5 rounded-xl h-8 px-3 text-sm font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                      >
+                        <ExternalLink className="size-3.5" />
+                        View Details
+                      </Link>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onDownload(log)}
+                      className="rounded-xl gap-1.5 shadow-none border-slate-200 bg-white hover:bg-slate-50 cursor-pointer"
+                    >
+                      <Download className="size-3.5" />
+                      Download
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))

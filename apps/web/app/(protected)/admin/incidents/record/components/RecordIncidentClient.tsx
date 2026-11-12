@@ -42,7 +42,6 @@ export function RecordIncidentClient({
   );
   const [residentId, setResidentId] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [bedNumber, setBedNumber] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [harmLevel, setHarmLevel] = useState("");
@@ -68,20 +67,23 @@ export function RecordIncidentClient({
   // Queries & Mutations
   const { data: assignedResidents } = useGetResidentsQuery({
     assignedOnly: true,
+    status: "Active",
   });
   const { data: allResidents } = useGetResidentsQuery({
     all: true,
     includeAll: true,
+    status: "Active",
   });
   const residents = useMemo(() => {
-    const isNonDraft = (r: Resident) =>
-      !r.isDraft && r.status !== "Draft" && r.status !== "draft" && r.status !== "Discharged";
-    const assigned = (assignedResidents ?? []).filter(isNonDraft);
+    const isActiveTenant = (r: Resident) =>
+      (r.status || "").toLowerCase() === "active";
+    const assigned = (assignedResidents ?? []).filter(isActiveTenant);
     const assignedIds = new Set(
       assigned.map((resident: Resident) => resident.id),
     );
     const otherResidents = (allResidents ?? []).filter(
-      (resident: Resident) => !assignedIds.has(resident.id) && isNonDraft(resident),
+      (resident: Resident) =>
+        !assignedIds.has(resident.id) && isActiveTenant(resident),
     );
     otherResidents.sort((a, b) => (a.fullName || "").localeCompare(b.fullName || ""));
     return [...assigned, ...otherResidents];
@@ -93,13 +95,12 @@ export function RecordIncidentClient({
       if (!exists) {
         setResidentId("");
         setRoomNumber("");
-        setBedNumber("");
       }
     }
   }, [residentId, residents]);
   const createIncidentMutation = useCreateIncidentMutation();
 
-  // Derive unique rooms and beds from residents for dropdown options
+  // Derive unique rooms from active tenants for dropdown options
   const roomOptions = useMemo(() => {
     if (!residents) return [];
     const seen = new Set<string>();
@@ -114,31 +115,10 @@ export function RecordIncidentClient({
       .sort();
   }, [residents]);
 
-  const bedOptions = useMemo(() => {
-    if (!residents) return [];
-    const seen = new Set<string>();
-    return residents
-      .filter((r: Resident) => r.bed?.number)
-      .map((r: Resident) => r.bed!.number as string)
-      .filter((bn: string) => {
-        if (seen.has(bn)) return false;
-        seen.add(bn);
-        return true;
-      })
-      .sort();
-  }, [residents]);
-
   const handleResidentChange = (val: string) => {
     setResidentId(val);
     const selectedResident = residents?.find((r: Resident) => r.id === val);
-    if (selectedResident) {
-      if (selectedResident.bed?.room?.roomNumber) {
-        setRoomNumber(selectedResident.bed.room.roomNumber);
-      }
-      if (selectedResident.bed?.number) {
-        setBedNumber(selectedResident.bed.number);
-      }
-    }
+    setRoomNumber(selectedResident?.bed?.room?.roomNumber ?? "");
   };
 
   const toggleAction = (action: string) => {
@@ -254,6 +234,15 @@ export function RecordIncidentClient({
       return;
     }
 
+    if (!residentId) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: "Please select a Tenant Name",
+      });
+      return;
+    }
+
     if (!category) {
       toast({
         variant: "destructive",
@@ -287,9 +276,8 @@ export function RecordIncidentClient({
         category,
         incidentDate,
         incidentTime,
-        residentId: residentId || undefined,
+        residentId,
         roomNumber,
-        bedNumber,
         location,
         harmLevel,
         severity: severity as "High" | "Medium" | "Low",
@@ -383,8 +371,6 @@ export function RecordIncidentClient({
           onResidentChange={handleResidentChange}
           roomNumber={roomNumber}
           setRoomNumber={setRoomNumber}
-          bedNumber={bedNumber}
-          setBedNumber={setBedNumber}
           location={location}
           setLocation={setLocation}
           category={category}
@@ -395,7 +381,6 @@ export function RecordIncidentClient({
           setSeverity={setSeverity}
           residents={residents}
           roomOptions={roomOptions}
-          bedOptions={bedOptions}
         />
 
         <div className="border-t border-slate-200/70" />

@@ -305,6 +305,7 @@ export function mapDraftToFormData(draft: any): AdmissionFormData {
     assignedBedId: admission.assignedBedId || draft.bed?.id || "",
     roomNumber: draft.bed?.room?.roomNumber || draft.roomNumber || "",
     roomType: admission.roomTypePreference || draft.roomType || "",
+    landlord: draft.supportedLivingDetails?.tenancy?.landlord || "",
     moveInDateTime: admission.moveInDateTime
       ? new Date(admission.moveInDateTime).toISOString().slice(0, 16)
       : "",

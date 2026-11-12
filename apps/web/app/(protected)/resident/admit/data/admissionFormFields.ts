@@ -248,6 +248,7 @@ export const DEFAULT_ADMISSION_FORM_DATA: AdmissionFormData = {
   assignedBedId: "",
   roomNumber: "",
   roomType: "",
+  landlord: "",
   moveInDateTime: "",
   roommate: "",
   belongings: [],

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
+  cleanAreaSource,
   getCareArea,
   type AssessmentAreaKey,
   type AssessmentNeedDTO,
@@ -90,7 +91,10 @@ export function CarePlanModal({
   const areaLabel =
     areaMeta?.label ?? need?.customAreaLabel ?? existingPlan?.area;
   const areaSource =
-    areaMeta?.source ?? need?.source ?? existingPlan?.content.source ?? "Custom area";
+    areaMeta?.source ??
+    cleanAreaSource(areaKey ?? "", need?.source) ??
+    cleanAreaSource(areaKey ?? "", existingPlan?.content.source) ??
+    "Custom area";
   const isAgreed = existingPlan?.status === "Agreed" || existingPlan?.agreedAt != null;
   const [planName, setPlanName] = useState("");
   const [level, setLevel] = useState<SupportLevel | null>(null);
@@ -112,9 +116,13 @@ export function CarePlanModal({
     );
     setContent(
       existingPlan?.content
-        ? { ...existingPlan.content, found: need?.found ?? existingPlan.content.found }
+        ? {
+            ...existingPlan.content,
+            source: cleanAreaSource(areaKey, existingPlan.content.source),
+            found: need?.found ?? existingPlan.content.found,
+          }
         : emptyContent(
-            meta?.source ?? need?.source ?? "Custom area",
+            meta?.source ?? cleanAreaSource(areaKey, need?.source) ?? "Custom area",
             need?.found ?? null,
           ),
     );

@@ -89,7 +89,7 @@ export function PreAdmissionWizard() {
         )}
         {step === 5 && (
           <PartCard
-            title="D · Risk assessment"
+            title="Risk assessment"
             description="Complete clinical risk assessment tools for this resident. Assessments recorded here automatically sync to their care profile."
           >
             {w.residentId ? (

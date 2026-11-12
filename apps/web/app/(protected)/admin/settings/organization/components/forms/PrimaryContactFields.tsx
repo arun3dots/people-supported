@@ -63,7 +63,7 @@ export function PrimaryContactFields({
           <Input
             id="primaryContactPhone"
             type="tel"
-            placeholder="e.g. +44 7700 900888"
+            placeholder="e.g. 7700 900888"
             {...register("primaryContactPhone")}
             errorMessage={errors.primaryContactPhone?.message}
           />

@@ -6,6 +6,12 @@ import {
   EXPORT_INCIDENTS_REPORT,
   EXPORT_RESIDENTS_REPORT,
   EXPORT_ESCALATIONS_REPORT,
+  EXPORT_OCCUPANCY_REPORT,
+  EXPORT_MEDICATIONS_REPORT,
+  EXPORT_CARE_PLANS_REPORT,
+  EXPORT_SHIFTS_REPORT,
+  EXPORT_CQC_COMPLIANCE_REPORT,
+  EXPORT_INVOICES_REPORT,
 } from "@repo/endpoints";
 import { ReportCsvResponseDTO } from "@repo/schema";
 
@@ -19,6 +25,18 @@ export function triggerCsvDownload(filename: string, content: string): void {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function useCsvExportMutation(endpointKey: string) {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await makeAPICall<ReportCsvResponseDTO>(endpointKey, {});
+      if (response?.content && response?.filename) {
+        triggerCsvDownload(response.filename, response.content);
+      }
+      return response;
+    },
+  });
 }
 
 export function useExportIncidentsReportMutation() {
@@ -40,31 +58,33 @@ export function useExportIncidentsReportMutation() {
 }
 
 export function useExportResidentsReportMutation() {
-  return useMutation({
-    mutationFn: async () => {
-      const response = await makeAPICall<ReportCsvResponseDTO>(
-        EXPORT_RESIDENTS_REPORT,
-        {},
-      );
-      if (response?.content && response?.filename) {
-        triggerCsvDownload(response.filename, response.content);
-      }
-      return response;
-    },
-  });
+  return useCsvExportMutation(EXPORT_RESIDENTS_REPORT);
 }
 
 export function useExportEscalationsReportMutation() {
-  return useMutation({
-    mutationFn: async () => {
-      const response = await makeAPICall<ReportCsvResponseDTO>(
-        EXPORT_ESCALATIONS_REPORT,
-        {},
-      );
-      if (response?.content && response?.filename) {
-        triggerCsvDownload(response.filename, response.content);
-      }
-      return response;
-    },
-  });
+  return useCsvExportMutation(EXPORT_ESCALATIONS_REPORT);
+}
+
+export function useExportOccupancyReportMutation() {
+  return useCsvExportMutation(EXPORT_OCCUPANCY_REPORT);
+}
+
+export function useExportMedicationsReportMutation() {
+  return useCsvExportMutation(EXPORT_MEDICATIONS_REPORT);
+}
+
+export function useExportCarePlansReportMutation() {
+  return useCsvExportMutation(EXPORT_CARE_PLANS_REPORT);
+}
+
+export function useExportShiftsReportMutation() {
+  return useCsvExportMutation(EXPORT_SHIFTS_REPORT);
+}
+
+export function useExportCqcComplianceReportMutation() {
+  return useCsvExportMutation(EXPORT_CQC_COMPLIANCE_REPORT);
+}
+
+export function useExportInvoicesReportMutation() {
+  return useCsvExportMutation(EXPORT_INVOICES_REPORT);
 }

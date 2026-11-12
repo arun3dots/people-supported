@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
-  shiftForTime,
   type CareTaskDefinitionDTO,
   type CareTaskRecurrenceDTO,
-  type CareTaskRole,
 } from "@repo/schema";
-import { Button, Input, Label, Switch } from "@repo/ui/components/ui";
+import { Button, Switch } from "@repo/ui/components/ui";
 import {
   useCreateCareTaskMutation,
   useUpdateCareTaskMutation,
 } from "../../../../../lib/queries/care-journey";
-import { SelectField } from "../../admit/pre-admission/shared/fields";
+import {
+  CarePlanTaskDialog,
+  type TaskFormData,
+} from "../../../../shared/components/care-plan/CarePlanTaskDialog";
+import { careJourneyTaskFromForm } from "./careJourneyTaskForm";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
@@ -37,39 +39,14 @@ export function PlanTasksEditor({
 }: PlanTasksEditorProps) {
   const create = useCreateCareTaskMutation(residentId);
   const update = useUpdateCareTaskMutation(residentId);
-  const [adding, setAdding] = useState(false);
-  const [title, setTitle] = useState("");
-  const [time, setTime] = useState("08:00");
-  const [role, setRole] = useState<CareTaskRole>("Carer");
-  const [weekly, setWeekly] = useState(false);
-  const [days, setDays] = useState<number[]>([]);
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
-  const reset = () => {
-    setAdding(false);
-    setTitle("");
-    setTime("08:00");
-    setRole("Carer");
-    setWeekly(false);
-    setDays([]);
-  };
-
-  const valid =
-    title.trim().length > 0 &&
-    /^([01]\d|2[0-3]):[0-5]\d$/.test(time) &&
-    (!weekly || days.length > 0);
-
-  const submit = async () => {
+  const submit = async (form: TaskFormData) => {
     await create.mutateAsync({
       planId,
-      data: {
-        title: title.trim(),
-        time,
-        role,
-        shift: shiftForTime(time),
-        recurrence: weekly ? { type: "weekly", days } : { type: "daily", days: [] },
-      },
+      data: careJourneyTaskFromForm(form),
     });
-    reset();
+    setTaskDialogOpen(false);
   };
 
   return (
@@ -123,87 +100,28 @@ export function PlanTasksEditor({
         )}
       </ul>
 
-      {!isAgreed && !adding ? (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setAdding(true)}
-          className="rounded-xl font-semibold shadow-none"
-        >
-          <Plus className="size-4" />
-          Add task
-        </Button>
-      ) : !isAgreed ? (
-        <div className="bg-white rounded-xl border border-slate-200/80 p-4 space-y-2">
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_8rem_8rem] gap-x-4 gap-y-1.5">
-            <div className="space-y-1.5">
-              <Label required>Task</Label>
-              <Input
-                list={`steps-${planId}`}
-                placeholder="e.g. Check heels and sacrum"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <datalist id={`steps-${planId}`}>
-                {steps.map((s) => (
-                  <option key={s} value={s} />
-                ))}
-              </datalist>
-            </div>
-            <div className="space-y-1.5">
-              <Label required>Time</Label>
-              <Input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
-            </div>
-            <SelectField
-              label="Who"
-              value={role}
-              options={["Carer", "Nurse"]}
-              onChange={(v) => setRole(v as CareTaskRole)}
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="flex items-center gap-2 text-md text-slate-700">
-              <Switch checked={weekly} onCheckedChange={setWeekly} />
-              Only on certain days
-            </label>
-            {weekly &&
-              WEEKDAYS.map((label, index) => (
-                <button
-                  key={label}
-                  type="button"
-                  aria-pressed={days.includes(index)}
-                  onClick={() =>
-                    setDays((prev) =>
-                      prev.includes(index)
-                        ? prev.filter((d) => d !== index)
-                        : [...prev, index],
-                    )
-                  }
-                  className="px-3 py-1 rounded-full border text-md font-medium border-slate-300 text-slate-700 aria-pressed:bg-emerald-800 aria-pressed:text-white aria-pressed:border-emerald-800"
-                >
-                  {label}
-                </button>
-              ))}
-          </div>
-
-          <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="outline" onClick={reset} className="rounded-xl shadow-none">
-              <X className="size-4" />
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              variant="primary"
-              disabled={!valid || create.isPending}
-              onClick={() => void submit()}
-              className="rounded-xl font-semibold shadow-none"
-            >
-              {create.isPending ? "Adding…" : "Add task"}
-            </Button>
-          </div>
-        </div>
-      ) : null}
+      {!isAgreed && (
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setTaskDialogOpen(true)}
+            className="rounded-xl font-semibold shadow-none"
+          >
+            <Plus className="size-4" />
+            Add task
+          </Button>
+          <CarePlanTaskDialog
+            isOpen={taskDialogOpen}
+            onClose={() => setTaskDialogOpen(false)}
+            onSubmit={(form) => void submit(form)}
+            residentId={residentId}
+            carePlanId={planId}
+            careJourneyMode
+            isLoading={create.isPending}
+          />
+        </>
+      )}
     </div>
   );
 }

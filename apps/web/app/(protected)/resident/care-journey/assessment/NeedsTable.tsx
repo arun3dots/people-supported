@@ -88,7 +88,7 @@ export function NeedsTable({
                 </span>
               </TableHead>
               <TableHead className="w-56 text-md font-bold text-slate-800">
-                Becomes care plan
+                Becomes support plan
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -127,9 +127,11 @@ export function NeedsTable({
                     <Text size="md" weight="bold" className="text-slate-800">
                       {area.label}
                     </Text>
-                    <Text size="md" className="text-slate-600">
-                      {area.source}
-                    </Text>
+                    {area.source && (
+                      <Text size="md" className="text-slate-600">
+                        {area.source}
+                      </Text>
+                    )}
                   </TableCell>
 
                   <TableCell className="py-3.5">
@@ -321,7 +323,7 @@ export function NeedsTable({
                         className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
                       >
                         <Plus className="size-4" />
-                        Add care plan
+                        Add Support plan
                       </Button>
                     )}
                   </TableCell>

@@ -34,7 +34,7 @@ export function PartCAllergiesSection({
 
   return (
     <PartCard
-      title="C · Allergies"
+      title="Allergies"
       description="Record all known drug, food, or environmental allergies and their reactions."
     >
       {errorMessage && (

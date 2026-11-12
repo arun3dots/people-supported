@@ -33,59 +33,23 @@ import {
   GeneratedReportLog,
 } from "./components/RecentReportsTable";
 import {
+  triggerCsvDownload,
   useExportIncidentsReportMutation,
   useExportResidentsReportMutation,
   useExportEscalationsReportMutation,
+  useExportOccupancyReportMutation,
+  useExportMedicationsReportMutation,
+  useExportCarePlansReportMutation,
+  useExportShiftsReportMutation,
+  useExportCqcComplianceReportMutation,
+  useExportInvoicesReportMutation,
 } from "../../../../lib/queries/reports";
 import { toast } from "@repo/ui/components/ui";
-
-const INITIAL_LOGS: GeneratedReportLog[] = [
-  {
-    id: "rep-101",
-    name: "CQC Quality & Compliance Pack - Aug 2026",
-    category: "Compliance & CQC",
-    generatedDate: "21 Aug 2026, 09:30",
-    generatedBy: "Admin User",
-    format: "PDF",
-    status: "Ready",
-    fileSize: "4.2 MB",
-  },
-  {
-    id: "rep-102",
-    name: "Weekly eMAR Drug Rounds Reconciliation",
-    category: "Clinical & Care",
-    generatedDate: "20 Aug 2026, 17:45",
-    generatedBy: "Nurse Supervisor",
-    format: "Excel",
-    status: "Ready",
-    fileSize: "1.8 MB",
-  },
-  {
-    id: "rep-103",
-    name: "Resident Occupancy & Room Split Ledger",
-    category: "Operations",
-    generatedDate: "19 Aug 2026, 14:15",
-    generatedBy: "Admin User",
-    format: "CSV",
-    status: "Ready",
-    fileSize: "840 KB",
-  },
-  {
-    id: "rep-104",
-    name: "Monthly Billing & Aged Debtors Breakdown",
-    category: "Finance & Billing",
-    generatedDate: "18 Aug 2026, 11:20",
-    generatedBy: "Finance Officer",
-    format: "Excel",
-    status: "Ready",
-    fileSize: "2.1 MB",
-  },
-];
 
 export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
-  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>(INITIAL_LOGS);
+  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>([]);
 
   const filteredReports = REPORT_DEFINITIONS.filter((rep) => {
     const matchesSearch =
@@ -110,23 +74,36 @@ export default function ReportsPage() {
   const exportIncidentsMutation = useExportIncidentsReportMutation();
   const exportResidentsMutation = useExportResidentsReportMutation();
   const exportEscalationsMutation = useExportEscalationsReportMutation();
+  const exportOccupancyMutation = useExportOccupancyReportMutation();
+  const exportMedicationsMutation = useExportMedicationsReportMutation();
+  const exportCarePlansMutation = useExportCarePlansReportMutation();
+  const exportShiftsMutation = useExportShiftsReportMutation();
+  const exportCqcComplianceMutation = useExportCqcComplianceReportMutation();
+  const exportInvoicesMutation = useExportInvoicesReportMutation();
 
   const handleGenerateReport = async (
     report: ReportDefinition,
     format: "PDF" | "Excel" | "CSV"
   ) => {
     try {
-      let rowCount = 0;
-      if (report.id === "incidents-safeguarding") {
-        const res = await exportIncidentsMutation.mutateAsync({});
-        rowCount = res.rowCount;
-      } else if (report.id === "resident-clinical-risk") {
-        const res = await exportResidentsMutation.mutateAsync();
-        rowCount = res.rowCount;
-      } else if (report.id === "clinical-escalations") {
-        const res = await exportEscalationsMutation.mutateAsync();
-        rowCount = res.rowCount;
-      }
+      const runners: Record<
+        string,
+        () => Promise<{ filename: string; content: string; rowCount: number } | undefined>
+      > = {
+        "incidents-safeguarding": () => exportIncidentsMutation.mutateAsync({}),
+        "resident-clinical-risk": () => exportResidentsMutation.mutateAsync(),
+        "clinical-escalations": () => exportEscalationsMutation.mutateAsync(),
+        "resident-occupancy": () => exportOccupancyMutation.mutateAsync(),
+        "medication-mar": () => exportMedicationsMutation.mutateAsync(),
+        "care-plan-reviews": () => exportCarePlansMutation.mutateAsync(),
+        "staff-rota-attendance": () => exportShiftsMutation.mutateAsync(),
+        "cqc-compliance": () => exportCqcComplianceMutation.mutateAsync(),
+        "finance-invoicing": () => exportInvoicesMutation.mutateAsync(),
+      };
+
+      const run = runners[report.id];
+      const res = run ? await run() : undefined;
+      const rowCount = res?.rowCount ?? 0;
 
       const newLog: GeneratedReportLog = {
         id: `rep-${Date.now().toString().slice(-4)}`,
@@ -136,13 +113,16 @@ export default function ReportsPage() {
         generatedBy: "Admin User",
         format,
         status: "Ready",
-        fileSize: rowCount ? `${rowCount} records` : (format === "PDF" ? "3.4 MB" : "1.2 MB"),
+        fileSize: `${rowCount} records`,
+        filename: res?.filename,
+        content: res?.content,
+        detailHref: report.detailHref,
       };
       setReportLogs((prev) => [newLog, ...prev]);
 
       toast({
         title: "Report Generated",
-        description: `${report.title} exported successfully`,
+        description: `${report.title} (${rowCount} records) exported successfully`,
       });
     } catch {
       toast({
@@ -154,18 +134,14 @@ export default function ReportsPage() {
   };
 
   const handleDownload = (log: GeneratedReportLog) => {
-    const dummyBlob = new Blob(
-      [`Report Name: ${log.name}\nCategory: ${log.category}\nGenerated: ${log.generatedDate}`],
-      { type: "text/plain" }
-    );
-    const url = URL.createObjectURL(dummyBlob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${log.name.toLowerCase().replace(/[^a-z0-9]/g, "_")}.${log.format.toLowerCase()}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (log.content && log.filename) {
+      triggerCsvDownload(log.filename, log.content);
+      return;
+    }
+    toast({
+      title: "Re-generate Report",
+      description: "Please click Generate on the report card above to fetch fresh CSV data.",
+    });
   };
 
   const {
@@ -195,7 +171,7 @@ export default function ReportsPage() {
     {
       title: "Recent Exports",
       value: `${reportLogs.length} Generated`,
-      subtitle: "PDF, Excel & CSV outputs",
+      subtitle: "Real-time CSV data exports",
       icon: <Clock className="size-5 text-blue-700" />,
       subtitleColor: "text-blue-700 font-medium",
     },

@@ -165,7 +165,7 @@ export function AddPropertyRoomsSection({
   };
 
   return (
-    <div className="space-y-3 pt-2 border-t border-slate-200">
+    <div className="space-y-4 mt-4 pt-5 border-t border-slate-200">
       <div className="flex items-center justify-between">
         <div>
           <Text size="md" weight="semibold" className="text-slate-900">
@@ -187,7 +187,7 @@ export function AddPropertyRoomsSection({
         </Button>
       </div>
 
-      <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+      <div className="space-y-2">
         {rooms.map((room, idx) => (
           <Card
             key={idx}
@@ -195,7 +195,7 @@ export function AddPropertyRoomsSection({
             border="secondary"
             className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl [&_[data-slot=input-error]]:hidden"
           >
-            <div className="col-span-3">
+            <div className="col-span-4">
               <label className="text-md font-medium text-slate-600 block mb-0.5">
                 Unit / Room Name
               </label>
@@ -268,18 +268,7 @@ export function AddPropertyRoomsSection({
               />
             </div>
 
-            <div className="col-span-2 flex items-center justify-between pt-4 pl-1">
-              <label className="inline-flex items-center gap-1.5 text-md font-medium text-slate-700 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={Boolean(room.isAccessible)}
-                  onChange={(e) =>
-                    updateRoom(idx, { isAccessible: e.target.checked })
-                  }
-                  className="rounded border-slate-300 text-primary focus:ring-primary"
-                />
-                Accessible
-              </label>
+            <div className="col-span-1 flex items-center justify-end pt-5">
               {rooms.length > 1 && (
                 <button
                   type="button"

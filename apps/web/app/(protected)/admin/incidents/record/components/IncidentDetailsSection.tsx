@@ -29,8 +29,6 @@ interface IncidentDetailsSectionProps {
   onResidentChange: (val: string) => void;
   roomNumber: string;
   setRoomNumber: (val: string) => void;
-  bedNumber: string;
-  setBedNumber: (val: string) => void;
   location: string;
   setLocation: (val: string) => void;
   category: string;
@@ -41,7 +39,6 @@ interface IncidentDetailsSectionProps {
   setSeverity: (val: "High" | "Medium" | "Low" | "") => void;
   residents?: Resident[];
   roomOptions: string[];
-  bedOptions: string[];
 }
 
 export function IncidentDetailsSection({
@@ -55,8 +52,6 @@ export function IncidentDetailsSection({
   onResidentChange,
   roomNumber,
   setRoomNumber,
-  bedNumber,
-  setBedNumber,
   location,
   setLocation,
   category,
@@ -67,7 +62,6 @@ export function IncidentDetailsSection({
   setSeverity,
   residents,
   roomOptions,
-  bedOptions,
 }: IncidentDetailsSectionProps) {
   return (
     <div className="space-y-5 font-sans">
@@ -116,28 +110,28 @@ export function IncidentDetailsSection({
         </div>
       </div>
 
-      {/* Row 2: Resident Name, Room Number, Bed Number */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+      {/* Row 2: Tenant Name, Room Number */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
         <div className="flex flex-col gap-1.5">
-          <Label required>Resident Name</Label>
+          <Label required>Tenant Name</Label>
           <Select value={residentId} onValueChange={onResidentChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
               {(() => {
-                const nonDraft = residents?.filter(
-                  (r: Resident) => !r.isDraft && r.status !== "Draft" && r.status !== "draft"
+                const activeTenants = residents?.filter(
+                  (r: Resident) => (r.status || "").toLowerCase() === "active",
                 );
-                return nonDraft && nonDraft.length > 0 ? (
-                  nonDraft.map((r: Resident) => (
+                return activeTenants && activeTenants.length > 0 ? (
+                  activeTenants.map((r: Resident) => (
                     <SelectItem key={r.id} value={r.id}>
                       {r.fullName}
                     </SelectItem>
                   ))
                 ) : (
                   <SelectItem value="__none" disabled>
-                    No residents available
+                    No active tenants available
                   </SelectItem>
                 );
               })()}
@@ -161,28 +155,6 @@ export function IncidentDetailsSection({
               ) : (
                 <SelectItem value="__none" disabled>
                   No rooms found
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <Label>Bed Number</Label>
-          <Select value={bedNumber} onValueChange={setBedNumber}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              {bedOptions.length > 0 ? (
-                bedOptions.map((bn) => (
-                  <SelectItem key={bn} value={bn}>
-                    {/^bed\b/i.test(bn.trim()) ? bn.trim() : `Bed ${bn.trim()}`}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="__none" disabled>
-                  No beds found
                 </SelectItem>
               )}
             </SelectContent>

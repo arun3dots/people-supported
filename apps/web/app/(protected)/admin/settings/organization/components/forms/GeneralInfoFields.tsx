@@ -88,7 +88,7 @@ export function GeneralInfoFields({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Supported Living">Supported Living</SelectItem>
-              <SelectItem value="Residential Care Home">Supported Living</SelectItem>
+              <SelectItem value="Residential Care Home">Residential Care Home</SelectItem>
               <SelectItem value="Nursing Home">Nursing Home</SelectItem>
               <SelectItem value="Dementia Care">Dementia Care</SelectItem>
               <SelectItem value="Dual Registered (Nursing & Residential)">

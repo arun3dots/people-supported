@@ -37,6 +37,10 @@ model Tenant {
   cqcNumber           String?              @unique
   cqcProviderId       String?
   cqcLocationId       String?
+  careHomeType        String?
+  registeredProvider  String?
+  establishedDate     String?
+  website             String?
   status              String               @default("Pending")
   packageId           String?
   trialExpiresAt      DateTime?
@@ -52,6 +56,7 @@ model Tenant {
   primaryContactEmail String?
   primaryContactName  String?
   primaryContactPhone String?
+  primaryContactRole  String?
   logoUrl             String?
   dpaVersion          String?
   dpaAcceptedAt       DateTime?
@@ -1003,7 +1008,7 @@ model ResidentNeedCarePlan {
   @@index([residentId, isCurrent])
 }
 
-// --- Care journey step 4: recurring carer tasks created from care plan steps ---
+// --- Care journey step 4: recurring carer tasks scheduled separately from plan steps ---
 // recurrence: { type: 'daily' | 'weekly', days?: number[] (0=Sunday) }
 model ResidentCareTask {
   id           String    @id @default(uuid())
@@ -1011,7 +1016,7 @@ model ResidentCareTask {
   branchId     String
   residentId   String
   carePlanId   String
-  stepIndex    Int?
+  stepIndex    Int? // Retained for existing tasks created from support steps.
   title        String
   description  String?
   shift        String    @default("Day") // Day, Night

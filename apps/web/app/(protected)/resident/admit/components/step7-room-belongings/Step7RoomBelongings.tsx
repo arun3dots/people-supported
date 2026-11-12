@@ -33,19 +33,10 @@ export function Step7RoomBelongings({
       return;
     }
 
-    if (!formData.assignedBedId) {
-      toast({
-        title: "Validation Error",
-        description: "Please select an available bed from the bed allocation dropdown.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     onNext();
   };
 
-  const isFormValid = Boolean(formData.roomNumber) && Boolean(formData.assignedBedId);
+  const isFormValid = Boolean(formData.roomNumber);
 
   return (
     <div className="space-y-6 font-sans">

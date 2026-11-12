@@ -89,7 +89,7 @@ export function CarePlanContentSections({
 
       <PartCard
         title="HOW WE WILL SUPPORT"
-        description="Each step can become a timed carer task."
+        description="Describe support steps here; add scheduled tasks separately below."
       >
         <TextAreaField
           label="Outcome"

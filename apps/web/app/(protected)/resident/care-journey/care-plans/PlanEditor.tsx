@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
 import {
+  cleanAreaSource,
   SUPPORT_LEVELS,
   type CareTaskDefinitionDTO,
   type NeedCarePlanContentDTO,
@@ -84,6 +85,8 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
     return () => clearTimeout(timer);
   }, [content, level, reviewDate, dirty, isDraft]);
 
+  const sourceLabel = cleanAreaSource(plan.areaKey, content.source);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -92,7 +95,7 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
             {plan.area}
           </Text>
           <p className="text-md text-slate-600">
-            {content.source} · version {plan.versionNumber}
+            {sourceLabel ? `${sourceLabel} · ` : ""}version {plan.versionNumber}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -147,7 +150,10 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
         <TextAreaField label="My strengths" value={content.strengths} disabled={isAgreed} onChange={(v) => set("strengths", v)} />
       </PartCard>
 
-      <PartCard title="HOW WE WILL SUPPORT" description="Each step can become a timed carer task.">
+      <PartCard
+        title="HOW WE WILL SUPPORT"
+        description="Describe support steps here; add scheduled tasks separately below."
+      >
         <TextAreaField label="Outcome" value={content.outcome} disabled={isAgreed} onChange={(v) => set("outcome", v)} />
         <div className="space-y-2">
           <Label>How staff will support me</Label>

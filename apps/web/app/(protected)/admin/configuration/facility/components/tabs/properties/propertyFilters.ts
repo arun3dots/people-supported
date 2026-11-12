@@ -1,5 +1,6 @@
 import type { SchemeItem } from "../../../../../../../../lib/types/facility";
 import type { FilterDropdown } from "../../shared/FacilityFilterBar";
+import { PROPERTY_TYPES } from "../../modals/AddPropertyFormFields";
 
 interface BuildPropertyFiltersArgs {
   schemeFilter: string;
@@ -51,6 +52,7 @@ export function buildPropertyFilterDropdowns({
         { value: "Active", label: "Active" },
         { value: "Void", label: "Void" },
         { value: "Maintenance", label: "Under maintenance" },
+        { value: "Archived", label: "Archived" },
       ],
     },
     {
@@ -62,10 +64,7 @@ export function buildPropertyFilterDropdowns({
       placeholder: "All Unit Types",
       options: [
         { value: "All Unit Types", label: "All Unit Types" },
-        { value: "Self-contained flats", label: "Self-contained flats" },
-        { value: "Cluster flats", label: "Cluster flats" },
-        { value: "Shared house", label: "Shared house" },
-        { value: "Bungalow", label: "Bungalow" },
+        ...PROPERTY_TYPES.map((pt) => ({ value: pt, label: pt })),
       ],
     },
     {

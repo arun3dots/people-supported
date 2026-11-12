@@ -22,7 +22,7 @@ export function PartBContactSection({
 }: PartBContactSectionProps) {
   return (
     <PartCard
-      title="B · Next of kin"
+      title="Next of kin"
       description="Who to call, and when. Add as many people as needed."
     >
       <CardRepeatableSection<Contact>

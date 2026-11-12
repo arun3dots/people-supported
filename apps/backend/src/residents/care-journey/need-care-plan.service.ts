@@ -36,7 +36,6 @@ import {
   addDays,
   assertCarePlanDraft,
   emitCareAudit,
-  ensureAgreedStepTasks,
   parseOptionalDate,
   requireTenant,
   syncDraftAssessmentNeed,
@@ -346,26 +345,15 @@ export class NeedCarePlanService {
     }
 
     const agreedAt = new Date();
-    const steps = (content.steps ?? []).map((s) => s.trim()).filter(Boolean);
-
-    const row = await prisma.$transaction(async (tx) => {
-      const updated = await tx.residentNeedCarePlan.update({
-        where: { id: current.id },
-        data: {
-          status: 'Agreed',
-          agreement: json({ ...dto, agreedAt: agreedAt.toISOString() }),
-          agreedAt,
-          agreedById: user.userId,
-          updatedById: user.userId,
-        },
-      });
-      await ensureAgreedStepTasks(
-        tx,
-        updated as ResidentNeedCarePlan,
-        steps,
-        user.userId,
-      );
-      return updated;
+    const row = await prisma.residentNeedCarePlan.update({
+      where: { id: current.id },
+      data: {
+        status: 'Agreed',
+        agreement: json({ ...dto, agreedAt: agreedAt.toISOString() }),
+        agreedAt,
+        agreedById: user.userId,
+        updatedById: user.userId,
+      },
     });
     this.audit(user, 'NEED_CARE_PLAN_AGREED', row as ResidentNeedCarePlan);
     return this.toPlanDTO(row as ResidentNeedCarePlan);
