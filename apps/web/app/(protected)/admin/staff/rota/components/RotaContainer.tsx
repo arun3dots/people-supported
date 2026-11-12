@@ -338,7 +338,7 @@ export function RotaContainer(): React.JSX.Element {
               });
             }}
             onViewHours={() => handleViewChange("hours")}
-            onViewAllocation={() => handleViewChange("allocation")}
+            onViewAllocation={() => router.push("/admin/staff")}
             onExportPdf={() => typeof window !== "undefined" && window.print()}
             onExportExcel={handleExportRotaCsv}
             onViewAudit={() => router.push("/admin/audit-log")}
