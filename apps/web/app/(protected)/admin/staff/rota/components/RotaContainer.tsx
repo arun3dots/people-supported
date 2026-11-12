@@ -159,7 +159,36 @@ export function RotaContainer(): React.JSX.Element {
   const handleSaveShiftBlock = async (formData: ShiftBlockFormData) => {
     const residentIds = formData.residentIds ?? [];
 
+    const resolveShiftDateTimes = (baseDateStr: string, windowStr?: string, durationHours?: number) => {
+      let startDt = new Date(`${baseDateStr}T08:00:00Z`);
+      let endDt = new Date(`${baseDateStr}T16:00:00Z`);
+
+      const windowMatch = windowStr?.match(/(\d{1,2}):(\d{2})\s*[-–—]\s*(\d{1,2}):(\d{2})/);
+      if (windowMatch) {
+        const [, sh, sm, eh, em] = windowMatch;
+        const startH = sh!.padStart(2, "0");
+        const startM = sm!;
+        const endH = eh!.padStart(2, "0");
+        const endM = em!;
+        startDt = new Date(`${baseDateStr}T${startH}:${startM}:00Z`);
+        const isOvernight =
+          Number(endH) < Number(startH) ||
+          (Number(endH) === Number(startH) && Number(endM) <= Number(startM));
+        if (isOvernight) {
+          const nextDay = addDays(startDt, 1);
+          endDt = new Date(`${format(nextDay, "yyyy-MM-dd")}T${endH}:${endM}:00Z`);
+        } else {
+          endDt = new Date(`${baseDateStr}T${endH}:${endM}:00Z`);
+        }
+      } else if (durationHours && durationHours > 0) {
+        endDt = new Date(startDt.getTime() + durationHours * 3600 * 1000);
+      }
+      return { startTime: startDt.toISOString(), endTime: endDt.toISOString() };
+    };
+
     if (editingShift) {
+      const shiftDate = getShiftDateStr(editingShift) || format(new Date(editingShift.startTime), "yyyy-MM-dd");
+      const { startTime, endTime } = resolveShiftDateTimes(shiftDate, formData.shiftWindow, formData.durationHours);
       await updateShiftMutation.mutateAsync({
         id: editingShift.id,
         careType: formData.careType,
@@ -167,21 +196,24 @@ export function RotaContainer(): React.JSX.Element {
         durationHours: formData.durationHours,
         notes: formData.handoverNotes,
         residentIds,
+        residentAssignmentConfirmed: true,
+        startTime,
+        endTime,
       });
       setEditingShift(null);
     } else if (slotToAdd) {
-      const startDateTime = new Date(`${slotToAdd.day.dateStr}T08:00:00Z`);
-      const endDateTime = new Date(`${slotToAdd.day.dateStr}T16:00:00Z`);
+      const { startTime, endTime } = resolveShiftDateTimes(slotToAdd.day.dateStr, formData.shiftWindow, formData.durationHours);
       await createShiftMutation.mutateAsync({
         status: "Published",
-        startTime: startDateTime.toISOString(),
-        endTime: endDateTime.toISOString(),
+        startTime,
+        endTime,
         careType: formData.careType,
         shiftWindow: formData.shiftWindow,
         durationHours: formData.durationHours,
         notes: formData.handoverNotes,
         userIds: [slotToAdd.staff.id],
         residentIds,
+        residentAssignmentConfirmed: true,
       });
       setSlotToAdd(null);
     }

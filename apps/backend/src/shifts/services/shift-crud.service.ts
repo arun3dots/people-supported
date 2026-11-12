@@ -1076,6 +1076,12 @@ export class ShiftCrudService {
         'Shift end time must be after the start time. For overnight shifts, use the following calendar date for the end time.',
       );
     }
+    const durationHours = (end.getTime() - start.getTime()) / (1000 * 3600);
+    if (durationHours > 24) {
+      throw new BadRequestException(
+        'A single shift cannot exceed 24 hours. For recurring shifts across multiple days, please use the repeat schedule option.',
+      );
+    }
   }
 
   async assignStaff(
