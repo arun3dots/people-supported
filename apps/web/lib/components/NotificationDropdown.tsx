@@ -18,7 +18,10 @@ import {
   PopoverTrigger,
   Button,
   Badge,
-  Text
+  Text,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@repo/ui/components/ui";
 import {
   useNotifications,
@@ -247,17 +250,37 @@ export function NotificationDropdown() {
                   </div>
                   <div className="flex-1 space-y-1 overflow-hidden">
                     <div className="flex items-center justify-between gap-2">
-                      <Text size="md" weight="semibold" className="truncate">
-                        {notification.title}
-                      </Text>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Text size="md" weight="semibold" className="truncate">
+                            {notification.title}
+                          </Text>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="left"
+                          className="z-[100] max-w-xs break-words bg-slate-900 text-white border border-slate-800 shadow-lg px-3 py-2 text-xs leading-relaxed rounded-lg"
+                        >
+                          {notification.title}
+                        </TooltipContent>
+                      </Tooltip>
                       <span className="text-md  text-muted-foreground flex items-center gap-1 shrink-0">
                         <Clock className="size-3" />
                         {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                       </span>
                     </div>
-                    <p className="text-md text-slate-600 line-clamp-2 leading-relaxed">
-                      {notification.message}
-                    </p>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-md text-slate-600 line-clamp-2 leading-relaxed">
+                          {notification.message}
+                        </p>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="left"
+                        className="z-[100] max-w-xs break-words bg-slate-900 text-white border border-slate-800 shadow-lg px-3 py-2 text-xs leading-relaxed rounded-lg"
+                      >
+                        {notification.message}
+                      </TooltipContent>
+                    </Tooltip>
                     <div className="flex items-center gap-2 pt-1">
                       <Badge variant="outline" className={cn("text-md  px-1.5 py-0 font-normal", getPriorityColor(notification.priority))}>
                         {notification.priority}

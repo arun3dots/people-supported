@@ -7,19 +7,13 @@ import {
   Home,
   LayoutGrid,
   List,
-  RotateCcw,
   UserCheck,
 } from "lucide-react";
 import {
   Button,
   Card,
-  EmptyState,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   SummaryCardsGrid,
+  Text,
   type SummaryCardItem,
 } from "@repo/ui/components/ui";
 import type {
@@ -37,7 +31,10 @@ interface StaffAllocationViewProps {
   properties: PropertyItem[];
   staff: StaffMember[];
   shifts: Shift[];
-  activeCareType: string;
+  activeCareType?: string;
+  schemeFilter?: string;
+  propertyFilter?: string;
+  staffFilter?: string;
   onReassignStaff: (staff: StaffMember) => void;
 }
 
@@ -46,11 +43,11 @@ export function StaffAllocationView({
   properties,
   staff,
   shifts,
+  schemeFilter = "all",
+  propertyFilter = "all",
+  staffFilter = "all",
   onReassignStaff,
 }: StaffAllocationViewProps): React.JSX.Element {
-  const [schemeFilter, setSchemeFilter] = useState("all");
-  const [propertyFilter, setPropertyFilter] = useState("all");
-  const [staffFilter, setStaffFilter] = useState("all");
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
 
   const filteredStaff = useMemo(() => {
@@ -97,7 +94,7 @@ export function StaffAllocationView({
       value: metrics.totalStaff,
       subtitle: `${metrics.assignedStaffCount} assigned to scheme/property`,
       icon: <UserCheck className="size-5 text-primary" />,
-      iconClassName: "bg-emerald-50",
+      iconClassName: "bg-surface-primary-light",
     },
     {
       title: "Active Schemes",
@@ -128,120 +125,65 @@ export function StaffAllocationView({
 
   return (
     <div className="space-y-6 font-sans">
+      {/* 4 KPI Stat Cards */}
       <SummaryCardsGrid
         cards={kpiCards}
         className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
       />
 
-      <Card
-        variant="surface"
-        border="default"
-        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-3 border-none shadow-none"
-      >
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Select value={schemeFilter} onValueChange={setSchemeFilter}>
-            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Schemes" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Schemes</SelectItem>
-              {schemes.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      {/* Staff Allocation Table or Card View */}
+      <Card variant="surface" border="default" className="p-5 font-sans gap-4 border-none shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border-secondary/50">
+          <div>
+            <Text as="h2" size="md" weight="semibold" className="text-slate-900">
+              Staff Allocation ({filteredStaff.length} shown of {staff.length})
+            </Text>
+            <Text size="md" variant="muted">
+              Manage primary, secondary and night cover allocations across homes.
+            </Text>
+          </div>
 
-          <Select value={propertyFilter} onValueChange={setPropertyFilter}>
-            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Properties" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Properties</SelectItem>
-              {properties.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={staffFilter} onValueChange={setStaffFilter}>
-            <SelectTrigger className="w-40 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Staff" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Staff ({staff.length})</SelectItem>
-              {staff.map((m) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {m.fullName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSchemeFilter("all");
-              setPropertyFilter("all");
-              setStaffFilter("all");
-            }}
-            className="h-10 px-2.5 text-md text-slate-600 hover:text-slate-900 font-medium"
-          >
-            <RotateCcw className="size-3.5 mr-1" /> Reset
-          </Button>
+          <div className="flex items-center gap-1 bg-white p-1 rounded-xl shrink-0">
+            <Button
+              type="button"
+              onClick={() => setViewMode("table")}
+              size="sm"
+              variant={viewMode === "table" ? "primary" : "ghost"}
+              className="h-8 rounded-lg px-3 font-medium text-xs gap-1"
+            >
+              <List className="size-3.5" />
+              Table View
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setViewMode("card")}
+              size="sm"
+              variant={viewMode === "card" ? "primary" : "ghost"}
+              className="h-8 rounded-lg px-3 font-medium text-xs gap-1"
+            >
+              <LayoutGrid className="size-3.5" />
+              Card View
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1 bg-white p-1 rounded-xl">
-          <Button
-            type="button"
-            onClick={() => setViewMode("table")}
-            size="sm"
-            variant={viewMode === "table" ? "primary" : "ghost"}
-            className="h-8 rounded-lg px-3 font-medium"
-          >
-            <List className="size-3.5" />
-            Table View
-          </Button>
-          <Button
-            type="button"
-            onClick={() => setViewMode("card")}
-            size="sm"
-            variant={viewMode === "card" ? "primary" : "ghost"}
-            className="h-8 rounded-lg px-3 font-medium"
-          >
-            <LayoutGrid className="size-3.5" />
-            Card View
-          </Button>
-        </div>
-      </Card>
-
-      {filteredStaff.length === 0 ? (
-        <Card variant="surface" border="default" className="p-0 border-none shadow-none">
-          <EmptyState
-            title="No staff members found"
-            description="Add staff members in the Staff Directory or clear your filters to see allocations."
+        {viewMode === "table" ? (
+          <StaffAllocationTable
+            filteredStaff={filteredStaff}
+            schemes={schemes}
+            properties={properties}
+            totalStaffCount={staff.length}
+            onReassignStaff={onReassignStaff}
           />
-        </Card>
-      ) : viewMode === "card" ? (
-        <StaffAllocationCardGrid
-          staffList={filteredStaff}
-          schemes={schemes}
-          properties={properties}
-          onReassignStaff={onReassignStaff}
-        />
-      ) : (
-        <StaffAllocationTable
-          filteredStaff={filteredStaff}
-          schemes={schemes}
-          properties={properties}
-          totalStaffCount={staff.length}
-          onReassignStaff={onReassignStaff}
-        />
-      )}
+        ) : (
+          <StaffAllocationCardGrid
+            staffList={filteredStaff}
+            schemes={schemes}
+            properties={properties}
+            onReassignStaff={onReassignStaff}
+          />
+        )}
+      </Card>
     </div>
   );
 }

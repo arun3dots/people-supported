@@ -77,24 +77,30 @@ export function ShiftDetailsModal({
     .filter((r): r is Resident => Boolean(r));
 
   const is1to1 = careType.includes("1:1");
+  const is2to1 = careType.includes("2:1");
   const isSleepIn = careType.includes("Sleep-in");
   const isWakingNight = careType.includes("Waking Night");
 
-  const careState = is1to1
-    ? "success"
-    : isSleepIn
-      ? "warning"
-      : isWakingNight
-        ? "danger"
-        : "inactive";
+  const careState: "success" | "warning" | "danger" | "info" | "inactive" =
+    is2to1
+      ? "info"
+      : is1to1
+        ? "success"
+        : isSleepIn
+          ? "warning"
+          : isWakingNight
+            ? "danger"
+            : "inactive";
 
-  const shortCareLabel = is1to1
-    ? "1:1"
-    : isSleepIn
-      ? "Sleep-in"
-      : isWakingNight
-        ? "Night"
-        : "Shared";
+  const shortCareLabel = is2to1
+    ? "2:1"
+    : is1to1
+      ? "1:1"
+      : isSleepIn
+        ? "Sleep-in"
+        : isWakingNight
+          ? "Night"
+          : "Shared";
 
   const locationSummary = [propertyName || "Unassigned Property", schemeName]
     .filter(Boolean)
@@ -207,10 +213,15 @@ export function ShiftDetailsModal({
                   .slice(0, 2)
                   .join("")
                   .toUpperCase();
-                const roomNum = person.bed?.room?.roomNumber;
+                const roomNum = person.bed?.room?.roomNumber?.trim();
+                const formattedLocation = roomNum
+                  ? (roomNum.toLowerCase().includes("flat") || roomNum.toLowerCase().includes("room")
+                      ? roomNum
+                      : `Flat / Room ${roomNum}`)
+                  : null;
                 const refCode = person.supportedLivingDetails?.referenceCode;
                 const metaParts = [
-                  roomNum ? `Room ${roomNum}` : null,
+                  formattedLocation,
                   refCode || null,
                   person.nhsNumber ? `NHS ${person.nhsNumber}` : null,
                 ].filter(Boolean);

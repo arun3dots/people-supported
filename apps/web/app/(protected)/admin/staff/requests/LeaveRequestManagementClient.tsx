@@ -21,10 +21,14 @@ import {
   type LeaveRequestItem,
 } from "../../../../../lib/queries/shifts";
 import { useGetStaffQuery } from "../../../../../lib/queries/staff";
+import { useGetPropertiesQuery } from "../../../../../lib/queries/facility";
 import { LeaveRequestDetailModal } from "./components/LeaveRequestDetailModal";
 import { LeaveRequestStatCards } from "./components/LeaveRequestStatCards";
 import { NewLeaveRequestModal } from "./components/NewLeaveRequestModal";
 import { useLeaveRequestColumns } from "./components/useLeaveRequestColumns";
+import { WhosOffThisWeekCard } from "./components/WhosOffThisWeekCard";
+import { AnnualLeaveBalancesCard } from "./components/AnnualLeaveBalancesCard";
+import { resolveStaffLocation } from "../rota/components/rotaDataUtils";
 
 const LEAVE_TYPE_OPTIONS = [
   "Annual Leave",
@@ -40,6 +44,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
   const { data: requestsData = [], isLoading } = useGetLeaveRequestsQuery();
   const { data: shiftsData = [] } = useGetShiftsQuery();
   const { data: staffData = [] } = useGetStaffQuery();
+  const { data: properties = [] } = useGetPropertiesQuery();
   const updateStatusMutation = useUpdateLeaveRequestStatusMutation();
 
   const requests = useMemo(
@@ -61,26 +66,34 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<string>("Pending");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("All");
+  const [propertyFilter, setPropertyFilter] = useState<string>("all");
 
   const filteredRequests = useMemo(() => {
     return requests.filter((r) => {
       if (activeTab !== "all" && r.status !== activeTab) return false;
       if (typeFilter !== "All" && r.type !== typeFilter) return false;
+      if (propertyFilter !== "all") {
+        const staffProp = staffList.find((s) => s.id === (r.staffId || r.staff?.id));
+        const loc = staffProp ? resolveStaffLocation(staffProp, [], properties) : null;
+        if (loc?.propertyId && loc.propertyId !== propertyFilter) return false;
+      }
       if (search.trim()) {
         const query = search.toLowerCase();
         const staffName = r.staff?.fullName?.toLowerCase() ?? "";
         const roleName = r.staff?.role?.name?.toLowerCase() ?? "";
         const reasonText = r.reason?.toLowerCase() ?? "";
+        const refId = `LV-${r.id.slice(0, 4)}`.toLowerCase();
         return (
           staffName.includes(query) ||
           roleName.includes(query) ||
           r.type.toLowerCase().includes(query) ||
-          reasonText.includes(query)
+          reasonText.includes(query) ||
+          refId.includes(query)
         );
       }
       return true;
     });
-  }, [requests, activeTab, typeFilter, search]);
+  }, [requests, activeTab, typeFilter, propertyFilter, search, staffList]);
 
   const counts = useMemo(
     () => ({
@@ -138,6 +151,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
   const handleResetFilters = () => {
     setSearch("");
     setTypeFilter("All");
+    setPropertyFilter("all");
   };
 
   return (
@@ -145,25 +159,33 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <Text size="xs" weight="medium" variant="subdued" className="mb-1">
-            Rota Management / Leave Request Management
-          </Text>
-          <Text size="xl" weight="bold" className="tracking-tight text-slate-900">
+          <div className="flex items-center gap-2 mb-1">
+            <Text as="span" size="md" weight="medium" variant="muted">
+              Rota Management
+            </Text>
+            <Text as="span" size="md" variant="muted">
+              &rsaquo;
+            </Text>
+            <Text as="span" size="md" weight="medium" className="text-slate-800">
+              Leave Request Management
+            </Text>
+          </div>
+          <Text as="h1" size="2xl" weight="semibold" className="tracking-tight text-slate-900">
             Leave Request Management
           </Text>
-          <Text variant="subdued" size="xs" weight="regular">
+          <Text variant="muted" size="md" className="mt-0.5">
             Review annual, sick and training leave, see rota impact and arrange
             cover before approving.
           </Text>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 shrink-0">
           <Button
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => window.print()}
-            className="h-10 px-3.5 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-sm font-medium text-slate-700 flex items-center gap-1.5 shadow-none cursor-pointer"
+            onClick={() => typeof window !== "undefined" && window.print()}
+            className="h-9 px-3 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-md font-medium text-slate-700 flex items-center gap-1.5 shadow-none cursor-pointer"
           >
             <Download className="size-3.5" />
             Export
@@ -171,10 +193,11 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
           <Button
             type="button"
             variant="primary"
+            size="sm"
             onClick={() => setIsNewModalOpen(true)}
-            className="rounded-xl h-10 px-4 text-sm font-medium flex items-center gap-1.5 cursor-pointer"
+            className="rounded-xl h-9 px-3.5 text-md font-medium flex items-center gap-1.5 cursor-pointer"
           >
-            <Plus className="size-4" />
+            <Plus className="size-3.5" />
             New Request
           </Button>
         </div>
@@ -191,14 +214,14 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by staff name, role, leave type or reason..."
-              className="w-full h-10 pl-10 pr-4 bg-white border-slate-200/80 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:ring-primary shadow-none"
+              placeholder="Search by staff name, staff ID or reference (LV-...)"
+              className="w-full h-10 pl-10 pr-4 bg-white border-slate-200/80 rounded-xl text-md text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:ring-primary shadow-none"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-44 h-10 bg-white border-slate-200/80 rounded-xl text-sm font-medium text-slate-700 cursor-pointer">
+              <SelectTrigger className="w-40 h-10 bg-white border-slate-200/80 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
                 <SelectValue placeholder="All Leave Types" />
               </SelectTrigger>
               <SelectContent>
@@ -211,12 +234,26 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
               </SelectContent>
             </Select>
 
+            <Select value={propertyFilter} onValueChange={setPropertyFilter}>
+              <SelectTrigger className="w-44 h-10 bg-white border-slate-200/80 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
+                <SelectValue placeholder="All Properties" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Properties</SelectItem>
+                {properties.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={handleResetFilters}
-              className="h-10 px-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1.5 cursor-pointer"
+              className="h-10 px-2.5 rounded-xl text-md font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
             >
               <RotateCcw className="size-3.5" />
               Reset
@@ -225,7 +262,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
         </div>
 
         {/* Status Tabs */}
-        <div className="flex items-center gap-6 border-b border-slate-200/70 text-sm overflow-x-auto pb-px">
+        <div className="flex items-center gap-6 border-b border-slate-200/70 text-md overflow-x-auto pb-px">
           {statusTabs.map((tab) => (
             <button
               key={tab.key}
@@ -248,10 +285,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
       <div className="w-full bg-surface-card-grey rounded-2xl p-5 lg:p-6 shadow-none border-none font-sans">
         <div className="flex items-center justify-between pb-4 border-b border-border-secondary/50 mb-4">
           <Text size="base" weight="semibold" className="text-slate-900">
-            Leave Request Overview
-          </Text>
-          <Text size="xs" variant="muted">
-            {filteredRequests.length} shown of {requests.length}
+            Leave Requests ({filteredRequests.length} of {requests.length})
           </Text>
         </div>
 
@@ -263,6 +297,12 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
           emptyTitle="No leave requests found"
           emptyDescription="No leave requests match your active search or status filter."
         />
+      </div>
+
+      {/* Bottom 2 Cards: Who's off this week + Annual leave balances */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <WhosOffThisWeekCard requests={requests} />
+        <AnnualLeaveBalancesCard staffList={staffList} requests={requests} />
       </div>
 
       {/* Create Leave Request Modal */}

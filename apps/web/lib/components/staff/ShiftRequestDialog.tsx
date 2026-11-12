@@ -72,16 +72,27 @@ export function ShiftRequestDialog({
     if (isOpen) {
       const isPast = Boolean(selectedShift?.startTime && new Date(selectedShift.startTime).getTime() < Date.now());
       const targetShift = isPast ? null : selectedShift;
-      const initialType = targetShift ? "Change" : (defaultType || "");
+      const initialType = targetShift ? "Change" : (defaultType || "Leave");
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(8, 0, 0, 0);
+
+      const defaultStartTime = targetShift
+        ? targetShift.startTime || targetShift.rawStartTime || ""
+        : initialType === "Leave"
+          ? tomorrow.toISOString()
+          : "";
+      const defaultEndTime = targetShift
+        ? targetShift.endTime || targetShift.rawEndTime || ""
+        : initialType === "Leave"
+          ? new Date(tomorrow.getTime() + 8 * 3600 * 1000).toISOString()
+          : "";
+
       reset({
         type: initialType as any,
         shiftId: targetShift?.id || null,
-        startTime: targetShift
-          ? targetShift.startTime || targetShift.rawStartTime || ""
-          : "",
-        endTime: targetShift
-          ? targetShift.endTime || targetShift.rawEndTime || ""
-          : "",
+        startTime: defaultStartTime,
+        endTime: defaultEndTime,
         reason: "",
         notes: "",
       });
@@ -92,7 +103,10 @@ export function ShiftRequestDialog({
   const selectedShiftId = watch("shiftId");
 
   const onSubmit = async (data: CreateShiftRequestDTO) => {
-    if (data.startTime && new Date(data.startTime).getTime() < Date.now()) {
+    if (!data.startTime || isNaN(new Date(data.startTime).getTime())) {
+      return;
+    }
+    if (new Date(data.startTime).getTime() < Date.now()) {
       return;
     }
     const cleanEndTime = data.endTime && data.endTime !== "" ? data.endTime : undefined;
@@ -143,8 +157,18 @@ export function ShiftRequestDialog({
               <Select
                 value={requestType || ""}
                 onValueChange={(v) => {
-                  setValue("type", v as "Leave" | "Change" | "Cover", { shouldValidate: true });
-                  if (v === "Leave") setValue("shiftId", null);
+                  const newType = v as "Leave" | "Change" | "Cover";
+                  setValue("type", newType, { shouldValidate: true });
+                  if (newType === "Leave") {
+                    setValue("shiftId", null);
+                    if (!watch("startTime")) {
+                      const tomorrow = new Date();
+                      tomorrow.setDate(tomorrow.getDate() + 1);
+                      tomorrow.setHours(8, 0, 0, 0);
+                      setValue("startTime", tomorrow.toISOString(), { shouldValidate: true });
+                      setValue("endTime", new Date(tomorrow.getTime() + 8 * 3600 * 1000).toISOString(), { shouldValidate: true });
+                    }
+                  }
                 }}
               >
                 <SelectTrigger>
@@ -194,7 +218,7 @@ export function ShiftRequestDialog({
           {/* Date & Time Range */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
             <div className="space-y-1">
-              <Label className="text-md font-semibold text-slate-700">Start Time</Label>
+              <Label required className="text-md font-semibold text-slate-700">Start Time</Label>
               <Controller
                 name="startTime"
                 control={control}
@@ -228,9 +252,15 @@ export function ShiftRequestDialog({
                 render={({ field }) => (
                   <DateTimePicker
                     value={field.value ? getUkDateTimeForLocalDisplay(field.value) : undefined}
-                    onChange={(d) =>
-                      field.onChange(d ? convertLocalDateTimeToUk(d).toISOString() : "")
-                    }
+                    onChange={(d) => {
+                      const iso = d ? convertLocalDateTimeToUk(d).toISOString() : "";
+                      field.onChange(iso);
+                      if (d && !watch("startTime")) {
+                        const autoStart = new Date(d);
+                        autoStart.setHours(Math.max(0, d.getHours() - 8));
+                        setValue("startTime", autoStart.toISOString(), { shouldValidate: true });
+                      }
+                    }}
                     use12Hours={false}
                     minDate={new Date()}
                     placeholder="Select end time (optional)"

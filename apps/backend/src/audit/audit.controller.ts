@@ -30,6 +30,7 @@ import {
   resolvePagination,
 } from '../common/utils/pagination.util';
 import { populateAuditUserSummaries } from './audit-user-lookup.util';
+import type { CqcAuditLog } from '@repo/audit-db';
 import {
   writeAuditExcelExport,
   writeAuditPdfExport,
@@ -74,7 +75,7 @@ export class AuditController {
 
     const userMap = await populateAuditUserSummaries(result.logs);
 
-    const formattedLogs = result.logs.map((log) => {
+    const formattedLogs = result.logs.map((log: CqcAuditLog) => {
       const dbUser = log.userId ? userMap.get(log.userId) : undefined;
       const fullName =
         log.userFullName ??
@@ -200,7 +201,7 @@ export class AuditController {
       limit: 10000,
     });
 
-    const errors = result.logs.filter((log) =>
+    const errors = result.logs.filter((log: CqcAuditLog) =>
       ['DOSE_MISSED', 'DOSE_REFUSED', 'DOSE_WITHHELD'].includes(log.actionType),
     );
 
@@ -214,9 +215,9 @@ export class AuditController {
       },
       totalErrors: errors.length,
       breakdown: {
-        missed: errors.filter((l) => l.actionType === 'DOSE_MISSED').length,
-        refused: errors.filter((l) => l.actionType === 'DOSE_REFUSED').length,
-        withheld: errors.filter((l) => l.actionType === 'DOSE_WITHHELD').length,
+        missed: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_MISSED').length,
+        refused: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_REFUSED').length,
+        withheld: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_WITHHELD').length,
       },
       records: errors,
     };
@@ -321,7 +322,7 @@ export class AuditController {
       limit: 10000,
     });
 
-    const securityEvents = result.logs.filter((l) =>
+    const securityEvents = result.logs.filter((l: CqcAuditLog) =>
       [
         'FAILED_LOGIN',
         'ROLE_CHANGED',
