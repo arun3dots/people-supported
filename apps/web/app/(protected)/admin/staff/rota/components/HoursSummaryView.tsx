@@ -6,17 +6,9 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
-  RotateCcw,
   TrendingUp,
 } from "lucide-react";
 import {
-  Button,
-  Card,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   SummaryCardsGrid,
   Tabs,
   TabsList,
@@ -48,7 +40,10 @@ interface HoursSummaryViewProps {
   staff: StaffMember[];
   residents: Resident[];
   days: DayColumnInfo[];
-  activeCareType: string;
+  activeCareType?: string;
+  schemeFilter?: string;
+  propertyFilter?: string;
+  staffFilter?: string;
 }
 
 export function HoursSummaryView({
@@ -58,11 +53,11 @@ export function HoursSummaryView({
   staff,
   residents,
   days,
-  activeCareType,
+  activeCareType = "All Care Types",
+  schemeFilter = "all",
+  propertyFilter = "all",
+  staffFilter = "all",
 }: HoursSummaryViewProps): React.JSX.Element {
-  const [schemeFilter, setSchemeFilter] = useState("all");
-  const [propertyFilter, setPropertyFilter] = useState("all");
-  const [staffFilter, setStaffFilter] = useState("all");
   const [viewMode, setViewMode] = useState<"both" | "scheme" | "property">(
     "both",
   );
@@ -191,109 +186,45 @@ export function HoursSummaryView({
 
   return (
     <div className="space-y-6 font-sans">
-      <Card
-        variant="surface"
-        border="default"
-        className="p-4 flex-col lg:flex-row lg:items-center justify-between gap-4 border-none shadow-none"
-      >
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Select
-            value={schemeFilter}
-            onValueChange={(val) => {
-              setSchemeFilter(val);
-              setPropertyFilter("all");
-            }}
-          >
-            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Schemes" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Schemes</SelectItem>
-              {schemes.map((s) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={propertyFilter} onValueChange={setPropertyFilter}>
-            <SelectTrigger className="w-44 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Properties" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                All Properties ({filteredProperties.length})
-              </SelectItem>
-              {filteredProperties.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={staffFilter} onValueChange={setStaffFilter}>
-            <SelectTrigger className="w-40 h-10 rounded-xl bg-white">
-              <SelectValue placeholder="All Staff" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Staff ({staff.length})</SelectItem>
-              {staff.map((m) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {m.fullName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setSchemeFilter("all");
-              setPropertyFilter("all");
-              setStaffFilter("all");
-            }}
-            className="h-10 px-2.5 text-md text-slate-600 hover:text-slate-900 font-medium"
-          >
-            <RotateCcw className="size-3.5 mr-1" /> Reset
-          </Button>
-        </div>
-
-        <Tabs
-          value={viewMode}
-          onValueChange={(v) =>
-            setViewMode(v as "both" | "scheme" | "property")
-          }
-          className="gap-0 border-b border-slate-200 lg:border-b-0"
-        >
-          <TabsList className="justify-start bg-transparent p-0 h-auto rounded-none gap-5">
-            <TabsTrigger value="both" className="px-0 py-1.5 text-md">
-              By Scheme &amp; Property
-            </TabsTrigger>
-            <TabsTrigger value="scheme" className="px-0 py-1.5 text-md">
-              By Scheme
-            </TabsTrigger>
-            <TabsTrigger value="property" className="px-0 py-1.5 text-md">
-              By Property
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </Card>
-
+      {/* 5 KPI Stat Cards (Image 2) */}
       <SummaryCardsGrid
         cards={kpiCards}
         className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
       />
 
+      {/* Weekly Hours Comparison + Overall Coverage Donut */}
       <HoursSummaryCharts days={dayPoints} metrics={metrics} />
 
-      <HoursSummaryTable
-        viewMode={viewMode}
-        rows={breakdownRows}
-        metrics={metrics}
-      />
+      {/* Hours Summary Table with View Mode Switcher */}
+      <div className="space-y-3">
+        <div className="flex justify-end">
+          <Tabs
+            value={viewMode}
+            onValueChange={(v) =>
+              setViewMode(v as "both" | "scheme" | "property")
+            }
+            className="gap-0"
+          >
+            <TabsList className="bg-slate-150 p-1 rounded-xl gap-1">
+              <TabsTrigger value="both" className="px-3 py-1 text-sm rounded-lg">
+                By Scheme &amp; Property
+              </TabsTrigger>
+              <TabsTrigger value="scheme" className="px-3 py-1 text-sm rounded-lg">
+                By Scheme
+              </TabsTrigger>
+              <TabsTrigger value="property" className="px-3 py-1 text-sm rounded-lg">
+                By Property
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        <HoursSummaryTable
+          viewMode={viewMode}
+          rows={breakdownRows}
+          metrics={metrics}
+        />
+      </div>
     </div>
   );
 }

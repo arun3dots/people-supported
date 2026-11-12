@@ -8,7 +8,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').cpSync('src/generated', 'dist/generated', {recursive: true, force: true, filter: (s) => !s.endsWith('.node')})\"",
+    "build": "tsc && node -e \"require('fs').cpSync('src/generated', 'dist/generated', {recursive: true, force: true})\"",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
