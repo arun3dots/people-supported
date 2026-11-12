@@ -34,6 +34,7 @@ import {
 interface RotaSummaryWidgetsProps {
   shifts?: Shift[];
   staffList?: StaffMember[];
+  isLocked?: boolean;
   onLockToggle?: (isLocked: boolean) => void;
   onViewHours?: () => void;
   onViewAllocation?: () => void;
@@ -45,6 +46,7 @@ interface RotaSummaryWidgetsProps {
 export function RotaSummaryWidgets({
   shifts = [],
   staffList = [],
+  isLocked: controlledLocked,
   onLockToggle,
   onViewHours,
   onViewAllocation,
@@ -52,11 +54,12 @@ export function RotaSummaryWidgets({
   onExportExcel,
   onViewAudit,
 }: RotaSummaryWidgetsProps): React.JSX.Element {
-  const [isLocked, setIsLocked] = useState(false);
+  const [internalLocked, setInternalLocked] = useState(false);
+  const isLocked = controlledLocked ?? internalLocked;
 
   const handleToggleLock = (): void => {
     const next = !isLocked;
-    setIsLocked(next);
+    setInternalLocked(next);
     onLockToggle?.(next);
   };
 
@@ -135,9 +138,15 @@ export function RotaSummaryWidgets({
   }, [staffList, shifts]);
 
   const rotaActions = [
-    { label: "Export to PDF", icon: FileText, onClick: onExportPdf },
-    { label: "Export to Excel", icon: FileSpreadsheet, onClick: onExportExcel },
-    { label: "View Audit Log", icon: Clock, onClick: onViewAudit },
+    ...(onExportExcel
+      ? [{ label: "Export Rota (CSV)", icon: FileSpreadsheet, onClick: onExportExcel }]
+      : []),
+    ...(onViewHours
+      ? [{ label: "Hours Summary", icon: FileText, onClick: onViewHours }]
+      : []),
+    ...(onViewAudit
+      ? [{ label: "View Audit Log", icon: Clock, onClick: onViewAudit }]
+      : []),
   ];
 
   return (
@@ -314,7 +323,9 @@ export function RotaSummaryWidgets({
       <Card
         variant="secondary"
         border="default"
-        className="p-4 flex-col sm:flex-row sm:items-center justify-between gap-3"
+        className={`p-4 flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+          isLocked ? "bg-amber-50/70 border-amber-200" : ""
+        }`}
       >
         <div className="flex items-center gap-2.5 text-slate-700">
           {isLocked ? (
