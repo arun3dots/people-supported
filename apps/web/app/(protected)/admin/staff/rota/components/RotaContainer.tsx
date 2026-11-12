@@ -62,20 +62,19 @@ export function RotaContainer(): React.JSX.Element {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [activeView, setActiveView] = useState<
-    "rota" | "hours" | "allocation" | "attendance"
+    "rota" | "hours" | "attendance"
   >("rota");
 
   const [filters, setFilters] = useState<RotaFilterState>(INITIAL_FILTERS);
 
   useEffect(() => {
     if (tabParam === "hours") setActiveView("hours");
-    else if (tabParam === "allocation") setActiveView("allocation");
     else if (tabParam === "attendance") setActiveView("attendance");
     else setActiveView("rota");
   }, [tabParam]);
 
   const handleViewChange = (
-    nextView: "rota" | "hours" | "allocation" | "attendance",
+    nextView: "rota" | "hours" | "attendance",
   ): void => {
     setActiveView(nextView);
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -90,6 +89,9 @@ export function RotaContainer(): React.JSX.Element {
   const [editingShift, setEditingShift] = useState<Shift | null>(null);
   const [slotToAdd, setSlotToAdd] = useState<{ staff: StaffMember; day: DayColumnInfo } | null>(null);
   const [reassignStaff, setReassignStaff] = useState<StaffMember | null>(null);
+  const [lockedWeeks, setLockedWeeks] = useState<Record<string, boolean>>({});
+  const weekKey = format(currentWeekStart, "yyyy-MM-dd");
+  const isRotaLocked = Boolean(lockedWeeks[weekKey]);
 
   const { data: shiftsData, isLoading: isShiftsLoading } = useGetShiftsQuery();
   const { data: staffData, isLoading: isStaffLoading } = useGetStaffQuery();
@@ -164,6 +166,10 @@ export function RotaContainer(): React.JSX.Element {
   );
 
   const handlePublishRota = async () => {
+    if (isRotaLocked) {
+      toast({ title: "Rota is locked", description: "Unlock the rota before publishing changes.", variant: "destructive" });
+      return;
+    }
     if (draftShifts.length === 0) return;
     try {
       await Promise.all(
@@ -179,6 +185,35 @@ export function RotaContainer(): React.JSX.Element {
     await executeSaveShiftBlock({ formData, editingShift, slotToAdd, createShiftMutation, updateShiftMutation });
     setEditingShift(null);
     setSlotToAdd(null);
+  };
+
+  const handleExportCsv = () => {
+    const headers = ["Date", "Staff", "Care Type", "Window", "Hours", "Status"];
+    const rows = weekShifts.map((s) => {
+      const staffNames = staffList
+        .filter((m) => s.userIds?.includes(m.id) || s.assignments?.some((a) => a.userId === m.id))
+        .map((m) => m.fullName)
+        .join("; ");
+      const dateStr = getShiftDateStr(s);
+      const escape = (v: string | number | null | undefined) =>
+        `"${String(v ?? "").replace(/"/g, '""')}"`;
+      return [
+        escape(dateStr),
+        escape(staffNames || "Unassigned"),
+        escape(s.careType || "Shared Care"),
+        escape(s.shiftWindow || ""),
+        escape(s.durationHours ?? ""),
+        escape(s.status || "Draft"),
+      ].join(",");
+    });
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `rota-${format(currentWeekStart, "yyyy-MM-dd")}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   if (isShiftsLoading || isStaffLoading) {
@@ -218,11 +253,15 @@ export function RotaContainer(): React.JSX.Element {
         onPublishRota={handlePublishRota}
         isPublishing={updateShiftMutation.isPending}
         onCreateShift={() => {
+          if (isRotaLocked) {
+            toast({ title: "Rota is locked", description: "Unlock the rota to add or edit shifts.", variant: "destructive" });
+            return;
+          }
           const todayDateStr = format(new Date(), "yyyy-MM-dd");
           const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
           if (staffList[0] && targetDay) setSlotToAdd({ staff: staffList[0], day: targetDay });
         }}
-        onExport={() => typeof window !== "undefined" && window.print()}
+        onExport={handleExportCsv}
       />
 
       <RotaUnifiedFilterBar
@@ -245,6 +284,7 @@ export function RotaContainer(): React.JSX.Element {
             schemes={schemes}
             properties={properties}
             activeCareTypeFilter={filters.careType}
+            isLocked={isRotaLocked}
             currentDate={currentWeekStart}
             onPreviousWeek={() => setCurrentWeekStart((prev) => subWeeks(prev, 1))}
             onNextWeek={() => setCurrentWeekStart((prev) => addWeeks(prev, 1))}
@@ -269,10 +309,19 @@ export function RotaContainer(): React.JSX.Element {
           <RotaSummaryWidgets
             shifts={weekShifts}
             staffList={staffList}
+            isLocked={isRotaLocked}
+            onLockToggle={(nextLocked) => {
+              setLockedWeeks((prev) => ({ ...prev, [weekKey]: nextLocked }));
+              toast({
+                title: nextLocked ? "Rota locked" : "Rota unlocked",
+                description: nextLocked
+                  ? "Editing is disabled for this week until unlocked."
+                  : "You can now add and edit shifts for this week.",
+              });
+            }}
             onViewHours={() => handleViewChange("hours")}
-            onViewAllocation={() => handleViewChange("allocation")}
-            onExportPdf={() => typeof window !== "undefined" && window.print()}
-            onExportExcel={() => typeof window !== "undefined" && window.print()}
+            onViewAllocation={() => router.push("/admin/staff")}
+            onExportExcel={handleExportCsv}
             onViewAudit={() => router.push("/admin/audit-log")}
           />
         </>
@@ -293,7 +342,7 @@ export function RotaContainer(): React.JSX.Element {
         />
       )}
 
-      {activeView === "allocation" && (
+      {/* {activeView === "allocation" && (
         <StaffAllocationView
           schemes={schemes}
           properties={properties}
@@ -305,7 +354,7 @@ export function RotaContainer(): React.JSX.Element {
           staffFilter={filters.staffId}
           onReassignStaff={(staff) => setReassignStaff(staff)}
         />
-      )}
+      )} */}
 
       <RotaModalsContainer
         detailsShift={detailsShift}
@@ -329,6 +378,7 @@ export function RotaContainer(): React.JSX.Element {
         residents={residents}
         schemes={schemes}
         properties={properties}
+        isLocked={isRotaLocked}
       />
     </div>
   );

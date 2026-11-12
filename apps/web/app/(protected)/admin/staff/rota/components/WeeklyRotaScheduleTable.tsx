@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { ArrowLeftRight, Bed, ChevronLeft, ChevronRight, Moon, Plus } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowLeftRight, Bed, ChevronLeft, ChevronRight, Moon } from "lucide-react";
 import {
   Button, Card, DatePicker, EmptyState, Table, TableBody, TableCell,
   TableHead, TableHeader, TableRow, Text,
@@ -30,6 +31,7 @@ interface WeeklyRotaScheduleTableProps {
   schemes?: SchemeItem[];
   properties?: PropertyItem[];
   activeCareTypeFilter: string;
+  isLocked?: boolean;
   onSelectShift: (shift: Shift, staffName: string, dayLabel: string) => void;
   onAddShiftBlock: (staff: StaffMember, day: DayColumnInfo) => void;
   onReassignStaff: (staff: StaffMember) => void;
@@ -54,6 +56,7 @@ export function WeeklyRotaScheduleTable({
   shifts,
   schemes = [],
   properties = [],
+  isLocked = false,
   onSelectShift,
   onAddShiftBlock,
   onReassignStaff,
@@ -63,6 +66,8 @@ export function WeeklyRotaScheduleTable({
   onCurrentWeek,
   onSelectDate,
 }: WeeklyRotaScheduleTableProps): React.JSX.Element {
+  const todayDateStr = format(new Date(), "yyyy-MM-dd");
+
   const getShiftsForStaffAndDay = (
     staffId: string,
     dayDateStr: string,
@@ -227,7 +232,7 @@ export function WeeklyRotaScheduleTable({
                             </Text>
                           </div>
                         </div>
-
+                        {/* 
                         <Button
                           type="button"
                           onClick={() => onReassignStaff(staff)}
@@ -238,21 +243,35 @@ export function WeeklyRotaScheduleTable({
                           className="size-8 rounded-lg text-slate-400 hover:text-primary hover:bg-white shrink-0"
                         >
                           <ArrowLeftRight className="size-4" />
-                        </Button>
+                        </Button> */}
                       </div>
                     </TableCell>
 
                     {days.map((d) => {
                       const dayShifts = getShiftsForStaffAndDay(staff.id, d.dateStr);
+                      const isPastDate = d.dateStr < todayDateStr;
+                      const isAddDisabled = isPastDate || isLocked;
 
                       if (dayShifts.length === 0) {
                         return (
                           <TableCell key={d.key} className="py-2 px-1.5 text-center">
                             <button
                               type="button"
-                              onClick={() => onAddShiftBlock(staff, d)}
-                              title="Click to assign shift"
-                              className="w-full h-13 rounded-xl bg-white/60 hover:bg-white text-slate-400 hover:text-primary flex flex-col items-center justify-center transition-colors cursor-pointer"
+                              disabled={isAddDisabled}
+                              onClick={() => !isAddDisabled && onAddShiftBlock(staff, d)}
+                              title={
+                                isLocked
+                                  ? "Rota is locked for this week"
+                                  : isPastDate
+                                    ? "Cannot create shifts on past dates"
+                                    : "Click to assign shift"
+                              }
+                              className={cn(
+                                "w-full h-13 rounded-xl flex flex-col items-center justify-center transition-colors",
+                                isAddDisabled
+                                  ? "bg-slate-50/50 text-slate-300 cursor-not-allowed"
+                                  : "bg-white/60 hover:bg-white text-slate-400 hover:text-primary cursor-pointer",
+                              )}
                             >
                               <Text as="span" size="md" weight="medium" variant="muted">
                                 &mdash;
@@ -261,10 +280,6 @@ export function WeeklyRotaScheduleTable({
                           </TableCell>
                         );
                       }
-
-                      const hasOffDay = dayShifts.some((s) =>
-                        s.careType?.includes("Off"),
-                      );
 
                       return (
                         <TableCell key={d.key} className="py-2 px-1.5 text-center align-top">

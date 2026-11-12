@@ -54,11 +54,18 @@ export function HoursSummaryTable({
   rows,
   metrics,
 }: HoursSummaryTableProps): React.JSX.Element {
-  const totalVariance = roundHours(metrics.delivered - metrics.required);
+  const totalVariance =
+    metrics.required > 0 ? roundHours(metrics.planned - metrics.required) : 0;
+  const totalCoveragePct =
+    metrics.required > 0
+      ? ((metrics.planned / metrics.required) * 100).toFixed(1)
+      : metrics.planned > 0
+        ? "100.0"
+        : "0.0";
   const totalStatus: HoursBreakdownRow["status"] =
     metrics.required === 0 && metrics.planned === 0
       ? "No data"
-      : metrics.planned < metrics.required
+      : metrics.required > 0 && metrics.planned < metrics.required
         ? "Shortfall"
         : "On track";
 
@@ -73,7 +80,7 @@ export function HoursSummaryTable({
           Hours Summary by Scheme &amp; Property
         </Text>
         <Text size="md" variant="muted">
-          Compare commissioned, planned and delivered weekly support hours
+          Compare commissioned and planned weekly support hours
         </Text>
       </div>
 
@@ -99,9 +106,6 @@ export function HoursSummaryTable({
                 </TableHead>
                 <TableHead className="text-right font-medium text-slate-500">
                   Planned / Wk
-                </TableHead>
-                <TableHead className="text-right font-medium text-slate-500">
-                  Delivered / Wk
                 </TableHead>
                 <TableHead className="text-right font-medium text-slate-500">
                   Variance
@@ -139,20 +143,19 @@ export function HoursSummaryTable({
                     </TableCell>
                   )}
                   <TableCell className="text-right text-slate-700">
-                    {row.commissioned} hrs
+                    {row.commissioned > 0 ? `${row.commissioned} hrs` : "—"}
                   </TableCell>
                   <TableCell className="text-right font-medium text-slate-900">
                     {row.planned} hrs
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-primary">
-                    {row.delivered} hrs
                   </TableCell>
                   <TableCell
                     className={`text-right font-medium ${
                       row.variance < 0 ? "text-rose-600" : "text-slate-700"
                     }`}
                   >
-                    {row.variance > 0 ? `+${row.variance}` : row.variance} hrs
+                    {row.commissioned > 0
+                      ? `${row.variance > 0 ? `+${row.variance}` : row.variance} hrs`
+                      : "—"}
                   </TableCell>
                   <TableCell className="text-right font-medium text-slate-900">
                     {row.coverage}
@@ -178,23 +181,22 @@ export function HoursSummaryTable({
                   Total
                 </TableCell>
                 <TableCell className="text-right font-semibold text-slate-900">
-                  {metrics.required} hrs
+                  {metrics.required > 0 ? `${metrics.required} hrs` : "—"}
                 </TableCell>
                 <TableCell className="text-right font-semibold text-slate-900">
                   {metrics.planned} hrs
-                </TableCell>
-                <TableCell className="text-right font-semibold text-primary">
-                  {metrics.delivered} hrs
                 </TableCell>
                 <TableCell
                   className={`text-right font-semibold ${
                     totalVariance < 0 ? "text-rose-600" : "text-slate-700"
                   }`}
                 >
-                  {totalVariance > 0 ? `+${totalVariance}` : totalVariance} hrs
+                  {metrics.required > 0
+                    ? `${totalVariance > 0 ? `+${totalVariance}` : totalVariance} hrs`
+                    : "—"}
                 </TableCell>
                 <TableCell className="text-right font-semibold text-slate-900">
-                  {metrics.coveragePercent}%
+                  {totalCoveragePct}%
                 </TableCell>
                 <TableCell className="pr-3 text-center">
                   <Badge

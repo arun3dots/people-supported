@@ -107,7 +107,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           subItems: [
             { title: "Shift Planner", url: "/admin/staff/rota" },
             { title: "Hours Summary", url: "/admin/staff/rota?tab=hours" },
-            { title: "Staff Allocation", url: "/admin/staff/rota?tab=allocation" },
+            // { title: "Staff Allocation", url: "/admin/staff/rota?tab=allocation" },
             { title: "Leave Request Management", url: "/admin/staff/requests" },
             { title: "Attendance", url: "/admin/staff/rota?tab=attendance" },
           ],

@@ -25,8 +25,8 @@ export interface RotaFilterState {
 }
 
 interface RotaUnifiedFilterBarProps {
-  activeView: "rota" | "hours" | "allocation";
-  onViewChange: (view: "rota" | "hours" | "allocation") => void;
+  activeView: "rota" | "hours";
+  onViewChange: (view: "rota" | "hours") => void;
   filters: RotaFilterState;
   onFilterChange: (updates: Partial<RotaFilterState>) => void;
   onResetFilters: () => void;
@@ -97,7 +97,7 @@ export function RotaUnifiedFilterBar({
             >
               Hours Summary
             </button>
-            <button
+            {/* <button
               type="button"
               onClick={() => onViewChange("allocation")}
               className={cn(
@@ -108,7 +108,7 @@ export function RotaUnifiedFilterBar({
               )}
             >
               Staff Allocation
-            </button>
+            </button> */}
           </div>
         </div>
 

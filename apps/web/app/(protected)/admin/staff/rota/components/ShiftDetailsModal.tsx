@@ -29,6 +29,7 @@ import type { Resident } from "../../../../../../lib/types/resident";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import {
   getShiftAssignedResidentIds,
+  getShiftDateStr,
   getShiftPlannedHours,
   resolveShiftLocation,
 } from "./rotaDataUtils";
@@ -43,6 +44,7 @@ interface ShiftDetailsModalProps {
   residents?: Resident[];
   schemes?: SchemeItem[];
   properties?: PropertyItem[];
+  isLocked?: boolean;
   onEditShift: (shift: Shift) => void;
 }
 
@@ -56,6 +58,7 @@ export function ShiftDetailsModal({
   residents = [],
   schemes = [],
   properties = [],
+  isLocked = false,
   onEditShift,
 }: ShiftDetailsModalProps): React.JSX.Element {
   if (!shift) return <></>;
@@ -105,6 +108,12 @@ export function ShiftDetailsModal({
   const locationSummary = [propertyName || "Unassigned Property", schemeName]
     .filter(Boolean)
     .join(" · ");
+
+  const todayStr = new Date().toISOString().split("T")[0] ?? "";
+  const shiftDateStr = getShiftDateStr(shift);
+  const isPastShift =
+    (shiftDateStr ? shiftDateStr < todayStr : false) ||
+    new Date(shift.endTime).getTime() <= Date.now();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -288,17 +297,19 @@ export function ShiftDetailsModal({
           >
             Close
           </Button>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => {
-              onOpenChange(false);
-              onEditShift(shift);
-            }}
-          >
-            <Edit2 className="size-4" />
-            Edit shift block
-          </Button>
+          {!isPastShift && !isLocked && (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                onOpenChange(false);
+                onEditShift(shift);
+              }}
+            >
+              <Edit2 className="size-4" />
+              Edit shift block
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

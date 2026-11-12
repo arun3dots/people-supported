@@ -1,32 +1,31 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { format, parse } from "date-fns";
+import React, { useState, useEffect, useMemo } from "react";
+import { format } from "date-fns";
 import {
   Alert, AlertDescription, AlertTitle, Button, DatePicker, Dialog, DialogContent,
-  DialogDescription, DialogFooter, DialogHeader, DialogTitle, Label, Textarea,
-  Badge, Text, Input
+  DialogDescription, DialogFooter, DialogHeader, DialogTitle, Label,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea,
 } from "@repo/ui/components/ui";
 import { useToast } from "@repo/ui/hooks";
-import { AlertCircle, Moon } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import type { PropertyItem, SchemeItem } from "../../../../../../lib/types/facility";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import type { Resident } from "../../../../../../lib/types/resident";
 import type { StaffMember } from "../../../../../../lib/types/staff";
-import {
-  ShiftCareTypePresetCards,
-  type CareTypePreset,
-} from "./ShiftCareTypePresetCards";
+import { ShiftCareTypePresetCards, type CareTypePreset } from "./ShiftCareTypePresetCards";
 import { ShiftStaffResidentSelectors } from "./ShiftStaffResidentSelectors";
-import { ShiftTimingDurationInputs, NIGHT_SHIFT_WINDOWS } from "./ShiftTimingDurationInputs";
-import { getShiftDateStr } from "./rotaDataUtils";
+import { getShiftDateStr, resolveStaffLocation } from "./rotaDataUtils";
 import { extractErrorMessage } from "./rotaCoverageUtils";
 
 export interface ShiftBlockFormData {
   careType: string;
-  startDate: string;
-  endDate?: string;
-  durationHours?: number;
+  startTime: string;
+  endTime: string;
+  durationHours: number;
   shiftWindow: string;
+  schemeId?: string;
+  propertyId?: string;
   handoverNotes?: string;
   userIds: string[];
   residentIds: string[];
@@ -43,8 +42,32 @@ interface ModifyShiftBlockModalProps {
   dayLabel?: string;
   staffList?: StaffMember[];
   residents?: Resident[];
+  schemes?: SchemeItem[];
+  properties?: PropertyItem[];
   onSave: (data: ShiftBlockFormData) => Promise<void>;
   isSaving?: boolean;
+}
+
+function buildDateTimeFromWindow(baseDateStr: string, windowStr: string): { start: Date; end: Date } {
+  const match = windowStr.match(/(\d{1,2}):(\d{2})\s*[-\u2013\u2014]\s*(\d{1,2}):(\d{2})/);
+  const [y, m, d] = baseDateStr.split("-").map(Number);
+  const year = y || new Date().getFullYear();
+  const month = (m || 1) - 1;
+  const day = d || 1;
+  if (!match) {
+    return {
+      start: new Date(year, month, day, 7, 0, 0, 0),
+      end: new Date(year, month, day, 15, 0, 0, 0),
+    };
+  }
+  const sh = Number(match[1]);
+  const sm = Number(match[2]);
+  const eh = Number(match[3]);
+  const em = Number(match[4]);
+  const start = new Date(year, month, day, sh, sm, 0, 0);
+  const isOvernight = eh < sh || (eh === sh && em <= sm);
+  const end = new Date(year, month, isOvernight ? day + 1 : day, eh, em, 0, 0);
+  return { start, end };
 }
 
 export function ModifyShiftBlockModal({
@@ -53,10 +76,10 @@ export function ModifyShiftBlockModal({
   initialShift,
   initialStaffId,
   initialDateStr,
-  staffName: _staffName,
-  dayLabel: _dayLabel,
   staffList = [],
   residents = [],
+  schemes = [],
+  properties = [],
   onSave,
   isSaving = false,
 }: ModifyShiftBlockModalProps): React.JSX.Element {
@@ -64,10 +87,10 @@ export function ModifyShiftBlockModal({
 
   const [formError, setFormError] = useState<string | null>(null);
   const [careType, setCareType] = useState<string>("Shared Care (Core Support)");
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [duration, setDuration] = useState<string>("8");
-  const [shiftWindow, setShiftWindow] = useState<string>("07:00 - 15:00");
+  const [startDateTime, setStartDateTime] = useState<Date | undefined>(undefined);
+  const [endDateTime, setEndDateTime] = useState<Date | undefined>(undefined);
+  const [schemeId, setSchemeId] = useState<string>("");
+  const [propertyId, setPropertyId] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
   const [selectedResidentIds, setSelectedResidentIds] = useState<string[]>([]);
@@ -75,50 +98,29 @@ export function ModifyShiftBlockModal({
   const isSharedCare = careType === "Shared Care (Core Support)";
   const isOneToOne = careType === "1:1 Dedicated Support";
   const isSleepIn = careType === "Sleep-in (Overnight)";
-  const isWakingNight = careType === "Waking Night";
   const isOffDay = careType === "Off / Rest Day";
-  const isNightShift = isSleepIn || isWakingNight;
 
-  // Single-day overnight shifts: 24h start/end clocks anchored to the chosen date.
-  const windowParts = shiftWindow.match(/(\d{1,2}):(\d{2})\s*[-\u2013\u2014]\s*(\d{1,2}):(\d{2})/);
-  const nightStartClock = windowParts
-    ? `${windowParts[1]!.padStart(2, "0")}:${windowParts[2]!}`
-    : isSleepIn
-      ? "22:00"
-      : "21:00";
-  const nightEndClock = windowParts
-    ? `${windowParts[3]!.padStart(2, "0")}:${windowParts[4]!}`
-    : "07:00";
-  const nightShiftDay = startDate ? parse(startDate, "yyyy-MM-dd", new Date()) : undefined;
-  const withClock = (clock: string): Date | undefined =>
-    nightShiftDay && clock ? parse(clock, "HH:mm", nightShiftDay) : undefined;
-  const isOvernightNight = nightEndClock <= nightStartClock;
-
-  const updateNightWindow = (startClock: string, endClock: string) => {
-    setFormError(null);
-    setShiftWindow(`${startClock} - ${endClock}`);
-    const [sh = "0", sm = "0"] = startClock.split(":");
-    const [eh = "0", em = "0"] = endClock.split(":");
-    let startMins = Number(sh) * 60 + Number(sm);
-    let endMins = Number(eh) * 60 + Number(em);
-    if (endMins <= startMins) endMins += 24 * 60;
-    const hrs = Math.round(((endMins - startMins) / 60) * 10) / 10;
-    if (!isSleepIn && hrs > 0 && hrs <= 24) setDuration(String(hrs));
-  };
+  const filteredProperties = useMemo(() => {
+    if (!schemeId) return properties;
+    return properties.filter((p) => p.schemeId === schemeId);
+  }, [properties, schemeId]);
 
   useEffect(() => {
     if (!open) return;
     setFormError(null);
     const initialCareType = initialShift?.careType || "Shared Care (Core Support)";
     setCareType(initialCareType);
-    const targetDate =
-      (initialShift ? getShiftDateStr(initialShift) : initialDateStr) ||
-      new Date().toISOString().split("T")[0] ||
-      "";
-    setStartDate(targetDate);
-    setEndDate("");
-    setDuration(initialShift?.durationHours ? String(initialShift.durationHours) : "8");
-    setShiftWindow(initialShift?.shiftWindow || "07:00 - 15:00");
+
+    if (initialShift) {
+      setStartDateTime(new Date(initialShift.startTime));
+      setEndDateTime(new Date(initialShift.endTime));
+    } else {
+      const targetDate = initialDateStr || format(new Date(), "yyyy-MM-dd");
+      const { start, end } = buildDateTimeFromWindow(targetDate, "07:00 - 15:00");
+      setStartDateTime(start);
+      setEndDateTime(end);
+    }
+
     setNotes(initialShift?.notes || "");
 
     const assignedStaff =
@@ -127,36 +129,50 @@ export function ModifyShiftBlockModal({
         : initialStaffId ? [initialStaffId] : staffList[0] ? [staffList[0].id] : [];
     setSelectedStaffIds(assignedStaff);
 
+    // Resolve initial Scheme & Property from shift.wingId or primary staff assignment
+    const initPropId = initialShift?.wingId || "";
+    if (initPropId) {
+      const matchedProp = properties.find((p) => p.id === initPropId);
+      setPropertyId(initPropId);
+      setSchemeId(matchedProp?.schemeId || "");
+    } else {
+      const primaryStaff = staffList.find((s) => s.id === assignedStaff[0]);
+      const loc = primaryStaff ? resolveStaffLocation(primaryStaff, schemes, properties) : null;
+      setSchemeId(loc?.schemeId || "");
+      setPropertyId(loc?.propertyId || "");
+    }
+
     const initialRes =
       initialShift?.residentIds && initialShift.residentIds.length > 0
         ? initialShift.residentIds
-        : initialCareType === "Shared Care (Core Support)"
-          ? residents.map((r) => r.id)
-          : residents[0] ? [residents[0].id] : [];
+        : [];
     setSelectedResidentIds(initialRes);
-  }, [open, initialShift, initialStaffId, initialDateStr, staffList, residents]);
+  }, [open, initialShift, initialStaffId, initialDateStr, staffList, residents, schemes, properties]);
 
   const handleSelectCarePreset = (preset: CareTypePreset) => {
     setFormError(null);
     setCareType(preset.id);
-    setDuration(String(preset.duration));
-    setShiftWindow(preset.window);
-    const isHouseCoverage =
-      preset.id === "Shared Care (Core Support)" ||
-      preset.id === "Sleep-in (Overnight)" ||
-      preset.id === "Waking Night";
+    const baseStr = startDateTime
+      ? format(startDateTime, "yyyy-MM-dd")
+      : initialDateStr || getShiftDateStr(initialShift as Shift) || format(new Date(), "yyyy-MM-dd");
+    const { start, end } = buildDateTimeFromWindow(
+      baseStr,
+      preset.id === "Off / Rest Day" ? "08:00 - 16:00" : preset.window,
+    );
+    setStartDateTime(start);
+    setEndDateTime(end);
+
     if (preset.id !== "Shared Care (Core Support)" && preset.id !== "2:1 Dedicated Support" && selectedStaffIds.length > 1) {
       setSelectedStaffIds(selectedStaffIds.slice(0, 1));
     }
-    if (isHouseCoverage) {
-      setSelectedResidentIds(residents.map((r) => r.id));
-    } else if (preset.id === "Off / Rest Day") {
+
+    if (preset.id === "Off / Rest Day") {
       setSelectedResidentIds([]);
     } else {
       if (preset.id === "2:1 Dedicated Support" && selectedStaffIds.length < 2 && staffList.length >= 2) {
         setSelectedStaffIds(staffList.slice(0, 2).map((s) => s.id));
       }
-      if (selectedResidentIds.length > 1) {
+      if (preset.id !== "Shared Care (Core Support)" && preset.id !== "Sleep-in (Overnight)" && preset.id !== "Waking Night" && selectedResidentIds.length > 1) {
         setSelectedResidentIds(selectedResidentIds.slice(0, 1));
       }
     }
@@ -178,12 +194,19 @@ export function ModifyShiftBlockModal({
 
   const handleFormSubmit = async () => {
     setFormError(null);
-    if (!startDate) {
-      toast({
-        title: "Validation error",
-        description: isNightShift ? "Shift date is required." : "From Date is required.",
-        variant: "destructive",
-      });
+    if (!startDateTime || !endDateTime) {
+      toast({ title: "Validation error", description: "Start and End date/time are required.", variant: "destructive" });
+      return;
+    }
+    const finalStart = isOffDay
+      ? new Date(startDateTime.getFullYear(), startDateTime.getMonth(), startDateTime.getDate(), 8, 0, 0, 0)
+      : startDateTime;
+    const finalEnd = isOffDay
+      ? new Date(endDateTime.getFullYear(), endDateTime.getMonth(), endDateTime.getDate(), 16, 0, 0, 0)
+      : endDateTime;
+
+    if (finalEnd.getTime() <= finalStart.getTime()) {
+      toast({ title: "Validation error", description: "End date & time must be after Start date & time.", variant: "destructive" });
       return;
     }
     if (selectedStaffIds.length === 0) {
@@ -198,25 +221,30 @@ export function ModifyShiftBlockModal({
       });
       return;
     }
-    if (!isOffDay && selectedResidentIds.length === 0) {
-      toast({ title: "Validation error", description: "At least one person supported must be selected.", variant: "destructive" });
+    if (!isOffDay && selectedResidentIds.length === 0 && !propertyId) {
+      toast({
+        title: "Validation error",
+        description: "Select a property or at least one person supported.",
+        variant: "destructive",
+      });
       return;
     }
 
-    const parsedDuration = isSleepIn || isOffDay ? 0 : Number.parseFloat(duration) || 8;
-    // Night/sleep-in runs are one-off unless the optional repeat date is set.
-    // Fixed 22:00-07:00 is only the sleep-in fallback; the manager's chosen times win otherwise.
-    const resolvedWindowMatches = shiftWindow.match(/(\d{1,2}:\d{2})\s*[-\u2013\u2014]\s*(\d{1,2}:\d{2})/);
-    const resolvedShiftWindow = isSleepIn
-      ? (resolvedWindowMatches ? shiftWindow : NIGHT_SHIFT_WINDOWS.sleepIn)
-      : shiftWindow;
+    const diffHours = Math.round(((finalEnd.getTime() - finalStart.getTime()) / (1000 * 60 * 60)) * 10) / 10;
+    const durationHours = isSleepIn || isOffDay ? 0 : diffHours;
+    const shiftWindow = isOffDay
+      ? "Off"
+      : `${format(finalStart, "HH:mm")} - ${format(finalEnd, "HH:mm")}`;
+
     try {
       await onSave({
         careType,
-        startDate,
-        endDate: endDate || undefined,
-        durationHours: parsedDuration,
-        shiftWindow: resolvedShiftWindow,
+        startTime: finalStart.toISOString(),
+        endTime: finalEnd.toISOString(),
+        durationHours,
+        shiftWindow,
+        schemeId: schemeId || undefined,
+        propertyId: propertyId || undefined,
         handoverNotes: notes,
         userIds: selectedStaffIds,
         residentIds: isOffDay ? [] : selectedResidentIds,
@@ -248,116 +276,105 @@ export function ModifyShiftBlockModal({
             {initialShift ? "Modify Shift Schedule" : "Create New Shift Schedule"}
           </DialogTitle>
           <DialogDescription className="text-sm text-slate-500">
-            Configure shift window, care model, multi-staff allocation, and people supported.
+            Configure care model, scheme/property, start &amp; end time, staff allocation, and people supported.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
-          {/* Care Type Preset Cards */}
-          <ShiftCareTypePresetCards
-            careType={careType}
-            onSelectCareType={handleSelectCarePreset}
-          />
+          <ShiftCareTypePresetCards careType={careType} onSelectCareType={handleSelectCarePreset} />
 
-          {/* Date Range: captured inline for single-day night/sleep-in shifts */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+          {/* Scheme & Property Assignment */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
+            <div className="space-y-1">
+              <Label className="text-md font-semibold text-slate-800">Scheme</Label>
+              <Select
+                value={schemeId || "none"}
+                onValueChange={(val) => {
+                  setFormError(null);
+                  const nextScheme = val === "none" ? "" : val;
+                  setSchemeId(nextScheme);
+                  if (propertyId) {
+                    const prop = properties.find((p) => p.id === propertyId);
+                    if (prop && nextScheme && prop.schemeId !== nextScheme) setPropertyId("");
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full h-10 bg-white">
+                  <SelectValue placeholder="Select scheme (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">All / No Specific Scheme</SelectItem>
+                  {schemes.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-md font-semibold text-slate-800">Property</Label>
+              <Select
+                value={propertyId || "none"}
+                onValueChange={(val) => {
+                  setFormError(null);
+                  const nextPropId = val === "none" ? "" : val;
+                  setPropertyId(nextPropId);
+                  const prop = properties.find((p) => p.id === nextPropId);
+                  if (prop?.schemeId) setSchemeId(prop.schemeId);
+                }}
+              >
+                <SelectTrigger className="w-full h-10 bg-white">
+                  <SelectValue placeholder="Select property (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No Specific Property</SelectItem>
+                  {filteredProperties.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Simple Start Date & Time / End Date & Time */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             <div className="space-y-1">
               <Label required className="text-md font-semibold text-slate-800">
-                {isNightShift ? "Shift Date" : "From Date"}
+                {isOffDay ? "Start Date" : "Start Date & Time"}
               </Label>
               <DatePicker
-                value={startDate}
-                onChange={(d) => {
+                variant={isOffDay ? "date" : "datetime"}
+                use12Hours={false}
+                value={startDateTime}
+                onChange={(d: Date | undefined) => {
                   setFormError(null);
-                  setStartDate(d ? format(d, "yyyy-MM-dd") : "");
+                  setStartDateTime(d);
                 }}
+                minDate={initialShift ? undefined : new Date(new Date().setHours(0, 0, 0, 0))}
                 maxYear={new Date().getFullYear() + 5}
-                placeholder={isNightShift ? "Select night shift date" : "Select shift date"}
+                placeholder={isOffDay ? "Select start date" : "Select start date & time"}
                 className="w-full"
               />
             </div>
             <div className="space-y-1">
-              <Label className="text-md font-semibold text-slate-800">
-                To Date (Optional repeat)
+              <Label required className="text-md font-semibold text-slate-800">
+                {isOffDay ? "End Date" : "End Date & Time"}
               </Label>
               <DatePicker
-                value={endDate}
-                onChange={(d) => {
+                variant={isOffDay ? "date" : "datetime"}
+                use12Hours={false}
+                value={endDateTime}
+                onChange={(d: Date | undefined) => {
                   setFormError(null);
-                  setEndDate(d ? format(d, "yyyy-MM-dd") : "");
+                  setEndDateTime(d);
                 }}
-                minDate={startDate ? new Date(startDate) : undefined}
+                minDate={startDateTime}
                 maxYear={new Date().getFullYear() + 5}
-                placeholder={isNightShift ? "One-off if empty" : "Select repeat end date"}
+                placeholder={isOffDay ? "Select end date" : "Select end date & time"}
                 className="w-full"
               />
             </div>
           </div>
 
-          {/* Night/sleep-in: 24h start/end times anchored to the shift date */}
-          {isNightShift && (
-            <div className="p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-amber-900">
-                  <Moon className="size-4 text-amber-700" />
-                  <Text as="span" size="md" weight="medium">
-                    {isSleepIn
-                      ? "Overnight Sleep-in (Flat Rate \u2022 Non-hourly)"
-                      : "Waking Night (Single Night Shift)"}
-                  </Text>
-                </div>
-                <Badge variant="secondary" state={isOvernightNight ? "warning" : "info"}>
-                  {!isSleepIn && duration ? `${duration}h · ` : ""}
-                  {isOvernightNight ? "Spans into next day" : "Same day"}
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                <div className="space-y-1">
-                  <Label required className="text-md font-medium text-slate-700">
-                    Start Time (24h)
-                  </Label>
-                  <DatePicker
-                    variant="datetime"
-                    use12Hours={false}
-                    value={withClock(nightStartClock)}
-                    onChange={(d) => {
-                      if (!d) return;
-                      updateNightWindow(format(d, "HH:mm"), nightEndClock);
-                    }}
-                    minDate={nightShiftDay}
-                    maxDate={nightShiftDay}
-                    placeholder="Select start time"
-                    className="w-full"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label required className="text-md font-medium text-slate-700">
-                    End Time (24h)
-                  </Label>
-                  <DatePicker
-                    variant="datetime"
-                    use12Hours={false}
-                    value={withClock(nightEndClock)}
-                    onChange={(d) => {
-                      if (!d) return;
-                      updateNightWindow(nightStartClock, format(d, "HH:mm"));
-                    }}
-                    minDate={nightShiftDay}
-                    maxDate={nightShiftDay}
-                    placeholder="Select end time"
-                    className="w-full"
-                  />
-                </div>
-              </div>
-
-              <Text size="xs" variant="muted">
-                One night per date. The end time rolls into the following morning automatically.
-              </Text>
-            </div>
-          )}
-
-          {/* Staff & Resident Selectors */}
           <ShiftStaffResidentSelectors
             careType={careType}
             isSharedCare={isSharedCare}
@@ -381,19 +398,6 @@ export function ModifyShiftBlockModal({
             }}
           />
 
-          {/* Timing & Duration */}
-          {!isOffDay && (
-            <ShiftTimingDurationInputs
-              isSleepIn={isSleepIn}
-              isNightShift={isNightShift}
-              duration={duration}
-              setDuration={setDuration}
-              shiftWindow={shiftWindow}
-              setShiftWindow={setShiftWindow}
-            />
-          )}
-
-          {/* Handover / Instructions Notes */}
           <div className="space-y-1">
             <Label className="text-md font-medium text-slate-700">Handover Notes / Instructions</Label>
             <Textarea
@@ -405,7 +409,6 @@ export function ModifyShiftBlockModal({
             />
           </div>
 
-          {/* Scheduling Conflict & Safeguard Error Alert */}
           {formError && (
             <Alert variant="destructive" className="animate-in fade-in duration-200">
               <AlertCircle className="size-4.5" />

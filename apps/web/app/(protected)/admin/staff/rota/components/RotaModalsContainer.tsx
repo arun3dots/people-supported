@@ -28,6 +28,7 @@ interface RotaModalsContainerProps {
   residents: Resident[];
   schemes: SchemeItem[];
   properties: PropertyItem[];
+  isLocked?: boolean;
 }
 
 export function RotaModalsContainer({
@@ -46,6 +47,7 @@ export function RotaModalsContainer({
   residents,
   schemes,
   properties,
+  isLocked = false,
 }: RotaModalsContainerProps): React.JSX.Element {
   const isModifyOpen = Boolean(editingShift || slotToAdd);
 
@@ -90,6 +92,7 @@ export function RotaModalsContainer({
         residents={residents}
         schemes={schemes}
         properties={properties}
+        isLocked={isLocked}
         onEditShift={onEditFromDetails}
       />
 
@@ -104,6 +107,8 @@ export function RotaModalsContainer({
         staffRole={modifyStaffRole}
         staffList={staffList}
         residents={residents}
+        schemes={schemes}
+        properties={properties}
         onSave={onSaveShiftBlock}
         isSaving={isSavingShift}
       />
