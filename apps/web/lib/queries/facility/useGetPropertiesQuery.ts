@@ -10,10 +10,12 @@ export type PaginatedPropertyResponse = PaginatedResponse<PropertyItem>;
 export function useGetPropertiesQuery(
   branchId?: string | null,
   options?: Partial<UseQueryOptions<PropertyItem[]>>,
+  status?: string,
 ) {
   const params: WingListQueryInput = {
     all: true,
     ...(branchId ? { branchId } : {}),
+    ...(status ? { status } : {}),
   };
 
   return useQuery({

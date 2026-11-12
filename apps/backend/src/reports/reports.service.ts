@@ -2,6 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { prisma, Prisma } from '@repo/db';
 import { formatCsv } from '../common/utils/csv.util';
 import { ReportCsvResponseDTO } from '@repo/schema';
+import {
+  exportCarePlansCsv,
+  exportCqcComplianceCsv,
+  exportInvoicesCsv,
+  exportMedicationsCsv,
+  exportOccupancyCsv,
+  exportShiftsCsv,
+} from './reports-extended.helper';
 
 type ResidentWithRelations = Prisma.ResidentGetPayload<{
   include: {
@@ -350,5 +358,29 @@ export class ReportsService {
       content,
       rowCount: escalations.length,
     };
+  }
+
+  exportOccupancyCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportOccupancyCsv(tenantId, branchId);
+  }
+
+  exportMedicationsCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportMedicationsCsv(tenantId, branchId);
+  }
+
+  exportCarePlansCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportCarePlansCsv(tenantId, branchId);
+  }
+
+  exportShiftsCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportShiftsCsv(tenantId, branchId);
+  }
+
+  exportCqcComplianceCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportCqcComplianceCsv(tenantId, branchId);
+  }
+
+  exportInvoicesCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+    return exportInvoicesCsv(tenantId, branchId);
   }
 }

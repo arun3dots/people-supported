@@ -5,7 +5,6 @@ import {
   Building2,
   FolderKanban,
   DoorOpen,
-  BedDouble,
   UserCheck,
   Sparkles,
 } from "lucide-react";
@@ -24,27 +23,27 @@ export function PropertiesSchemeStats({
   const totalProperties = properties.length;
   const totalSchemes = schemes.length;
   const totalRooms = properties.reduce((acc, p) => acc + (p.totalRooms || 0), 0);
-  const totalCapacity = properties.reduce(
-    (acc, p) => acc + (p.totalBeds || 0),
-    0,
-  );
-  const occupiedCount = properties.reduce(
-    (acc, p) => acc + (p.occupiedBeds || 0),
-    0,
-  );
-  const vacantCount = properties.reduce(
-    (acc, p) => acc + (p.vacantBeds || 0),
-    0,
-  );
+  const occupiedRooms = properties.reduce((acc, p) => {
+    if (p.roomTenancies && p.roomTenancies.length > 0) {
+      return acc + p.roomTenancies.filter((r) => r.tenancyStatus === "In tenancy").length;
+    }
+    return acc + (p.occupiedBeds || 0);
+  }, 0);
+  const vacantRooms = properties.reduce((acc, p) => {
+    if (p.roomTenancies && p.roomTenancies.length > 0) {
+      return acc + p.roomTenancies.filter((r) => r.tenancyStatus === "Void").length;
+    }
+    return acc + (p.vacantBeds || 0);
+  }, 0);
 
   const occupiedPct =
-    totalCapacity > 0 ? Math.round((occupiedCount / totalCapacity) * 100) : 0;
+    totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
   const vacantPct =
-    totalCapacity > 0 ? Math.round((vacantCount / totalCapacity) * 100) : 0;
+    totalRooms > 0 ? Math.round((vacantRooms / totalRooms) * 100) : 0;
 
   return (
     <FacilityStatCards
-      className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4"
+      className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"
       cards={[
         {
           title: "Total Properties",
@@ -71,17 +70,9 @@ export function PropertiesSchemeStats({
           subtitleColor: "text-slate-500",
         },
         {
-          title: "Total Capacity",
-          value: String(totalCapacity),
-          subtitle: "Beds available",
-          icon: <BedDouble className="size-5 text-emerald-800" />,
-          iconClassName: "bg-slate-100",
-          subtitleColor: "text-slate-500",
-        },
-        {
           title: "Occupied",
           value: `${occupiedPct}%`,
-          subtitle: `${occupiedCount} of ${totalCapacity} beds occupied`,
+          subtitle: `${occupiedRooms} of ${totalRooms} rooms occupied`,
           icon: <UserCheck className="size-5 text-emerald-800" />,
           iconClassName: "bg-emerald-50",
           subtitleColor: "text-emerald-800",
@@ -89,7 +80,7 @@ export function PropertiesSchemeStats({
         {
           title: "Vacant",
           value: `${vacantPct}%`,
-          subtitle: `${vacantCount} beds ready for referral`,
+          subtitle: `${vacantRooms} rooms ready for referral`,
           icon: <Sparkles className="size-5 text-amber-600" />,
           iconClassName: "bg-amber-50",
           subtitleColor: "text-amber-700",

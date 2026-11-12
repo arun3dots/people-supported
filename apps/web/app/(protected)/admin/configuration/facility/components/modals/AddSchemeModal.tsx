@@ -51,18 +51,20 @@ export function AddSchemeModal({
   const [description, setDescription] = useState("");
   const [commissioningLa, setCommissioningLa] = useState("");
   const [housingPartner, setHousingPartner] = useState("");
-  const [schemeManagerId, setSchemeManagerId] = useState("none");
-  const [commissionedHours, setCommissionedHours] = useState("240");
-  const [targetOccupancy, setTargetOccupancy] = useState("90");
-  const [status, setStatus] = useState("Active");
+  const [schemeManagerId, setSchemeManagerId] = useState("");
+  const [commissionedHours, setCommissionedHours] = useState("");
+  const [targetOccupancy, setTargetOccupancy] = useState("");
+  const [status, setStatus] = useState("");
   const [selectedPropertyIds, setSelectedPropertyIds] = useState<string[]>([]);
   const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
   const [selectedResidentIds, setSelectedResidentIds] = useState<string[]>([]);
   const [nameError, setNameError] = useState<string | undefined>();
+  const [formError, setFormError] = useState<string | undefined>();
 
   useEffect(() => {
     if (!isOpen) return;
     setNameError(undefined);
+    setFormError(undefined);
     if (initialData) {
       setName(initialData.name || "");
       setReferenceId(initialData.referenceId || "");
@@ -99,10 +101,10 @@ export function AddSchemeModal({
       setDescription("");
       setCommissioningLa("");
       setHousingPartner("");
-      setSchemeManagerId("none");
-      setCommissionedHours("240");
-      setTargetOccupancy("90");
-      setStatus("Active");
+      setSchemeManagerId("");
+      setCommissionedHours("");
+      setTargetOccupancy("");
+      setStatus("");
       setSelectedPropertyIds([]);
       setSelectedStaffIds([]);
       setSelectedResidentIds([]);
@@ -123,19 +125,30 @@ export function AddSchemeModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
       setNameError("Scheme name is required");
       return;
     }
+    if (trimmedName.length < 2) {
+      setNameError("Scheme name must be at least 2 characters");
+      return;
+    }
+    if (!status) {
+      setFormError("Please select a status");
+      return;
+    }
 
-    const selectedManager = staffList.find((s) => s.id === schemeManagerId);
+    const resolvedManagerId =
+      schemeManagerId && schemeManagerId !== "none" ? schemeManagerId : null;
+    const selectedManager = staffList.find((s) => s.id === resolvedManagerId);
     const payload: CreateSchemeDTO = {
       name: name.trim(),
       referenceId: referenceId.trim() || undefined,
       location: location.trim() || undefined,
       description: description.trim() || undefined,
       commissioningLa: commissioningLa.trim() || undefined,
-      schemeManagerId: schemeManagerId !== "none" ? schemeManagerId : null,
+      schemeManagerId: resolvedManagerId,
       commissionedHours: commissionedHours
         ? Number(commissionedHours)
         : undefined,
@@ -150,6 +163,7 @@ export function AddSchemeModal({
       },
     };
 
+    setFormError(undefined);
     try {
       if (isEdit && initialData && onUpdate) {
         await onUpdate(initialData.id, payload);
@@ -158,9 +172,13 @@ export function AddSchemeModal({
       }
       onOpenChange(false);
     } catch (err) {
-      setNameError(
-        err instanceof Error ? err.message : "Failed to save scheme",
-      );
+      const msg = err instanceof Error ? err.message : "Failed to save scheme";
+      const lower = msg.toLowerCase();
+      if (lower.includes("already exists") || lower.includes("scheme name")) {
+        setNameError(msg);
+      } else {
+        setFormError(msg);
+      }
     }
   };
 
@@ -191,6 +209,14 @@ export function AddSchemeModal({
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+            {formError && (
+              <div
+                role="alert"
+                className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700"
+              >
+                {formError}
+              </div>
+            )}
             <AddSchemeFormFields
               name={name}
               onNameChange={(val) => {

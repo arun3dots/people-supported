@@ -16,6 +16,7 @@ import {
   useGetPropertiesQuery,
 } from "../../../../../../lib/queries/facility";
 import { useGetResidentsQuery } from "../../../../../../lib/queries/residents";
+import { useExportShiftsReportMutation } from "../../../../../../lib/queries/reports";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import type { StaffMember } from "../../../../../../lib/types/staff";
 import {
@@ -101,6 +102,23 @@ export function RotaContainer(): React.JSX.Element {
 
   const updateShiftMutation = useUpdateShiftMutation();
   const createShiftMutation = useCreateShiftMutation();
+  const exportShiftsMutation = useExportShiftsReportMutation();
+
+  const handleExportRotaCsv = async () => {
+    try {
+      const res = await exportShiftsMutation.mutateAsync();
+      toast({
+        title: "Rota Report Exported",
+        description: `${res?.rowCount ?? 0} shifts exported to CSV.`,
+      });
+    } catch {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export staff rota report.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const shifts: Shift[] = useMemo(() => (Array.isArray(shiftsData) ? shiftsData : []), [shiftsData]);
   const staffList: StaffMember[] = useMemo(() => (Array.isArray(staffData) ? staffData : []), [staffData]);
@@ -261,7 +279,7 @@ export function RotaContainer(): React.JSX.Element {
           const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
           if (staffList[0] && targetDay) setSlotToAdd({ staff: staffList[0], day: targetDay });
         }}
-        onExport={handleExportCsv}
+        onExport={handleExportRotaCsv}
       />
 
       <RotaUnifiedFilterBar
@@ -321,7 +339,8 @@ export function RotaContainer(): React.JSX.Element {
             }}
             onViewHours={() => handleViewChange("hours")}
             onViewAllocation={() => router.push("/admin/staff")}
-            onExportExcel={handleExportCsv}
+            onExportPdf={() => typeof window !== "undefined" && window.print()}
+            onExportExcel={handleExportRotaCsv}
             onViewAudit={() => router.push("/admin/audit-log")}
           />
         </>

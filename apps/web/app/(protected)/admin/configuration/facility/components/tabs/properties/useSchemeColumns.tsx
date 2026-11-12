@@ -151,7 +151,10 @@ export function useSchemeColumns({
         cell: ({ row }) => {
           const s = row.original;
           return (
-            <div className="flex justify-center">
+            <div
+              className="flex justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               <RowActions
                 onEdit={() => onEdit(s)}
                 editLabel={`Edit ${s.name}`}

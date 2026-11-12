@@ -18,6 +18,7 @@ import { DeleteConfirmDialog } from "../../../../../../../lib/components/shared/
 import { FacilityFilterBar } from "../shared/FacilityFilterBar";
 import { PropertiesSchemeStats } from "../shared/PropertiesSchemeStats";
 import { AddSchemeModal } from "../modals/AddSchemeModal";
+import { SchemeDetailDrawer } from "../modals/SchemeDetailDrawer";
 import { useSchemeColumns } from "./properties/useSchemeColumns";
 import { Button, toast } from "@repo/ui/components/ui";
 
@@ -25,6 +26,7 @@ export function SchemesTab() {
   const queryClient = useQueryClient();
 
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [viewScheme, setViewScheme] = useState<SchemeItem | null>(null);
   const [editScheme, setEditScheme] = useState<SchemeItem | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
@@ -169,6 +171,7 @@ export function SchemesTab() {
         data={filteredSchemes}
         paginatedData={paginatedSchemes}
         columns={columns}
+        onRowClick={setViewScheme}
         renderCard={(s, idx) => (
           <EntityCard
             key={s.id}
@@ -253,6 +256,16 @@ export function SchemesTab() {
         onCreate={async () => {}}
         onUpdate={(id, data) => updateMutation.mutateAsync({ id, data })}
         isSubmitting={updateMutation.isPending}
+      />
+
+      <SchemeDetailDrawer
+        scheme={viewScheme}
+        properties={allProperties}
+        onClose={() => setViewScheme(null)}
+        onEditScheme={(s) => {
+          setViewScheme(null);
+          setEditScheme(s);
+        }}
       />
 
       <DeleteConfirmDialog
