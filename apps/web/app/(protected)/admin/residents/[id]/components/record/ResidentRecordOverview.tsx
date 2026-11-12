@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Activity, FileText, ShieldCheck, User } from "lucide-react";
+import Link from "next/link";
+import { Activity, FileText, Pencil, ShieldCheck, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Card, InfoField, Spinner, Text } from "@repo/ui/components/ui";
+import { Button, Card, InfoField, Spinner, Text } from "@repo/ui/components/ui";
 import type { SupportedLivingDetailsDTO } from "@repo/schema";
 import {
   useGetResidentQuery,
@@ -70,57 +71,77 @@ export function ResidentRecordOverview({
   const nokPhone = resident?.nextOfKin?.phoneNumber || "07700 900321";
   const allergiesList = resident?.careProfile?.allergies ?? [];
 
-  const sections: Array<{ title: string; icon: LucideIcon; rows: SummaryRow[] }> = [
+  const sections: Array<{
+    title: string;
+    icon: LucideIcon;
+    step: number;
+    rows: SummaryRow[];
+  }> = [
     {
       title: "Activities of Daily Living (ADLs)",
       icon: Activity,
+      step: 7,
       rows: buildAdlRows(parts.partD, hasSavedAdls),
     },
     {
       title: "Advance care planning",
       icon: FileText,
+      step: 9,
       rows: buildAdvanceCareRows(parts.partF),
     },
     {
       title: "About me",
       icon: User,
+      step: 2,
       rows: buildAboutMeRows(parts.partG),
     },
     {
       title: "Capacity, consent, DoLS",
       icon: ShieldCheck,
+      step: 8,
       rows: buildCapacityRows(parts.partE),
     },
   ];
 
   return (
     <div className="space-y-6 font-sans">
-      {sections.map((section) => {
-        const filled = section.rows.filter(([, value]) => hasValue(value));
-        return (
-          <Card key={section.title} variant="surface" className="p-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <section.icon className="size-4 text-primary" />
-              <Text as="h3" size="md" weight="semibold" className="text-slate-900">
-                {section.title}
-              </Text>
-            </div>
-            {filled.length === 0 ? (
-              <Text size="md" className="text-slate-500">
-                Nothing recorded yet.
-              </Text>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filled.map(([label, value], idx) => (
-                  <InfoField key={`${label}-${idx}`} label={label} value={value} multiline />
-                ))}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {sections.map((section) => {
+          const filled = section.rows.filter(([, value]) => hasValue(value));
+          return (
+            <Card key={section.title} variant="surface" className="p-6 space-y-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <section.icon className="size-4 text-primary" />
+                  <Text as="h3" size="md" weight="semibold" className="text-slate-900">
+                    {section.title}
+                  </Text>
+                </div>
+                {canEdit && (
+                  <Link href={`/admin/residents/admit?id=${residentId}&step=${section.step}`}>
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      <Pencil className="size-3.5" /> Edit
+                    </Button>
+                  </Link>
+                )}
               </div>
-            )}
-          </Card>
-        );
-      })}
+              {filled.length === 0 ? (
+                <Text size="md" className="text-slate-500">
+                  Nothing recorded yet.
+                </Text>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {filled.map(([label, value], idx) => (
+                    <InfoField key={`${label}-${idx}`} label={label} value={value} multiline />
+                  ))}
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
 
-      <ResidentRecordSecondaryCards
+      {/* <ResidentRecordSecondaryCards
         residentId={residentId}
         canEdit={canEdit}
         onEditSection={setEditSection}
@@ -133,7 +154,7 @@ export function ResidentRecordOverview({
         nokPhone={nokPhone}
         allergiesList={allergiesList}
         preAdmissionRecord={record}
-      />
+      /> */}
 
       <SupportedLivingProfileEditModal
         section={editSection}

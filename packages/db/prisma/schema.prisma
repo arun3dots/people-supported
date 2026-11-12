@@ -1002,7 +1002,7 @@ model ResidentNeedCarePlan {
   @@index([residentId, isCurrent])
 }
 
-// --- Care journey step 4: recurring carer tasks created from care plan steps ---
+// --- Care journey step 4: recurring carer tasks scheduled separately from plan steps ---
 // recurrence: { type: 'daily' | 'weekly', days?: number[] (0=Sunday) }
 model ResidentCareTask {
   id           String    @id @default(uuid())
@@ -1010,7 +1010,7 @@ model ResidentCareTask {
   branchId     String
   residentId   String
   carePlanId   String
-  stepIndex    Int?
+  stepIndex    Int? // Retained for existing tasks created from support steps.
   title        String
   description  String?
   shift        String    @default("Day") // Day, Night

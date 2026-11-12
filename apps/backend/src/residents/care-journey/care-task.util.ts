@@ -13,7 +13,6 @@ import {
   AssessmentNeedSchema,
   cleanAreaSource,
   getCareArea,
-  shiftForTime,
   type AssessmentNeedDTO,
   type CareTaskRecurrenceDTO,
   type CreateNeedCarePlanDTO,
@@ -167,57 +166,4 @@ export async function syncDraftAssessmentNeed(
     });
   }
   return assessment.id;
-}
-
-const DEFAULT_TASK_TIME = '08:00';
-/** A step such as "Check pad and skin at 20:00" keeps that time on the task. */
-export const timeFromStep = (step: string): string => {
-  const match = /([01]?\d|2[0-3]):([0-5]\d)/.exec(step);
-  return match ? `${match[1].padStart(2, '0')}:${match[2]}` : DEFAULT_TASK_TIME;
-};
-
-/**
- * Ensures each agreed support step has a carer task, without overwriting
- * times or roles already configured by hand.
- */
-export async function ensureAgreedStepTasks(
-  tx: PrismaTransactionClient,
-  plan: Pick<
-    ResidentNeedCarePlan,
-    'id' | 'tenantId' | 'branchId' | 'residentId'
-  >,
-  steps: string[],
-  userId: string,
-): Promise<void> {
-  const existing = await tx.residentCareTask.findMany({
-    where: { carePlanId: plan.id },
-    select: { stepIndex: true, title: true },
-  });
-  const usedIndexes = new Set(
-    existing.map((t) => t.stepIndex).filter((i): i is number => i !== null),
-  );
-  const usedTitles = new Set(existing.map((t) => t.title.trim().toLowerCase()));
-
-  for (const [index, title] of steps.entries()) {
-    if (usedIndexes.has(index) || usedTitles.has(title.toLowerCase())) {
-      continue;
-    }
-    const time = timeFromStep(title);
-    await tx.residentCareTask.create({
-      data: {
-        tenantId: plan.tenantId,
-        branchId: plan.branchId,
-        residentId: plan.residentId,
-        carePlanId: plan.id,
-        stepIndex: index,
-        title,
-        shift: shiftForTime(time),
-        time,
-        role: 'Carer',
-        recurrence: { type: 'daily', days: [] },
-        createdById: userId,
-        updatedById: userId,
-      },
-    });
-  }
 }

@@ -150,7 +150,10 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
         <TextAreaField label="My strengths" value={content.strengths} disabled={isAgreed} onChange={(v) => set("strengths", v)} />
       </PartCard>
 
-      <PartCard title="HOW WE WILL SUPPORT" description="Each step can become a timed carer task.">
+      <PartCard
+        title="HOW WE WILL SUPPORT"
+        description="Describe support steps here; add scheduled tasks separately below."
+      >
         <TextAreaField label="Outcome" value={content.outcome} disabled={isAgreed} onChange={(v) => set("outcome", v)} />
         <div className="space-y-2">
           <Label>How staff will support me</Label>

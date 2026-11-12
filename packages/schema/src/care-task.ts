@@ -32,7 +32,6 @@ export const CareTaskRecurrenceSchema = z.object({
 export type CareTaskRecurrenceDTO = z.infer<typeof CareTaskRecurrenceSchema>;
 
 const CreateCareTaskBaseSchema = z.object({
-  stepIndex: z.number().int().min(0).nullable().optional(),
   title: z.string().trim().min(1, "Title is required"),
   description: text,
   shift: CareTaskShiftEnum.optional(),
@@ -129,7 +128,7 @@ export interface CareTaskDefinitionDTO {
   carePlanId: string;
   areaKey: AssessmentAreaKey;
   area: string;
-  stepIndex: number | null;
+  stepIndex: number | null; // Legacy metadata from tasks generated from support steps.
   title: string;
   description: string | null;
   shift: CareTaskShift;

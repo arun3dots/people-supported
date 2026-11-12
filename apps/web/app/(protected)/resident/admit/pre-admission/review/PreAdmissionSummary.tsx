@@ -280,9 +280,9 @@ export function PreAdmissionSummary({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      {cards.map((card) => (
+      {/* {cards.map((card) => (
         <SummaryCard key={card.title} title={card.title} rows={card.rows} />
-      ))}
+      ))} */}
     </div>
   );
 }
