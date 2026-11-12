@@ -45,7 +45,7 @@ export function OutcomeSection({ formData, onChange, readOnly }: Props) {
             <RadioGroupItem value="APPROVED" id="decision-approved" disabled={readOnly} />
             <Text className="cursor-pointer">
               <Text as="span" size="md" weight="semibold" className="block">Suitable for Admission</Text>
-              <Text as="span" size="md" variant="muted" className="block">Care home can meet all identified care and clinical needs</Text>
+              <Text as="span" size="md" variant="muted" className="block">Supported living service can meet all identified care and clinical needs</Text>
             </Text>
           </div>
 

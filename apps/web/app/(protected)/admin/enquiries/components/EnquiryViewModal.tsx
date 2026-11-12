@@ -35,7 +35,7 @@ function createEnquiryPreviewSections(enquiry: EnquiryResponseDTO): PreviewSecti
     {
       id: "enquirer-contact",
       title: "Enquirer Contact Details",
-      description: "Person contacting the care home on behalf of the resident",
+      description: "Person contacting the supported living service on behalf of the resident",
       fields: [
         { label: "Full Name", value: enquiry.enquirerName || "—" },
         { label: "Relationship to Resident", value: enquiry.enquirerRelationship || "—" },

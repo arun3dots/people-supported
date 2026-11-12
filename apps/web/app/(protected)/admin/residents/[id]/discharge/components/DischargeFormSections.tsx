@@ -89,7 +89,7 @@ export function DischargeFormSections({
           <div className="sm:col-span-2 lg:col-span-5 space-y-1.5">
             <Label required>Reason for Discharge</Label>
             <Input
-              placeholder="e.g. Moving to another care home"
+              placeholder="e.g. Moving to another supported living service"
               value={formData.reason}
               onChange={(e) => {
                 setFormData((prev) => ({ ...prev, reason: e.target.value }));

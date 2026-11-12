@@ -75,7 +75,7 @@ export function AssessmentFormTab({
         id: t.id,
         name: t.name,
         category: t.category,
-        description: t.description || "Custom care home template",
+        description: t.description || "Custom supported living template",
         isPreset: false,
         questions,
       };
@@ -176,7 +176,7 @@ export function AssessmentFormTab({
                     <>
                       <SelectSeparator />
                       <SelectGroup>
-                        <SelectLabel>Custom Care Home Templates</SelectLabel>
+                        <SelectLabel>Custom Supported Living Templates</SelectLabel>
                         {dbOptions.map((tmpl) => (
                           <SelectItem key={tmpl.id} value={tmpl.id}>
                             {tmpl.name} ({tmpl.category})

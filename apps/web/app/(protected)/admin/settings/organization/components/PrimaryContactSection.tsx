@@ -57,7 +57,7 @@ export function PrimaryContactSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Contact Email"
-            value={profile?.primaryContactEmail || "eleanor@carehome.com"}
+            value={profile?.primaryContactEmail || "eleanor@example.com"}
             multiline
           />
         </div>

@@ -101,7 +101,7 @@ export class DataRightsService {
     });
 
     if (!resident) {
-      throw new NotFoundException('Resident not found in this care home');
+      throw new NotFoundException('Resident not found in this supported living service');
     }
 
     const now = new Date();
@@ -235,7 +235,7 @@ export class DataRightsService {
     });
 
     if (!staff) {
-      throw new NotFoundException('Staff member not found in this care home');
+      throw new NotFoundException('Staff member not found in this supported living service');
     }
 
     const now = new Date();

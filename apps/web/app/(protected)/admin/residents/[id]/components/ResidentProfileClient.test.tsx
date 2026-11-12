@@ -4,10 +4,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ResidentProfileClient } from "./ResidentProfileClient";
 
 const mockPush = vi.fn();
+let mockSearchParams = new URLSearchParams();
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush, back: vi.fn() }),
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => mockSearchParams,
   usePathname: () => "/admin/residents/res-1",
 }));
 
@@ -93,6 +94,7 @@ describe("ResidentProfileClient", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSearchParams = new URLSearchParams();
   });
 
   it("renders a loading state when query is loading", () => {
@@ -102,11 +104,11 @@ describe("ResidentProfileClient", () => {
     expect(container.querySelector(".animate-spin")).toBeInTheDocument();
   });
 
-  it("renders 'Resident not found' if query returns null", () => {
+  it("renders 'Record not found' if query returns null", () => {
     mockUseGetResidentQuery.mockReturnValue({ data: null, isLoading: false });
 
     render(<ResidentProfileClient residentId={residentId} />);
-    expect(screen.getByText("Resident not found")).toBeInTheDocument();
+    expect(screen.getByText("Record not found")).toBeInTheDocument();
   });
 
   it("renders the hero banner, page header, and overview tab when resident data is present", () => {
@@ -117,6 +119,15 @@ describe("ResidentProfileClient", () => {
     expect(screen.getByTestId("hero-banner")).toHaveTextContent("Jane Doe");
     expect(screen.getByTestId("page-header")).toHaveTextContent("Jane Doe");
     expect(screen.getByTestId("overview-tab")).toBeInTheDocument();
+  });
+
+  it("renders ResidentRecordCarePlans for the Support Plan (careplan) tab", () => {
+    mockSearchParams = new URLSearchParams("tab=careplan");
+    mockUseGetResidentQuery.mockReturnValue({ data: mockResident, isLoading: false });
+
+    render(<ResidentProfileClient residentId={residentId} />);
+
+    expect(screen.getByTestId("care-plans-tab")).toBeInTheDocument();
   });
 
   it("navigates to the discharge route when the discharge button in header is clicked", () => {

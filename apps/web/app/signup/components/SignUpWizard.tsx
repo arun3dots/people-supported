@@ -249,9 +249,9 @@ export function SignUpWizard() {
   }
 
   const titles = [
-    { title: "Set up your care home", subtitle: "Tell us a little about your care home." },
+    { title: "Set up your supported living service", subtitle: "Tell us a little about your supported living service." },
     { title: "Your admin account", subtitle: "Create the first administrator account." },
-    { title: "Choose a plan", subtitle: "Pick the best plan to start managing your care home." },
+    { title: "Choose a plan", subtitle: "Pick the best plan to start managing your supported living service." },
   ];
   const activeHeader = titles[step - 1] || titles[0];
 

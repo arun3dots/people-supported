@@ -232,7 +232,7 @@ export class StaffService {
         user.email,
         user.fullName,
         tempPassword,
-        user.tenant?.name || 'Care Home',
+        user.tenant?.name || 'Supported Living',
       );
     } catch (mailError: unknown) {
       this.logger.error('Error sending staff welcome email:', mailError);

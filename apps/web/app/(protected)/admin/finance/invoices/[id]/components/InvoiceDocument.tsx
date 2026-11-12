@@ -120,7 +120,7 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
                   Cantra
                 </Text>
                 <Text size="md" weight="medium" className="text-slate-400 block leading-none">
-                  Care &amp; Support Home
+                  Supported Living
                 </Text>
               </div>
             </div>
@@ -131,12 +131,12 @@ export function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
             </Text>
           </div>
 
-          {/* Care Home Details & Invoice Metadata */}
+          {/* Supported Living Service Details & Invoice Metadata */}
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pt-2">
-            {/* Care Home Sender Info */}
+            {/* Supported Living Service Sender Info */}
             <div className="space-y-1 text-md text-slate-600">
               <Text size="md" weight="bold" className="text-slate-900">
-                Cantra Care Home
+                Cantra Supported Living
               </Text>
               <Text size="md" weight="regular" className="text-slate-600 block">
                 221b Baker Street, London, NW16XE, United Kingdom.

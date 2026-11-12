@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Eye, DoorOpen, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Eye, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Badge, Text } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../../lib/types/facility";
 import { RowActions } from "../../../../../../../../lib/components/shared/RowActions";
@@ -11,7 +11,6 @@ interface UsePropertyColumnsProps {
   onSelectProperty: (property: PropertyItem) => void;
   onEdit: (property: PropertyItem) => void;
   onDelete: (id: string) => void;
-  onNavigate: (tab: string, extra?: Record<string, string>) => void;
 }
 
 function getInitials(name: string): string {
@@ -26,7 +25,6 @@ export function usePropertyColumns({
   onSelectProperty,
   onEdit,
   onDelete,
-  onNavigate,
 }: UsePropertyColumnsProps): TableColumn<PropertyItem>[] {
   return useMemo<TableColumn<PropertyItem>[]>(
     () => [
@@ -158,27 +156,27 @@ export function usePropertyColumns({
           );
         },
       },
-      {
-        id: "safetyEvidence",
-        header: "Safety Evidence",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const p = row.original;
-          const st = p.safetyEvidenceStatus;
-          const state =
-            st === "On track" ? "success" : st === "Due soon" ? "warning" : "danger";
-          return (
-            <Badge variant="secondary" state={state} className="border gap-1">
-              {st === "On track" ? (
-                <CheckCircle2 className="size-3" />
-              ) : (
-                <AlertTriangle className="size-3" />
-              )}
-              {st}
-            </Badge>
-          );
-        },
-      },
+      // {
+      //   id: "safetyEvidence",
+      //   header: "Safety Evidence",
+      //   enableSorting: false,
+      //   cell: ({ row }) => {
+      //     const p = row.original;
+      //     const st = p.safetyEvidenceStatus;
+      //     const state =
+      //       st === "On track" ? "success" : st === "Due soon" ? "warning" : "danger";
+      //     return (
+      //       <Badge variant="secondary" state={state} className="border gap-1">
+      //         {st === "On track" ? (
+      //           <CheckCircle2 className="size-3" />
+      //         ) : (
+      //           <AlertTriangle className="size-3" />
+      //         )}
+      //         {st}
+      //       </Badge>
+      //     );
+      //   },
+      // },
       {
         id: "status",
         header: "Status",
@@ -219,11 +217,6 @@ export function usePropertyColumns({
                     icon: Eye,
                     onClick: () => onSelectProperty(p),
                   },
-                  {
-                    label: "Manage Rooms",
-                    icon: DoorOpen,
-                    onClick: () => onNavigate("rooms", { wingId: p.id }),
-                  },
                 ]}
               />
             </div>
@@ -231,6 +224,6 @@ export function usePropertyColumns({
         },
       },
     ],
-    [onSelectProperty, onEdit, onDelete, onNavigate],
+    [onSelectProperty, onEdit, onDelete],
   );
 }

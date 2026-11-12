@@ -69,7 +69,7 @@ export function ExpenseDirectoryClient() {
     <>
       <EntityListView<ExpenseItem>
         title="Expense Management"
-        description="Track operational care home costs, medical supplies, catering, utilities, and staffing."
+        description="Track supported living service costs, medical supplies, catering, utilities, and staffing."
         overviewTitle="Expense Overview"
         storageKey="expenses_directory_view_mode"
         headerActions={

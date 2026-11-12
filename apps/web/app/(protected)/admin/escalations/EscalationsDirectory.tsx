@@ -109,11 +109,11 @@ export function EscalationsDirectory() {
         <SelectTrigger >
           <div className="flex items-center gap-2">
             <Building2 className="size-4 text-slate-400" />
-            <SelectValue placeholder="All Care Home Branches" />
+            <SelectValue placeholder="All Supported Living Services" />
           </div>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Care Home Branches</SelectItem>
+          <SelectItem value="all">All Supported Living Services</SelectItem>
           {branches.map((b) => (
             <SelectItem key={b.id} value={b.id}>
               {b.name}

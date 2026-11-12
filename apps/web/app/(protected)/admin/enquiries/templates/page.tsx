@@ -150,11 +150,11 @@ export default function AssessmentTemplatesPage() {
         </div>
       </div>
 
-      {/* ── Custom Care Home Templates ──────────────────────────────────── */}
+      {/* ── Custom Supported Living Templates ───────────────────────────── */}
       <div className="space-y-3 pt-4">
         <Text as="h2" size="md" weight="bold" className="flex items-center gap-2">
           <FileText className="size-4 text-slate-700" />
-          Custom Care Home Templates
+          Custom Supported Living Templates
         </Text>
 
         {isLoading ? (

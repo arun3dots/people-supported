@@ -114,7 +114,7 @@ export function OrgBrandingCard({ initialLogoUrl, onLogoChange }: OrgBrandingCar
           Branding
         </Text>
         <Text size={'md'} weight={'regular'} className="text-slate-500">
-          Your care home&apos;s brand identity
+          Your supported living service&apos;s brand identity
         </Text>
       </div>
 
@@ -138,7 +138,7 @@ export function OrgBrandingCard({ initialLogoUrl, onLogoChange }: OrgBrandingCar
 
             <img
               src={logoUrl}
-              alt="Care Home Logo"
+              alt="Supported Living Service Logo"
               className="size-full object-cover"
             />
           ) : (
