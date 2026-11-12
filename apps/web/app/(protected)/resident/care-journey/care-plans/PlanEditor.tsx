@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
 import {
+  cleanAreaSource,
   SUPPORT_LEVELS,
   type CareTaskDefinitionDTO,
   type NeedCarePlanContentDTO,
@@ -84,6 +85,8 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
     return () => clearTimeout(timer);
   }, [content, level, reviewDate, dirty, isDraft]);
 
+  const sourceLabel = cleanAreaSource(plan.areaKey, content.source);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -92,7 +95,7 @@ export function PlanEditor({ residentId, plan, tasks }: PlanEditorProps) {
             {plan.area}
           </Text>
           <p className="text-md text-slate-600">
-            {content.source} · version {plan.versionNumber}
+            {sourceLabel ? `${sourceLabel} · ` : ""}version {plan.versionNumber}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

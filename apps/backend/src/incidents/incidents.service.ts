@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -70,7 +71,7 @@ export class IncidentsService {
     dto: CreateIncidentDTO,
     tenantId: string,
     userId: string,
-    branchId: string,
+    branchId?: string,
   ) {
     const incidentDate = new Date(`${dto.incidentDate}T00:00:00`);
     const today = new Date();
@@ -81,11 +82,8 @@ export class IncidentsService {
       );
     }
 
-    const incidentNumber = await this.generateIncidentNumber(tenantId);
-
-    // If the incident is tied to a resident, the resident's own branch wins
-    // over the caller's scope, so the incident can never disagree with the
-    // resident it's about.
+    // If the incident is tied to a resident/tenant, their own branch wins
+    // over the caller's scope, so tenant-wide callers don't need to pass branchId.
     let resolvedBranchId = branchId;
     if (dto.residentId) {
       const resident = await prisma.resident.findFirst({
@@ -95,6 +93,14 @@ export class IncidentsService {
       if (!resident) throw new NotFoundException('Resident not found');
       resolvedBranchId = resident.branchId;
     }
+
+    if (!resolvedBranchId) {
+      throw new ForbiddenException(
+        'Branch scope missing - assign a branch to this user, select a tenant, or specify branchId explicitly',
+      );
+    }
+
+    const incidentNumber = await this.generateIncidentNumber(tenantId);
 
     const compliance = this.dutyOfCandourService.evaluateComplianceFlags({
       severity: dto.severity,

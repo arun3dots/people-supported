@@ -73,9 +73,7 @@ export function SupportedLivingProfileEditModal({
   useEffect(() => {
     if (!section) return;
     setTenancyStartDate(details.tenancy?.tenancyStartDate || "2023-01-01");
-    setLandlord(
-      details.tenancy?.landlord || "Yorkshire Housing Association",
-    );
+    setLandlord(details.tenancy?.landlord || "");
     setTenancyType(
       details.tenancy?.tenancyType || "Assured Shorthold Tenancy",
     );

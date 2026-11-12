@@ -42,7 +42,7 @@ export function PartCMedicinesSection({
 
   return (
     <PartCard
-      title="C · Medicines"
+      title="Medicines"
       description="Record all current prescribed, over-the-counter, and as-needed (PRN) medications."
     >
       <CardRepeatableSection<Medicine>

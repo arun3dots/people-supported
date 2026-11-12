@@ -55,23 +55,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
     //     },
     //   ],
     // },
-    {
-      category: "PEOPLE SUPPORTED",
-      icon: Heart,
-      items: [
-        {
-          title: "People Supported",
-          url: "/admin/residents",
-          icon: Heart,
-          hasSubmenu: false,
-          subItems: [
-            { title: "People Supported Directory", url: "/admin/residents" },
-            { title: "Daily Tasks Board", url: "/admin/care-plans/daily-tasks" },
-            { title: "Clinical Escalations & CQC", url: "/admin/escalations" },
-          ],
-        },
-      ],
-    },
+   
     {
       category: "PROPERTIES & SCHEMES",
       icon: Building2,
@@ -84,6 +68,23 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           subItems: [
             { title: "Properties Directory", url: "/admin/configuration/facility/properties" },
             { title: "Supported Living Schemes", url: "/admin/configuration/facility/schemes" },
+          ],
+        },
+      ],
+    },
+     {
+      category: "PEOPLE SUPPORTED",
+      icon: Heart,
+      items: [
+        {
+          title: "People Supported",
+          url: "/admin/residents",
+          icon: Heart,
+          hasSubmenu: false,
+          subItems: [
+            { title: "People Supported Directory", url: "/admin/residents" },
+            { title: "Daily Tasks Board", url: "/admin/care-plans/daily-tasks" },
+            { title: "Clinical Escalations & CQC", url: "/admin/escalations" },
           ],
         },
       ],

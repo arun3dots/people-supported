@@ -231,8 +231,8 @@ export function Step9Review({
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <InfoField
-            label="Assigned Room / Bed"
-            value={`Room ${formData.roomNumber || "N/A"} (${formData.roomType || "Single"})${formData.assignedBedId ? " • Bed Allocated" : ""}`}
+            label="Assigned Room"
+            value={`Room ${formData.roomNumber || "N/A"} (${formData.roomType || "Single"})`}
           />
           <InfoField
             label="Payment Method"

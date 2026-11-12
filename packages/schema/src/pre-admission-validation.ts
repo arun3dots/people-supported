@@ -224,10 +224,6 @@ export type MandatoryPreAdmissionPartEDTO = z.infer<
 
 export const MandatoryPreAdmissionRoomAllocationSchema =
   PreAdmissionRoomAllocationSchema.extend({
-    bedId: z.preprocess(
-      (value) => value ?? "",
-      z.string().trim().min(1, "Bed allocation is required"),
-    ),
     roomNumber: z.preprocess(
       (value) => value ?? "",
       z.string().trim().min(1, "Room number is required"),

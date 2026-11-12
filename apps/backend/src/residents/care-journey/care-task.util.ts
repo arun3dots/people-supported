@@ -11,6 +11,7 @@ import {
 } from '@repo/db';
 import {
   AssessmentNeedSchema,
+  cleanAreaSource,
   getCareArea,
   shiftForTime,
   type AssessmentNeedDTO,
@@ -147,8 +148,10 @@ export async function syncDraftAssessmentNeed(
       areaKey: dto.areaKey,
       supportLevel: dto.supportLevel ?? existingNeed?.supportLevel ?? null,
       found: dto.content.found ?? existingNeed?.found ?? null,
-      source:
+      source: cleanAreaSource(
+        dto.areaKey,
         dto.content.source ?? existingNeed?.source ?? areaMeta?.source ?? null,
+      ),
       toolKey: existingNeed?.toolKey ?? null,
       becomesCarePlan: true,
       ...(customAreaLabel ? { customAreaLabel } : {}),

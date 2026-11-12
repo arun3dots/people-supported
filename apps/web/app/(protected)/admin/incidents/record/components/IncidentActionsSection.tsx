@@ -198,7 +198,7 @@ export function IncidentActionsSection({
           value={initialAssessment}
           onChange={(e) => setInitialAssessment(e.target.value)}
           rows={4}
-          placeholder="Record the resident's initial condition and assessment..."
+          placeholder="Record the tenant's initial condition and assessment..."
           className="min-h-[100px] resize-y"
         />
       </div>
@@ -211,7 +211,7 @@ export function IncidentActionsSection({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={4}
-          placeholder="Provide detailed clinical and operational notes on what occurred, resident demeanor, and subsequent steps taken..."
+          placeholder="Provide detailed clinical and operational notes on what occurred, tenant demeanor, and subsequent steps taken..."
           className="min-h-[100px] resize-y"
         />
       </div>

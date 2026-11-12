@@ -66,6 +66,9 @@ export function getResidentCareTypeBadgeState(type: string): BadgeState {
     case "Respite":
     case "Respite Care":
       return "info";
+    case "Supported Living":
+    case "Supported living":
+      return "success";
     default:
       return "inactive";
   }

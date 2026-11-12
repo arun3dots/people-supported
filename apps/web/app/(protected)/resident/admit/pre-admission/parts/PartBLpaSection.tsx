@@ -26,7 +26,7 @@ interface PartBLpaSectionProps {
 export function PartBLpaSection({ items, onChange }: PartBLpaSectionProps) {
   return (
     <PartCard
-      title="B · Lasting Power of Attorney"
+      title="Lasting Power of Attorney"
       description="Health & Welfare and Property & Finance are separate registrations."
     >
       <CardRepeatableSection<Lpa>

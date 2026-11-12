@@ -8,6 +8,7 @@ import type {
 import {
   ASSESSMENT_TOOLS,
   CARE_AREAS,
+  cleanAreaSource,
   formatToolValue,
   getCareArea,
   type AssessmentDolsDTO,
@@ -37,6 +38,10 @@ const iso = (d: Date | null): string | null => (d ? d.toISOString() : null);
 export const dateOnly = (d: Date): string => d.toISOString().slice(0, 10);
 
 export function toAssessmentDTO(row: ResidentAssessment): AssessmentRecordDTO {
+  const needs = ((row.needs ?? []) as AssessmentNeedDTO[]).map((need) => ({
+    ...need,
+    source: cleanAreaSource(need.areaKey, need.source),
+  })) as AssessmentNeedDTO[];
   return {
     id: row.id,
     residentId: row.residentId,
@@ -45,7 +50,7 @@ export function toAssessmentDTO(row: ResidentAssessment): AssessmentRecordDTO {
     status: row.status as AssessmentStatus,
     isCurrent: row.isCurrent,
     tools: (row.tools ?? []) as AssessmentToolResultDTO[],
-    needs: (row.needs ?? []) as AssessmentNeedDTO[],
+    needs,
     dols: (row.dols ?? null) as AssessmentDolsDTO | null,
     assessedAt: iso(row.assessedAt),
     assessedByName: row.assessedByName,
@@ -62,6 +67,11 @@ export function toNeedCarePlanDTO(
   const agreement = row.agreement as
     | (NeedCarePlanAgreementDTO & { agreedAt: string })
     | null;
+  const rawContent = (row.content ?? { steps: [] }) as NeedCarePlanContentDTO;
+  const content: NeedCarePlanContentDTO = {
+    ...rawContent,
+    source: cleanAreaSource(row.areaKey, rawContent.source),
+  };
   return {
     id: row.id,
     residentId: row.residentId,
@@ -70,7 +80,7 @@ export function toNeedCarePlanDTO(
     area: row.area,
     supportLevel: row.supportLevel as SupportLevel | null,
     risk: (row.risk ?? null) as NeedCarePlanRiskDTO | null,
-    content: (row.content ?? { steps: [] }) as NeedCarePlanContentDTO,
+    content,
     agreement: agreement ?? null,
     status: row.status as NeedCarePlanStatus,
     versionNumber: row.versionNumber,
@@ -203,7 +213,10 @@ export function draftPlanContent(
   need: AssessmentNeedDTO,
 ): NeedCarePlanContentDTO {
   return {
-    source: need.source ?? getCareArea(need.areaKey)?.source ?? null,
+    source:
+      cleanAreaSource(need.areaKey, need.source) ??
+      getCareArea(need.areaKey)?.source ??
+      null,
     found: need.found ?? null,
     needs: null,
     prefs: null,
