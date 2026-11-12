@@ -103,10 +103,11 @@ export function OrganizationProfile() {
             id={profile?.id}
             createdAt={profile?.createdAt}
             status={profile?.status ?? null}
+            packageName={profile?.package?.name ?? null}
           />
 
           {/* ─── Documents ─── */}
-          <OrgDocumentsCard />
+          {/* <OrgDocumentsCard /> */}
         </div>
       </div>
 

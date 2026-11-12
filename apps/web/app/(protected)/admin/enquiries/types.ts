@@ -23,6 +23,7 @@ export const CATEGORIES = [
   "Dementia",
   "Respite",
   "Nursing",
+  "Supported Living",
 ] as const;
 
 export const DEPENDENCY_LEVELS = ["Low", "Medium", "High", "Critical"] as const;

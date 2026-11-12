@@ -22,7 +22,7 @@ export function PartBProfessionalsSection({
   const gp = value.gp;
 
   return (
-    <PartCard title="B · Professionals">
+    <PartCard title="Professionals">
       <FieldGrid cols={3}>
         <TextField
           label="Social worker"

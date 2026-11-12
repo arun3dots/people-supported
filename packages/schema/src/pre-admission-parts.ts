@@ -26,6 +26,7 @@ export const PRE_ADMISSION_CARE_TYPES = [
   "Dementia Care",
   "Respite Care",
   "Nursing Care",
+  "Supported Living",
 ] as const;
 
 export const PRE_ADMISSION_CARE_LEVELS = ["High", "Medium", "Low"] as const;
@@ -41,6 +42,8 @@ const CARE_CATEGORY_LABELS: Record<string, string> = {
   "respite care": "Respite Care",
   nursing: "Nursing Care",
   "nursing care": "Nursing Care",
+  "supported living": "Supported Living",
+  "supported living care": "Supported Living",
 };
 
 export function normalizePreAdmissionTypeOfCare(value: unknown): string | null {

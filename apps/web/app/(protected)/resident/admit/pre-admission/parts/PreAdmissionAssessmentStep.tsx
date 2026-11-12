@@ -101,7 +101,7 @@ export function PreAdmissionAssessmentStep({
   if (!residentId) {
     return (
       <PartCard
-        title="E · Care needs assessment"
+        title="Care needs assessment"
         description="Review findings from the risk assessments, record support levels, and create care plans."
       >
         <Alert className="rounded-xl border-amber-200 bg-amber-50 p-6 text-center">
@@ -135,7 +135,7 @@ export function PreAdmissionAssessmentStep({
   if (!record) {
     return (
       <PartCard
-        title="E · Care needs assessment"
+        title="Care needs assessment"
         description="Start the care needs assessment for this resident."
       >
         <Button
@@ -171,8 +171,8 @@ export function PreAdmissionAssessmentStep({
   return (
     <div className="space-y-6 font-sans">
       <PartCard
-        title="E · Care needs assessment"
-        description="Link risk assessment findings from Step D to each area of need, choose the support level, and add or edit a care plan."
+        title="Care needs assessment"
+        description="Link risk assessment findings from Risk to each area of need, choose the support level, and add or edit a care plan."
       >
         <NeedsTable
           needs={draft.needs}

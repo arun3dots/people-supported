@@ -28,7 +28,7 @@ export function LocationAddressSection({
           <Button
             variant="ghost"
             size="icon"
-            className="w-[36px] h-[36px] bg-white rounded-full p-2 shadow-md flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
+            className="w-[36px] h-[36px]  p-2 flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors border border-slate-100 z-10"
             title="Edit location & address"
             onClick={onEditClick}
           >
@@ -41,22 +41,22 @@ export function LocationAddressSection({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Address Line 1"
-            value={profile?.addressLine1 || "14 High Street"}
+            value={profile?.addressLine1 || "-"}
           />
           <InfoField
             label="Address Line 2"
-            value={profile?.addressLine2 || "Suite 4"}
+            value={profile?.addressLine2 || "-"}
           />
           <InfoField
             label="City / Town"
-            value={profile?.city || "London"}
+            value={profile?.city || "-"}
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <InfoField
             label="Postcode"
-            value={profile?.postcode || "SW1A 1AA"}
+            value={profile?.postcode || "-"}
           />
         </div>
       </div>

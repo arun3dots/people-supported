@@ -8,16 +8,18 @@ interface OrgSummaryCardProps {
   id?: string;
   createdAt?: string;
   status?: string | null;
+  packageName?: string | null;
 }
 
 export function OrgSummaryCard({
   id,
   createdAt,
   status,
+  packageName,
 }: OrgSummaryCardProps) {
   const formattedId = id
     ? `ORG-${id.slice(0, 8).toUpperCase()}`
-    : "ORG-2025-0012";
+    : "-";
 
   const formattedDate = createdAt
     ? new Date(createdAt).toLocaleDateString("en-GB", {
@@ -25,7 +27,7 @@ export function OrgSummaryCard({
       month: "short",
       year: "numeric",
     })
-    : "15 Jan 2021";
+    : "-";
 
   return (
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none w-full font-sans">
@@ -63,7 +65,7 @@ export function OrgSummaryCard({
             </Text>
           </div>
           <Text size="md" weight="medium" className="text-slate-900">
-            Enterprise
+            {packageName || "-"}
           </Text>
         </div>
 
@@ -88,17 +90,23 @@ export function OrgSummaryCard({
               Status
             </Text>
           </div>
-          <Badge
-            variant="secondary"
-            state={
-              status === "Suspended" || status === "Inactive"
-                ? "inactive"
-                : "success"
-            }
-            className="text-md"
-          >
-            {status || "Active"}
-          </Badge>
+          {status ? (
+            <Badge
+              variant="secondary"
+              state={
+                status === "Suspended" || status === "Inactive"
+                  ? "inactive"
+                  : "success"
+              }
+              className="text-md"
+            >
+              {status}
+            </Badge>
+          ) : (
+            <Text size="md" weight="medium" className="text-slate-900">
+              -
+            </Text>
+          )}
         </div>
       </div>
     </Card>

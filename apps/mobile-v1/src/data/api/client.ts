@@ -22,7 +22,7 @@ export function getApiBaseUrl(): string {
     const trimmed = envUrl.trim().replace(/\/+$/, '');
     return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
   }
-  return 'https://devapi.cantracare.com/api';
+  return 'https://api-demo.cantracare.com/api';
 }
 
 type RefreshResult = 'refreshed' | 'unauthorized' | 'network_error';

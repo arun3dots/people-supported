@@ -28,7 +28,7 @@ export function KatzMatrixCard({
 }: KatzMatrixCardProps) {
   return (
     <PartCard
-      title="F · Activities of Daily Living (ADLs)"
+      title="Activities of Daily Living (ADLs)"
       description="Record the support needed for each activity and add comments where helpful."
     >
       <div className="overflow-x-auto rounded-xl border border-slate-200/70 bg-white">

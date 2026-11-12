@@ -278,6 +278,47 @@ describe('ResidentsService - Step-by-Step Admission Flow', () => {
       });
     });
 
+    it('syncs pre-admission roomAllocation landlord into supportedLivingDetails on confirmation', async () => {
+      (prisma.resident.findFirst as jest.Mock).mockResolvedValue({
+        id: 'res-102',
+        tenantId: 'tenant-1',
+        branchId: 'branch-1',
+        admissionStep: 10,
+        supportedLivingDetails: { referenceCode: 'SL-102' },
+      });
+      (prisma.residentPreAdmission.findFirst as jest.Mock).mockResolvedValue({
+        roomAllocation: {
+          roomNumber: '103',
+          landlord: 'Northern Supported Housing',
+        },
+      });
+      (prisma.resident.update as jest.Mock).mockResolvedValue({
+        id: 'res-102',
+        isDraft: false,
+        status: 'Active',
+        admissionStep: 11,
+      });
+
+      await service.confirmAdmission(
+        'res-102',
+        { bedId: '' },
+        'user-1',
+        'tenant-1',
+      );
+
+      expect(prisma.resident.update).toHaveBeenCalledWith({
+        where: { id: 'res-102' },
+        data: expect.objectContaining({
+          supportedLivingDetails: expect.objectContaining({
+            referenceCode: 'SL-102',
+            tenancy: {
+              landlord: 'Northern Supported Housing',
+            },
+          }),
+        }),
+      });
+    });
+
     it('should throw ConflictException if requested bed is occupied', async () => {
       (prisma.resident.findFirst as jest.Mock).mockResolvedValue({
         id: 'res-101',
