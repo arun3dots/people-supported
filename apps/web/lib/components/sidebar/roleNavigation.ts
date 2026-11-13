@@ -156,7 +156,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           subItems: [
             { title: "Audit Log", url: "/admin/audit-log" },
             { title: "Reports", url: "/admin/reports" },
-            { title: "Reviews", url: "/admin/escalations" },
+            { title: "Reviews", url: "/admin/compliance/review" },
           ],
         },
         // {
