@@ -226,12 +226,12 @@ export function ResidentDirectoryClient({
       onRowClick={(r) => router.push(`/${roleBase}/residents/${r.id}`)}
       isLoading={isLoading}
       isError={isError}
-      errorMessage="Error loading resident directory. Please try again."
-      emptyTitle={effectiveAssignedOnly ? "No residents allotted for your shift" : "No residents found"}
+      errorMessage="Error loading tenant directory. Please try again."
+      emptyTitle={effectiveAssignedOnly ? "No tenants allotted for your shift" : "No tenants found"}
       emptyDescription={
         effectiveAssignedOnly
-          ? "You do not have any residents assigned to your shift yet. Check with your manager or rota planner."
-          : "No resident records match your active search or filter criteria."
+          ? "You do not have any tenants assigned to your shift yet. Check with your manager or rota planner."
+          : "No tenant records match your active search or filter criteria."
       }
       pagination={{
         currentPage: page,
@@ -239,7 +239,7 @@ export function ResidentDirectoryClient({
         totalRecords,
         onPageChange: handlePageChange,
         onLimitChange: handleLimitChange,
-        entityName: "residents",
+        entityName: "tenants",
       }}
     />
   );

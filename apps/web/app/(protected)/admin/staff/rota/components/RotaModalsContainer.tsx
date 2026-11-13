@@ -17,6 +17,7 @@ interface RotaModalsContainerProps {
   onCloseDetails: () => void;
   detailsContext: { staffName: string; staffRole?: string; dayLabel: string };
   onEditFromDetails: (shift: Shift) => void;
+  onAddAnotherShift?: (shift: Shift) => void;
   editingShift: Shift | null;
   slotToAdd: { staff: StaffMember; day: DayColumnInfo } | null;
   onCloseModify: () => void;
@@ -36,6 +37,7 @@ export function RotaModalsContainer({
   onCloseDetails,
   detailsContext,
   onEditFromDetails,
+  onAddAnotherShift,
   editingShift,
   slotToAdd,
   onCloseModify,
@@ -94,6 +96,7 @@ export function RotaModalsContainer({
         properties={properties}
         isLocked={isLocked}
         onEditShift={onEditFromDetails}
+        onAddAnotherShift={onAddAnotherShift}
       />
 
       <ModifyShiftBlockModal

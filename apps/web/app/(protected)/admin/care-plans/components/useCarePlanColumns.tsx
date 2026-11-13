@@ -61,7 +61,7 @@ export function useCarePlanColumns({
     () => [
       {
         id: "resident",
-        header: "Resident",
+        header: "Tenant",
         enableSorting: false,
         cell: ({ row }) => {
           const plan = row.original;
@@ -82,7 +82,7 @@ export function useCarePlanColumns({
             >
               <Avatar size="default" className="size-9 border border-emerald-200 shrink-0">
                 {res?.photoUrl && (
-                  <AvatarImage src={res.photoUrl} alt={res?.fullName || "Resident"} />
+                  <AvatarImage src={res.photoUrl} alt={res?.fullName || "Tenant"} />
                 )}
                 <AvatarFallback className="bg-emerald-100 text-emerald-800 font-bold text-md">
                   {initials}
@@ -94,7 +94,7 @@ export function useCarePlanColumns({
                   weight="bold"
                   className="text-slate-900 group-hover:text-emerald-800 transition truncate"
                 >
-                  {res?.fullName || "Unassigned Resident"}
+                  {res?.fullName || "Unassigned Tenant"}
                 </Text>
                 <Text size="md" variant="muted" className="font-mono text-slate-400">
                   {shortCode}

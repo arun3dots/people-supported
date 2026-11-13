@@ -57,7 +57,7 @@ export class StaffService {
     private auditService: AuditService,
     private s3Service: S3StorageService,
     private passwordGeneratorService: PasswordGeneratorService,
-  ) {}
+  ) { }
 
   /** Decrypt a stored value, tolerating legacy/plaintext rows. */
   private safeDecrypt(value: string | null): string | null {
@@ -188,11 +188,11 @@ export class StaffService {
             },
             branches: targetBranchId
               ? {
-                  create: {
-                    branchId: targetBranchId,
-                    isPrimary: true,
-                  },
-                }
+                create: {
+                  branchId: targetBranchId,
+                  isPrimary: true,
+                },
+              }
               : undefined,
             // Persist contact/employment details entered on the add form so they
             // are available on the view/edit screens (previously dropped).
@@ -349,7 +349,27 @@ export class StaffService {
 
     const users = pageResult.data;
 
+<<<<<<< HEAD
     const onLeaveUserIds = await getStaffOnLeaveIds(users, branchId);
+=======
+    const now = new Date();
+    const userIds = users.map((u) => u.id);
+    const activeLeaves =
+      userIds.length > 0
+        ? await prisma.shiftRequest.findMany({
+          where: {
+            branchId,
+            type: 'Leave',
+            status: 'Approved',
+            userId: { in: userIds },
+            startTime: { lte: now },
+            endTime: { gte: now },
+          },
+          select: { userId: true },
+        })
+        : [];
+    const onLeaveUserIds = new Set(activeLeaves.map((l) => l.userId));
+>>>>>>> 1f8f414b03cf0e986909a11403483a0b70711687
 
     const staffDetails = users.map((user) =>
       this.toStaffDetail(user, onLeaveUserIds.has(user.id)),
@@ -483,9 +503,9 @@ export class StaffService {
     const updatedQualifications =
       updateStaffDto.emergencyContacts !== undefined
         ? {
-            ...currentQuals,
-            emergencyContacts: updateStaffDto.emergencyContacts,
-          }
+          ...currentQuals,
+          emergencyContacts: updateStaffDto.emergencyContacts,
+        }
         : undefined;
 
     const updatedStaff = await prisma.user.update({

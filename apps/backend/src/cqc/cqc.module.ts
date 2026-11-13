@@ -12,6 +12,8 @@ import { AuditScheduleController } from './audit-schedule.controller';
 import { AuditScheduleService } from './audit-schedule.service';
 import { CqcNotificationController } from './cqc-notification.controller';
 import { CqcNotificationService } from './cqc-notification.service';
+import { ComplianceReviewController } from './compliance-review.controller';
+import { ComplianceReviewService } from './compliance-review.service';
 
 @Module({
   imports: [AuditModule],
@@ -22,6 +24,7 @@ import { CqcNotificationService } from './cqc-notification.service';
     StaffSupervisionController,
     AuditScheduleController,
     CqcNotificationController,
+    ComplianceReviewController,
   ],
   providers: [
     VisitorLogService,
@@ -30,6 +33,7 @@ import { CqcNotificationService } from './cqc-notification.service';
     StaffSupervisionService,
     AuditScheduleService,
     CqcNotificationService,
+    ComplianceReviewService,
   ],
   exports: [
     VisitorLogService,
@@ -38,6 +42,7 @@ import { CqcNotificationService } from './cqc-notification.service';
     StaffSupervisionService,
     AuditScheduleService,
     CqcNotificationService,
+    ComplianceReviewService,
   ],
 })
 export class CqcModule {}

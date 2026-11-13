@@ -52,6 +52,17 @@ export function RiskAssessmentDialog(props: Props) {
     isPending,
   } = useRiskAssessmentForm(props);
 
+  const rawType = state.title?.trim() || props.initialTitle?.trim() || (templateDisplay !== "General Risk" ? templateDisplay : "");
+  const formattedAssessmentType = rawType
+    ? (/assessment|agreement|scale|audit|plan/i.test(rawType)
+        ? rawType
+        : `${rawType} Assessment`)
+    : "Risk Assessment";
+
+  const dialogTitle = editingAssessment
+    ? `Edit ${formattedAssessmentType}`
+    : `New ${formattedAssessmentType}`;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -61,12 +72,12 @@ export function RiskAssessmentDialog(props: Props) {
         <DialogHeader className="pb-4 border-b border-gray-100 shrink-0 space-y-1">
           <DialogTitle className="flex items-center gap-2 text-xl font-bold text-[#141F1E]">
             <ShieldAlert className="w-5 h-5 text-[#4A706A]" />
-            {editingAssessment ? "Edit Risk Assessment" : "New Risk Assessment"}
+            {dialogTitle}
           </DialogTitle>
           <DialogDescription className="text-md text-[#5D5D5D]">
             {editingAssessment
-              ? "Update assessment details and risk matrix scores."
-              : "Record assessment details and risk matrix scores."}
+              ? `Update ${formattedAssessmentType.toLowerCase()} details and risk matrix scores.`
+              : `Record ${formattedAssessmentType.toLowerCase()} details and risk matrix scores.`}
           </DialogDescription>
         </DialogHeader>
 

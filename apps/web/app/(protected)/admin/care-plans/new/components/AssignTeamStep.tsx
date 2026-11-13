@@ -56,10 +56,10 @@ export function AssignTeamStep({
     <div className="space-y-6 font-sans">
       <div>
         <Text as="h2" size="lg" weight="semibold" className="text-slate-900 tracking-tight">
-          Care Team Governance &amp; Statutory Consent
+          Supported Worker Governance &amp; Statutory Consent
         </Text>
         <Text size="md" weight="regular" className="text-slate-500 mt-1">
-          Assign the author, Registered Manager approver, and document resident consultation in accordance with CQC Regulations 9 &amp; 11.
+          Assign the author, Registered Manager approver, and document tenant consultation in accordance with CQC Regulations 9 &amp; 11.
         </Text>
       </div>
 
@@ -185,7 +185,7 @@ export function AssignTeamStep({
                 onCheckedChange={(checked) => setResidentAgreed(!!checked)}
               />
               <Label htmlFor="residentAgreed" className="text-md font-semibold cursor-pointer">
-                Resident was consulted and agreed to this care and support plan (CQC Reg 9)
+                Tenant was consulted and agreed to this care and support plan (CQC Reg 9)
               </Label>
             </div>
 

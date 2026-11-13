@@ -383,6 +383,20 @@ export function RotaContainer(): React.JSX.Element {
           setDetailsShift(null);
           setEditingShift(shift);
         }}
+        onAddAnotherShift={(shift) => {
+          const staff =
+            staffList.find((m) => m.fullName === detailsContext.staffName) ??
+            staffList.find(
+              (m) =>
+                shift.userIds?.includes(m.id) ||
+                shift.assignments?.some((a) => a.userId === m.id),
+            );
+          const dateStr = getShiftDateStr(shift);
+          const day = days.find((d) => d.dateStr === dateStr);
+          setDetailsShift(null);
+          setEditingShift(null);
+          if (staff && day) setSlotToAdd({ staff, day });
+        }}
         editingShift={editingShift}
         slotToAdd={slotToAdd}
         onCloseModify={() => {

@@ -217,7 +217,7 @@ export function AddInternalNoteModal({
           <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-xl text-md text-amber-900 flex items-center gap-2">
             <ShieldAlert className="size-4 text-amber-700 shrink-0" />
             <span>
-              Internal notes are encrypted and restricted to authorised care team members.
+              Internal notes are encrypted and restricted to authorised supported workers.
             </span>
           </div>
 
