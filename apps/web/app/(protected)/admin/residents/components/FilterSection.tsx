@@ -69,7 +69,7 @@ export function FilterSection({
 
   const wingOptions = useMemo(() => {
     if (wingsData && wingsData.length > 0) {
-      return wingsData.map((w) => w.name).filter(Boolean);
+      return Array.from(new Set(wingsData.map((w) => w.name).filter(Boolean)));
     }
     return [];
   }, [wingsData]);
@@ -82,11 +82,14 @@ export function FilterSection({
           (r) => r.wingName === normalizedDept || r.wing?.name === normalizedDept,
         );
       }
-      return filtered.map((r) =>
-        r.roomNumber
-          ? `Room ${r.roomNumber}`
-          : r.name || `Room ${r.id.slice(-3)}`,
-      );
+      const mapped = filtered
+        .map((r) =>
+          r.roomNumber
+            ? `Room ${r.roomNumber}`
+            : r.name || (r.id ? `Room ${r.id.slice(-3)}` : ""),
+        )
+        .filter(Boolean);
+      return Array.from(new Set(mapped));
     }
     return [];
   }, [roomsData, normalizedDept]);
@@ -119,7 +122,7 @@ export function FilterSection({
             { value: "All", label: "All People" },
             { value: "Active", label: "Active" },
             ...(!hideDraftStatusOption
-              ? [{ value: "Draft", label: "In referral" }]
+              ? [{ value: "Draft", label: "Draft" }]
               : []),
             { value: "Hospitalized", label: "In hospital" },
           ] as const

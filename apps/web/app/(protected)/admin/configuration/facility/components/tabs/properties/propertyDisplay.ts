@@ -14,7 +14,7 @@ export function getPropertyPartnerLabel(property: PropertyItem): string {
   );
 }
 
-/** Returns the property manager / team leader label, or "Unassigned". */
+/** Returns the property manager label, or "Unassigned". */
 export function getPropertyManagerLabel(property: PropertyItem): string {
   return (
     property.parsedPropertyDetails?.propertyManagerName ||

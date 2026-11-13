@@ -25,6 +25,10 @@ const sampleProperties: PropertyItem[] = [
       housingPartner: null,
       commissioningLa: null,
     },
+    parsedPropertyDetails: {
+      propertyType: "Shared house",
+      facilities: ["Shared Kitchen", "Communal Lounge"],
+    },
     roomTenancies: [],
   } as unknown as PropertyItem,
   {
@@ -33,9 +37,23 @@ const sampleProperties: PropertyItem[] = [
     schemeId: null,
     scheme: null,
     parsedPropertyDetails: {
+      propertyType: "Self-contained flats",
       landlordDetails: { name: "Northern Supported Housing" },
     },
-    roomTenancies: [],
+    roomTenancies: [
+      {
+        id: "room-201",
+        roomNumber: "201",
+        type: "Single",
+        beds: [{ id: "bed-1", status: "Occupied", resident: { id: "res-1", fullName: "John Doe" } }],
+      },
+      {
+        id: "room-202",
+        roomNumber: "202",
+        type: "Single",
+        beds: [{ id: "bed-2", status: "Available" }],
+      },
+    ],
   } as unknown as PropertyItem,
 ];
 
@@ -52,6 +70,14 @@ const sampleRooms: Room[] = [
     id: "room-201",
     roomNumber: "201",
     type: "Single Ensuite",
+    wingId: "prop-south",
+    totalBeds: 1,
+    occupiedBeds: 1,
+  } as Room,
+  {
+    id: "room-202",
+    roomNumber: "202",
+    type: "Single",
     wingId: "prop-south",
     totalBeds: 1,
     occupiedBeds: 0,
@@ -134,7 +160,7 @@ describe("RoomBedAllocationCard", () => {
 
     expect(schemeSelect).toHaveTextContent("All Schemes");
     expect(propertySelect).toHaveTextContent("Maple Cottage");
-    expect(roomSelect).toHaveTextContent("Room 201");
+    expect(roomSelect).toHaveTextContent(/Flat 201/);
     expect(
       screen.getByText(/Maple Cottage • Room 201 • Single Ensuite/),
     ).toBeInTheDocument();
@@ -162,5 +188,62 @@ describe("RoomBedAllocationCard", () => {
     const landlordInput = screen.getByLabelText(/Landlord \/ Housing Provider/i);
     fireEvent.change(landlordInput, { target: { value: "Custom Housing Trust" } });
     expect(updateFormData).toHaveBeenCalledWith({ landlord: "Custom Housing Trust" });
+  });
+
+  it("enforces 1 flat per tenant by disabling occupied flats and locking roommate field", () => {
+    const updateFormData = vi.fn();
+    render(
+      <RoomBedAllocationCard
+        formData={{ ...DEFAULT_ADMISSION_FORM_DATA }}
+        updateFormData={updateFormData}
+      />,
+    );
+
+    const [, propertySelect, roomSelect] = screen.getAllByRole("combobox");
+    fireEvent.click(propertySelect!);
+    fireEvent.click(screen.getByRole("option", { name: "Maple Cottage" }));
+
+    // Accommodation badge shows Self-contained Flat (1 Tenant per unit)
+    expect(
+      screen.getByText(/Self-contained Flat \(1 Tenant per unit\)/i),
+    ).toBeInTheDocument();
+
+    // Roommate input is locked and shows N/A
+    const roommateInput = screen.getByDisplayValue(
+      /N\/A \(Self-contained flat - 1 tenant only\)/i,
+    );
+    expect(roommateInput).toBeDisabled();
+
+    // Check Flat dropdown: occupied flat 201 is disabled
+    fireEvent.click(roomSelect!);
+    const occupiedOption = screen.getByRole("option", {
+      name: /Flat 201.*Occupied \(John Doe\)/i,
+    });
+    expect(occupiedOption).toHaveAttribute("aria-disabled", "true");
+
+    // Available flat 202 is selectable
+    const availableOption = screen.getByRole("option", {
+      name: /Flat 202.*Available/i,
+    });
+    expect(availableOption).not.toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("shows common facilities badge for shared living properties", () => {
+    const updateFormData = vi.fn();
+    render(
+      <RoomBedAllocationCard
+        formData={{ ...DEFAULT_ADMISSION_FORM_DATA }}
+        updateFormData={updateFormData}
+      />,
+    );
+
+    const [, propertySelect] = screen.getAllByRole("combobox");
+    fireEvent.click(propertySelect!);
+    fireEvent.click(screen.getByRole("option", { name: /Oak House/i }));
+
+    // Badge shows Community / Shared Living and common facilities
+    expect(
+      screen.getByText(/Shared Kitchen, Communal Lounge/i),
+    ).toBeInTheDocument();
   });
 });

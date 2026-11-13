@@ -224,7 +224,7 @@ export function AddPropertyFormFields({
 
       <div className="space-y-1">
         <Label className="text-md font-medium text-slate-700">
-          Property Manager / Team Leader
+          Property Manager
         </Label>
         <Select
           value={propertyManagerId}
