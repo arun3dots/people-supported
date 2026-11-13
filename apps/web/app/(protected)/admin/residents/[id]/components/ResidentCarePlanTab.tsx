@@ -97,8 +97,8 @@ export function ResidentCarePlanTab({ resident }: ResidentCarePlanTabProps): Rea
             No Care Plan Created Yet
           </Text>
           <Text size="md" variant="muted">
-            This resident does not have a registered care plan. Create a master
-            care plan to define clinical goals, intervention tasks, and assign care teams.
+            This tenant does not have a registered care plan. Create a master
+            support plan to define goals, intervention tasks, and assign supported workers.
           </Text>
         </div>
         <Button

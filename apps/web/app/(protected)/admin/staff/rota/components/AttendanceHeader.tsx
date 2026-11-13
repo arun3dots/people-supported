@@ -86,17 +86,6 @@ export function AttendanceHeader({
     <div className="space-y-5 font-sans">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Text as="span" size="md" weight="medium" variant="muted">
-              Rota Management
-            </Text>
-            <Text as="span" size="md" variant="muted">
-              &rsaquo;
-            </Text>
-            <Text as="span" size="md" weight="medium" className="text-slate-800">
-              Attendance
-            </Text>
-          </div>
           <Text as="h1" size="2xl" weight="semibold" className="tracking-tight text-slate-900">
             Attendance
           </Text>

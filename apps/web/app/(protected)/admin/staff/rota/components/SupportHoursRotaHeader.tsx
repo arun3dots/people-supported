@@ -55,7 +55,7 @@ export function SupportHoursRotaHeader({
       case "hours":
         return "Hours Summary";
       default:
-        return "Support Hours & Rota";
+        return "Shift Planner";
     }
   };
 
@@ -113,17 +113,6 @@ export function SupportHoursRotaHeader({
       {/* Top Header Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Text as="span" size="md" weight="medium" variant="muted">
-              Support Hours &amp; Rota
-            </Text>
-            <Text as="span" size="md" variant="muted">
-              &rsaquo;
-            </Text>
-            <Text as="span" size="md" weight="medium" className="text-slate-800">
-              All Properties
-            </Text>
-          </div>
           <Text as="h1" size="2xl" weight="semibold" className="tracking-tight text-slate-900">
             {getHeaderTitle()}
           </Text>

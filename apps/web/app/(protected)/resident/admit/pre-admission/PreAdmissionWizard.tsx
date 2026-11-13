@@ -90,7 +90,7 @@ export function PreAdmissionWizard() {
         {step === 5 && (
           <PartCard
             title="Risk assessment"
-            description="Complete clinical risk assessment tools for this resident. Assessments recorded here automatically sync to their care profile."
+            description="Complete clinical risk assessment tools for this tenant. Assessments recorded here automatically sync to their profile."
           >
             {w.residentId ? (
               <RiskAssessmentTab
@@ -101,7 +101,7 @@ export function PreAdmissionWizard() {
             ) : (
               <div className="rounded-xl bg-amber-50 border border-amber-200 p-6 text-center space-y-3">
                 <Text size="md" weight="medium" className="text-amber-900">
-                  Please save Step 1 (Admission and personal details) first to generate a resident record before completing risk assessments.
+                  Please save Step 1 (Admission and personal details) first to generate a tenant record before completing risk assessments.
                 </Text>
                 <Button
                   type="button"
