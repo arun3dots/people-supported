@@ -26,6 +26,7 @@ export * from "./mca-dols/endpoints";
 export * from "./branches/endpoints";
 export * from "./escalations/endpoints";
 export * from "./reports/endpoints";
+export * from "./compliance/endpoints";
 import facilityEndpoints from "./facilities/endpoints";
 import staffEndpoints from "./staff/endpoints";
 import profileEndpoints from "./profile/endpoints";
@@ -54,6 +55,7 @@ import mcaDolsEndpoints from "./mca-dols/endpoints";
 import branchEndpoints from "./branches/endpoints";
 import escalationEndpoints from "./escalations/endpoints";
 import reportEndpoints from "./reports/endpoints";
+import complianceEndpoints from "./compliance/endpoints";
 import { EndpointDetails } from "./types";
 
 export const endpoints: EndpointDetails = {
@@ -85,6 +87,7 @@ export const endpoints: EndpointDetails = {
   ...branchEndpoints,
   ...escalationEndpoints,
   ...reportEndpoints,
+  ...complianceEndpoints,
 };
 
 export const endpointInfo = endpoints;
