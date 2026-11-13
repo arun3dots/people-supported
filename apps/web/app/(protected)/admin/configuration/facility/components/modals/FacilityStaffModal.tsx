@@ -42,7 +42,7 @@ export function FacilityStaffModal({
             Assigned Staff - {title}
           </DialogTitle>
           <DialogDescription>
-            List of care team members currently assigned to this facility.
+            List of supported workers currently assigned to this facility.
           </DialogDescription>
         </DialogHeader>
 
