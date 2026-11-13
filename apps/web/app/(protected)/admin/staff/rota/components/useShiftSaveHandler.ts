@@ -48,7 +48,9 @@ export async function executeSaveShiftBlock({
     const targetUserIds =
       formData.userIds && formData.userIds.length > 0
         ? formData.userIds
-        : [slotToAdd.staff.id];
+        : slotToAdd.staff?.id
+          ? [slotToAdd.staff.id]
+          : [];
 
     await createShiftMutation.mutateAsync({
       status: "Published",
