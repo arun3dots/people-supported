@@ -259,7 +259,7 @@ export function ShiftDialog({
         name: r.fullName,
         roomBed: r.bed
           ? `Bed: ${r.bed.number || r.bed.bedLabel || "--"} | Room: ${r.bed.room?.roomNumber || "--"}`
-          : "No Bed Assigned",
+          : "",
         dependency: r.careProfile?.careCategory || r.careLevel || "Medium",
         conditions: r.careProfile?.chronicConditions?.length
           ? r.careProfile.chronicConditions
@@ -276,9 +276,9 @@ export function ShiftDialog({
       }))
       : [];
 
-  const residentsWithBedAssignments = allResidents.filter(
-    (resident: { roomId?: string | null; bedId?: string | null; status?: string }) =>
-      Boolean(resident.roomId && resident.bedId && resident.status?.toLowerCase() === "active"),
+  // Supported living has no bed allocation: any Active person supported can be rostered.
+  const assignableResidents = allResidents.filter(
+    (resident: { status?: string }) => resident.status?.toLowerCase() === "active",
   );
 
   const toggleResident = (id: string) => {
@@ -404,8 +404,8 @@ export function ShiftDialog({
       setError("residentIds", {
         type: "validate",
         message:
-          residentsWithBedAssignments.length === 0
-            ? "No residents with assigned rooms and beds are available. Admit and assign a resident to a bed before scheduling a shift."
+          assignableResidents.length === 0
+            ? "No active people supported are available. Admit a person supported before scheduling a shift."
             : "Select at least one resident to assign to this shift.",
       });
       return;
@@ -680,7 +680,7 @@ export function ShiftDialog({
             </div>
 
             <ShiftResidentTable
-              allResidents={residentsWithBedAssignments}
+              allResidents={assignableResidents}
               selectedResidentIds={selectedResidentIds}
               onToggleResident={toggleResident}
               onClearResidents={() => setValue("residentIds", [], { shouldValidate: true })}
@@ -779,11 +779,11 @@ export function ShiftDialog({
                   disabled={
                     createShiftMutation.isPending ||
                     updateShiftMutation.isPending ||
-                    residentsWithBedAssignments.length === 0
+                    assignableResidents.length === 0
                   }
                   title={
-                    residentsWithBedAssignments.length === 0
-                      ? "Admit and assign at least one resident to a room and bed before scheduling a shift"
+                    assignableResidents.length === 0
+                      ? "Admit at least one person supported before scheduling a shift"
                       : undefined
                   }
                   className="rounded-xl px-5 font-semibold shadow-none"
