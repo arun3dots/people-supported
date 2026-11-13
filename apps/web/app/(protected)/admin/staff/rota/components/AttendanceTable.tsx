@@ -22,8 +22,10 @@ export interface AttendanceRecord {
   staffId: string;
   staffName: string;
   staffRole: string;
+  staffPhone?: string | null;
   property: string;
   dateLabel: string;
+  shiftDateStr?: string;
   scheduledTime: string;
   careType: string;
   careTypeColor: string;

@@ -33,7 +33,7 @@ export function AttendanceSidebar({
   onArrangeCover,
 }: AttendanceSidebarProps): React.JSX.Element {
   const followUpItems = records.filter(
-    (r) => r.status === "Late" || r.status === "Absent" || r.status === "Left early",
+    (r) => r.status === "Late" || r.status === "Absent",
   );
 
   const resolvedWeekStart = useMemo(
@@ -89,7 +89,7 @@ export function AttendanceSidebar({
   return (
     <div className="space-y-5 font-sans">
       {/* 1. Needs Follow-up Card */}
-      <Card variant="surface" border="default" className="p-5 font-sans gap-3 border-none shadow-none">
+      <Card variant="surface" border="default">
         <div className="flex items-center justify-between pb-3 border-b border-border-secondary/50">
           <div className="flex items-center gap-2">
             <AlertCircle className="size-4 text-amber-600" />
@@ -162,15 +162,31 @@ export function AttendanceSidebar({
                       Arrange cover
                     </Button>
                   )}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs px-2 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
-                  >
-                    <Phone className="size-3 mr-1" />
-                    Call
-                  </Button>
+                  {item.staffPhone ? (
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs px-2 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
+                    >
+                      <a href={`tel:${item.staffPhone}`} title={`Call ${item.staffPhone}`}>
+                        <Phone className="size-3 mr-1" />
+                        Call
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled
+                      title="No phone number on file"
+                      className="h-7 text-xs px-2 rounded-lg text-slate-400"
+                    >
+                      <Phone className="size-3 mr-1" />
+                      Call
+                    </Button>
+                  )}
                 </div>
               </div>
             ))

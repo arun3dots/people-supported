@@ -67,7 +67,7 @@ export function HoursSummaryCharts({
         <Card
           variant="white"
           border="default"
-          className="p-4 pt-6 flex-row items-end justify-between gap-3 h-52 shadow-none"
+          className="p-4 pt-6 flex-row items-end justify-between gap-3 flex-1 min-h-72 shadow-none"
         >
           {!hasAnyHours ? (
             <div className="w-full h-full flex items-center justify-center">
@@ -81,7 +81,7 @@ export function HoursSummaryCharts({
                 key={d.day}
                 className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
               >
-                <div className="w-full flex items-end justify-center gap-1.5 h-36">
+                <div className="w-full flex items-end justify-center gap-1.5 flex-1 min-h-56">
                   <div
                     title={`Commissioned: ${d.req} hrs`}
                     style={{ height: `${(d.req / maxDayHours) * 100}%` }}
