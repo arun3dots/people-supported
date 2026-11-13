@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import { format } from "date-fns";
 import {
   Calendar,
   CheckCircle2,
   Clock,
   Edit2,
   Home,
+  Plus,
   User,
 } from "lucide-react";
 import {
@@ -46,6 +48,7 @@ interface ShiftDetailsModalProps {
   properties?: PropertyItem[];
   isLocked?: boolean;
   onEditShift: (shift: Shift) => void;
+  onAddAnotherShift?: (shift: Shift) => void;
 }
 
 export function ShiftDetailsModal({
@@ -60,12 +63,17 @@ export function ShiftDetailsModal({
   properties = [],
   isLocked = false,
   onEditShift,
+  onAddAnotherShift,
 }: ShiftDetailsModalProps): React.JSX.Element {
   if (!shift) return <></>;
 
   const careType = shift.careType || "Shared Care (Core Support)";
+  const computedWindow =
+    shift.startTime && shift.endTime
+      ? `${format(new Date(shift.startTime), "HH:mm")} - ${format(new Date(shift.endTime), "HH:mm")}`
+      : "Not specified";
   const windowLabel =
-    shift.shiftWindow || shift.timingFormatted || "Not specified";
+    shift.shiftWindow || shift.timingFormatted || computedWindow;
   const hours = getShiftPlannedHours(shift);
   const { propertyName, schemeName } = resolveShiftLocation(
     shift,
@@ -118,7 +126,7 @@ export function ShiftDetailsModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl font-sans max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-3 border-b border-slate-100">
+        <DialogHeader className="pb-3 pr-8 border-b border-slate-100">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Home className="size-4 text-primary" />
@@ -225,8 +233,8 @@ export function ShiftDetailsModal({
                 const roomNum = person.bed?.room?.roomNumber?.trim();
                 const formattedLocation = roomNum
                   ? (roomNum.toLowerCase().includes("flat") || roomNum.toLowerCase().includes("room")
-                      ? roomNum
-                      : `Flat / Room ${roomNum}`)
+                    ? roomNum
+                    : `Flat / Room ${roomNum}`)
                   : null;
                 const refCode = person.supportedLivingDetails?.referenceCode;
                 const metaParts = [
@@ -289,27 +297,45 @@ export function ShiftDetailsModal({
           )}
         </div>
 
-        <DialogFooter className="pt-3 border-t border-slate-100 gap-2">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => onOpenChange(false)}
-          >
-            Close
-          </Button>
-          {!isPastShift && !isLocked && (
+        <DialogFooter className="pt-3 border-t border-slate-100 flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            {!isPastShift && !isLocked && !careType.includes("Off") && onAddAnotherShift && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-primary hover:text-primary hover:bg-emerald-50/70 font-semibold"
+                onClick={() => {
+                  onOpenChange(false);
+                  onAddAnotherShift(shift);
+                }}
+              >
+                <Plus className="size-4" />
+                Add another shift
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center justify-end gap-2">
             <Button
-              variant="primary"
-              size="lg"
-              onClick={() => {
-                onOpenChange(false);
-                onEditShift(shift);
-              }}
+              variant="outline"
+              size="default"
+              onClick={() => onOpenChange(false)}
             >
-              <Edit2 className="size-4" />
-              Edit shift block
+              Close
             </Button>
-          )}
+            {!isPastShift && !isLocked && (
+              <Button
+                variant="primary"
+                size="default"
+                onClick={() => {
+                  onOpenChange(false);
+                  onEditShift(shift);
+                }}
+              >
+                <Edit2 className="size-4" />
+                Edit shift block
+              </Button>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

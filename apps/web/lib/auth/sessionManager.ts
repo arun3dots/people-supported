@@ -42,6 +42,8 @@ async function requestRefresh(): Promise<RefreshAttemptResult> {
   try {
     const response = await fetch(getApiBaseUrl() + "/auth/refresh", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
       credentials: "include",
     });
 
