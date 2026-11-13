@@ -15,6 +15,7 @@ import { ResidentDocumentViewModal } from './ResidentDocumentViewModal';
 import { UploadResidentDocumentModal } from './UploadResidentDocumentModal';
 import { formatUkDate } from '../../lib/date';
 import { theme } from '../../theme';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 interface Props {
   residentId?: string;
@@ -95,7 +96,7 @@ export function ResidentDocumentsSections({ residentId, residentStatus }: Props)
       if (!query) return true;
       return (
         doc.title.toLowerCase().includes(query) ||
-        doc.subtitle.toLowerCase().includes(query)
+        supportPlanLabel(doc.subtitle).toLowerCase().includes(query)
       );
     });
   }, [documents, searchQuery, selectedCategory]);
@@ -173,7 +174,7 @@ export function ResidentDocumentsSections({ residentId, residentStatus }: Props)
               }`}
             >
               <Text className={`text-xs font-semibold ${active ? 'text-white' : 'text-muted-foreground'}`}>
-                {cat}
+                {supportPlanLabel(cat)}
               </Text>
             </TouchableOpacity>
           );

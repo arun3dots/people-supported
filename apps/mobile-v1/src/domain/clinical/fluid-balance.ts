@@ -75,18 +75,22 @@ export function formatMealSlotLabel(slot?: string | null): string {
 
 export interface FluidBalanceSummary {
   totalIntakeMl: number;
-  dailyTargetMl: number;
-  percentageCompleted: number;
-  remainingMl: number;
+  dailyTargetMl: number | null;
+  percentageCompleted: number | null;
+  remainingMl: number | null;
   isDehydratedRisk: boolean;
   statusLabel: string;
 }
 
 export function calculateFluidBalance(
   entries: FluidEntry[],
-  dailyTargetMl = 2000
+  dailyTargetMl?: number
 ): FluidBalanceSummary {
   const totalIntakeMl = entries.reduce((acc, curr) => acc + curr.amountMl, 0);
+  if (!dailyTargetMl || dailyTargetMl <= 0) return {
+    totalIntakeMl, dailyTargetMl: null, percentageCompleted: null, remainingMl: null,
+    isDehydratedRisk: false, statusLabel: 'Clinical target not recorded',
+  };
   const percentageCompleted = Math.min(Math.round((totalIntakeMl / dailyTargetMl) * 100), 100);
   const remainingMl = Math.max(dailyTargetMl - totalIntakeMl, 0);
 

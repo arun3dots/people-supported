@@ -15,6 +15,7 @@ import {
 } from 'lucide-react-native';
 import { ScreenWrapper } from '../../src/components/common/ScreenWrapper';
 import { Text } from '../../src/components/ui/text';
+import { ResidentLoadError } from '../../src/components/clinical/ResidentLoadError';
 import { useResidentDetail } from '../../src/presentation/hooks/useResidentDetail';
 import { ResidentDetailSections } from '../../src/components/clinical/ResidentDetailSections';
 import { ResidentProfileHeaderCard } from '../../src/components/clinical/ResidentProfileHeaderCard';
@@ -27,6 +28,7 @@ export default function ResidentDetailScreen() {
     timeline,
     loading,
     activityError,
+    error,
     refetch,
   } = useResidentDetail(id);
 
@@ -59,8 +61,10 @@ export default function ResidentDetailScreen() {
     );
   }
 
+  if (error) return <ResidentLoadError message={error} onRetry={() => { void refetch(); }} />;
+
   if (!resident) {
-    return null;
+    return <ResidentLoadError message="Select a person supported to view their details." onRetry={() => { void refetch(); }} />;
   }
 
   return (
@@ -89,14 +93,14 @@ export default function ResidentDetailScreen() {
         {/* Row 1 */}
         <View className="flex-row gap-2.5 mb-2.5">
           {/* Action 1: Observation */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.navigate({ pathname: '/news2', params: { id: resident.id } } as Href)}
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <Activity size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Observation</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Action 2: Support Plan */}
           <TouchableOpacity
@@ -117,19 +121,6 @@ export default function ResidentDetailScreen() {
             <Pill size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">MAR</Text>
           </TouchableOpacity>
-        </View>
-
-        {/* Row 2 */}
-        <View className="flex-row gap-2.5 mb-2.5">
-          {/* Action 4: Body Map */}
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push({ pathname: '/body-map', params: { id: resident.id } } as Href)}
-            className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
-          >
-            <Accessibility size={22} color="#4A706A" strokeWidth={2} />
-            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Body Map</Text>
-          </TouchableOpacity>
 
           {/* Action 5: Task History */}
           <TouchableOpacity
@@ -138,18 +129,33 @@ export default function ResidentDetailScreen() {
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <History size={22} color="#4A706A" strokeWidth={2} />
-            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Task History</Text>
+            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Support History</Text>
           </TouchableOpacity>
 
+        </View>
+
+        {/* Row 2 */}
+        <View className="flex-row gap-2.5 mb-2.5">
+          {/* Action 4: Body Map */}
+          {/* <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push({ pathname: '/body-map', params: { id: resident.id } } as Href)}
+            className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
+          >
+            <Accessibility size={22} color="#4A706A" strokeWidth={2} />
+            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Body Map</Text>
+          </TouchableOpacity> */}
+
+
           {/* Action 6: Documents */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.navigate({ pathname: '/documents', params: { id: resident.id } } as Href)}
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <Upload size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Documents</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Row 3 */}

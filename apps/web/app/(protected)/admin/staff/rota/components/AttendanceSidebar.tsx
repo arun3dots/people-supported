@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { format, subDays } from "date-fns";
+import { addDays, format, startOfWeek } from "date-fns";
 import { AlertCircle, Phone, UserPlus } from "lucide-react";
 import { Badge, Button, Card, Text } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
@@ -12,13 +12,14 @@ import { getShiftDateStr, getShiftStaffIds } from "./rotaDataUtils";
 interface AttendanceSidebarProps {
   records: AttendanceRecord[];
   shifts?: Shift[];
-  referenceDateStr?: string;
+  weekStart?: Date;
   onRecordReason: (record: AttendanceRecord) => void;
   onArrangeCover?: (record: AttendanceRecord) => void;
 }
 
 interface DayAttendanceSummary {
   dayName: string;
+  dateLabel: string;
   onTimeCount: number;
   lateCount: number;
   absentCount: number;
@@ -27,23 +28,28 @@ interface DayAttendanceSummary {
 export function AttendanceSidebar({
   records,
   shifts = [],
-  referenceDateStr,
+  weekStart,
   onRecordReason,
   onArrangeCover,
 }: AttendanceSidebarProps): React.JSX.Element {
   const followUpItems = records.filter(
-    (r) => r.status === "Late" || r.status === "Absent" || r.status === "Left early",
+    (r) => r.status === "Late" || r.status === "Absent",
+  );
+
+  const resolvedWeekStart = useMemo(
+    () => weekStart ?? startOfWeek(new Date(), { weekStartsOn: 1 }),
+    [weekStart],
   );
 
   const past7DaysData: DayAttendanceSummary[] = useMemo(() => {
-    const anchor = referenceDateStr ? new Date(`${referenceDateStr}T12:00:00`) : new Date();
     const nowMs = Date.now();
     const GRACE_MS = 10 * 60 * 1000;
 
     return Array.from({ length: 7 }, (_, idx) => {
-      const day = subDays(anchor, 6 - idx);
+      const day = addDays(resolvedWeekStart, idx);
       const dateStr = format(day, "yyyy-MM-dd");
       const dayName = format(day, "EEE");
+      const dateLabel = format(day, "dd MMM");
       let onTimeCount = 0;
       let lateCount = 0;
       let absentCount = 0;
@@ -71,9 +77,9 @@ export function AttendanceSidebar({
         });
       });
 
-      return { dayName, onTimeCount, lateCount, absentCount };
+      return { dayName, dateLabel, onTimeCount, lateCount, absentCount };
     });
-  }, [shifts, referenceDateStr]);
+  }, [shifts, resolvedWeekStart]);
 
   const maxScale = Math.max(
     1,
@@ -83,7 +89,7 @@ export function AttendanceSidebar({
   return (
     <div className="space-y-5 font-sans">
       {/* 1. Needs Follow-up Card */}
-      <Card variant="surface" border="default" className="p-5 font-sans gap-3 border-none shadow-none">
+      <Card variant="surface" border="default">
         <div className="flex items-center justify-between pb-3 border-b border-border-secondary/50">
           <div className="flex items-center gap-2">
             <AlertCircle className="size-4 text-amber-600" />
@@ -156,15 +162,31 @@ export function AttendanceSidebar({
                       Arrange cover
                     </Button>
                   )}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs px-2 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
-                  >
-                    <Phone className="size-3 mr-1" />
-                    Call
-                  </Button>
+                  {item.staffPhone ? (
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs px-2 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
+                    >
+                      <a href={`tel:${item.staffPhone}`} title={`Call ${item.staffPhone}`}>
+                        <Phone className="size-3 mr-1" />
+                        Call
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled
+                      title="No phone number on file"
+                      className="h-7 text-xs px-2 rounded-lg text-slate-400"
+                    >
+                      <Phone className="size-3 mr-1" />
+                      Call
+                    </Button>
+                  )}
                 </div>
               </div>
             ))
@@ -172,14 +194,14 @@ export function AttendanceSidebar({
         </div>
       </Card>
 
-      {/* 2. Last 7 Days Stacked Bar Chart */}
+      {/* 2. Weekly Attendance Stacked Bar Chart */}
       <Card variant="surface" border="default" className="p-5 font-sans gap-3 border-none shadow-none">
         <div className="pb-3 border-b border-border-secondary/50">
           <Text as="h2" size="md" weight="semibold" className="text-slate-900">
-            Last 7 days
+            Weekly breakdown
           </Text>
           <Text size="md" variant="muted">
-            Shifts started on time, late or missed
+            {format(resolvedWeekStart, "dd MMM")} &ndash; {format(addDays(resolvedWeekStart, 6), "dd MMM yyyy")} &bull; On time, late or missed
           </Text>
         </div>
 
@@ -215,7 +237,9 @@ export function AttendanceSidebar({
                       />
                     )}
                   </div>
-                  <span className="text-xs font-medium text-slate-500">{d.dayName}</span>
+                  <span className="text-xs font-medium text-slate-500" title={d.dateLabel}>
+                    {d.dayName}
+                  </span>
                 </div>
               );
             })}

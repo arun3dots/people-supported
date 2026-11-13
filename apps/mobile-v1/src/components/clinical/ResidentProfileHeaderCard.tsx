@@ -31,9 +31,8 @@ function computeAge(dobStr?: string | null): number | null {
 export function ResidentProfileHeaderCard({ resident }: Props) {
   const age = computeAge(resident.dob);
   const gender = resident.profile?.gender || (resident as { gender?: string }).gender || 'Not recorded';
-  const residentIdDisplay = resident.id.slice(0, 8).toUpperCase();
   const refCode = resident.supportedLivingDetails?.referenceCode;
-  const idLabel = refCode ? `Ref: ${refCode}` : `Person ID: ${residentIdDisplay}`;
+  const idLabel = refCode ? `Ref: ${refCode}` : 'Reference not recorded';
 
   const admissionDateDisplay = formatAdmissionDate(resident.admissionDate);
   const wingName = resident.bed?.room?.wing?.name;
@@ -120,8 +119,8 @@ export function ResidentProfileHeaderCard({ resident }: Props) {
       ) : null}
 
       {/* NEWS2 Score Section */}
-      <View className="rounded-xl bg-white p-4">
-        <View className="flex-row items-center justify-between mb-3">
+      {/* <View className="rounded-xl bg-white p-4"> */}
+        {/* <View className="flex-row items-center justify-between mb-3">
           <View className="flex-row items-center gap-1.5">
             <Text className="text-md font-bold text-foreground">NEWS2 Score</Text>
             <Info size={14} color="#8E8E93" />
@@ -129,10 +128,10 @@ export function ResidentProfileHeaderCard({ resident }: Props) {
           <View className="bg-surface px-3.5 py-1 rounded-full">
             <Text className="text-md font-bold text-foreground">{scoreFormatted}</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* 10-Segment Color Progress Bar */}
-        <View className="flex-row items-center gap-1">
+        {/* <View className="flex-row items-center gap-1">
           {Array.from({ length: 10 }).map((_, idx) => {
             const isActive = idx < Math.min(news2Score, 10);
             let activeColor = '#4A706A';
@@ -155,8 +154,8 @@ export function ResidentProfileHeaderCard({ resident }: Props) {
               />
             );
           })}
-        </View>
-      </View>
+        </View> */}
+      {/* </View> */}
     </Card>
   );
 }

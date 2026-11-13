@@ -6,6 +6,7 @@ import { RetentionPurgeWorker } from './retention-purge.worker';
 import { HydrationAlertWorker } from './hydration-alert.worker';
 import { MatrixComplianceAlertWorker } from './matrix-compliance-alert.worker';
 import { ShiftReminderWorker } from './shift-reminder.worker';
+import { ShiftOverrunWorker } from './shift-overrun.worker';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { PaymentsModule } from '../payments/payments.module';
 import { ShiftsModule } from '../shifts/shifts.module';
@@ -20,12 +21,14 @@ import { ShiftsModule } from '../shifts/shifts.module';
     HydrationAlertWorker,
     MatrixComplianceAlertWorker,
     ShiftReminderWorker,
+    ShiftOverrunWorker,
   ],
   exports: [
     RetentionPurgeWorker,
     HydrationAlertWorker,
     MatrixComplianceAlertWorker,
     ShiftReminderWorker,
+    ShiftOverrunWorker,
   ],
 })
 export class JobsModule {}

@@ -329,6 +329,8 @@ export class ComplianceController {
     }
 
     res.setHeader('Content-Type', contentType || 'application/octet-stream');
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Cache-Control', 'private, max-age=3600');
 
     const stream = this.complianceService.getFileStream(filePath);

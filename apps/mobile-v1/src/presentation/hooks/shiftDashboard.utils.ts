@@ -1,6 +1,9 @@
-import { Resident } from '../../domain/entities/Resident';
+import type { Resident } from '../../domain/entities/Resident';
+import { enrichResidentFromRecord } from './residentRecordedData';
+import type { ResidentDetailData } from './useResidentDetail';
 import { formatUkTime } from '../../lib/date';
 import { parseShiftTimestamp } from './useClockInEligibility';
+import type { PreviousShiftHandoverDTO } from '@repo/schema';
 
 export interface HandoverPersonInfo {
   id?: string;
@@ -10,12 +13,7 @@ export interface HandoverPersonInfo {
   avatarUrl?: string | null;
 }
 
-export interface PreviousShiftHandoverInfo {
-  shiftName?: string | null;
-  staffName?: string | null;
-  endTime?: string | Date | null;
-  handoverNotes: string;
-}
+export type PreviousShiftHandoverInfo = PreviousShiftHandoverDTO;
 
 export interface ShiftInfo {
   id: string;
@@ -29,16 +27,22 @@ export interface ShiftInfo {
   timeRemainingStr?: string;
   tasksCompleted: number;
   tasksTotal: number;
+  taskProgressLoading?: boolean;
+  taskProgressError?: boolean;
   urgentAlertsCount: number;
   incidentCount: number;
   status?: string;
   isStarted?: boolean;
   isCompleted?: boolean;
+  isContinuing?: boolean;
+  hasContinuousNextShift?: boolean;
   shiftNotes?: string | null;
+  handoverNotes?: string | null;
   nextShiftName?: string | null;
   nextShiftStartTime?: string | null;
   nextShiftHandoverPerson?: HandoverPersonInfo | null;
   previousShiftHandover?: PreviousShiftHandoverInfo | null;
+  previousShiftHandovers?: PreviousShiftHandoverInfo[];
 }
 
 export interface ShiftDetailsApiResponse {
@@ -58,9 +62,13 @@ export interface ShiftDetailsApiResponse {
   incidentCount?: number;
   timeRemainingStr?: string | null;
   wardName?: string | null;
+  isContinuing?: boolean;
+  hasContinuousNextShift?: boolean;
   shiftNotes?: string | null;
   notes?: string | null;
+  handoverNotes?: string | null;
   previousShiftHandover?: PreviousShiftHandoverInfo | null;
+  previousShiftHandovers?: PreviousShiftHandoverInfo[];
   nextShift?: {
     name?: string | null;
     startTime?: string | null;
@@ -68,33 +76,108 @@ export interface ShiftDetailsApiResponse {
   } | null;
 }
 
-export function normalizeShiftTimeRemaining(
-  value: string | null | undefined,
-  isStarted: boolean,
-  isCompleted: boolean
-): string | undefined {
-  if (isCompleted) return 'Shift ended';
-  if (value?.trim().toLowerCase() === 'shift ended') {
-    return 'Shift ended';
-  }
-  return value || undefined;
+export const CONTINUOUS_SHIFT_MAX_GAP_MS = 30 * 60 * 1000;
+
+export interface ShiftScheduleTimestamps {
+  id?: string;
+  status?: string;
+  rawStartTime?: string | Date;
+  rawEndTime?: string | Date;
+  startTime?: string;
+  endTime?: string;
 }
 
-export function isShiftPast(
-  shift?: {
-    rawStartTime?: string | Date;
-    rawEndTime?: string | Date;
-    startTime?: string;
-    endTime?: string;
-  } | null
-): boolean {
-  if (!shift?.rawEndTime && !shift?.endTime) return false;
-  const startMs = parseShiftTimestamp(shift.rawStartTime, shift.startTime, shift.rawStartTime);
-  let endMs = parseShiftTimestamp(shift.rawEndTime, shift.endTime, shift.rawStartTime);
+function parseFullDateTimestamp(value?: string | Date): number | null {
+  if (!value) return null;
+  if (value instanceof Date) {
+    return Number.isFinite(value.getTime()) ? value.getTime() : null;
+  }
+  const trimmed = value.trim();
+  if (!trimmed || /^\d{1,2}:\d{2}/.test(trimmed)) return null;
+  const ms = Date.parse(trimmed);
+  return Number.isFinite(ms) ? ms : null;
+}
+
+export function resolveShiftStartEndMs(
+  shift?: ShiftScheduleTimestamps | null,
+): { startMs: number | null; endMs: number | null } {
+  if (!shift?.rawEndTime && !shift?.endTime && !shift?.rawStartTime) {
+    return { startMs: null, endMs: null };
+  }
+  const fullStartMs = parseFullDateTimestamp(shift.rawStartTime);
+  const fullEndMs = parseFullDateTimestamp(shift.rawEndTime);
+  if (fullStartMs !== null && fullEndMs !== null) {
+    return { startMs: fullStartMs, endMs: fullEndMs };
+  }
+  const startMs =
+    fullStartMs ?? parseShiftTimestamp(shift.rawStartTime, shift.startTime, shift.rawStartTime);
+  let endMs =
+    fullEndMs ?? parseShiftTimestamp(shift.rawEndTime, shift.endTime, shift.rawStartTime);
   if (startMs && endMs && endMs <= startMs) {
     endMs += 24 * 60 * 60 * 1000;
   }
-  return Boolean(endMs && endMs < Date.now());
+  return { startMs, endMs };
+}
+
+export function isShiftPast(
+  shift?: ShiftScheduleTimestamps | null,
+  nowMs: number = Date.now(),
+): boolean {
+  const { endMs } = resolveShiftStartEndMs(shift);
+  return Boolean(endMs && endMs < nowMs);
+}
+
+export function isContinuousNextShift(
+  current?: ShiftScheduleTimestamps | null,
+  candidate?: ShiftScheduleTimestamps | null,
+): boolean {
+  if (!current || !candidate) return false;
+  if (current.id && candidate.id && current.id === candidate.id) return false;
+  if (candidate.status === 'Cancelled' || candidate.status === 'Draft') return false;
+  const { endMs: currentEndMs } = resolveShiftStartEndMs(current);
+  const { startMs: nextStartMs, endMs: nextEndMs } = resolveShiftStartEndMs(candidate);
+  if (!currentEndMs || !nextStartMs || !nextEndMs || nextEndMs <= nextStartMs) return false;
+  const gapMs = nextStartMs - currentEndMs;
+  return gapMs >= 0 && gapMs <= CONTINUOUS_SHIFT_MAX_GAP_MS;
+}
+
+export function formatContinuingTimeRemaining(
+  shift?: ShiftScheduleTimestamps | null,
+  nowMs: number = Date.now(),
+): string {
+  const { endMs } = resolveShiftStartEndMs(shift);
+  if (!endMs || nowMs <= endMs) return 'Continuing';
+  const totalMins = Math.floor((nowMs - endMs) / 60_000);
+  if (totalMins < 1) return 'Continuing (just past end)';
+  const hrs = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  return hrs === 0
+    ? `Continuing (+${mins}m)`
+    : `Continuing (+${hrs}h ${String(mins).padStart(2, '0')}m)`;
+}
+
+export function normalizeShiftTimeRemaining(
+  value: string | null | undefined,
+  isStarted: boolean,
+  isCompleted: boolean,
+  options?: {
+    isContinuing?: boolean;
+    shift?: ShiftScheduleTimestamps | null;
+    nowMs?: number;
+  },
+): string | undefined {
+  if (isCompleted) return 'Shift ended';
+  if (isStarted && options?.isContinuing) {
+    return options.shift
+      ? formatContinuingTimeRemaining(options.shift, options.nowMs)
+      : value && value.trim().toLowerCase().startsWith('continuing')
+        ? value
+        : 'Continuing';
+  }
+  if (value?.trim().toLowerCase() === 'shift ended') {
+    return isStarted ? 'In progress' : 'Shift ended';
+  }
+  return value || undefined;
 }
 
 export function mapApiShift(item: Record<string, unknown> | null | undefined): ShiftInfo | null {
@@ -127,14 +210,23 @@ export function mapApiShift(item: Record<string, unknown> | null | undefined): S
     item.status === 'Completed' ||
     item.shiftStatus === 'Completed' ||
     Boolean(item.isCompleted);
-  const isStarted = !isCompleted && !isPast && Boolean(item.isStarted);
+  const hasContinuousNextShift = Boolean(item.hasContinuousNextShift);
+  const hasStartedFlag =
+    Boolean(item.isStarted) ||
+    item.status === 'Continuing' ||
+    item.shiftStatus === 'Continuing';
+  const isStarted = !isCompleted && hasStartedFlag && !(isPast && hasContinuousNextShift);
+  const isContinuing =
+    isStarted && (isPast || Boolean(item.isContinuing) || item.status === 'Continuing');
   const status = isCompleted
     ? 'Completed'
-    : isPast
-      ? 'Ended'
-      : isStarted
-        ? 'Started'
-        : 'Scheduled';
+    : isContinuing
+      ? 'Continuing'
+      : isPast
+        ? 'Ended'
+        : isStarted
+          ? 'Started'
+          : 'Scheduled';
 
   const tasksCompleted = typeof item.tasksCompleted === 'number' ? item.tasksCompleted : 0;
   const tasksTotal =
@@ -147,7 +239,11 @@ export function mapApiShift(item: Record<string, unknown> | null | undefined): S
   const timeRemainingStr = normalizeShiftTimeRemaining(
     typeof item.timeRemainingStr === 'string' ? item.timeRemainingStr : undefined,
     isStarted,
-    isCompleted
+    isCompleted,
+    {
+      isContinuing,
+      shift: { rawStartTime, rawEndTime, startTime, endTime },
+    },
   );
 
   const shiftNotes =
@@ -174,6 +270,8 @@ export function mapApiShift(item: Record<string, unknown> | null | undefined): S
     status,
     isStarted,
     isCompleted,
+    isContinuing,
+    hasContinuousNextShift,
     shiftNotes,
     nextShiftName: null,
     nextShiftStartTime: null,
@@ -186,22 +284,17 @@ export function mapAssignedResidents(
   apiResidents: ShiftDetailsApiResponse['assignedResidents']
 ): Resident[] {
   if (!apiResidents || apiResidents.length === 0) return [];
-  return apiResidents.map((r, idx) => ({
-    id: r.id || `res_${idx}`,
-    fullName: r.fullName || 'Resident',
-    roomNumber: r.roomNumber || '',
-    bedNumber: r.bedNumber || '',
-    wingName: r.wingName || '',
+  return apiResidents.filter((r) => Boolean(r.id && r.fullName)).map((r) => ({
+    id: r.id,
+    fullName: r.fullName,
+    roomNumber: r.roomNumber ?? '',
+    bedNumber: r.bedNumber ?? undefined,
+    wingName: r.wingName ?? undefined,
     dateOfBirth: '',
-    age: r.age ?? 0,
-    gender: r.gender || 'Not specified',
-    status: 'Active',
-    allergies: [],
-    dnacpr: false,
-    photoUrl: r.photoUrl || null,
-    riskRatings: { fallRisk: 'Low', pressureUlcerRisk: 'Low', chokingRisk: 'Low' },
-    mustScore: 0,
-    fluidTargetMl: 2000,
+    age: r.age ?? undefined,
+    gender: r.gender ?? '',
+    photoUrl: r.photoUrl,
+    riskRatings: {},
   }));
 }
 
@@ -240,42 +333,9 @@ export function enrichResidentsLocation(
   residents: Resident[],
   rawResidentsList: Array<Record<string, unknown>>
 ): Resident[] {
-  if (!rawResidentsList || rawResidentsList.length === 0) return residents;
-
-  const locMap = new Map<string, { roomNumber: string; bedNumber: string; wingName: string }>();
-  rawResidentsList.forEach((item) => {
-    const bed = item.bed as
-      | {
-          bedLabel?: string;
-          number?: string;
-          wingName?: string;
-          room?: { roomNumber?: string; wing?: { name?: string } };
-        }
-      | undefined;
-    const roomNum = bed?.room?.roomNumber || (item.roomNumber as string) || '';
-    const rawBed = bed?.bedLabel || bed?.number || (item.bedNumber as string) || '';
-    const rawWing =
-      bed?.wingName ||
-      bed?.room?.wing?.name ||
-      (item.wingName as string) ||
-      '';
-    if (item.id) {
-      locMap.set(String(item.id), {
-        roomNumber: roomNum,
-        bedNumber: rawBed,
-        wingName: rawWing,
-      });
-    }
-  });
-
-  return residents.map((r) => {
-    const loc = locMap.get(r.id);
-    if (!loc) return r;
-    return {
-      ...r,
-      roomNumber: loc.roomNumber || r.roomNumber,
-      bedNumber: loc.bedNumber || r.bedNumber,
-      wingName: loc.wingName || r.wingName,
-    };
+  const records = new Map(rawResidentsList.map((item) => [item.id, item]));
+  return residents.map((resident) => {
+    const record = records.get(resident.id);
+    return record ? enrichResidentFromRecord(resident, record as unknown as ResidentDetailData) : resident;
   });
 }

@@ -10,7 +10,8 @@ import {
   UPDATE_INCIDENT,
 } from '@repo/endpoints';
 import { ScreenWrapper, Text } from '../../src/presentation/components/common';
-import { formatUkDate, formatUkTime, getUkDateString, normalizeToIsoDate } from '../../src/lib/date';
+import { formatUkDate, formatUkTime, getUkDateString } from '../../src/lib/date';
+import { incidentValidationError } from '../../src/lib/incidentValidation';
 import { appendFileToFormData } from '../../src/lib/fileUpload';
 import {
   IncidentDetailsCard,
@@ -91,6 +92,7 @@ const [form, setForm] = useState<IncidentDetailsFormState>(() => {
     incidentDate,
     incidentTime,
     residentName: '',
+    residentId: '',
     roomNumber: '',
     bedNumber: '',
     category: '',
@@ -113,20 +115,11 @@ const handleSubmit = async (data: {
   attachments: IncidentAttachment[];
 }) => {
   const trimmedTitle = form.incidentName.trim();
-  if (!trimmedTitle) {
-    Alert.alert('Required Field', 'Please enter an incident name or title.');
+  const validationError = incidentValidationError(form, residentOptions, getUkDateString(new Date(), true));
+  if (validationError) {
+    Alert.alert('Required Field', validationError);
     return;
   }
-  if (!form.residentName) {
-    Alert.alert('Required Field', 'Please select the affected person supported.');
-    return;
-  }
-  if (!form.category) {
-    Alert.alert('Required Field', 'Please select an incident category.');
-    return;
-  }
-
-  const selectedResident = residentOptions.find((r) => r.fullName === form.residentName);
   const severityVal =
     form.severity === 'Critical' || form.severity === 'High'
       ? 'High'
@@ -134,17 +127,12 @@ const handleSubmit = async (data: {
         ? 'Low'
         : 'Medium';
 
-  const maxAllowedUkDate = getUkDateString(new Date(), true);
-  const normalizedSelectedDate = normalizeToIsoDate(form.incidentDate);
-  const finalIncidentDate =
-    normalizedSelectedDate > maxAllowedUkDate ? maxAllowedUkDate : normalizedSelectedDate;
-
   const payload = {
     title: trimmedTitle,
     category: form.category,
-    incidentDate: finalIncidentDate,
-    incidentTime: form.incidentTime || formatUkTime(new Date()),
-    residentId: selectedResident?.id || undefined,
+    incidentDate: form.incidentDate,
+    incidentTime: form.incidentTime,
+    residentId: form.residentId,
     roomNumber: form.roomNumber || undefined,
     bedNumber: form.bedNumber || undefined,
     harmLevel: form.harmLevel || undefined,

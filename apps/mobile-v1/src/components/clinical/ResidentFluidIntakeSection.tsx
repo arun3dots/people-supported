@@ -45,7 +45,7 @@ export function ResidentFluidIntakeSection({ resident }: ResidentFluidIntakeSect
 
   const {
     logs, summary, fluidCount, foodCount, isLoading, isSaving, isDeleting,
-    logBeverage, createLog, updateLog, deleteLog,
+    logBeverage, createLog, updateLog, deleteLog, error, refetch,
   } = useFluidTracker(resident.id, selectedDateStr);
 
   const filteredLogs = useMemo(() => {
@@ -74,6 +74,12 @@ export function ResidentFluidIntakeSection({ resident }: ResidentFluidIntakeSect
   };
 
   const displayDateLabel = formatUkDate(`${selectedDateStr}T12:00:00`, { day: '2-digit', month: 'short', year: 'numeric' });
+
+  if (error) return <View className="p-4 gap-3">
+    <Text className="text-base text-clinical-critical">Unable to load fluid and nutrition records.</Text>
+    <TouchableOpacity onPress={() => { void refetch(); }}><Text className="text-base text-primary">Retry</Text></TouchableOpacity>
+  </View>;
+  if (isLoading) return <ActivityIndicator accessibilityLabel="Loading fluid and nutrition records" />;
 
   return (
     <View className="mb-4">

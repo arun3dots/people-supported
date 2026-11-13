@@ -19,6 +19,7 @@ export interface IncidentDetailsFormState {
   incidentDate: string;
   incidentTime: string;
   residentName: string;
+  residentId: string;
   roomNumber: string;
   bedNumber: string;
   category: string;
@@ -252,6 +253,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
                     <TouchableOpacity
                       key={r.id}
                       onPress={() => {
+                        onChange('residentId', r.id);
                         onChange('residentName', r.fullName);
                         onChange('roomNumber', r.roomNumber);
                         if (r.bedNumber !== undefined) {
@@ -262,7 +264,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
                       className="py-3 px-2 border-b border-slate-100 flex-row items-center justify-between"
                     >
                       <Text className="text-sm font-semibold text-[#141F1E]">{r.fullName} ({r.roomNumber})</Text>
-                      {form.residentName === r.fullName && <Check size={18} color="#4A706A" />}
+                      {form.residentId === r.id && <Check size={18} color="#4A706A" />}
                     </TouchableOpacity>
                   ))
                 ))}

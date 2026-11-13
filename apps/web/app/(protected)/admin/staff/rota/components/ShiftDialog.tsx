@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -75,7 +75,11 @@ export function ShiftDialog({
 }: any) {
   const { user } = useAuth();
   const { data: shiftTypes = [] } = useGetShiftTypesQuery();
-  const { data: apiResidents = [] } = useGetResidentsQuery();
+  const { data: rawApiResidents = [] } = useGetResidentsQuery();
+  const apiResidents = useMemo(
+    () => rawApiResidents.filter((r: { status?: string }) => r.status === "Active"),
+    [rawApiResidents],
+  );
 
   const staffOptions = staff
     .filter((s: any) => s.id !== user?.userId && s.userId !== user?.userId)

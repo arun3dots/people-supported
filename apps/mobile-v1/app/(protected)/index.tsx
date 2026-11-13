@@ -8,7 +8,6 @@ import { QuickAccessCard, QuickAccessAction } from '../../src/components/dashboa
 import { AlertCard, AlertItem } from '../../src/components/dashboard/AlertCard';
 import { ResidentCard } from '../../src/components/common/ResidentCard';
 import { RecentHandoverCard } from '../../src/components/dashboard/RecentHandoverCard';
-import { EndShiftModal } from '../../src/components/dashboard/EndShiftModal';
 import { ShiftDetailsModal } from '../../src/components/dashboard/ShiftDetailsModal';
 import { ShiftResidentActivityCard } from '../../src/components/dashboard/ShiftResidentActivityCard';
 import { Text } from '../../src/components/ui/text';
@@ -29,6 +28,7 @@ function toAlertPriority(priority?: string): AlertItem['priority'] {
   }
 }
 import { formatNotificationTime } from '../../src/presentation/hooks/useNotifications';
+import { notificationDestination } from '../../src/lib/notificationDestination';
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -39,14 +39,13 @@ export default function DashboardScreen() {
     assignedResidents,
     urgentAlerts,
     isShiftStarted,
+    isShiftContinuing,
     isShiftCompleted,
     startShift,
-    endShift,
     refreshShifts,
     loading,
   } = useShiftDashboard();
   const eligibility = useClockInEligibility(shift);
-  const [isEndShiftModalOpen, setIsEndShiftModalOpen] = useState(false);
   const [isShiftDetailsModalOpen, setIsShiftDetailsModalOpen] = useState(false);
   const [shiftDetailsInitialTab, setShiftDetailsInitialTab] = useState<'today' | 'weekly'>('today');
   const activeShiftResidents =
@@ -79,6 +78,7 @@ export default function DashboardScreen() {
     priorityLabel: alert.priority,
     timestamp: formatNotificationTime(alert.createdAt ?? undefined),
     actionUrl: alert.actionUrl,
+    category: alert.category,
   }));
 
   useFocusEffect(
@@ -104,15 +104,7 @@ export default function DashboardScreen() {
     }
   };
 
-  const handleEndShift = async (notes: string) => {
-    try {
-      await endShift(notes);
-      setIsEndShiftModalOpen(false);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Unable to end shift at this time';
-      Alert.alert('Shift Error', msg);
-    }
-  };
+  const openEndShiftHandover = () => router.push('/handover' as Href);
 
   const handleQuickAccessPress = (type: QuickAccessAction) => {
     switch (type) {
@@ -134,19 +126,7 @@ export default function DashboardScreen() {
         router.push('/news2' as Href);
         break;
       case 'handover':
-        if (!shift) {
-          Alert.alert('No Active Shift', 'You do not currently have an active shift assigned.');
-          return;
-        }
-        if (!isShiftStarted) {
-          Alert.alert('Shift Not Started', 'Please clock in to start your shift before accessing Handover.');
-          return;
-        }
-        if (isShiftCompleted) {
-          Alert.alert('Shift Completed', 'Your shift for today has already ended.');
-          return;
-        }
-        router.push('/handover' as Href);
+        router.push('/previous-handover' as Href);
         break;
       case 'mar':
         if (!isShiftStarted) {
@@ -188,10 +168,10 @@ export default function DashboardScreen() {
         {!isShiftStarted || !shift || isShiftCompleted ? (
           <ShiftWelcomeCard
             shift={shift}
-            userName={user?.fullName || 'Sarah'}
+            userName={user?.fullName || ''}
             isShiftStarted={isShiftStarted}
             onStartShift={handleStartShift}
-            onEndShift={isShiftStarted && !isShiftCompleted && Boolean(shift?.id) ? () => setIsEndShiftModalOpen(true) : undefined}
+            onEndShift={isShiftStarted && !isShiftCompleted && Boolean(shift?.id) ? openEndShiftHandover : undefined}
             onPress={() => {
               setShiftDetailsInitialTab(shift ? 'today' : 'weekly');
               setIsShiftDetailsModalOpen(true);
@@ -205,8 +185,11 @@ export default function DashboardScreen() {
             timeRemainingStr={shift.timeRemainingStr || 'Shift in progress'}
             completedTasks={shift.tasksCompleted}
             totalTasks={shift.tasksTotal}
+            loadingTasks={shift.taskProgressLoading}
+            taskError={shift.taskProgressError}
             isCompleted={isShiftCompleted}
-            onEndShift={() => setIsEndShiftModalOpen(true)}
+            isContinuing={isShiftContinuing}
+            onEndShift={openEndShiftHandover}
             onPress={() => {
               setShiftDetailsInitialTab('today');
               setIsShiftDetailsModalOpen(true);
@@ -221,12 +204,12 @@ export default function DashboardScreen() {
         />
 
         {/* Critical Alerts Section */}
-        {alertItems.length > 0 && (
+        {isShiftStarted && !isShiftCompleted && alertItems.length > 0 && (
           <AlertCard
             alerts={alertItems}
             onSeeAllAlerts={() => router.push('/alerts' as Href)}
             onPressAlert={(alert) =>
-              router.push((alert.actionUrl || '/alerts') as Href)
+              router.push(notificationDestination(alert))
             }
           />
         )}
@@ -237,24 +220,15 @@ export default function DashboardScreen() {
             shift?.previousShiftHandover
               ? {
                   authorName: shift.previousShiftHandover.staffName || 'Staff',
-                  authorRole: 'Previous Shift Staff',
+                  authorRole: shift.previousShiftHandover.staffRole || 'Previous Shift Staff',
+                  authorAvatarUrl: shift.previousShiftHandover.staffAvatarUrl,
                   authorShift: String(shift.previousShiftHandover.shiftName || 'Previous Shift'),
                   content: shift.previousShiftHandover.handoverNotes,
                 }
               : null
           }
           residents={activeShiftResidents}
-          onPress={() => {
-            if (!shift) {
-              Alert.alert('No Active Shift', 'You do not currently have an active shift assigned.');
-              return;
-            }
-            if (!isShiftStarted) {
-              Alert.alert('Shift Not Started', 'Please clock in to start your shift before accessing Handover.');
-              return;
-            }
-            router.push('/handover' as Href);
-          }}
+          onPress={() => router.push('/previous-handover' as Href)}
         />
 
         {/* Next Visit Resident Section - Only when shift is started */}
@@ -287,19 +261,6 @@ export default function DashboardScreen() {
         )}
       </ScrollView>
 
-      {/* End Shift Modal Dialog */}
-      {shift && (
-        <EndShiftModal
-          visible={isEndShiftModalOpen}
-          onClose={() => setIsEndShiftModalOpen(false)}
-          onConfirmEndShift={handleEndShift}
-          shiftName={shift.name}
-          assignedResidents={assignedResidents}
-          completedTasks={shift.tasksCompleted}
-          totalTasks={shift.tasksTotal}
-        />
-      )}
-
       {/* Shift Details & Handover Information Modal */}
       <ShiftDetailsModal
         visible={isShiftDetailsModalOpen}
@@ -309,6 +270,7 @@ export default function DashboardScreen() {
         wardName={shift?.wardName || ''}
         isShiftStarted={isShiftStarted}
         isCompleted={isShiftCompleted}
+        isContinuing={isShiftContinuing}
         scheduledStartTime={shift?.startTime}
         actualStartedTime={shift?.actualStartedTime}
         scheduledEndTime={shift?.endTime}
@@ -330,11 +292,11 @@ export default function DashboardScreen() {
         }}
         onEndShift={() => {
           setIsShiftDetailsModalOpen(false);
-          setIsEndShiftModalOpen(true);
+          openEndShiftHandover();
         }}
         onEnterHandoverNote={() => {
           setIsShiftDetailsModalOpen(false);
-          router.push('/handover' as Href);
+          openEndShiftHandover();
         }}
       />
     </ScreenWrapper>

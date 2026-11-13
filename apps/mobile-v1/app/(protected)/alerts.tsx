@@ -20,6 +20,7 @@ import {
   type MobileNotificationItem,
 } from '../../src/presentation/hooks/useNotifications';
 import { NotificationCard } from '../../src/components/common/NotificationCard';
+import { notificationDestination } from '../../src/lib/notificationDestination';
 
 export type AlertFilter = 'all' | 'unread' | 'urgent';
 
@@ -31,6 +32,7 @@ export default function AlertsScreen() {
     urgentCount,
     loading,
     refreshing,
+    error,
     refreshNotifications,
     markAsRead,
     markAllAsRead,
@@ -52,26 +54,7 @@ export default function AlertsScreen() {
       void markAsRead(item.id);
     }
 
-    const cat = item.category?.toUpperCase() || '';
-    const title = item.title?.toLowerCase() || '';
-    const actionUrl = item.actionUrl?.toLowerCase() || '';
-
-    if (cat === 'MEDICATION' || actionUrl.includes('medication') || title.includes('medication')) {
-      router.navigate('/mar' as Href);
-    } else if (cat === 'TASK' || actionUrl.includes('tasks') || title.includes('task')) {
-      router.navigate('/tasks' as Href);
-    } else if (
-      cat === 'CLINICAL' ||
-      actionUrl.includes('observation') ||
-      title.includes('news2') ||
-      title.includes('vital')
-    ) {
-      router.navigate('/news2' as Href);
-    } else if (cat === 'INCIDENT' || actionUrl.includes('incident')) {
-      router.navigate('/report-incident' as Href);
-    } else {
-      router.navigate('/' as Href);
-    }
+    router.navigate(notificationDestination(item));
   };
 
   return (
@@ -90,7 +73,7 @@ export default function AlertsScreen() {
           <View>
             <Text className="text-xl font-bold text-text-primary">Notifications</Text>
             <Text className="text-xs text-text-secondary">
-              {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All notifications up to date'}
+              {loading ? 'Loading notifications...' : error ? 'Notifications unavailable' : unreadCount > 0 ? `${unreadCount} unread notifications` : 'All notifications up to date'}
             </Text>
           </View>
         </View>
@@ -160,7 +143,7 @@ export default function AlertsScreen() {
           </View>
         )}
 
-        {!loading && filteredNotifications.length === 0 && (
+        {!loading && !error && filteredNotifications.length === 0 && (
           <View className="py-16 px-6 items-center justify-center bg-surface rounded-2xl my-4">
             <View className="w-16 h-16 rounded-full bg-white items-center justify-center mb-3">
               {activeFilter === 'unread' ? (
@@ -185,6 +168,14 @@ export default function AlertsScreen() {
             </Text>
           </View>
         )}
+
+        {error && <View className="p-5 gap-3">
+          <Text className="text-base font-bold text-foreground">Unable to load notifications</Text>
+          <Text className="text-base text-muted-foreground">{error}</Text>
+          <TouchableOpacity onPress={() => { void refreshNotifications(); }}>
+            <Text className="text-base font-bold text-primary">Retry</Text>
+          </TouchableOpacity>
+        </View>}
 
         {filteredNotifications.map((item) => (
           <NotificationCard

@@ -50,7 +50,7 @@ export function AdminDashboardClient() {
 
 
       {/* 3. Clinical Governance & Escalations Command Center */}
-      <ManagerClinicalGovernanceWidget />
+      {/* <ManagerClinicalGovernanceWidget /> */}
 
       {/* 5. Revenue & Financial Overview */}
       <FinancialOverviewCard />

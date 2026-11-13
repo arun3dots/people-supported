@@ -109,7 +109,6 @@ export function FilterSection({
     setSelectedStatus("All");
     setSelectedCareType("All");
     setSelectedDept("All");
-    setSelectedDob("");
     setSelectedRoom("All");
     setSearch("");
   };

@@ -31,6 +31,9 @@ jest.mock('@repo/db', () => ({
     branch: {
       findFirst: jest.fn(),
     },
+    leaveRequest: {
+      findMany: jest.fn().mockResolvedValue([]),
+    },
     shiftRequest: {
       findMany: jest.fn(),
     },
@@ -360,7 +363,7 @@ describe('StaffService', () => {
       );
     });
 
-    it('scopes the leave lookup by branchId too, not tenantId', async () => {
+    it('scopes shift leave by branch and the listed staff tenants', async () => {
       (prisma.user.count as jest.Mock).mockResolvedValue(1);
       (prisma.user.findMany as jest.Mock).mockResolvedValue([mockUsers[0]]);
       (prisma.shiftRequest.findMany as jest.Mock).mockResolvedValue([]);
@@ -370,7 +373,7 @@ describe('StaffService', () => {
       const shiftWhere = (prisma.shiftRequest.findMany as jest.Mock).mock
         .calls[0][0].where;
       expect(shiftWhere.branchId).toBe('branch-1');
-      expect(shiftWhere.tenantId).toBeUndefined();
+      expect(shiftWhere.tenantId).toEqual({ in: ['tenant-1'] });
     });
 
     it('should return all records without skip/take when all is true', async () => {

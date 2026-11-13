@@ -133,8 +133,16 @@ export function useResidentColumns({
             }
           )?.roomAllocation;
 
+          const residentObj = r as unknown as {
+            room?: string | null;
+            supportedLivingDetails?: { property?: string | null };
+          };
+
           const rawRoom =
-            r.bed?.room?.roomNumber || preAlloc?.roomNumber || r.room || null;
+            r.bed?.room?.roomNumber ||
+            preAlloc?.roomNumber ||
+            residentObj.room ||
+            null;
 
           const matchedRoom =
             !r.bed?.room?.wing && rawRoom
@@ -155,7 +163,7 @@ export function useResidentColumns({
             r.bed?.room?.wing?.name ||
             matchedProp?.name ||
             preAlloc?.landlord ||
-            r.supportedLivingDetails?.property ||
+            residentObj.supportedLivingDetails?.property ||
             "Unassigned";
 
           const roomNum = rawRoom
@@ -201,36 +209,6 @@ export function useResidentColumns({
               className="border font-normal text-md"
             >
               {need}
-            </Badge>
-          );
-        },
-      },
-      {
-        id: "riskLevel",
-        header: "Risk",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const risk =
-            r.supportedLivingDetails?.riskLevel ||
-            (r.careProfile?.careComplexity === "High"
-              ? "High"
-              : r.careProfile?.careComplexity === "Low"
-                ? "Low"
-                : "Medium");
-          const riskState =
-            risk === "High"
-              ? "danger"
-              : risk === "Low"
-                ? "success"
-                : "warning";
-          return (
-            <Badge
-              variant="secondary"
-              state={riskState}
-              className="border text-md"
-            >
-              {risk}
             </Badge>
           );
         },

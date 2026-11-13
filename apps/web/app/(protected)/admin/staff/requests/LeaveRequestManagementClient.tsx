@@ -26,7 +26,6 @@ import { LeaveRequestDetailModal } from "./components/LeaveRequestDetailModal";
 import { LeaveRequestStatCards } from "./components/LeaveRequestStatCards";
 import { NewLeaveRequestModal } from "./components/NewLeaveRequestModal";
 import { useLeaveRequestColumns } from "./components/useLeaveRequestColumns";
-import { WhosOffThisWeekCard } from "./components/WhosOffThisWeekCard";
 import { AnnualLeaveBalancesCard } from "./components/AnnualLeaveBalancesCard";
 import { resolveStaffLocation } from "../rota/components/rotaDataUtils";
 
@@ -75,7 +74,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
       if (propertyFilter !== "all") {
         const staffProp = staffList.find((s) => s.id === (r.staffId || r.staff?.id));
         const loc = staffProp ? resolveStaffLocation(staffProp, [], properties) : null;
-        if (loc?.propertyId && loc.propertyId !== propertyFilter) return false;
+        if (!loc?.propertyId || loc.propertyId !== propertyFilter) return false;
       }
       if (search.trim()) {
         const query = search.toLowerCase();
@@ -93,7 +92,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
       }
       return true;
     });
-  }, [requests, activeTab, typeFilter, propertyFilter, search, staffList]);
+  }, [requests, activeTab, typeFilter, propertyFilter, search, staffList, properties]);
 
   const counts = useMemo(
     () => ({
@@ -152,6 +151,7 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
     setSearch("");
     setTypeFilter("All");
     setPropertyFilter("all");
+    setActiveTab("all");
   };
 
   return (
@@ -173,7 +173,48 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => typeof window !== "undefined" && window.print()}
+            onClick={() => {
+              const escapeCsv = (val: string | number | null | undefined): string => {
+                const str = String(val ?? "");
+                return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+              };
+              const headers = [
+                "Staff Member",
+                "Role",
+                "Leave Type",
+                "Start Date",
+                "End Date",
+                "Status",
+                "Reason",
+              ];
+              const csvRows = [
+                headers.join(","),
+                ...filteredRequests.map((r) =>
+                  [
+                    r.staff?.fullName || "Staff",
+                    r.staff?.role?.name || "",
+                    r.type,
+                    r.startDate ? String(r.startDate).slice(0, 10) : "",
+                    r.endDate ? String(r.endDate).slice(0, 10) : "",
+                    r.status,
+                    r.reason || "",
+                  ]
+                    .map(escapeCsv)
+                    .join(","),
+                ),
+              ];
+              const blob = new Blob([csvRows.join("\n")], {
+                type: "text/csv;charset=utf-8;",
+              });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `leave-requests-${new Date().toISOString().slice(0, 10)}.csv`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }}
             className="h-9 px-3 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-md font-medium text-slate-700 flex items-center gap-1.5 shadow-none cursor-pointer"
           >
             <Download className="size-3.5" />
@@ -237,6 +278,19 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
               </SelectContent>
             </Select>
 
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-44 h-10 bg-white border-slate-200/80 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
+                <SelectValue placeholder="Filter Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {statusTabs.map((tab) => (
+                  <SelectItem key={tab.key} value={tab.key}>
+                    {tab.label} ({tab.count})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <Button
               type="button"
               variant="ghost"
@@ -248,25 +302,6 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
               Reset
             </Button>
           </div>
-        </div>
-
-        {/* Status Tabs */}
-        <div className="flex items-center gap-6 border-b border-slate-200/70 text-md overflow-x-auto pb-px">
-          {statusTabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => setActiveTab(tab.key)}
-              className={`pb-2.5 transition-colors whitespace-nowrap cursor-pointer ${
-                activeTab === tab.key
-                  ? "border-b-2 border-primary text-primary font-semibold"
-                  : "text-slate-500 hover:text-slate-800 font-medium"
-              }`}
-            >
-              {tab.label}{" "}
-              <span className="text-slate-400 font-normal">({tab.count})</span>
-            </button>
-          ))}
         </div>
       </div>
 
@@ -288,11 +323,8 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
         />
       </div>
 
-      {/* Bottom 2 Cards: Who's off this week + Annual leave balances */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <WhosOffThisWeekCard requests={requests} />
-        <AnnualLeaveBalancesCard staffList={staffList} requests={requests} />
-      </div>
+      {/* Annual leave balances */}
+      <AnnualLeaveBalancesCard staffList={staffList} requests={requests} />
 
       {/* Create Leave Request Modal */}
       <NewLeaveRequestModal

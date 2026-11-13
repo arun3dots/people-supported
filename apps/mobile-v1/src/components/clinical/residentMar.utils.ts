@@ -5,6 +5,13 @@ import type {
   RecentMedicationAdmin,
 } from './residentMar.types';
 
+const recordedText = (value: unknown) =>
+  typeof value === 'string' && value.trim() ? value.trim() : 'Not recorded';
+const validDate = (value: unknown): value is string =>
+  typeof value === 'string' && Number.isFinite(new Date(value).getTime());
+const asRecord = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+
 export function mapRawRoundsToMarLists(rawRounds: Array<Record<string, unknown>>): {
   scheduledList: ScheduledMedication[];
   prnList: PrnMedication[];
@@ -13,101 +20,81 @@ export function mapRawRoundsToMarLists(rawRounds: Array<Record<string, unknown>>
   const scheduled: ScheduledMedication[] = [];
   const prn: PrnMedication[] = [];
   const recent: RecentMedicationAdmin[] = [];
-
   for (const round of rawRounds) {
-    const isPrn = Boolean(
-      round.isPRN ||
-      round.isAdhoc ||
-      String(round.form || '').toLowerCase().includes('prn')
-    );
-    const rawStatus = String(round.status || 'Due');
+    if (typeof round.id !== 'string' || !round.id) continue;
+    const admins = (Array.isArray(round.administrations) ? round.administrations : [])
+      .map(asRecord)
+      .filter((adm) => !adm.isSuperseded && !adm.deletedAt)
+      .sort(
+        (a, b) =>
+          new Date(String(b.administeredAt)).getTime() -
+          new Date(String(a.administeredAt)).getTime(),
+      );
+    const rawStatus = admins[0]?.status ?? round.status;
     const status: ScheduledMedication['status'] =
-      rawStatus === 'Administered'
+      rawStatus === 'Given' || rawStatus === 'Administered'
         ? 'Administered'
-        : rawStatus === 'Missed'
-          ? 'Missed'
-          : rawStatus === 'On Hold' || rawStatus === 'Withheld'
-            ? 'On Hold'
-            : 'Due';
-
-    const timeStr = round.scheduledTime
-      ? formatUkTime(round.scheduledTime)
-      : '08:00 AM';
-
-    if (isPrn) {
+        : rawStatus === 'Pending' || rawStatus === 'Due'
+          ? 'Due'
+          : rawStatus === 'Missed'
+            ? 'Missed'
+            : rawStatus === 'On Hold' || rawStatus === 'Withheld' || rawStatus === 'Paused'
+              ? 'On Hold'
+              : rawStatus === 'Refused' || rawStatus === 'Omitted' || rawStatus === 'NPO'
+                ? rawStatus
+                : 'Not recorded';
+    const base = {
+      id: round.id,
+      drugName: recordedText(round.drugName),
+      dose: recordedText(round.dose),
+      route: recordedText(round.route),
+      isControlledDrug: round.isControlledDrug === true,
+    };
+    if (round.isPRN === true || round.isAdhoc === true) {
       prn.push({
-        id: String(round.id),
-        drugName: String(round.drugName || 'Medication'),
-        dose: String(round.dose || '1 Dose'),
-        route: String(round.route || 'Oral'),
-        indication:
-          typeof round.instructions === 'string'
-            ? round.instructions
-            : 'As needed',
-        maxDose: 'As prescribed',
-        isControlledDrug: Boolean(round.isControlledDrug),
-        notes:
-          typeof round.instructions === 'string'
-            ? round.instructions
-            : undefined,
+        ...base,
+        indication: recordedText(round.indication),
+        maxDose: recordedText(round.maxDose),
+        notes: recordedText(round.instructions),
       });
     } else {
       scheduled.push({
-        id: String(round.id),
-        drugName: String(round.drugName || 'Medication'),
-        dose: String(round.dose || '1 Dose'),
-        route: String(round.route || 'Oral'),
-        frequency: 'Daily',
-        scheduledTime: timeStr,
-        prescribedBy: 'Prescribing Clinician',
-        startDate: round.createdAt ? formatUkDate(round.createdAt) : 'Active',
-        notes:
-          typeof round.instructions === 'string' && round.instructions
-            ? round.instructions
-            : 'Take as directed',
+        ...base,
+        frequency: recordedText(round.frequency),
+        scheduledTime: validDate(round.scheduledTime)
+          ? formatUkTime(round.scheduledTime)
+          : 'Not recorded',
+        prescribedBy: recordedText(round.prescriber),
+        startDate: validDate(round.startDate) ? formatUkDate(round.startDate) : 'Not recorded',
+        notes: recordedText(round.instructions),
         status,
-        isControlledDrug: Boolean(round.isControlledDrug),
-        rawScheduledDate: round.scheduledTime as string | Date | null,
+        rawScheduledDate: validDate(round.scheduledTime) ? round.scheduledTime : null,
       });
     }
-
-    const admins = Array.isArray(round.administrations)
-      ? round.administrations
-      : [];
     for (const adm of admins) {
-      const admCarer = adm.carer as Record<string, unknown> | undefined;
+      if (typeof adm.id !== 'string' || !validDate(adm.administeredAt)) continue;
       recent.push({
-        id: String(adm.id || `adm-${Math.random()}`),
-        drugName: String(round.drugName || 'Medication'),
-        dose: String(round.dose || '1 Dose'),
-        route: String(round.route || 'Oral'),
-        time: adm.administeredAt ? formatUkTime(adm.administeredAt) : timeStr,
-        dateStr: adm.administeredAt
-          ? formatUkDate(adm.administeredAt, { day: 'numeric', month: 'short' })
-          : 'Today',
-        administeredBy: String(
-          admCarer?.fullName || adm.witnessName || 'Care Staff'
-        ),
+        ...base,
+        id: adm.id,
+        status: recordedText(adm.status),
+        recordedAt: adm.administeredAt,
+        time: formatUkTime(adm.administeredAt),
+        dateStr: formatUkDate(adm.administeredAt, { day: 'numeric', month: 'short' }),
+        administeredBy: recordedText(asRecord(adm.carer).fullName),
       });
     }
   }
-
+  recent.sort((a, b) => new Date(b.recordedAt).getTime() - new Date(a.recordedAt).getTime());
   return { scheduledList: scheduled, prnList: prn, recentList: recent };
 }
 
 export function filterScheduledByDate(
   scheduledList: ScheduledMedication[],
-  scheduleFilter: 'today' | 'all'
+  scheduleFilter: 'today' | 'all',
 ): ScheduledMedication[] {
   if (scheduleFilter === 'all') return scheduledList;
-  const todayStr = getUkDateString(new Date());
-  return scheduledList.filter((s) => {
-    if (!s.rawScheduledDate) return true;
-    try {
-      return getUkDateString(s.rawScheduledDate) === todayStr;
-    } catch {
-      return true;
-    }
-  });
+  const today = getUkDateString(new Date());
+  return scheduledList.filter(
+    (row) => row.rawScheduledDate && getUkDateString(row.rawScheduledDate) === today,
+  );
 }
-
