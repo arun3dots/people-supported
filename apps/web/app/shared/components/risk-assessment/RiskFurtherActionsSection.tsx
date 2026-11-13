@@ -72,7 +72,7 @@ export function RiskFurtherActionsSection({
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
-      <p className="text-sm font-semibold text-slate-800">Further actions</p>
+      <p className="text-md font-semibold text-slate-800">Further actions</p>
 
       {actions.length > 0 && (
         <div className="space-y-2">
@@ -82,8 +82,8 @@ export function RiskFurtherActionsSection({
               className="flex items-start justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5"
             >
               <div className="min-w-0">
-                <p className="text-sm font-medium text-slate-800 truncate">{fa.action}</p>
-                <p className="text-sm text-slate-500 mt-0.5">
+                <p className="text-md font-medium text-slate-800 truncate">{fa.action}</p>
+                <p className="text-md text-slate-500 mt-0.5">
                   <UserCircle2 className="inline size-3 mr-1 text-slate-400" />
                   {fa.ownerName}
                   {fa.dueDate && (
@@ -130,7 +130,7 @@ export function RiskFurtherActionsSection({
             </Select>
             <p
               className={cn(
-                "text-sm text-text-error font-medium min-h-[18px] leading-tight mt-1 transition-opacity",
+                "text-md text-text-error font-medium min-h-[18px] leading-tight mt-1 transition-opacity",
                 isOwnerMissing ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none select-none"
               )}
             >
@@ -156,7 +156,7 @@ export function RiskFurtherActionsSection({
           size="sm"
           onClick={handleAdd}
           disabled={!canAddAction}
-          className="gap-1.5 mt-1 text-sm"
+          className="gap-1.5 mt-1 text-md"
         >
           <Plus className="size-3.5" />
           Add action

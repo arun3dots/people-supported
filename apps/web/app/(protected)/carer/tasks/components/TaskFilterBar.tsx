@@ -38,7 +38,7 @@ export function TaskFilterBar({
       <div className="flex items-center gap-4 flex-wrap">
         {/* 1. Show Filter */}
         <div className="flex items-center gap-2">
-          <Text size="sm" weight="semibold" className="text-text-description uppercase tracking-wider">
+          <Text size="md" weight="semibold" className="text-text-description uppercase tracking-wider">
             Show
           </Text>
           <div className="flex items-center gap-1 bg-surface-primary-light/60 p-1 rounded-xl border border-border-secondary/40">
@@ -62,7 +62,7 @@ export function TaskFilterBar({
 
         {/* 2. Resident Filter */}
         <div className="flex items-center gap-2">
-          <Text size="sm" weight="semibold" className="text-text-description uppercase tracking-wider">
+          <Text size="md" weight="semibold" className="text-text-description uppercase tracking-wider">
             Resident
           </Text>
           <div className="flex items-center gap-1 bg-surface-primary-light/60 p-1 rounded-xl border border-border-secondary/40">

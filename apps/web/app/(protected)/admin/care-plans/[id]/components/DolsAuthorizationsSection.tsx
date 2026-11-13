@@ -49,10 +49,10 @@ export function DolsAuthorizationsSection({
     return (
       <div className="text-center py-10 bg-white border border-dashed border-slate-200 rounded-2xl space-y-2 font-['Outfit',sans-serif]">
         <ShieldCheck className="w-8 h-8 text-slate-300 mx-auto" />
-        <Text size="sm" weight="semibold" className="text-slate-700">
+        <Text size="md" weight="semibold" className="text-slate-700">
           No DoLS Authorisations Recorded
         </Text>
-        <Text size="sm" variant="muted" className="max-w-md mx-auto">
+        <Text size="md" variant="muted" className="max-w-md mx-auto">
           Under CQC Regulation 13, any deprivation of liberty requires authorisation by the Supervisory Body.
         </Text>
         <Button
@@ -83,12 +83,12 @@ export function DolsAuthorizationsSection({
                       {d.supervisoryBody}
                     </span>
                     {d.referenceNumber && (
-                      <Badge variant="secondary" state="inactive" className="text-sm font-mono">
+                      <Badge variant="secondary" state="inactive" className="text-md font-mono">
                         Ref: {d.referenceNumber}
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-slate-500 mt-1 flex-wrap">
+                  <div className="flex items-center gap-3 text-md text-slate-500 mt-1 flex-wrap">
                     <span>Applied: {new Date(d.appliedDate).toLocaleDateString("en-GB")}</span>
                     {d.authorizedDate && (
                       <span>
@@ -115,7 +115,7 @@ export function DolsAuthorizationsSection({
                 <Badge
                   variant="secondary"
                   state={getDolsBadgeState(d.status)}
-                  className="text-sm font-semibold px-2.5 py-0.5"
+                  className="text-md font-semibold px-2.5 py-0.5"
                 >
                   {d.status}
                 </Badge>
@@ -123,7 +123,7 @@ export function DolsAuthorizationsSection({
 
               {/* Conditions Attached to Authorisation */}
               {d.conditions && d.conditions.length > 0 && (
-                <div className="text-sm text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-1">
+                <div className="text-md text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-1">
                   <div className="font-semibold text-slate-800">
                     Statutory Conditions Attached ({d.conditions.length}):
                   </div>
@@ -137,7 +137,7 @@ export function DolsAuthorizationsSection({
 
               {/* Representative (RPR) Details */}
               {d.relevantPersonsRepresentative && (
-                <div className="flex items-center gap-2 text-sm text-slate-500">
+                <div className="flex items-center gap-2 text-md text-slate-500">
                   <Users className="size-3 text-slate-400" />
                   <span>
                     RPR: <strong className="text-slate-700">{d.relevantPersonsRepresentative}</strong>

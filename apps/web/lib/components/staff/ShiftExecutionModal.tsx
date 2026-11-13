@@ -75,7 +75,7 @@ export function ShiftExecutionModal({
         <DialogHeader className="pb-3 border-b border-slate-100">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Badge className="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 border-0 font-bold">
+              <Badge className="bg-emerald-100 text-emerald-800 text-md px-2.5 py-0.5 border-0 font-bold">
                 {shift.type?.name || "Shift"}
               </Badge>
               <Badge
@@ -99,7 +99,7 @@ export function ShiftExecutionModal({
             </Text>
           </DialogTitle>
           <DialogDescription asChild>
-            <Text size="xs" weight="regular" className="text-slate-500">
+            <Text size="md" weight="regular" className="text-slate-500">
               Review assigned residents, care tasks, clinical handover, and record attendance.
             </Text>
           </DialogDescription>
@@ -109,7 +109,7 @@ export function ShiftExecutionModal({
           {/* Shift Timing & Attendance Action Card */}
           <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
+              <div className="flex items-center gap-2 text-md font-semibold text-slate-700">
                 <Clock className="size-4 text-emerald-700" />
                 <span>
                   {(() => {
@@ -132,7 +132,7 @@ export function ShiftExecutionModal({
                   })()}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="flex items-center gap-2 text-md text-slate-500">
                 <MapPin className="size-3.5 text-slate-400" />
                 <span>{shift.wing?.name || (shift as any).wardName || "Main Facility"}</span>
               </div>
@@ -146,7 +146,7 @@ export function ShiftExecutionModal({
                   disabled={!eligibility.canClockIn || startShiftMutation.isPending}
                   title={eligibility.reason || "Clock In"}
                   className={cn(
-                    "bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs h-9 px-4 rounded-xl gap-1.5 shadow-xs",
+                    "bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-md h-9 px-4 rounded-xl gap-1.5 shadow-xs",
                     eligibility.canClockIn && !startShiftMutation.isPending
                       ? "cursor-pointer"
                       : "opacity-60 cursor-not-allowed",
@@ -162,14 +162,14 @@ export function ShiftExecutionModal({
               )}
 
               {shift.status === "Draft" && (
-                <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                <span className="text-md font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
                   Draft (Unpublished)
                 </span>
               )}
               {isStarted && !isEndingShift && (
                 <Button
                   onClick={() => setIsEndingShift(true)}
-                  className="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs h-9 px-4 rounded-xl gap-1.5 shadow-xs cursor-pointer"
+                  className="bg-amber-600 hover:bg-amber-700 text-white font-bold text-md h-9 px-4 rounded-xl gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Square className="size-3.5 fill-current" />
                   End Shift &amp; Handover
@@ -177,7 +177,7 @@ export function ShiftExecutionModal({
               )}
 
               {isCompleted && (
-                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg">
+                <div className="flex items-center gap-1.5 text-md font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg">
                   <CheckCircle2 className="size-4 text-emerald-600" />
                   <span>Shift Completed</span>
                 </div>
@@ -189,19 +189,19 @@ export function ShiftExecutionModal({
           {isEndingShift && (
             <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl space-y-3">
               <div className="flex items-center justify-between">
-                <Text size="sm" weight="bold" className="text-amber-900 flex items-center gap-2">
+                <Text size="md" weight="bold" className="text-amber-900 flex items-center gap-2">
                   <FileText className="size-4 text-amber-700" />
                   CQC Shift Handover &amp; Summary Notes
                 </Text>
                 <button
                   type="button"
                   onClick={() => setIsEndingShift(false)}
-                  className="text-xs text-amber-800 hover:underline font-medium"
+                  className="text-md text-amber-800 hover:underline font-medium"
                 >
                   Cancel
                 </button>
               </div>
-              <p className="text-xs text-amber-800 leading-relaxed">
+              <p className="text-md text-amber-800 leading-relaxed">
                 Provide concise clinical handover notes for the incoming shift lead (e.g. resident observations, skipped tasks, escalations).
               </p>
               <Textarea
@@ -209,13 +209,13 @@ export function ShiftExecutionModal({
                 value={handoverNotes}
                 onChange={(e) => setHandoverNotes(e.target.value)}
                 placeholder="E.g., All morning medication rounds complete. Room 102 reported dizziness post-lunch, GP notified."
-                className="bg-white border-amber-300 text-xs rounded-xl focus:ring-amber-500"
+                className="bg-white border-amber-300 text-md rounded-xl focus:ring-amber-500"
               />
               <div className="flex justify-end gap-2 pt-1">
                 <Button
                   onClick={handleClockOut}
                   disabled={endShiftMutation.isPending}
-                  className="bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs h-9 px-4 rounded-xl cursor-pointer"
+                  className="bg-amber-700 hover:bg-amber-800 text-white font-bold text-md h-9 px-4 rounded-xl cursor-pointer"
                 >
                   {endShiftMutation.isPending ? "Submitting..." : "Submit Handover & Clock Out"}
                 </Button>
@@ -226,11 +226,11 @@ export function ShiftExecutionModal({
           {/* Previous Shift Handover Note (Continuity of Care) */}
           {details?.previousShiftHandover && (
             <div className="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-xl space-y-1">
-              <Text size="xs" weight="bold" className="text-blue-900 flex items-center gap-1.5">
+              <Text size="md" weight="bold" className="text-blue-900 flex items-center gap-1.5">
                 <CheckCircle2 className="size-3.5 text-blue-600" />
                 Previous Shift Handover ({details.previousShiftHandover.shiftName || "Previous Shift"})
               </Text>
-              <p className="text-xs text-blue-800 leading-relaxed italic">
+              <p className="text-md text-blue-800 leading-relaxed italic">
                 &ldquo;{details.previousShiftHandover.handoverNotes}&rdquo;
               </p>
             </div>
@@ -239,11 +239,11 @@ export function ShiftExecutionModal({
           {/* Assigned Residents Section */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="bold" className="text-slate-900 flex items-center gap-2">
+              <Text size="md" weight="bold" className="text-slate-900 flex items-center gap-2">
                 <Users className="size-4 text-emerald-800" />
                 Assigned Residents ({details?.assignedResidents?.length || 0})
               </Text>
-              <span className="text-xs text-slate-500 font-medium">Care allocation</span>
+              <span className="text-md text-slate-500 font-medium">Care allocation</span>
             </div>
 
             {isLoading ? (
@@ -257,13 +257,13 @@ export function ShiftExecutionModal({
                   >
                     <Avatar size="sm" className="size-8 rounded-full border border-slate-200 shrink-0">
                       {res.photoUrl && <AvatarImage src={res.photoUrl} alt={res.fullName} />}
-                      <AvatarFallback className="bg-emerald-100 text-emerald-800 text-xs font-bold">
+                      <AvatarFallback className="bg-emerald-100 text-emerald-800 text-md font-bold">
                         {res.fullName.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-900 truncate">{res.fullName}</p>
-                      <p className="text-2xs text-slate-500 truncate">
+                      <p className="text-md font-bold text-slate-900 truncate">{res.fullName}</p>
+                      <p className="text-md text-slate-500 truncate">
                         {res.careLevel || "General Care"}
                       </p>
                     </div>
@@ -271,7 +271,7 @@ export function ShiftExecutionModal({
                 ))}
               </div>
             ) : (
-              <div className="p-4 rounded-xl border border-dashed border-slate-200 text-center text-xs text-slate-500">
+              <div className="p-4 rounded-xl border border-dashed border-slate-200 text-center text-md text-slate-500">
                 Facility-wide coverage or no specific resident allocated.
               </div>
             )}
@@ -280,11 +280,11 @@ export function ShiftExecutionModal({
           {/* Scheduled Shift Care Tasks */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <Text size="sm" weight="bold" className="text-slate-900 flex items-center gap-2">
+              <Text size="md" weight="bold" className="text-slate-900 flex items-center gap-2">
                 <ClipboardList className="size-4 text-emerald-800" />
                 Shift Tasks ({details?.tasks?.length || 0})
               </Text>
-              <span className="text-xs text-slate-500 font-medium">
+              <span className="text-md text-slate-500 font-medium">
                 {details?.tasksCompleted || 0} of {details?.tasksTotal || 0} completed
               </span>
             </div>
@@ -299,16 +299,16 @@ export function ShiftExecutionModal({
                     className="p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between gap-3 shadow-2xs"
                   >
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 truncate">{task.title}</p>
-                      <p className="text-2xs text-slate-500 truncate">
+                      <p className="text-md font-bold text-slate-900 truncate">{task.title}</p>
+                      <p className="text-md text-slate-500 truncate">
                         {task.residentName} • {task.category || "Care"} • {task.time || "Scheduled"}
                       </p>
                     </div>
                     <Badge
                       className={
                         task.status === "Completed"
-                          ? "bg-emerald-100 text-emerald-800 text-2xs"
-                          : "bg-slate-100 text-slate-600 text-2xs"
+                          ? "bg-emerald-100 text-emerald-800 text-md"
+                          : "bg-slate-100 text-slate-600 text-md"
                       }
                     >
                       {task.status}
@@ -317,7 +317,7 @@ export function ShiftExecutionModal({
                 ))}
               </div>
             ) : (
-              <div className="p-4 rounded-xl border border-dashed border-slate-200 text-center text-xs text-slate-500">
+              <div className="p-4 rounded-xl border border-dashed border-slate-200 text-center text-md text-slate-500">
                 No active care tasks scheduled for this shift window.
               </div>
             )}
@@ -325,7 +325,7 @@ export function ShiftExecutionModal({
         </div>
 
         <DialogFooter className="border-t border-slate-100 pt-3">
-          <Button variant="outline" onClick={onClose} className="text-xs h-9 px-4 rounded-xl">
+          <Button variant="outline" onClick={onClose} className="text-md h-9 px-4 rounded-xl">
             Close
           </Button>
         </DialogFooter>

@@ -88,11 +88,11 @@ export function FluidIntakeTab({
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5">
               <Clock className="size-3.5 text-slate-400 shrink-0" />
-              <Text size="sm" weight="semibold" className="text-slate-900">
+              <Text size="md" weight="semibold" className="text-slate-900">
                 {row.original.timestamp ? format(new Date(row.original.timestamp), "HH:mm") : "—"}
               </Text>
             </div>
-            <Text size="sm" className="text-slate-500">
+            <Text size="md" className="text-slate-500">
               {row.original.timestamp ? format(new Date(row.original.timestamp), "dd MMM yyyy") : ""}
             </Text>
           </div>
@@ -104,7 +104,7 @@ export function FluidIntakeTab({
         cell: ({ row }) => (
           <Badge
             state={row.original.type === "Fluid" ? "info" : "warning"}
-            className={cn("text-sm font-semibold px-2.5 py-0.5 rounded-full", row.original.type === "Fluid" && "bg-[#4A706A] text-white border-none")}
+            className={cn("text-md font-semibold px-2.5 py-0.5 rounded-full", row.original.type === "Fluid" && "bg-[#4A706A] text-white border-none")}
           >
             {row.original.type}
           </Badge>
@@ -114,21 +114,21 @@ export function FluidIntakeTab({
         id: "mealSlot",
         header: "Meal / Round",
         cell: ({ row }) => (
-          <Text size="sm" weight="medium" className="text-slate-800">{row.original.mealSlot || "Hydration Round"}</Text>
+          <Text size="md" weight="medium" className="text-slate-800">{row.original.mealSlot || "Hydration Round"}</Text>
         ),
       },
       {
         id: "amount",
         header: "Amount",
         cell: ({ row }) => (
-          <Text size="sm" weight="bold" className="text-slate-900 whitespace-nowrap">{row.original.amount} {row.original.unit}</Text>
+          <Text size="md" weight="bold" className="text-slate-900 whitespace-nowrap">{row.original.amount} {row.original.unit}</Text>
         ),
       },
       {
         id: "intakePercentage",
         header: "% Consumed",
         cell: ({ row }) => (
-          <Text size="sm" className="text-slate-700">
+          <Text size="md" className="text-slate-700">
             {row.original.intakePercentage !== null && row.original.intakePercentage !== undefined ? `${row.original.intakePercentage}%` : "100%"}
           </Text>
         ),
@@ -136,7 +136,7 @@ export function FluidIntakeTab({
       {
         id: "notes",
         header: "Notes / Details",
-        cell: ({ row }) => <Text size="sm" className="text-slate-600 max-w-xs truncate">{row.original.notes || "—"}</Text>,
+        cell: ({ row }) => <Text size="md" className="text-slate-600 max-w-xs truncate">{row.original.notes || "—"}</Text>,
       },
     ];
 
@@ -189,7 +189,7 @@ export function FluidIntakeTab({
                 placeholder="Search notes, slot or amount…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-[#4A706A] focus:ring-1 focus:ring-[#4A706A]/20 transition-all shadow-2xs"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-md text-slate-800 placeholder:text-slate-400 outline-none focus:border-[#4A706A] focus:ring-1 focus:ring-[#4A706A]/20 transition-all shadow-2xs"
               />
             </div>
 
@@ -201,7 +201,7 @@ export function FluidIntakeTab({
                   type="button"
                   onClick={() => setTypeFilter(t)}
                   className={cn(
-                    "px-3.5 py-1.5 rounded-lg transition-all cursor-pointer text-sm font-semibold",
+                    "px-3.5 py-1.5 rounded-lg transition-all cursor-pointer text-md font-semibold",
                     typeFilter === t ? "bg-[#4A706A] text-white shadow-xs font-bold" : "text-slate-600 hover:text-slate-900",
                   )}
                 >

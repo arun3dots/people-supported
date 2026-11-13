@@ -89,7 +89,7 @@ export function PreAdmissionWizard() {
         )}
         {step === 5 && (
           <PartCard
-            title="D · Risk assessment"
+            title="Risk assessment"
             description="Complete clinical risk assessment tools for this resident. Assessments recorded here automatically sync to their care profile."
           >
             {w.residentId ? (
@@ -100,7 +100,7 @@ export function PreAdmissionWizard() {
               />
             ) : (
               <div className="rounded-xl bg-amber-50 border border-amber-200 p-6 text-center space-y-3">
-                <Text size="sm" weight="medium" className="text-amber-900">
+                <Text size="md" weight="medium" className="text-amber-900">
                   Please save Step 1 (Admission and personal details) first to generate a resident record before completing risk assessments.
                 </Text>
                 <Button
@@ -120,6 +120,7 @@ export function PreAdmissionWizard() {
           <PreAdmissionAssessmentStep
             residentId={w.residentId}
             onGoToStepOne={() => w.goToStep(1)}
+            onGoToRiskStep={() => w.goToStep(5)}
             flushRef={w.assessmentFlushRef}
           />
         )}

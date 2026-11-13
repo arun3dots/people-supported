@@ -391,10 +391,18 @@ export class TenantsService {
     });
   }
 
-  async findOne(id: string): Promise<Tenant> {
+  async findOne(
+    id: string,
+  ): Promise<Tenant & { package?: { id: string; name: string } | null }> {
     const tenant = await prisma.tenant.findUnique({
       where: { id },
       include: {
+        package: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         _count: {
           select: {
             residents: true,
@@ -409,6 +417,46 @@ export class TenantsService {
     return tenant;
   }
 
+  private buildTenantUpdateData(dto: UpdateTenantDTO) {
+    return {
+      ...(dto.name && { name: dto.name }),
+      ...(dto.subdomain && { subdomain: dto.subdomain }),
+      ...(dto.cqcNumber !== undefined && { cqcNumber: dto.cqcNumber }),
+      ...(dto.cqcProviderId !== undefined && {
+        cqcProviderId: dto.cqcProviderId,
+      }),
+      ...(dto.cqcLocationId !== undefined && {
+        cqcLocationId: dto.cqcLocationId,
+      }),
+      ...(dto.careHomeType !== undefined && { careHomeType: dto.careHomeType }),
+      ...(dto.registeredProvider !== undefined && {
+        registeredProvider: dto.registeredProvider,
+      }),
+      ...(dto.establishedDate !== undefined && {
+        establishedDate: dto.establishedDate,
+      }),
+      ...(dto.website !== undefined && { website: dto.website }),
+      ...(dto.addressLine1 !== undefined && { addressLine1: dto.addressLine1 }),
+      ...(dto.addressLine2 !== undefined && { addressLine2: dto.addressLine2 }),
+      ...(dto.city !== undefined && { city: dto.city }),
+      ...(dto.postcode !== undefined && { postcode: dto.postcode }),
+      ...(dto.primaryContactName !== undefined && {
+        primaryContactName: dto.primaryContactName,
+      }),
+      ...(dto.primaryContactEmail !== undefined && {
+        primaryContactEmail: dto.primaryContactEmail,
+      }),
+      ...(dto.primaryContactPhone !== undefined && {
+        primaryContactPhone: dto.primaryContactPhone,
+      }),
+      ...(dto.primaryContactRole !== undefined && {
+        primaryContactRole: dto.primaryContactRole,
+      }),
+      ...(dto.packageId !== undefined && { packageId: dto.packageId }),
+      ...(dto.logoUrl !== undefined && { logoUrl: dto.logoUrl }),
+    };
+  }
+
   async update(
     id: string,
     updateTenantDto: UpdateTenantDTO,
@@ -417,42 +465,7 @@ export class TenantsService {
     const oldTenant = await this.findOne(id);
     const updatedTenant = await prisma.tenant.update({
       where: { id },
-      data: {
-        ...(updateTenantDto.name && { name: updateTenantDto.name }),
-        ...(updateTenantDto.subdomain && {
-          subdomain: updateTenantDto.subdomain,
-        }),
-        ...(updateTenantDto.cqcNumber !== undefined && {
-          cqcNumber: updateTenantDto.cqcNumber,
-        }),
-        ...(updateTenantDto.addressLine1 !== undefined && {
-          addressLine1: updateTenantDto.addressLine1,
-        }),
-        ...(updateTenantDto.addressLine2 !== undefined && {
-          addressLine2: updateTenantDto.addressLine2,
-        }),
-        ...(updateTenantDto.city !== undefined && {
-          city: updateTenantDto.city,
-        }),
-        ...(updateTenantDto.postcode !== undefined && {
-          postcode: updateTenantDto.postcode,
-        }),
-        ...(updateTenantDto.primaryContactName !== undefined && {
-          primaryContactName: updateTenantDto.primaryContactName,
-        }),
-        ...(updateTenantDto.primaryContactEmail !== undefined && {
-          primaryContactEmail: updateTenantDto.primaryContactEmail,
-        }),
-        ...(updateTenantDto.primaryContactPhone !== undefined && {
-          primaryContactPhone: updateTenantDto.primaryContactPhone,
-        }),
-        ...(updateTenantDto.packageId !== undefined && {
-          packageId: updateTenantDto.packageId,
-        }),
-        ...(updateTenantDto.logoUrl !== undefined && {
-          logoUrl: updateTenantDto.logoUrl,
-        }),
-      },
+      data: this.buildTenantUpdateData(updateTenantDto),
     });
 
     void this.auditService.emit({
@@ -478,34 +491,7 @@ export class TenantsService {
     const updatedTenant = await prisma.tenant.update({
       where: { id: tenantId },
       data: {
-        ...(updateDto.name && { name: updateDto.name }),
-        ...(updateDto.subdomain && { subdomain: updateDto.subdomain }),
-        ...(updateDto.cqcNumber !== undefined && {
-          cqcNumber: updateDto.cqcNumber,
-        }),
-        ...(updateDto.addressLine1 !== undefined && {
-          addressLine1: updateDto.addressLine1,
-        }),
-        ...(updateDto.addressLine2 !== undefined && {
-          addressLine2: updateDto.addressLine2,
-        }),
-        ...(updateDto.city !== undefined && { city: updateDto.city }),
-        ...(updateDto.postcode !== undefined && {
-          postcode: updateDto.postcode,
-        }),
-        ...(updateDto.primaryContactName !== undefined && {
-          primaryContactName: updateDto.primaryContactName,
-        }),
-        ...(updateDto.primaryContactEmail !== undefined && {
-          primaryContactEmail: updateDto.primaryContactEmail,
-        }),
-        ...(updateDto.primaryContactPhone !== undefined && {
-          primaryContactPhone: updateDto.primaryContactPhone,
-        }),
-        ...(updateDto.packageId !== undefined && {
-          packageId: updateDto.packageId,
-        }),
-        ...(updateDto.logoUrl !== undefined && { logoUrl: updateDto.logoUrl }),
+        ...this.buildTenantUpdateData(updateDto),
         ...(updateDto.enforceMfaForAllStaff !== undefined && {
           enforceMfaForAllStaff: updateDto.enforceMfaForAllStaff,
         }),

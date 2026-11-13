@@ -196,7 +196,7 @@ export function MedicationScheduleSection({
       {/* Mandatory Pre-Admin Observations */}
       <div className="space-y-1.5 pt-1">
         <Label>Mandatory Pre-Administration Observations (Optional)</Label>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Select vitals that staff must record before administering this medication.
         </Text>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">

@@ -1,11 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
-import {
-  CARE_AREAS,
-  PRE_ADMISSION_ADL_ACTIVITIES,
-  PRE_ADMISSION_NEED_AREAS,
-} from "@repo/schema";
+import { CARE_AREAS, PRE_ADMISSION_NEED_AREAS } from "@repo/schema";
 import { InfoField, Text } from "@repo/ui/components/ui";
 import {
   useGetAssessmentQuery,
@@ -14,22 +9,18 @@ import {
 import { useGetRiskAssessmentsQuery } from "../../../../../../lib/queries/risk";
 import { SUPPORT_LEVEL_LABELS } from "../../../care-journey/shared";
 import type { PartsState } from "../usePreAdmissionWizard";
+import {
+  buildAboutMeRows,
+  buildAdlRows,
+  buildAdvanceCareRows,
+  buildCapacityRows,
+  hasValue as has,
+  joinSummaryValues as join,
+  summaryLines as lines,
+  type SummaryRow as Row,
+} from "./summarySections";
 
-type Row = [label: string, value: ReactNode];
-
-const has = (v: unknown): boolean =>
-  Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined && v !== "";
 const dash = (v: string | null | undefined) => (v && v.trim() ? v : null);
-const join = (xs: Array<string | null | undefined>, sep = " · ") =>
-  xs.filter((x): x is string => !!x && !!x.trim()).join(sep);
-const lines = (xs: string[]): ReactNode =>
-  xs.length ? (
-    <span className="flex flex-col">
-      {xs.map((x, i) => (
-        <span key={i}>{x}</span>
-      ))}
-    </span>
-  ) : null;
 
 const LEGACY_AREA_LABELS: Record<string, string> = {
   mobility: "Mobility",
@@ -39,16 +30,6 @@ const LEGACY_AREA_LABELS: Record<string, string> = {
   skin: "Skin",
   senses: "Senses",
 };
-
-const DNACPR_LABELS: Record<string, string> = {
-  NotDiscussed: "Not discussed yet",
-  InPlace: "In place",
-  NotInPlace: "Discussed, not in place",
-  Declined: "Declined",
-};
-const ADL_ACTIVITY_LABELS: Record<string, string> = Object.fromEntries(
-  PRE_ADMISSION_ADL_ACTIVITIES.map(({ key, label }) => [key, label]),
-);
 
 function SummaryCard({ title, rows }: { title: string; rows: Row[] }) {
   const filled = rows.filter(([, v]) => has(v));
@@ -124,16 +105,7 @@ export function PreAdmissionSummary({
       join([x?.summary, x?.supportLevel ? `support ${x.supportLevel}` : null], " · "),
     ];
   });
-  const adlRows: Row[] = hasSavedAdls
-    ? Object.entries(d.adlChecklist).flatMap(([key, activity]) => {
-        const label = ADL_ACTIVITY_LABELS[key] ?? key;
-        const value = join([
-          activity?.assistanceLevel,
-          activity?.comments,
-        ]);
-        return value ? [[label, value] as Row] : [];
-      })
-    : [];
+  const adlRows: Row[] = buildAdlRows(d, hasSavedAdls);
 
   const lpaFor = (type: string) =>
     b.lpa
@@ -145,12 +117,9 @@ export function PreAdmissionSummary({
           l.copySeen ? "copy seen" : null,
         ]),
       );
-  const move = e.moveDecision;
-  const dols = e.dolsScreen;
-
   const cards: Array<{ title: string; rows: Row[] }> = [
     {
-      title: "A · Admission and personal details",
+      title: "Admission and personal details",
       rows: [
         ["Full name", join([a.firstName, a.middleName, a.lastName], " ") || null],
         ["Preferred name", dash(a.preferredName)],
@@ -175,7 +144,7 @@ export function PreAdmissionSummary({
       ],
     },
     {
-      title: "B · Contacts and legal authority",
+      title: "Contacts and legal authority",
       rows: [
         [
           "Next of kin",
@@ -193,7 +162,7 @@ export function PreAdmissionSummary({
       ],
     },
     {
-      title: "C · Health and medicines",
+      title: "Health and medicines",
       rows: [
         ["Primary diagnosis", dash(c.primaryDiagnosis || c.diagnoses[0])],
         ...(c.secondaryDiagnoses?.length || c.diagnoses.length > 1
@@ -277,7 +246,7 @@ export function PreAdmissionSummary({
       ],
     },
     {
-      title: "D · Risk assessment",
+      title: "Risk assessment",
       rows: activeAssessments.map((ra): Row => {
         const level = ra.residualLevel ?? ra.inherentLevel;
         const score = ra.residualScore ?? ra.inherentScore;
@@ -288,58 +257,32 @@ export function PreAdmissionSummary({
       }),
     },
     {
-      title: "E · Care needs assessment",
+      title: "Care needs assessment",
       rows: assessmentRows.length > 0 ? assessmentRows : legacyRows,
     },
     {
-      title: "F · Activities of Daily Living (ADLs)",
+      title: "Activities of Daily Living (ADLs)",
       rows: adlRows,
     },
     {
-      title: "G · Capacity, consent, DoLS",
-      rows: [
-        [
-          "Move decision",
-          move
-            ? join(
-                [
-                  move.hasCapacity === false ? "Lacks capacity for this decision" : move.hasCapacity ? "Has capacity" : null,
-                  move.assessedAt ? `assessed ${move.assessedAt}` : null,
-                  move.bestInterests?.decisionMaker ? `best-interests decision with ${move.bestInterests.decisionMaker}` : null,
-                ],
-                "; ",
-              )
-            : null,
-        ],
-        ["Wishes", dash(e.wishes)],
-        ["DoLS screen", dols ? join([dols.outcome, dols.rationale, dols.rescreenTrigger ? `re-screen if ${dols.rescreenTrigger}` : null], "; ") : null],
-        ["Consents", dash(e.consents.map((x) => `${x.name}${x.given ? "" : " (not given)"}`).join(", "))],
-      ],
+      title: "Capacity, consent, DoLS",
+      rows: buildCapacityRows(e),
     },
     {
-      title: "H · Advance care planning",
-      rows: [
-        ["DNACPR", DNACPR_LABELS[f.dnacpr.status] ?? f.dnacpr.status],
-        ["ReSPECT", f.respect.inPlace ? "In place" : "None"],
-        ["Plan", join([f.plan, f.planOwner, f.planTargetDate], " · ")],
-      ],
+      title: "Advance care planning",
+      rows: buildAdvanceCareRows(f),
     },
     {
-      title: "I · About me",
-      rows: [
-        ["Loves", dash(g.loves)],
-        ["Routine", join([g.routine?.wakeTime ? `up about ${g.routine.wakeTime}` : null, g.routine?.bedTime ? `bed about ${g.routine.bedTime}` : null, g.routine?.bedtimeNotes], ", ")],
-        ["Bathing", join([g.bathing?.preference, g.bathing?.days?.join(", "), g.bathing?.carerGender ? `${g.bathing.carerGender} carer` : null], "; ")],
-        ["Worries", join([g.worries, g.whatHelps ? `helps: ${g.whatHelps}` : null], "; ")],
-      ],
+      title: "About me",
+      rows: buildAboutMeRows(g),
     },
   ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      {cards.map((card) => (
+      {/* {cards.map((card) => (
         <SummaryCard key={card.title} title={card.title} rows={card.rows} />
-      ))}
+      ))} */}
     </div>
   );
 }

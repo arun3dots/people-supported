@@ -79,16 +79,16 @@ export function AssignTaskPreview({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-md">
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Task Title
               </p>
               <p className="font-semibold text-slate-800 pt-0.5">{title}</p>
             </div>
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Task Description
               </p>
-              <p className="text-slate-600 text-[11px] leading-relaxed pt-0.5">
+              <p className="text-slate-600 text-md leading-relaxed pt-0.5">
                 {description}
               </p>
             </div>
@@ -96,7 +96,7 @@ export function AssignTaskPreview({
 
           <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md">
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Priority
               </p>
               <div className="flex items-center gap-1.5 pt-0.5 font-medium text-red-500">
@@ -105,22 +105,22 @@ export function AssignTaskPreview({
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Assigned To
               </p>
               <div className="flex items-center gap-2 pt-1">
                 <Avatar className="size-6">
                   <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&q=80" />
-                  <AvatarFallback className="text-[9px] bg-slate-200">
+                  <AvatarFallback className="text-md bg-slate-200">
                     {assignedTo.slice(0, 2).toUpperCase() || "ST"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="text-[11px] leading-tight">
+                <div className="text-md leading-tight">
                   <span className="font-medium text-slate-800">
                     {assignedTo}
                   </span>
                   {assignedRole && (
-                    <span className="text-[9px] text-slate-500 block">
+                    <span className="text-md text-slate-500 block">
                       ({assignedRole})
                     </span>
                   )}
@@ -131,19 +131,19 @@ export function AssignTaskPreview({
 
           <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md">
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Date
               </p>
-              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-[11px]">
+              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-md">
                 <Calendar className="size-3 text-slate-400" />
                 <span>{taskDate}</span>
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Time
               </p>
-              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-[11px]">
+              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-md">
                 <Clock className="size-3 text-slate-400" />
                 <span>{taskTime}</span>
               </div>
@@ -152,19 +152,19 @@ export function AssignTaskPreview({
 
           <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md">
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Attachments
               </p>
-              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-[11px]">
+              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-md">
                 <Paperclip className="size-3 text-slate-400" />
                 <span>{attachedFilesCount} Files attached</span>
               </div>
             </div>
             <div>
-              <p className="text-[10px] text-text-description font-normal">
+              <p className="text-md text-text-description font-normal">
                 Notify Assignee
               </p>
-              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-[11px]">
+              <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-md">
                 <Mail className="size-3 text-slate-400" />
                 <span>
                   {notifyEmail
@@ -178,7 +178,7 @@ export function AssignTaskPreview({
 
         {/* Incident Reference Card */}
         <div className="bg-slate-50/70 border border-[#E5E5E5] rounded-xl p-3.5 space-y-2">
-          <p className="text-[11px] font-bold text-slate-800">
+          <p className="text-md font-bold text-slate-800">
             Incident Reference
           </p>
           <div className="flex items-start gap-3">
@@ -187,7 +187,7 @@ export function AssignTaskPreview({
             </div>
             <div className="space-y-0.5 text-md">
               <p className="font-bold text-slate-800">{incident.title}</p>
-              <div className="flex items-center gap-2 text-[11px] text-text-description">
+              <div className="flex items-center gap-2 text-md text-text-description">
                 <span>#{incident.incidentNumber}</span>
                 <span>•</span>
                 <span>
@@ -205,7 +205,7 @@ export function AssignTaskPreview({
                   {incident.incidentTime || ""}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-600">
+              <p className="text-md text-slate-600">
                 Reported by:{" "}
                 <span className="font-medium">
                   {incident.reportedBy?.fullName || "Staff Member"}
@@ -220,7 +220,7 @@ export function AssignTaskPreview({
           <ShieldCheck className="size-4 text-[#4A706A] shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <p className="font-bold text-md">Compliance Note</p>
-            <p className="text-[11px] text-[#3D5E59] leading-tight">
+            <p className="text-md text-[#3D5E59] leading-tight">
               This task will be logged and tracked under the incident record for
               compliance and audit purposes.
             </p>

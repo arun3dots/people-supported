@@ -20,7 +20,7 @@ export const welcomeTemplate = (
   </p>
   
   <p style="color: #475569; font-size: 16px; line-height: 24px;">
-    To activate your administrator account and begin configuring your care home, please verify your email address:
+    To activate your administrator account and begin configuring your supported living service, please verify your email address:
   </p>
   
   <div style="margin: 40px 0; text-align: center;">

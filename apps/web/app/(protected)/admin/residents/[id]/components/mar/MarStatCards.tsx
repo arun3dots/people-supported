@@ -94,13 +94,13 @@ export function MarStatCards({
 
             {/* Metric Content on Right Side */}
             <div className="flex flex-col gap-0.5 min-w-0">
-              <Text size="sm" weight="regular" className="text-slate-600 leading-none truncate">
+              <Text size="md" weight="regular" className="text-slate-600 leading-none truncate">
                 {c.title}
               </Text>
               <Text size="md" weight="bold" className={`${c.valueColor} leading-tight mt-0.5`}>
                 {c.value}
               </Text>
-              <Text size="sm" weight="regular" className={`${c.subColor} leading-none truncate`}>
+              <Text size="md" weight="regular" className={`${c.subColor} leading-none truncate`}>
                 {c.subtitle}
               </Text>
             </div>

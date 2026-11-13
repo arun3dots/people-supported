@@ -227,14 +227,14 @@ export default function SignUpPage() {
             <Text as="h2" size="xl" weight="bold" className="tracking-tight">
               Account created! 2
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-500 leading-relaxed">
+            <Text size="md" weight="regular" className="text-slate-500 leading-relaxed">
               We&apos;ve emailed a verification link and a payment link to your
               primary contact. Verify your email, then complete payment to
               unlock your dashboard.
             </Text>
           </div>
           {paymentError && (
-            <Text size="sm" className="text-red-500 font-medium">
+            <Text size="md" className="text-red-500 font-medium">
               {paymentError}
             </Text>
           )}
@@ -275,16 +275,16 @@ export default function SignUpPage() {
 
   const headTitle =
     step === 1
-      ? "Set up your care home"
+      ? "Set up your supported living service"
       : step === 2
         ? "Your admin account"
         : "Choose a plan";
   const headSubtitle =
     step === 1
-      ? "Tell us a little about your care home."
+      ? "Tell us a little about your supported living service."
       : step === 2
         ? "Create the first administrator account."
-        : "Pick the best plan to start managing your care home.";
+        : "Pick the best plan to start managing your supported living service.";
 
   return (
     <div className="flex min-h-screen w-full bg-[#F7FAF9] font-sans overflow-x-hidden">
@@ -342,7 +342,7 @@ export default function SignUpPage() {
                         {isCompleted ? (
                           <Check className="size-4 stroke-[2.5]" />
                         ) : (
-                          <Text as="span" size="sm" weight="bold" className="leading-none text-inherit">
+                          <Text as="span" size="md" weight="bold" className="leading-none text-inherit">
                             {idx + 1}
                           </Text>
                         )}
@@ -350,7 +350,7 @@ export default function SignUpPage() {
 
                       {/* Step Label */}
                       <Text
-                        size="sm"
+                        size="md"
                         weight={isActive ? "medium" : "regular"}
                         className={cn(
                           "mt-2 text-center font-medium leading-tight",
@@ -374,7 +374,7 @@ export default function SignUpPage() {
           >
             {error && (
               <div className="p-3 mb-4 rounded-lg bg-red-50">
-                <Text size="sm" weight="medium" variant="destructive">{error}</Text>
+                <Text size="md" weight="medium" variant="destructive">{error}</Text>
               </div>
             )}
 
@@ -383,10 +383,10 @@ export default function SignUpPage() {
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="md:col-span-2 flex flex-col gap-1.5">
-                    <Label required>Care Home Name</Label>
+                    <Label required>Supported Living Service Name</Label>
                     <Input
                       type="text"
-                      placeholder="Enter your care home name"
+                      placeholder="Enter your supported living service name"
                       autoComplete="organization"
                       errorMessage={errors.name?.message}
                       {...register("name")}
@@ -570,13 +570,13 @@ export default function SignUpPage() {
                       setTermsError("");
                     }}
                   />
-                  <Text as="span" size="sm">
+                  <Text as="span" size="md">
                     <PolicyLinks
                       className="text-primary hover:underline"
                     />
                   </Text>
                 </div>
-                {termsError && <p className="text-sm text-rose-600">{termsError}</p>}
+                {termsError && <p className="text-md text-rose-600">{termsError}</p>}
               </div>
             )}
 
@@ -586,7 +586,7 @@ export default function SignUpPage() {
             {step === 3 && (
               <div className="space-y-4">
                 {(packages ?? []).length === 0 && (
-                  <Text size="sm" weight="regular" variant="muted" className="text-center">
+                  <Text size="md" weight="regular" variant="muted" className="text-center">
                     No plans are currently available. Please contact support.
                   </Text>
                 )}
@@ -621,10 +621,10 @@ export default function SignUpPage() {
                         <div className="mt-1">
                           <Text as="span" size="2xl" weight="bold">
                             {pkg.currency} {pkg.priceMonthly}
-                            <Text as="span" size="sm" weight="medium" variant="muted">/mo</Text>
+                            <Text as="span" size="md" weight="medium" variant="muted">/mo</Text>
                           </Text>
                         </div>
-                        <Text size="sm" weight="regular" variant="muted" className="mt-3 block">
+                        <Text size="md" weight="regular" variant="muted" className="mt-3 block">
                           Up to {pkg.residentLimit} residents · {pkg.staffLimit} staff
                         </Text>
                       </Card>
@@ -632,7 +632,7 @@ export default function SignUpPage() {
                   })}
                 </div>
                 {errors.packageId && (
-                  <Text size="sm" weight="semibold" variant="destructive">
+                  <Text size="md" weight="semibold" variant="destructive">
                     {errors.packageId.message}
                   </Text>
                 )}

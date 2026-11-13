@@ -78,7 +78,7 @@ export function BedTypeSelector({ value, onChange, errorMessage }: BedTypeSelect
                 <Text size="md" weight="semibold" className="text-slate-900 leading-snug">
                   {type.label}
                 </Text>
-                <Text size="sm" weight="regular" className="text-slate-500 leading-snug mt-0.5">
+                <Text size="md" weight="regular" className="text-slate-500 leading-snug mt-0.5">
                   {type.subtext}
                 </Text>
               </div>

@@ -17,6 +17,19 @@ import { useShiftDashboard } from '../../src/presentation/hooks/useShiftDashboar
 import { useShiftResidentActivity } from '../../src/presentation/hooks/useShiftResidentActivity';
 import { useClockInEligibility } from '../../src/presentation/hooks/useClockInEligibility';
 
+/** Notification priorities outside the alert card's High/Medium/Low scale map to High. */
+function toAlertPriority(priority?: string): AlertItem['priority'] {
+  switch (priority?.toLowerCase()) {
+    case 'medium':
+      return 'Medium';
+    case 'low':
+      return 'Low';
+    default:
+      return 'High';
+  }
+}
+import { formatNotificationTime } from '../../src/presentation/hooks/useNotifications';
+
 export default function DashboardScreen() {
   const router = useRouter();
   const { openShiftDetails, tab } = useLocalSearchParams<{ openShiftDetails?: string; tab?: string }>();
@@ -57,14 +70,15 @@ export default function DashboardScreen() {
     router.setParams({ openShiftDetails: undefined, tab: undefined });
   }, [openShiftDetails, tab, router]);
 
-  // Convert alerts to AlertItem format
-  const alertItems: AlertItem[] = urgentAlerts.map((msg, idx) => ({
-    id: `alert-${idx}`,
-    title: msg.length > 35 ? `${msg.slice(0, 35)}...` : msg || 'Clinical Alert',
-    description: msg,
-    priority: 'High',
-    priorityLabel: 'High Priority',
-    timestamp: 'Just now',
+  // Convert live unread notifications into alert cards
+  const alertItems: AlertItem[] = urgentAlerts.map((alert) => ({
+    id: alert.id,
+    title: alert.title,
+    description: alert.message,
+    priority: toAlertPriority(alert.priority),
+    priorityLabel: alert.priority,
+    timestamp: formatNotificationTime(alert.createdAt ?? undefined),
+    actionUrl: alert.actionUrl,
   }));
 
   useFocusEffect(
@@ -211,7 +225,9 @@ export default function DashboardScreen() {
           <AlertCard
             alerts={alertItems}
             onSeeAllAlerts={() => router.push('/alerts' as Href)}
-            onPressAlert={() => router.push('/alerts' as Href)}
+            onPressAlert={(alert) =>
+              router.push((alert.actionUrl || '/alerts') as Href)
+            }
           />
         )}
 

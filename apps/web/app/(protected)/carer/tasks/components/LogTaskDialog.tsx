@@ -72,7 +72,7 @@ export function LogTaskDialog({
         <div className="space-y-4 py-2">
           {/* Status Selection Buttons */}
           <div className="space-y-1.5">
-            <Text size="sm" weight="medium" className="text-text-description">
+            <Text size="md" weight="medium" className="text-text-description">
               Outcome
             </Text>
             <div className="grid grid-cols-2 gap-2">
@@ -81,7 +81,7 @@ export function LogTaskDialog({
                 variant={status === "Completed" ? "primary" : "outline"}
                 size="sm"
                 onClick={() => setStatus("Completed")}
-                className="w-full text-sm font-semibold"
+                className="w-full text-md font-semibold"
               >
                 Mark Completed
               </Button>
@@ -90,7 +90,7 @@ export function LogTaskDialog({
                 variant={status === "Skipped" ? "destructive" : "outline"}
                 size="sm"
                 onClick={() => setStatus("Skipped")}
-                className="w-full text-sm font-semibold"
+                className="w-full text-md font-semibold"
               >
                 Skip / Hand Over
               </Button>
@@ -100,7 +100,7 @@ export function LogTaskDialog({
           {/* Conditional Skip Reason */}
           {status === "Skipped" && (
             <div className="space-y-1.5">
-              <Text size="sm" weight="medium" className="text-text-description">
+              <Text size="md" weight="medium" className="text-text-description">
                 Reason for Skipping <span className="text-red-500">*</span>
               </Text>
               <Input
@@ -113,7 +113,7 @@ export function LogTaskDialog({
 
           {/* Observation & Care Note */}
           <div className="space-y-1.5">
-            <Text size="sm" weight="medium" className="text-text-description">
+            <Text size="md" weight="medium" className="text-text-description">
               Observation & Care Notes
             </Text>
             <Textarea

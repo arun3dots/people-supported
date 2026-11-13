@@ -108,14 +108,14 @@ export function FindingDetailDialog({
                 className="inline-block size-3 rounded-full"
                 style={{ background: typeColor }}
               />
-              <span className="font-mono text-sm font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+              <span className="font-mono text-md font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
                 {finding.trackingId}
               </span>
               <span>{finding.findingType}</span>
             </DialogTitle>
             <Badge
               variant={isOpen ? "destructive" : "secondary"}
-              className="text-sm px-2.5 py-0.5"
+              className="text-md px-2.5 py-0.5"
             >
               {finding.status}
             </Badge>
@@ -128,13 +128,13 @@ export function FindingDetailDialog({
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
               <MapPin className="size-4 text-blue-600 shrink-0" />
               <div>
-                <p className="text-sm font-medium text-slate-500">
+                <p className="text-md font-medium text-slate-500">
                   Anatomical Location
                 </p>
-                <p className="text-sm font-bold text-slate-900 leading-tight">
+                <p className="text-md font-bold text-slate-900 leading-tight">
                   {finding.locationLabel}
                 </p>
-                <p className="text-sm text-slate-500 mt-0.5">
+                <p className="text-md text-slate-500 mt-0.5">
                   {finding.view} View ({finding.bodyMapVariant})
                 </p>
               </div>
@@ -146,8 +146,8 @@ export function FindingDetailDialog({
                 style={{ color: sevColor }}
               />
               <div>
-                <p className="text-sm font-medium text-slate-500">Severity</p>
-                <p className="text-sm font-bold" style={{ color: sevColor }}>
+                <p className="text-md font-medium text-slate-500">Severity</p>
+                <p className="text-md font-bold" style={{ color: sevColor }}>
                   {finding.severity}
                 </p>
               </div>
@@ -156,11 +156,11 @@ export function FindingDetailDialog({
 
           {/* Exact Location Badge */}
           {finding.exactX != null && finding.exactY != null && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-sm text-emerald-900">
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-md text-emerald-900">
               <Crosshair className="size-4 text-emerald-600 shrink-0" />
               <div>
                 <span className="font-semibold">Exact Coordinate Pin:</span>{" "}
-                <span className="font-mono text-sm font-medium">
+                <span className="font-mono text-md font-medium">
                   x: {finding.exactX.toFixed(2)}, y: {finding.exactY.toFixed(2)}
                 </span>
               </div>
@@ -172,8 +172,8 @@ export function FindingDetailDialog({
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
               <Calendar className="size-4 text-slate-500 shrink-0" />
               <div>
-                <p className="text-sm font-medium text-slate-500">Onset Date</p>
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-md font-medium text-slate-500">Onset Date</p>
+                <p className="text-md font-semibold text-slate-900">
                   {format(new Date(finding.onsetDate), "dd MMM yyyy")}
                 </p>
               </div>
@@ -181,8 +181,8 @@ export function FindingDetailDialog({
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
               <Calendar className="size-4 text-slate-500 shrink-0" />
               <div>
-                <p className="text-sm font-medium text-slate-500">Recorded</p>
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-md font-medium text-slate-500">Recorded</p>
+                <p className="text-md font-semibold text-slate-900">
                   {format(new Date(finding.createdAt), "dd MMM yyyy, HH:mm")}
                 </p>
               </div>
@@ -217,13 +217,13 @@ export function FindingDetailDialog({
             <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
               <div className="flex items-center gap-2 mb-1">
                 <CheckCircle2 className="size-4 text-emerald-600" />
-                <p className="text-sm text-emerald-800 font-semibold">
+                <p className="text-md text-emerald-800 font-semibold">
                   Resolved on{" "}
                   {format(new Date(finding.resolvedAt), "dd MMM yyyy, HH:mm")}
                 </p>
               </div>
               {finding.resolutionNote && (
-                <p className="text-sm text-emerald-900 mt-1">
+                <p className="text-md text-emerald-900 mt-1">
                   {finding.resolutionNote}
                 </p>
               )}
@@ -233,7 +233,7 @@ export function FindingDetailDialog({
           {/* Resolve Form */}
           {isOpen && canResolve && showResolveForm && (
             <div className="space-y-2 p-3 rounded-xl bg-amber-50 border border-amber-200">
-              <Label className="text-sm font-semibold text-amber-900">
+              <Label className="text-md font-semibold text-amber-900">
                 Resolution Notes
               </Label>
               <Textarea
@@ -241,19 +241,19 @@ export function FindingDetailDialog({
                 onChange={(e) => setResolutionNote(e.target.value)}
                 placeholder="e.g. Skin tear fully healed, dressing discontinued."
                 rows={2}
-                className="text-sm"
+                className="text-md"
               />
               <div className="flex gap-2 justify-end pt-1">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => setShowResolveForm(false)}
-                  className="text-sm"
+                  className="text-md"
                 >
                   <X className="size-3.5 mr-1" />
                   Cancel
                 </Button>
-                <Button size="sm" onClick={handleResolve} className="text-sm">
+                <Button size="sm" onClick={handleResolve} className="text-md">
                   <CheckCircle2 className="size-3.5 mr-1" />
                   Confirm Resolve
                 </Button>
@@ -268,7 +268,7 @@ export function FindingDetailDialog({
               variant="outline"
               size="sm"
               onClick={() => setShowResolveForm(true)}
-              className="text-emerald-700 border-emerald-300 hover:bg-emerald-50 text-sm"
+              className="text-emerald-700 border-emerald-300 hover:bg-emerald-50 text-md"
             >
               <CheckCircle2 className="size-3.5 mr-1.5" />
               Resolve Finding

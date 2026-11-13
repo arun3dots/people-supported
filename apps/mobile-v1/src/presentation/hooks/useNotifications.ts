@@ -31,7 +31,7 @@ interface RawNotificationItem {
   createdAt?: string | Date;
 }
 
-function formatNotificationTime(rawDate?: string | Date): string {
+export function formatNotificationTime(rawDate?: string | Date): string {
   if (!rawDate) return 'Just now';
   const date = new Date(rawDate);
   if (isNaN(date.getTime())) return 'Just now';

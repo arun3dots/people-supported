@@ -85,7 +85,7 @@ export function FindingPhotoAttachmentSection({
         <label className="text-md font-bold text-slate-800">
           Attach Clinical Photos
         </label>
-        <span className="text-[11px] text-slate-500 font-medium">
+        <span className="text-md text-slate-500 font-medium">
           {files.length} photo(s) attached
         </span>
       </div>
@@ -124,10 +124,10 @@ export function FindingPhotoAttachmentSection({
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-slate-800">
+          <p className="text-md font-semibold text-slate-800">
             Click to upload or drag & drop clinical photographs
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">
+          <p className="text-md text-slate-500 mt-0.5">
             PNG, JPG, JPEG, WEBP · Max 5MB (consent checked, encrypted on AWS S3)
           </p>
         </div>
@@ -169,10 +169,10 @@ export function FindingPhotoAttachmentSection({
 
                 {/* File Info */}
                 <div className="flex-1 min-w-0 pr-6">
-                  <p className="text-[11px] font-medium text-slate-800 truncate" title={file.name}>
+                  <p className="text-md font-medium text-slate-800 truncate" title={file.name}>
                     {file.name}
                   </p>
-                  <p className="text-[10px] text-slate-400">
+                  <p className="text-md text-slate-400">
                     {formatFileSize(file.size)}
                   </p>
                 </div>

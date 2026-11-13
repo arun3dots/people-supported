@@ -151,7 +151,7 @@ export function DocumentUploadField({
         )}
       </div>
 
-      <p className="text-sm sm:text-md text-slate-500 mt-1 font-normal leading-normal">
+      <p className="text-md text-slate-500 mt-1 font-normal leading-normal">
         {helperText
           ? helperText.includes("MB") || helperText.includes("PDF")
             ? helperText

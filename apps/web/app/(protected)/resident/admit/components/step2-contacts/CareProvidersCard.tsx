@@ -45,10 +45,10 @@ export function CareProvidersCard({
     <div className="bg-surface-card-grey rounded-2xl p-6 lg:p-8 space-y-6 shadow-none border-none font-sans">
       <div className="pb-4 border-b border-slate-200/80 flex flex-row items-center justify-between gap-4">
         <div>
-          <Text as="h3" size="sm" weight="bold" >
+          <Text as="h3" size="md" weight="bold" >
             Care Providers &amp; GP
           </Text>
-          <Text size="sm" weight="regular" >
+          <Text size="md" weight="regular" >
             Primary care practitioner and specialist medical contacts.
           </Text>
         </div>
@@ -66,7 +66,7 @@ export function CareProvidersCard({
         {/* GP */}
         <div className="space-y-3">
 
-          <Text as="h3" size="sm" weight="medium" className="text-slate-700">
+          <Text as="h3" size="md" weight="medium" className="text-slate-700">
             General Practitioner (GP) <span className="text-red-500">*</span>
           </Text>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -85,7 +85,7 @@ export function DailyTaskListSection({
                   />
                   <CardHeader className="p-5 pb-2 flex flex-row items-start justify-between space-y-0 gap-3">
                     <div className="space-y-1 min-w-0">
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                      <span className="inline-block text-md font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
                         {category}
                       </span>
                       <CardTitle className="text-base font-bold text-slate-900 group-hover:text-[#3D5C57] transition-colors truncate">
@@ -93,7 +93,7 @@ export function DailyTaskListSection({
                       </CardTitle>
                     </div>
                     <Badge
-                      className={`text-[10px] font-bold shrink-0 ${priority === "High" || priority === "Critical"
+                      className={`text-md font-bold shrink-0 ${priority === "High" || priority === "Critical"
                         ? "bg-rose-50 text-rose-700 border-rose-200"
                         : "bg-slate-100 text-slate-700 border-slate-200"
                         }`}

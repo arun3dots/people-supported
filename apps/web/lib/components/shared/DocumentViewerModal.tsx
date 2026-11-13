@@ -245,11 +245,11 @@ export function DocumentViewerModal({
             <div className="flex flex-col gap-0.5">
               <DialogTitle className="text-base font-semibold text-[#141F1E] flex items-center gap-2">
                 {title}
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-[#F1FCF3] text-[#22973F] border border-[#22973F]/30 flex items-center gap-1">
+                <span className="px-2.5 py-0.5 rounded-full text-md font-medium bg-[#F1FCF3] text-[#22973F] border border-[#22973F]/30 flex items-center gap-1">
                   <Lock className="w-3 h-3" /> Protected Preview
                 </span>
               </DialogTitle>
-              <DialogDescription className="text-sm text-[#5D5D5D]">
+              <DialogDescription className="text-md text-[#5D5D5D]">
                 {subtitle}
               </DialogDescription>
             </div>
@@ -268,7 +268,7 @@ export function DocumentViewerModal({
                 >
                   <ZoomOut className="w-3.5 h-3.5" />
                 </Button>
-                <span className="text-[11px] font-mono text-[#141F1E] w-12 text-center font-medium">
+                <span className="text-md font-mono text-[#141F1E] w-12 text-center font-medium">
                   {Math.round(zoom * 100)}%
                 </span>
                 <Button
@@ -308,14 +308,14 @@ export function DocumentViewerModal({
           {isLoading ? (
             <div className="flex flex-col items-center gap-3 text-[#5D5D5D]">
               <Loader2 className="w-8 h-8 animate-spin text-[#4A706A]" />
-              <Text size="sm" weight="regular" className="text-[#5D5D5D]">
+              <Text size="md" weight="regular" className="text-[#5D5D5D]">
                 Loading secure document preview...
               </Text>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center gap-3 text-red-700 max-w-sm text-center p-6 bg-red-50 border border-red-200 rounded-xl">
               <AlertCircle className="w-8 h-8 text-red-600" />
-              <Text size="sm" weight="medium" className="text-red-700">
+              <Text size="md" weight="medium" className="text-red-700">
                 {error}
               </Text>
             </div>
@@ -384,21 +384,21 @@ export function DocumentViewerModal({
                 />
 
                 {/* Security Pointer Shield Badge */}
-                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur border border-[#BCD3CD] text-[#141F1E] text-[10px] px-2.5 py-1 rounded-md shadow-md flex items-center gap-1.5 pointer-events-none select-none z-50">
+                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur border border-[#BCD3CD] text-[#141F1E] text-md px-2.5 py-1 rounded-md shadow-md flex items-center gap-1.5 pointer-events-none select-none z-50">
                   <Lock className="w-3 h-3 text-[#22973F]" />
                   Protected View (Download Disabled)
                 </div>
               </div>
             )
           ) : (
-            <Text size="sm" weight="regular" className="text-[#5D5D5D] italic">
+            <Text size="md" weight="regular" className="text-[#5D5D5D] italic">
               No document file specified.
             </Text>
           )}
         </div>
 
         {/* Security Footer Notice */}
-        <div className="p-4 bg-[#F8FAF9] border-t border-[#BCD3CD] flex items-center justify-between text-sm text-[#5D5D5D] shrink-0">
+        <div className="p-4 bg-[#F8FAF9] border-t border-[#BCD3CD] flex items-center justify-between text-md text-[#5D5D5D] shrink-0">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-[#22973F]" />
             <span>Document viewing is audited. Saving, printing, and downloading are disabled.</span>

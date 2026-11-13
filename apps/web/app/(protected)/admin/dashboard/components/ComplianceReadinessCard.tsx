@@ -64,7 +64,7 @@ export function ComplianceReadinessCard() {
           <span className="font-['Outfit'] font-medium text-[32px] leading-[36px] text-[#141F1E]">
             {score}%
           </span>
-          <span className="font-['Outfit'] font-medium text-[12px] leading-[15px] text-[#141F1E] mt-[2px]">
+          <span className="font-['Outfit'] font-medium text-md leading-[15px] text-[#141F1E] mt-[2px]">
             Overall Score
           </span>
         </div>
@@ -75,10 +75,10 @@ export function ComplianceReadinessCard() {
           <div key={index} className="flex items-start gap-[8px] min-w-0">
             <CheckCircle2 className="w-[18px] h-[18px] text-[#22973F] shrink-0 mt-[1px]" />
             <div className="flex flex-col min-w-0">
-              <span className="font-['Outfit'] font-normal text-[9.3px] leading-[12px] text-[#141F1E] truncate">
+              <span className="font-['Outfit'] font-normal text-md leading-[12px] text-[#141F1E] truncate">
                 {item.name}
               </span>
-              <span className="font-['Outfit'] font-normal text-[7px] leading-[9px] text-[#5D5D5D] mt-[2px]">
+              <span className="font-['Outfit'] font-normal text-md leading-[9px] text-[#5D5D5D] mt-[2px]">
                 {item.status}
               </span>
             </div>
@@ -90,7 +90,7 @@ export function ComplianceReadinessCard() {
         type="button"
         className="w-full h-[40px] bg-[#F5F8F7] hover:bg-[#eaf1ee] transition-colors rounded-xl flex items-center justify-center shrink-0 cursor-pointer"
       >
-        <span className="font-['outfit'] font-bold text-[12px] leading-[14px] text-[#141F1E]">
+        <span className="font-['outfit'] font-bold text-md leading-[14px] text-[#141F1E]">
           View Compliance Centre
         </span>
       </button>

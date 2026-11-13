@@ -90,7 +90,7 @@ export function OrgDocumentsCard() {
         <Text size={'base'} weight={'bold'} className="text-slate-900">
           Documents
         </Text>
-        <Text size={'xs'} weight={'regular'} className="text-slate-500">
+        <Text size={'md'} weight={'regular'} className="text-slate-500">
           Statutory and registration documents
         </Text>
       </div>
@@ -116,7 +116,7 @@ export function OrgDocumentsCard() {
         {/* Empty State */}
         {!isLoading && documents.length === 0 && (
           <div className="p-4 text-center rounded-xl border border-dashed border-slate-200 bg-slate-50/50">
-            <Text size="sm" weight="regular" className="text-slate-400">
+            <Text size="md" weight="regular" className="text-slate-400">
               No statutory documents uploaded yet.
             </Text>
           </div>
@@ -157,11 +157,11 @@ export function OrgDocumentsCard() {
                           <ExternalLink className="size-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400" />
                         </a>
                       ) : (
-                        <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                        <Text size="md" weight="medium" className="text-slate-900 truncate">
                           {doc.name}
                         </Text>
                       )}
-                      <Text size="sm" weight="regular" className="text-slate-400 text-[11px] truncate">
+                      <Text size="md" weight="regular" className="text-slate-400 text-md truncate">
                         Uploaded on {formattedDate} {formattedSize ? `· ${formattedSize}` : ""}
                       </Text>
                     </div>

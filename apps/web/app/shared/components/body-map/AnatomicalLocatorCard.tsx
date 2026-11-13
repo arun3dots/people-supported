@@ -60,11 +60,11 @@ export function AnatomicalLocatorCard({
             Anatomical Locator
           </Text>
           <div className="flex items-center gap-2 mt-0.5">
-            <Text size="sm" weight="medium" variant="subdued">
+            <Text size="md" weight="medium" variant="subdued">
               {subtitle}
             </Text>
             <Text variant="muted">•</Text>
-            <Text size="sm" variant="subdued">
+            <Text size="md" variant="subdued">
               {view} View
             </Text>
           </div>

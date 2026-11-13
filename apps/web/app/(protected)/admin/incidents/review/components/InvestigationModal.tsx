@@ -149,9 +149,9 @@ export function InvestigationModal({
                         }
                         placeholder={`Write your ${step.title} notes here...`}
                         rows={3}
-                        className="w-full bg-white border border-[#D1D1D1] rounded-lg p-3 text-md lg:text-md text-text-body min-h-[90px]"
+                        className="w-full bg-white border border-[#D1D1D1] rounded-lg p-3 text-md text-text-body min-h-[90px]"
                       />
-                      <span className="absolute bottom-2 right-2 text-[10px] text-slate-400">
+                      <span className="absolute bottom-2 right-2 text-md text-slate-400">
                         {(currentNotes || "").length}/250
                       </span>
                     </div>

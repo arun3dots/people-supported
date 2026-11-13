@@ -87,7 +87,7 @@ export function EmarAdministrationCard({
           <Text className="text-sm font-bold text-[#4A706A]">{item.dose}</Text>
         </View>
         <Text className="text-xs text-slate-500 mt-0.5">
-          Resident: <Text className="font-semibold text-slate-800">{item.residentName}</Text> • Route:{' '}
+          Person: <Text className="font-semibold text-slate-800">{item.residentName}</Text> • Route:{' '}
           <Text className="font-medium text-slate-700">{item.route}</Text> ({item.form})
         </Text>
       </View>
@@ -107,7 +107,7 @@ export function EmarAdministrationCard({
         <View className="rounded-md bg-[#FFF2F1] p-3 border border-[#FF3B2F]/30 mb-2.5 flex-row items-center gap-2">
           <AlertCircle size={16} color="#FF3B2F" />
           <Text className="text-xs font-bold text-[#FF3B2F] flex-1 leading-tight">
-            ALLERGY WARNING: Check resident allergies before administration!
+            ALLERGY WARNING: Check documented allergies before administration!
           </Text>
         </View>
       )}

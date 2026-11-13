@@ -73,7 +73,11 @@ export function mapEnquiryToFormData(enquiry: EnquiryResponseDTO): AdmissionForm
   // 3. Medical & Diagnoses
   const primaryDiagnosis =
     enquiry.medicalNeeds ||
-    (enquiry.careCategory ? `${enquiry.careCategory} Care` : "");
+    (enquiry.careCategory
+      ? /care$|living$/i.test(enquiry.careCategory.trim())
+        ? enquiry.careCategory
+        : `${enquiry.careCategory} Care`
+      : "");
   const secondaryDiagnoses =
     ad?.cognitiveDiagnoses && Array.isArray(ad.cognitiveDiagnoses)
       ? ad.cognitiveDiagnoses

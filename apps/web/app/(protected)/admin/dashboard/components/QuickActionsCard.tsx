@@ -37,7 +37,7 @@ export function QuickActionsCard() {
     >
       {/* Header (Frame 195) */}
       <div className="flex items-center justify-between w-full h-[18px]">
-        <Text as="h3" size="sm" weight="medium" className="leading-tight">
+        <Text as="h3" size="md" weight="medium" className="leading-tight">
           Quick Actions
         </Text>
       </div>
@@ -58,7 +58,7 @@ export function QuickActionsCard() {
                   <Icon className="w-[16px] h-[16px]" />
                 </div>
                 {/* Label */}
-                <Text size="sm" weight="medium" className="text-slate-800">
+                <Text size="md" weight="medium" className="text-slate-800">
                   {action.title}
                 </Text>
               </div>

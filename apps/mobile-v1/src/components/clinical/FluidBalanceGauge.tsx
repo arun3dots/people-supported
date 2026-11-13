@@ -47,7 +47,7 @@ export function FluidBalanceGauge({
         {isLow && (
           <View className="rounded-md bg-[#FDFBE9] px-2.5 py-1 border border-[#C38C0B]/30">
             <Text className="text-xs font-semibold text-[#C38C0B]">
-              DEHYDRATION NOTICE: Prompt resident with preferred fluids.
+              DEHYDRATION NOTICE: Prompt person supported with preferred fluids.
             </Text>
           </View>
         )}

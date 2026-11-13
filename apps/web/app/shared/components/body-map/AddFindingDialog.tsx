@@ -206,15 +206,15 @@ export function AddFindingDialog({
             Document Clinical Finding
           </DialogTitle>
           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            <Badge variant="outline" className="text-sm font-normal border-blue-200 bg-blue-50 text-blue-900 flex items-center gap-1">
+            <Badge variant="outline" className="text-md font-normal border-blue-200 bg-blue-50 text-blue-900 flex items-center gap-1">
               <MapPin className="size-3 text-blue-600" />
               {locationLabel}
             </Badge>
-            <Badge variant="secondary" className="text-sm">
+            <Badge variant="secondary" className="text-md">
               {view} View
             </Badge>
             {exactPoint && (
-              <Badge className="text-sm bg-emerald-600 text-white flex items-center gap-1">
+              <Badge className="text-md bg-emerald-600 text-white flex items-center gap-1">
                 <Crosshair className="size-3" />
                 Exact Coordinate Pin
               </Badge>
@@ -228,7 +228,7 @@ export function AddFindingDialog({
             <label className="text-md font-bold text-slate-800 block">
               Type *
             </label>
-            <div className="border border-slate-300 rounded-lg overflow-hidden bg-white text-sm divide-y divide-slate-200">
+            <div className="border border-slate-300 rounded-lg overflow-hidden bg-white text-md divide-y divide-slate-200">
               {/* Row 1: Primary Types */}
               <div className="grid grid-cols-2 sm:grid-cols-6 divide-x divide-y sm:divide-y-0 divide-slate-200">
                 {PRIMARY_FINDING_TYPES.map((type) => (
@@ -239,7 +239,7 @@ export function AddFindingDialog({
                     size="sm"
                     onClick={() => handleSelectPrimaryType(type)}
                     className={cn(
-                      "h-auto rounded-none py-2 px-1.5 text-center text-sm font-normal truncate shadow-none",
+                      "h-auto rounded-none py-2 px-1.5 text-center text-md font-normal truncate shadow-none",
                       primaryType === type
                         ? "font-medium"
                         : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -263,7 +263,7 @@ export function AddFindingDialog({
                         size="sm"
                         onClick={() => setSubCategory(cat)}
                         className={cn(
-                          "h-auto rounded-none py-2 px-3 text-left justify-start text-sm font-normal shadow-none",
+                          "h-auto rounded-none py-2 px-3 text-left justify-start text-md font-normal shadow-none",
                           subCategory === cat
                             ? "font-medium"
                             : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -282,7 +282,7 @@ export function AddFindingDialog({
                         size="sm"
                         onClick={() => setSubCategory(cat)}
                         className={cn(
-                          "h-auto rounded-none py-2 px-3 text-left justify-start text-sm font-normal shadow-none",
+                          "h-auto rounded-none py-2 px-3 text-left justify-start text-md font-normal shadow-none",
                           subCategory === cat
                             ? "font-medium"
                             : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -299,7 +299,7 @@ export function AddFindingDialog({
                       size="sm"
                       onClick={() => setSubCategory("Unstageable / deep tissue injury")}
                       className={cn(
-                        "h-auto rounded-none py-2 px-3 text-left justify-start sm:w-1/2 text-sm font-normal shadow-none",
+                        "h-auto rounded-none py-2 px-3 text-left justify-start sm:w-1/2 text-md font-normal shadow-none",
                         subCategory === "Unstageable / deep tissue injury"
                           ? "font-medium"
                           : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -319,7 +319,7 @@ export function AddFindingDialog({
                       size="sm"
                       onClick={() => setSubCategory(sub)}
                       className={cn(
-                        "h-auto rounded-none py-2.5 px-3 text-left justify-start text-sm font-normal shadow-none",
+                        "h-auto rounded-none py-2.5 px-3 text-left justify-start text-md font-normal shadow-none",
                         subCategory === sub
                           ? "font-medium"
                           : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -348,12 +348,12 @@ export function AddFindingDialog({
                   if (errors.dateFound) setErrors((prev) => ({ ...prev, dateFound: undefined }));
                 }}
                 className={cn(
-                  "h-9 text-sm rounded-lg border-slate-300",
+                  "h-9 text-md rounded-lg border-slate-300",
                   errors.dateFound && "border-red-500 focus-visible:ring-red-400",
                 )}
               />
               {errors.dateFound && (
-                <p className="text-sm text-red-500 font-medium mt-1">{errors.dateFound}</p>
+                <p className="text-md text-red-500 font-medium mt-1">{errors.dateFound}</p>
               )}
             </div>
 
@@ -370,12 +370,12 @@ export function AddFindingDialog({
                 }}
                 placeholder={currentConfig.sizePlaceholder}
                 className={cn(
-                  "h-9 text-sm rounded-lg border-slate-300",
+                  "h-9 text-md rounded-lg border-slate-300",
                   errors.sizeAppearance && "border-red-500 focus-visible:ring-red-400",
                 )}
               />
               {errors.sizeAppearance && (
-                <p className="text-sm text-red-500 font-medium mt-1">{errors.sizeAppearance}</p>
+                <p className="text-md text-red-500 font-medium mt-1">{errors.sizeAppearance}</p>
               )}
             </div>
           </div>
@@ -386,7 +386,7 @@ export function AddFindingDialog({
               <label className="text-md font-bold text-slate-800 block">
                 Exudate
               </label>
-              <div className="grid grid-cols-5 border border-slate-300 rounded-lg overflow-hidden divide-x divide-slate-200 bg-white text-sm">
+              <div className="grid grid-cols-5 border border-slate-300 rounded-lg overflow-hidden divide-x divide-slate-200 bg-white text-md">
                 {EXUDATE_LEVELS.map((opt) => (
                   <Button
                     key={opt}
@@ -395,7 +395,7 @@ export function AddFindingDialog({
                     size="sm"
                     onClick={() => setExudate(opt)}
                     className={cn(
-                      "h-auto rounded-none py-2 text-center text-sm font-normal shadow-none",
+                      "h-auto rounded-none py-2 text-center text-md font-normal shadow-none",
                       exudate === opt
                         ? "font-medium"
                         : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -411,7 +411,7 @@ export function AddFindingDialog({
               <label className="text-md font-bold text-slate-800 block">
                 {currentConfig.symptomLabel}
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 border border-slate-300 rounded-lg overflow-hidden divide-x divide-slate-200 bg-white text-sm">
+              <div className="grid grid-cols-2 sm:grid-cols-4 border border-slate-300 rounded-lg overflow-hidden divide-x divide-slate-200 bg-white text-md">
                 {currentConfig.symptomOptions.map((opt) => (
                   <Button
                     key={opt}
@@ -420,7 +420,7 @@ export function AddFindingDialog({
                     size="sm"
                     onClick={() => setSymptomValue(opt)}
                     className={cn(
-                      "h-auto rounded-none py-2 text-center text-sm font-normal truncate px-1 shadow-none",
+                      "h-auto rounded-none py-2 text-center text-md font-normal truncate px-1 shadow-none",
                       symptomValue === opt
                         ? "font-medium"
                         : "text-slate-700 hover:bg-slate-50 bg-white",
@@ -444,7 +444,7 @@ export function AddFindingDialog({
                 value={secondaryFieldValue}
                 onChange={(e) => setSecondaryFieldValue(e.target.value)}
                 placeholder={currentConfig.secondaryFieldPlaceholder}
-                className="h-9 text-sm rounded-lg border-slate-300"
+                className="h-9 text-md rounded-lg border-slate-300"
               />
             </div>
 
@@ -457,7 +457,7 @@ export function AddFindingDialog({
                 value={photoReference}
                 onChange={(e) => setPhotoReference(e.target.value)}
                 placeholder="e.g. Consent checked, wound ref #01"
-                className="h-9 text-sm rounded-lg border-slate-300"
+                className="h-9 text-md rounded-lg border-slate-300"
               />
             </div>
           </div>
@@ -474,7 +474,7 @@ export function AddFindingDialog({
                 onChange={(e) => setAdditionalNotes(e.target.value)}
                 placeholder="e.g. Surrounding erythema, clean wound base"
                 rows={2}
-                className="text-sm rounded-lg border-slate-300 resize-none"
+                className="text-md rounded-lg border-slate-300 resize-none"
               />
             </div>
 
@@ -487,13 +487,13 @@ export function AddFindingDialog({
                   value={linkedIncidentId}
                   onValueChange={setLinkedIncidentId}
                 >
-                  <SelectTrigger id="linked-incident" className="h-9 text-sm rounded-lg border-slate-300">
+                  <SelectTrigger id="linked-incident" className="h-9 text-md rounded-lg border-slate-300">
                     <SelectValue placeholder="Select incident..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="" className="text-sm">None</SelectItem>
+                    <SelectItem value="" className="text-md">None</SelectItem>
                     {incidents.map((inc) => (
-                      <SelectItem key={inc.id} value={inc.id} className="text-sm">
+                      <SelectItem key={inc.id} value={inc.id} className="text-md">
                         {inc.incidentNumber} — {inc.title}
                       </SelectItem>
                     ))}
@@ -513,7 +513,7 @@ export function AddFindingDialog({
 
           {/* Footer Bar with Sign-Off Audit Info and Action Buttons */}
           <div className="pt-4 border-t border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <p className="text-[11px] text-slate-500 leading-tight">
+            <p className="text-md text-slate-500 leading-tight">
               Signed as <span className="font-semibold text-slate-700">{signOffStaff}</span> · {signOffDate} · entries cannot be edited after saving
             </p>
 
@@ -523,7 +523,7 @@ export function AddFindingDialog({
                 variant="outline"
                 size="sm"
                 onClick={() => onOpenChange(false)}
-                className="h-8 text-sm font-medium rounded-lg border-slate-300 text-slate-700 hover:bg-slate-50 px-4"
+                className="h-8 text-md font-medium rounded-lg border-slate-300 text-slate-700 hover:bg-slate-50 px-4"
               >
                 Cancel
               </Button>
@@ -531,7 +531,7 @@ export function AddFindingDialog({
                 type="submit"
                 variant="primary"
                 size="sm"
-                className="h-8 text-sm font-semibold rounded-lg shadow-xs px-5"
+                className="h-8 text-md font-semibold rounded-lg shadow-xs px-5"
               >
                 Save
               </Button>

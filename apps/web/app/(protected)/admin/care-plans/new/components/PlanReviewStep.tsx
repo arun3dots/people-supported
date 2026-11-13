@@ -34,7 +34,7 @@ export function PlanReviewStep({
         <Text as="h2" size="lg" weight="semibold" className="text-slate-900 tracking-tight">
           Review &amp; Submit Care Plan
         </Text>
-        <Text size="sm" weight="regular" >
+        <Text size="md" weight="regular" >
           Verify the clinical details before creating and submitting the plan for sign-off.
         </Text>
       </div>
@@ -45,8 +45,8 @@ export function PlanReviewStep({
             key={idx}
             className="flex flex-col sm:flex-row sm:items-center justify-between py-3 first:pt-0 last:pb-0 gap-1 text-md"
           >
-            <Text size="sm">{item.label}</Text>
-            <Text size="sm" >{item.value}</Text>
+            <Text size="md">{item.label}</Text>
+            <Text size="md" >{item.value}</Text>
           </div>
         ))}
       </div>

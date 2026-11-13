@@ -93,7 +93,7 @@ const CustomYAxisTick = ({ x, y, payload }: any) => {
         y={4}
         textAnchor="end"
         fill="#141F1E"
-        fontSize={12}
+        fontSize={14}
         fontWeight={400}
         fontFamily="Outfit"
         style={{ whiteSpace: 'pre' }}
@@ -129,14 +129,14 @@ export function ResidentAnalyticsClient() {
           <h1 className="text-2xl lg:text-3xl font-bold tracking-normal text-black font-sans leading-none">
             Resident Directory Analytics
           </h1>
-          <p className="text-[#5D5D5D] text-md lg:text-md font-medium font-sans">
+          <p className="text-[#5D5D5D] text-md font-medium font-sans">
             Insights and trends about your residents and care population.
           </p>
         </div>
         <div className="flex items-center gap-4 lg:gap-6">
           <Button
             variant="ghost"
-            className="w-[124px] lg:w-[140px] h-[38px] lg:h-[44px] bg-white border border-[#BCD3CD] hover:bg-slate-50 text-[#4A706A] font-medium rounded-xl text-md lg:text-md flex items-center justify-center gap-1.5 lg:gap-2 transition-colors"
+            className="w-[124px] lg:w-[140px] h-[38px] lg:h-[44px] bg-white border border-[#BCD3CD] hover:bg-slate-50 text-[#4A706A] font-medium rounded-xl text-md flex items-center justify-center gap-1.5 lg:gap-2 transition-colors"
           >
             <Calendar className="w-4 h-4 lg:w-5 lg:h-5 text-[#4A706A]" />
             May
@@ -145,7 +145,7 @@ export function ResidentAnalyticsClient() {
           {isAdmin && (
             <Button
               asChild
-              className="w-[137px] lg:w-[160px] h-[38px] lg:h-[44px] bg-[#4A706A] hover:bg-[#3d5d58] text-white font-medium rounded-xl text-md lg:text-md flex items-center justify-center gap-1.5 lg:gap-2 transition-colors shadow-none"
+              className="w-[137px] lg:w-[160px] h-[38px] lg:h-[44px] bg-[#4A706A] hover:bg-[#3d5d58] text-white font-medium rounded-xl text-md flex items-center justify-center gap-1.5 lg:gap-2 transition-colors shadow-none"
             >
               <Link href="/admin/residents/admit">
                 <UserPlus className="w-4 h-4 lg:w-5 lg:h-5 text-white" /> Admit Resident
@@ -208,7 +208,7 @@ export function ResidentAnalyticsClient() {
                 <Icon className="size-4 lg:size-6 text-[#4A706A]" />
               </div>
               <div className="space-y-1 lg:space-y-2">
-                <p className="text-md lg:text-md text-[#141F1E] font-normal leading-none font-sans">
+                <p className="text-md text-[#141F1E] font-normal leading-none font-sans">
                   {stat.title}
                 </p>
                 <h4 className="text-xl lg:text-3xl font-bold text-[#141F1E] tracking-normal leading-none font-sans py-0.5">
@@ -223,7 +223,7 @@ export function ResidentAnalyticsClient() {
                     )
                   )}
                   <span
-                    className={`text-[10px] lg:text-md font-normal font-sans ${stat.isTrend
+                    className={`text-md font-normal font-sans ${stat.isTrend
                       ? stat.isUp
                         ? "text-[#22973F]"
                         : "text-[#FF3B2F]"
@@ -258,7 +258,7 @@ export function ResidentAnalyticsClient() {
               value={sel.value}
               onValueChange={sel.setter}
             >
-              <SelectTrigger className="w-full h-[50px] bg-white border border-border-secondary rounded-xl px-3 text-[12px] leading-[15px] text-text-body">
+              <SelectTrigger className="w-full h-[50px] bg-white border border-border-secondary rounded-xl px-3 text-md leading-[15px] text-text-body">
                 <SelectValue placeholder={sel.placeholder} />
               </SelectTrigger>
               <SelectContent>
@@ -275,7 +275,7 @@ export function ResidentAnalyticsClient() {
             <input
               type="text"
               placeholder="Search by names, room ...."
-              className="w-full h-full pl-11 pr-4 bg-white border border-[#BCD3CD] rounded-xl text-[12px] leading-[15px] font-['Outfit'] text-[#141F1E] placeholder:text-[#5D5D5D] focus:outline-none truncate"
+              className="w-full h-full pl-11 pr-4 bg-white border border-[#BCD3CD] rounded-xl text-md leading-[15px] font-['Outfit'] text-[#141F1E] placeholder:text-[#5D5D5D] focus:outline-none truncate"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -328,11 +328,11 @@ export function ResidentAnalyticsClient() {
                 </ResponsiveContainer>
                 <div className="absolute text-center flex flex-col items-center">
                   <span className="text-xl lg:text-2xl font-bold text-[#141F1E] leading-none">128</span>
-                  <span className="text-[8px] lg:text-[10px] font-medium text-[#141F1E] mt-0.5">Total</span>
+                  <span className="text-md font-medium text-[#141F1E] mt-0.5">Total</span>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-[9px] lg:text-[11px] text-[#141F1E] flex-1 w-full min-w-0">
+              <div className="space-y-1.5 text-md text-[#141F1E] flex-1 w-full min-w-0">
                 {[
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#4A706A]" },
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#93B5AE]" },
@@ -349,7 +349,7 @@ export function ResidentAnalyticsClient() {
                 ))}
               </div>
             </div>
-            <button className="mx-auto flex items-center gap-1.5 text-md lg:text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
+            <button className="mx-auto flex items-center gap-1.5 text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
               View all Rejected Requests <ArrowRight className="size-3 lg:size-4 text-[#4A706A]" />
             </button>
           </Card>
@@ -367,22 +367,22 @@ export function ResidentAnalyticsClient() {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#141F1E", fontSize: 11, fontWeight: 500 }}
+                    tick={{ fill: "#141F1E", fontSize: 14, fontWeight: 500 }}
                     dy={5}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#141F1E", fontSize: 11, fontWeight: 500 }}
+                    tick={{ fill: "#141F1E", fontSize: 14, fontWeight: 500 }}
                     domain={[0, 40]}
                     ticks={[0, 10, 20, 30, 40]}
-                    width={35}
+                    width={40}
                   />
                   <Bar dataKey="value" fill="#4A706A" radius={[4, 4, 0, 0]} maxBarSize={28} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex items-center justify-center gap-1.5 text-[10px] lg:text-md text-[#141F1E] font-medium mt-1">
+            <div className="flex items-center justify-center gap-1.5 text-md text-[#141F1E] font-medium mt-1">
               <span className="w-3.5 h-2.5 bg-[#4A706A] rounded-xs" /> Residents
             </div>
           </Card>
@@ -416,11 +416,11 @@ export function ResidentAnalyticsClient() {
                 </ResponsiveContainer>
                 <div className="absolute text-center flex flex-col items-center">
                   <span className="text-xl lg:text-2xl font-bold text-[#141F1E] leading-none">128</span>
-                  <span className="text-[8px] lg:text-[10px] font-medium text-[#141F1E] mt-0.5">Total</span>
+                  <span className="text-md font-medium text-[#141F1E] mt-0.5">Total</span>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-[9px] lg:text-[11px] text-[#141F1E] flex-1 w-full min-w-0">
+              <div className="space-y-1.5 text-md text-[#141F1E] flex-1 w-full min-w-0">
                 {[
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#4A706A]" },
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#93B5AE]" },
@@ -436,7 +436,7 @@ export function ResidentAnalyticsClient() {
                 ))}
               </div>
             </div>
-            <button className="mx-auto flex items-center gap-1.5 text-md lg:text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
+            <button className="mx-auto flex items-center gap-1.5 text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
               View all Rejected Requests <ArrowRight className="size-3 lg:size-4 text-[#4A706A]" />
             </button>
           </Card>
@@ -468,7 +468,7 @@ export function ResidentAnalyticsClient() {
                     interval={0}
                     axisLine={{ stroke: "#BCD3CD", strokeWidth: 0.5 }}
                     tickLine={false}
-                    tick={{ fill: "#141F1E", fontSize: 10, fontWeight: 500 }}
+                    tick={{ fill: "#141F1E", fontSize: 14, fontWeight: 500 }}
                   />
                   <YAxis
                     type="category"
@@ -476,15 +476,15 @@ export function ResidentAnalyticsClient() {
                     interval={0}
                     axisLine={false}
                     tickLine={false}
-                    width={70}
-                    tick={{ fill: "#141F1E", fontSize: 10, fontWeight: 500 }}
+                    width={88}
+                    tick={{ fill: "#141F1E", fontSize: 14, fontWeight: 500 }}
                   />
                   <Bar dataKey="value" fill="#4A706A" barSize={16} radius={[0, 2, 2, 0]}>
                     <LabelList
                       dataKey="countText"
                       position="right"
                       offset={6}
-                      style={{ fill: "#5D5D5D", fontSize: "9px" }}
+                      style={{ fill: "#5D5D5D", fontSize: "14px" }}
                     />
                   </Bar>
                 </BarChart>
@@ -521,11 +521,11 @@ export function ResidentAnalyticsClient() {
                 </ResponsiveContainer>
                 <div className="absolute text-center flex flex-col items-center">
                   <span className="text-xl lg:text-2xl font-bold text-[#141F1E] leading-none">128</span>
-                  <span className="text-[8px] lg:text-[10px] font-medium text-[#141F1E] mt-0.5">Total</span>
+                  <span className="text-md font-medium text-[#141F1E] mt-0.5">Total</span>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-[9px] lg:text-[11px] text-[#141F1E] flex-1 w-full min-w-0">
+              <div className="space-y-1.5 text-md text-[#141F1E] flex-1 w-full min-w-0">
                 {[
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#4A706A]" },
                   { label: "Occupied", sub: "89(81%)", color: "bg-[#93B5AE]" },
@@ -541,7 +541,7 @@ export function ResidentAnalyticsClient() {
                 ))}
               </div>
             </div>
-            <button className="mx-auto flex items-center gap-1.5 text-md lg:text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
+            <button className="mx-auto flex items-center gap-1.5 text-md text-[#141F1E] font-medium hover:text-[#4A706A] mt-2">
               View all Rejected Requests <ArrowRight className="size-3 lg:size-4 text-[#4A706A]" />
             </button>
           </Card>
@@ -569,8 +569,8 @@ export function ResidentAnalyticsClient() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trendData} margin={{ top: 10, right: 15, left: -15, bottom: 0 }}>
                   <CartesianGrid vertical={false} stroke="#E3ECE9" strokeWidth={1} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#141F1E", fontSize: 11 }} dy={10} />
-                  <YAxis type="number" axisLine={false} tickLine={false} domain={[0, 140]} ticks={[0, 20, 40, 60, 80, 100, 120, 140]} tick={{ fill: "#141F1E", fontSize: 10 }} width={35} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#141F1E", fontSize: 14 }} dy={10} />
+                  <YAxis type="number" axisLine={false} tickLine={false} domain={[0, 140]} ticks={[0, 20, 40, 60, 80, 100, 120, 140]} tick={{ fill: "#141F1E", fontSize: 14 }} width={42} />
                   <Line type="monotone" dataKey="activeResidents" stroke="#ED2115" strokeWidth={1.8} dot={false} />
                   <Line type="monotone" dataKey="admissions" stroke="#1B75F5" strokeWidth={1.8} dot={false} />
                   <Line type="monotone" dataKey="discharge" stroke="#22973F" strokeWidth={1.8} dot={false} />
@@ -603,7 +603,7 @@ export function ResidentAnalyticsClient() {
 
                 {/* Text Column */}
                 <div className="flex flex-col justify-center min-w-0">
-                  <span className="text-[9px] font-light text-[#141F1E] leading-tight truncate">
+                  <span className="text-md font-light text-[#141F1E] leading-tight truncate">
                     Upcoming Reviews
                   </span>
 
@@ -611,7 +611,7 @@ export function ResidentAnalyticsClient() {
                     18
                   </h4>
 
-                  <p className="text-[8px] font-normal text-[#5D5D5D] leading-[10px] whitespace-nowrap">
+                  <p className="text-md font-normal text-[#5D5D5D] leading-[10px] whitespace-nowrap">
                     Reviews due <br /> in next 30 days
                   </p>
                 </div>
@@ -626,7 +626,7 @@ export function ResidentAnalyticsClient() {
 
           {/* Card 4: Top Card Needs */}
           <div className="bg-[#F7F7F7] border border-[#BCD3CD] rounded-xl p-4 h-[117px] flex flex-col justify-center shadow-none box-border w-full">
-            <h4 className="text-[9px] font-light text-[#141F1E] leading-tight mb-2">
+            <h4 className="text-md font-light text-[#141F1E] leading-tight mb-2">
               Top Card Needs
             </h4>
 
@@ -637,7 +637,7 @@ export function ResidentAnalyticsClient() {
                 { label: "Occupied", value: "89(81%)" },
                 { label: "Available", value: "9(6.8%)" },
               ].map((item, index) => (
-                <div key={index} className="flex flex-row items-center justify-between text-[8px] leading-none w-full">
+                <div key={index} className="flex flex-row items-center justify-between text-md leading-none w-full">
                   <span className="font-normal text-[#141F1E]">{item.label}</span>
                   <span className="font-normal text-[#5D5D5D]">{item.value}</span>
                 </div>
@@ -647,7 +647,7 @@ export function ResidentAnalyticsClient() {
 
           {/* Card 5: Gender Distribution */}
           <div className="bg-[#F7F7F7] border border-[#BCD3CD] rounded-xl p-4 h-[117px] flex flex-col justify-center shadow-none box-border w-full">
-            <h4 className="text-[9px] font-light text-[#141F1E] leading-tight mb-1.5">
+            <h4 className="text-md font-light text-[#141F1E] leading-tight mb-1.5">
               Gender Distribution
             </h4>
 
@@ -690,7 +690,7 @@ export function ResidentAnalyticsClient() {
                   { color: "bg-[#93B5AE]", label: "Occupied", value: "89(81%)" },
                   { color: "bg-[#C6B37E]", label: "Occupied", value: "89(81%)" },
                 ].map((item, index) => (
-                  <div key={index} className="flex flex-row items-center justify-between text-[8px] leading-none w-full">
+                  <div key={index} className="flex flex-row items-center justify-between text-md leading-none w-full">
                     <div className="flex flex-row items-center gap-1 min-w-0">
                       <div className={`w-2 h-2 ${item.color} shrink-0 rounded-xs`} />
                       <span className="font-medium text-[#141F1E] truncate">{item.label}</span>

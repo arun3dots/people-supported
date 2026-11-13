@@ -19,10 +19,10 @@ const textVariants = cva("text-foreground transition-colors", {
       warning: "text-amber-600",
     },
     size: {
-      xs: "text-xs xl:text-sm",
-      sm: "text-sm xl:text-md",
-      base: "text-base xl:text-base",
-      md: "text-base xl:text-base",
+      xs: "text-md",
+      sm: "text-md",
+      base: "text-base",
+      md: "text-md",
       lg: "text-lg xl:text-lg",
       xl: "text-xl xl:text-2xl",
       "2xl": "text-2xl xl:text-3xl",
@@ -109,9 +109,13 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>(
       !knownVariants.includes(variant)
     ) {
       const [s, w] = variant.split("-");
-      if (s) effectiveSize = effectiveSize || (s as TextSize);
+      const normalizedSize = s === "xs" || s === "sm" ? "md" : s;
+      if (normalizedSize) effectiveSize = effectiveSize || (normalizedSize as TextSize);
       if (w) effectiveWeight = effectiveWeight || (w as TextProps["weight"]);
       effectiveVariant = "default";
+    }
+    if (effectiveSize === "xs" || effectiveSize === "sm") {
+      effectiveSize = "md";
     }
 
     const Comp = asChild ? Slot.Root : Component;

@@ -13,7 +13,7 @@ import {
 } from "../../../../lib/queries/risk";
 import type { RiskStatus } from "@repo/schema";
 import { useAuth } from "../../../../lib/context/AuthContext";
-import { getRiskLevelStyle, getStatusStyle } from "./risk-utils";
+import { formatReviewDate, getRiskLevelStyle, getStatusStyle } from "./risk-utils";
 
 interface Props {
   assessments: RiskAssessmentResponse[];
@@ -76,7 +76,7 @@ export function RiskRegisterTable({ assessments, onSelect }: Props) {
                   </div>
                   <p className="text-md text-muted-foreground mt-0.5 truncate">
                     Tool: {a.tool ?? "—"} · Next review:{" "}
-                    {new Date(a.nextReviewDate).toLocaleDateString()}
+                    {formatReviewDate(a.nextReviewDate)}
                   </p>
                 </div>
               </button>

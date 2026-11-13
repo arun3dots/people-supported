@@ -173,7 +173,7 @@ export function AddFluidIntakeDialog({
                 type="button"
                 onClick={() => handleTypeChange("Fluid")}
                 className={cn(
-                  "flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all cursor-pointer",
+                  "flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-md font-semibold transition-all cursor-pointer",
                   type === "Fluid"
                     ? "border-[#4A706A] bg-[#4A706A]/10 text-[#4A706A] shadow-xs"
                     : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
@@ -188,7 +188,7 @@ export function AddFluidIntakeDialog({
                 type="button"
                 onClick={() => handleTypeChange("Food")}
                 className={cn(
-                  "flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all cursor-pointer",
+                  "flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-md font-semibold transition-all cursor-pointer",
                   type === "Food"
                     ? "border-amber-600 bg-amber-50 text-amber-900 shadow-xs"
                     : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
@@ -212,7 +212,7 @@ export function AddFluidIntakeDialog({
                     type="button"
                     onClick={() => { setAmount(p.value); setUnit("ml"); setError(""); }}
                     className={cn(
-                      "text-sm px-2.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer",
+                      "text-md px-2.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer",
                       amount === p.value && unit === "ml"
                         ? "bg-[#4A706A] text-white border-[#4A706A] shadow-xs font-semibold"
                         : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100",
@@ -291,7 +291,7 @@ export function AddFluidIntakeDialog({
                     type="button"
                     onClick={() => setIntakePercentage(intakePercentage === pct ? null : pct)}
                     className={cn(
-                      "flex-1 py-1.5 rounded-lg border text-sm font-semibold transition-all cursor-pointer",
+                      "flex-1 py-1.5 rounded-lg border text-md font-semibold transition-all cursor-pointer",
                       intakePercentage === pct
                         ? "bg-[#4A706A] text-white border-[#4A706A] shadow-xs"
                         : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100",

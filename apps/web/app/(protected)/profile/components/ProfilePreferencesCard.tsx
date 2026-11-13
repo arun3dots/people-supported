@@ -54,7 +54,7 @@ export function ProfilePreferencesCard() {
       <CardContent className="pt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
         {PREFERENCE_FIELDS.map((pref) => (
           <div key={pref.label} className="flex flex-col items-start gap-2 w-full min-w-0">
-            <Text size="sm" className="text-muted-foreground truncate w-full">
+            <Text size="md" className="text-muted-foreground truncate w-full">
               {pref.label}
             </Text>
 

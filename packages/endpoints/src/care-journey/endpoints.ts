@@ -9,6 +9,7 @@ export const CREATE_NEED_CARE_PLAN = "CREATE_NEED_CARE_PLAN";
 export const SAVE_NEED_CARE_PLAN = "SAVE_NEED_CARE_PLAN";
 export const AGREE_NEED_CARE_PLAN = "AGREE_NEED_CARE_PLAN";
 export const LIST_CARE_TASK_DEFINITIONS = "LIST_CARE_TASK_DEFINITIONS";
+export const GET_CARE_TASK_BOARD = "GET_CARE_TASK_BOARD";
 export const CREATE_CARE_TASK = "CREATE_CARE_TASK";
 export const UPDATE_CARE_TASK = "UPDATE_CARE_TASK";
 export const GET_CARE_TASK_DAY = "GET_CARE_TASK_DAY";
@@ -51,6 +52,10 @@ const careJourneyEndpoints: EndpointDetails = {
   },
   [LIST_CARE_TASK_DEFINITIONS]: {
     endpoint: "/residents/[id]/care-tasks",
+    requestType: "GET",
+  },
+  [GET_CARE_TASK_BOARD]: {
+    endpoint: "/residents/care-tasks/board",
     requestType: "GET",
   },
   [CREATE_CARE_TASK]: {

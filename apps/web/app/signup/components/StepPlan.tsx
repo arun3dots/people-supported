@@ -58,7 +58,7 @@ export function StepPlan({
                   <h4 className="text-lg font-bold text-slate-900 tracking-tight">
                     {pkg.name}
                   </h4>
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-md font-medium text-slate-500">
                     Up to {pkg.residentLimit} residents · {pkg.staffLimit} staff members
                   </p>
                 </div>
@@ -68,7 +68,7 @@ export function StepPlan({
                     <span className="text-2xl font-bold text-slate-900">
                       {pkg.currency} {pkg.priceMonthly}
                     </span>
-                    <span className="text-sm font-semibold text-slate-500 ml-1">
+                    <span className="text-md font-semibold text-slate-500 ml-1">
                       /mo
                     </span>
                   </div>
@@ -91,7 +91,7 @@ export function StepPlan({
       </div>
 
       {errorMessage && (
-        <p className="text-sm font-medium text-red-500 mt-1">
+        <p className="text-md font-medium text-red-500 mt-1">
           {errorMessage}
         </p>
       )}

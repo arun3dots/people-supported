@@ -97,7 +97,7 @@ export function ResidentIncidentsTab({
         className="py-20 flex flex-col items-center justify-center font-sans"
       >
         <Loader2 className="size-8 animate-spin text-primary mb-3" />
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           Loading incident records…
         </Text>
       </Card>
@@ -121,7 +121,7 @@ export function ResidentIncidentsTab({
               <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 Incidents & Safeguarding Log
               </Text>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 All reported accidents, behavioural triggers, and safeguarding events
               </Text>
             </div>
@@ -181,12 +181,12 @@ export function ResidentIncidentsTab({
                         {inc.incidentNumber}
                       </TableCell>
                       <TableCell>
-                        <Text size="sm" weight="medium" className="text-slate-900">
+                        <Text size="md" weight="medium" className="text-slate-900">
                           {inc.title}
                         </Text>
                       </TableCell>
                       <TableCell>
-                        <Text size="sm" className="text-slate-700">
+                        <Text size="md" className="text-slate-700">
                           {inc.category}
                         </Text>
                       </TableCell>
@@ -197,10 +197,10 @@ export function ResidentIncidentsTab({
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <Text size="sm" weight="medium" className="text-slate-800">
+                          <Text size="md" weight="medium" className="text-slate-800">
                             {new Date(inc.incidentDate).toLocaleDateString("en-GB")}
                           </Text>
-                          <Text size="xs" variant="muted">
+                          <Text size="md" variant="muted">
                             {inc.reportedBy?.fullName ?? "Support Staff"}
                           </Text>
                         </div>

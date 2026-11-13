@@ -120,7 +120,7 @@ export function AssessmentCustomTab({
           <Badge variant="outline">{allTemplates.length} Available Templates</Badge>
         </div>
 
-        <Text variant="xs-regular" className="text-text-description">
+        <Text variant="md-regular" className="text-text-description">
           Quickly append structured questionnaires onto this prospective resident&apos;s assessment.
         </Text>
 
@@ -267,7 +267,7 @@ export function AssessmentCustomTab({
         </div>
 
         {!formData.customQuestions || formData.customQuestions.length === 0 ? (
-          <Text variant="xs-regular" className="text-text-description italic py-4 text-center">
+          <Text variant="md-regular" className="text-text-description italic py-4 text-center">
             No custom questions loaded yet. Use the template loader above or add specific questions.
           </Text>
         ) : (
@@ -287,12 +287,12 @@ export function AssessmentCustomTab({
                     </Badge>
                   </div>
                   {q.section && (
-                    <Text size="sm" variant="muted">
+                    <Text size="md" variant="muted">
                       Section: {q.section}
                     </Text>
                   )}
                   {q.options && q.options.length > 0 && (
-                    <Text size="sm" variant="muted">
+                    <Text size="md" variant="muted">
                       Options: {q.options.join(" • ")}
                     </Text>
                   )}

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { paginationQuerySchema } from "./common/pagination";
 
 export const createBranchSchema = z.object({
-  name: z.string().min(2, "Branch name is required"),
+  name: z.string().trim().min(2, "Branch name must be at least 2 characters"),
   code: z.string().optional(),
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
@@ -61,7 +61,7 @@ export type SchemeDetailsDTO = z.infer<typeof schemeDetailsSchema>;
 
 export const createSchemeSchema = z.object({
   branchId: z.string().uuid("Invalid branch selected").optional(),
-  name: z.string().min(2, "Scheme name is required"),
+  name: z.string().trim().min(2, "Scheme name must be at least 2 characters"),
   referenceId: z.string().optional(),
   location: z.string().optional(),
   description: z.string().optional(),
@@ -79,6 +79,7 @@ export type CreateSchemeDTO = z.infer<typeof createSchemeSchema>;
 export type UpdateSchemeDTO = z.infer<typeof updateSchemeSchema>;
 
 export const propertyRoomDraftSchema = z.object({
+  id: z.string().uuid().optional(),
   roomNumber: z.string().min(1, "Room/Flat number is required"),
   name: z.string().optional(),
   type: z.string().default("Single"),
@@ -94,7 +95,7 @@ export type PropertyRoomDraftDTO = z.infer<typeof propertyRoomDraftSchema>;
 
 export const createPropertyWithRoomsSchema = z.object({
   branchId: z.string().uuid("Invalid branch selected").optional(),
-  name: z.string().min(2, "Property name is required"),
+  name: z.string().trim().min(2, "Property name must be at least 2 characters"),
   code: z.string().optional(),
   schemeId: z.string().uuid().optional().nullable(),
   description: z.string().optional(),
@@ -116,7 +117,7 @@ export const createWingSchema = z.object({
   // branch need to supply it explicitly here.
   branchId: z.string().uuid("Invalid branch selected").optional(),
   schemeId: z.string().uuid().optional().nullable(),
-  name: z.string().min(2, "Wing name is required"),
+  name: z.string().trim().min(2, "Wing name must be at least 2 characters"),
   code: z.string().optional(),
   description: z.string().optional(),
   primaryContact: z.string().optional(),

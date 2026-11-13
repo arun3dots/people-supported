@@ -208,9 +208,9 @@ export function CarePlanHistoryStack({
                             <div key={task.id} className="text-md p-2 bg-slate-50 rounded-lg flex justify-between items-center">
                               <div>
                                 <p className="font-medium text-slate-800">{task.title}</p>
-                                <p className="text-[10px] text-slate-500">{task.category} • {task.frequency}</p>
+                                <p className="text-md text-slate-500">{task.category} • {task.frequency}</p>
                               </div>
-                              <Badge variant="outline" className="text-[10px]">
+                              <Badge variant="outline" className="text-md">
                                 {task.priority}
                               </Badge>
                             </div>
@@ -233,7 +233,7 @@ export function CarePlanHistoryStack({
                             <div key={med.id} className="text-md p-2 bg-slate-50 rounded-lg flex justify-between items-center">
                               <div>
                                 <p className="font-medium text-slate-800">{med.drugName} ({med.dose})</p>
-                                <p className="text-[10px] text-slate-500">{med.form || "General"} • {med.frequency}</p>
+                                <p className="text-md text-slate-500">{med.form || "General"} • {med.frequency}</p>
                               </div>
                             </div>
                           ))}

@@ -125,7 +125,7 @@ export function CarePlanHeaderCard({
               </Badge>
               <CarePlanStatusBadge status={carePlan.status} />
             </div>
-            <Text size="sm" weight="regular" variant="muted" className="mt-1 max-w-2xl leading-relaxed">
+            <Text size="md" weight="regular" variant="muted" className="mt-1 max-w-2xl leading-relaxed">
               {carePlan.description ||
                 "Clinical rationale, overarching goals, and scheduled routine interventions."}
             </Text>
@@ -175,16 +175,16 @@ export function CarePlanHeaderCard({
         <div className="bg-white p-4 rounded-xl border border-slate-200/80 space-y-2">
           <div className="flex items-center gap-1.5 text-md font-bold text-slate-500 uppercase tracking-wider">
             <Calendar className="size-3.5 text-emerald-800" />
-            <Text size="sm" weight="bold" variant="muted">Validity Period</Text>
+            <Text size="md" weight="bold" variant="muted">Validity Period</Text>
           </div>
           <div className="space-y-1 pt-1">
             <div className="flex justify-between items-center text-md">
-              <Text size="sm" variant="muted">From:</Text>
-              <Text size="sm" weight="semibold">{formatDateLabel(carePlan.validFrom)}</Text>
+              <Text size="md" variant="muted">From:</Text>
+              <Text size="md" weight="semibold">{formatDateLabel(carePlan.validFrom)}</Text>
             </div>
             <div className="flex justify-between items-center text-md">
-              <Text size="sm" variant="muted">Valid To:</Text>
-              <Text size="sm" weight="semibold">{formatDateLabel(carePlan.validTo)}</Text>
+              <Text size="md" variant="muted">Valid To:</Text>
+              <Text size="md" weight="semibold">{formatDateLabel(carePlan.validTo)}</Text>
             </div>
           </div>
         </div>
@@ -193,16 +193,16 @@ export function CarePlanHeaderCard({
         <div className="bg-white p-4 rounded-xl border border-slate-200/80 space-y-2">
           <div className="flex items-center gap-1.5 text-md font-bold text-slate-500 uppercase tracking-wider">
             <UserCheck className="size-3.5 text-emerald-800" />
-            <Text size="sm" weight="bold" variant="muted">Clinical Sign-Off</Text>
+            <Text size="md" weight="bold" variant="muted">Clinical Sign-Off</Text>
           </div>
 
           <div className="space-y-1.5 pt-1">
             <div className="flex justify-between items-center text-md">
-              <Text size="sm" variant="muted">Primary:</Text>
+              <Text size="md" variant="muted">Primary:</Text>
               <div className="flex items-center gap-1.5">
                 {primaryApproverName ? (
                   <>
-                    <Text size="sm" weight="medium" className="truncate max-w-[90px]">
+                    <Text size="md" weight="medium" className="truncate max-w-[90px]">
                       {primaryApproverName}
                     </Text>
                     <Badge
@@ -233,9 +233,9 @@ export function CarePlanHeaderCard({
 
             {(secondaryApproval || secondaryApproverName) && (
               <div className="flex justify-between items-center text-md">
-                <Text size="sm" variant="muted">Secondary:</Text>
+                <Text size="md" variant="muted">Secondary:</Text>
                 <div className="flex items-center gap-1.5">
-                  <Text size="sm" weight="medium" className="truncate max-w-[90px]">
+                  <Text size="md" weight="medium" className="truncate max-w-[90px]">
                     {secondaryApproverName || "Reviewer"}
                   </Text>
                   <Badge
@@ -271,7 +271,7 @@ export function CarePlanHeaderCard({
         <div className="bg-white p-4 rounded-xl border border-slate-200/80 space-y-2">
           <div className="flex items-center gap-1.5 text-md font-bold text-slate-500 uppercase tracking-wider">
             <Stethoscope className="size-3.5 text-emerald-800" />
-            <Text size="sm" weight="bold" variant="muted">Medical Team</Text>
+            <Text size="md" weight="bold" variant="muted">Medical Team</Text>
           </div>
           <div className="min-h-[50px] flex flex-wrap gap-1.5 content-start pt-1">
             {carePlan.doctorsInvolved && carePlan.doctorsInvolved.length > 0 ? (
@@ -285,7 +285,7 @@ export function CarePlanHeaderCard({
                 </Badge>
               ))
             ) : (
-              <Text size="sm" variant="muted" className="italic">
+              <Text size="md" variant="muted" className="italic">
                 Assigned per shift
               </Text>
             )}
@@ -296,7 +296,7 @@ export function CarePlanHeaderCard({
         <div className="bg-white p-4 rounded-xl border border-slate-200/80 space-y-2">
           <div className="flex items-center gap-1.5 text-md font-bold text-slate-500 uppercase tracking-wider">
             <Building2 className="size-3.5 text-emerald-800" />
-            <Text size="sm" weight="bold" variant="muted">Departments</Text>
+            <Text size="md" weight="bold" variant="muted">Departments</Text>
           </div>
           <div className="min-h-[50px] flex flex-wrap gap-1.5 content-start pt-1">
             {carePlan.departments && carePlan.departments.length > 0 ? (
@@ -310,7 +310,7 @@ export function CarePlanHeaderCard({
                 </Badge>
               ))
             ) : (
-              <Text size="sm" variant="muted" className="italic">
+              <Text size="md" variant="muted" className="italic">
                 General Nursing
               </Text>
             )}

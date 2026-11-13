@@ -34,6 +34,7 @@ import {
 interface RotaSummaryWidgetsProps {
   shifts?: Shift[];
   staffList?: StaffMember[];
+  isLocked?: boolean;
   onLockToggle?: (isLocked: boolean) => void;
   onViewHours?: () => void;
   onViewAllocation?: () => void;
@@ -45,6 +46,7 @@ interface RotaSummaryWidgetsProps {
 export function RotaSummaryWidgets({
   shifts = [],
   staffList = [],
+  isLocked: controlledLocked,
   onLockToggle,
   onViewHours,
   onViewAllocation,
@@ -52,11 +54,12 @@ export function RotaSummaryWidgets({
   onExportExcel,
   onViewAudit,
 }: RotaSummaryWidgetsProps): React.JSX.Element {
-  const [isLocked, setIsLocked] = useState(false);
+  const [internalLocked, setInternalLocked] = useState(false);
+  const isLocked = controlledLocked ?? internalLocked;
 
   const handleToggleLock = (): void => {
     const next = !isLocked;
-    setIsLocked(next);
+    setInternalLocked(next);
     onLockToggle?.(next);
   };
 
@@ -135,9 +138,15 @@ export function RotaSummaryWidgets({
   }, [staffList, shifts]);
 
   const rotaActions = [
-    { label: "Export to PDF", icon: FileText, onClick: onExportPdf },
-    { label: "Export to Excel", icon: FileSpreadsheet, onClick: onExportExcel },
-    { label: "View Audit Log", icon: Clock, onClick: onViewAudit },
+    ...(onExportExcel
+      ? [{ label: "Export Rota (CSV)", icon: FileSpreadsheet, onClick: onExportExcel }]
+      : []),
+    ...(onViewHours
+      ? [{ label: "Hours Summary", icon: FileText, onClick: onViewHours }]
+      : []),
+    ...(onViewAudit
+      ? [{ label: "View Audit Log", icon: Clock, onClick: onViewAudit }]
+      : []),
   ];
 
   return (
@@ -190,7 +199,7 @@ export function RotaSummaryWidgets({
                 <Text as="span" size="xl" weight="semibold" className="leading-tight text-slate-900">
                   {breakdown.totalHours}
                 </Text>
-                <Text as="span" size="xs" variant="muted" className="leading-none">
+                <Text as="span" size="md" variant="muted" className="leading-none">
                   hrs / Week
                 </Text>
               </div>
@@ -199,11 +208,11 @@ export function RotaSummaryWidgets({
             <div className="space-y-2 flex-1 min-w-0">
               {legendItems.map((item) => (
                 <div key={item.label} className="flex items-center justify-between gap-2">
-                  <Text as="span" size="sm" variant="muted" className="flex items-center gap-1.5 truncate">
+                  <Text as="span" size="md" variant="muted" className="flex items-center gap-1.5 truncate">
                     <span className={`size-2 rounded-full ${item.dotClass} shrink-0`} />
                     {item.label}
                   </Text>
-                  <Text as="span" size="sm" weight="medium" className="text-slate-900 shrink-0">
+                  <Text as="span" size="md" weight="medium" className="text-slate-900 shrink-0">
                     {item.hours} hrs ({item.percent}%)
                   </Text>
                 </div>
@@ -234,7 +243,7 @@ export function RotaSummaryWidgets({
 
           {staffAllocations.length === 0 ? (
             <div className="py-6 text-center">
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 No staff members available yet.
               </Text>
             </div>
@@ -242,13 +251,13 @@ export function RotaSummaryWidgets({
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-border-secondary/40 hover:bg-transparent">
-                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
+                  <TableHead className="h-8 px-1 py-1 text-md font-medium text-slate-500">
                     Staff Member
                   </TableHead>
-                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
+                  <TableHead className="h-8 px-1 py-1 text-md font-medium text-slate-500">
                     Hours
                   </TableHead>
-                  <TableHead className="h-8 px-1 py-1 text-xs font-medium text-slate-500">
+                  <TableHead className="h-8 px-1 py-1 text-md font-medium text-slate-500">
                     Role
                   </TableHead>
                 </TableRow>
@@ -298,7 +307,7 @@ export function RotaSummaryWidgets({
                     <div className="size-7 rounded-full bg-surface-primary-light flex items-center justify-center text-primary shrink-0">
                       <Icon className="size-3.5" />
                     </div>
-                    <Text as="span" size="sm" weight="medium" className="text-slate-800">
+                    <Text as="span" size="md" weight="medium" className="text-slate-800">
                       {action.label}
                     </Text>
                   </div>
@@ -314,7 +323,9 @@ export function RotaSummaryWidgets({
       <Card
         variant="secondary"
         border="default"
-        className="p-4 flex-col sm:flex-row sm:items-center justify-between gap-3"
+        className={`p-4 flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+          isLocked ? "bg-amber-50/70 border-amber-200" : ""
+        }`}
       >
         <div className="flex items-center gap-2.5 text-slate-700">
           {isLocked ? (
@@ -322,7 +333,7 @@ export function RotaSummaryWidgets({
           ) : (
             <Unlock className="size-4 text-primary shrink-0" />
           )}
-          <Text size="sm" weight="medium" className="text-slate-800">
+          <Text size="md" weight="medium" className="text-slate-800">
             {isLocked
               ? "Rota is locked for editing. Rota changes are restricted until unlocked."
               : "Rota is currently unlocked for editing. Remember to lock the rota once shift allocations are finalised."}

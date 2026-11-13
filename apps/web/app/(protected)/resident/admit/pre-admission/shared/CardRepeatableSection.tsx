@@ -126,7 +126,7 @@ export function CardRepeatableSection<T>({
               </Text>
             )}
             {description && (
-              <Text size="sm" className="text-slate-600 mt-0.5">
+              <Text size="md" className="text-slate-600 mt-0.5">
                 {description}
               </Text>
             )}
@@ -137,7 +137,7 @@ export function CardRepeatableSection<T>({
               variant="outline"
               size="sm"
               onClick={handleStartAdd}
-              className="gap-1.5 rounded-xl font-semibold text-sm shadow-none"
+              className="gap-1.5 rounded-xl font-semibold text-md shadow-none"
             >
               <Plus className="size-4" />
               {addLabel}
@@ -147,7 +147,7 @@ export function CardRepeatableSection<T>({
       )}
 
       {errorMessage && (
-        <p className="text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5">
+        <p className="text-md font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg p-2.5">
           {errorMessage}
         </p>
       )}
@@ -215,7 +215,7 @@ export function CardRepeatableSection<T>({
             </div>
             <p className="text-md font-semibold text-slate-700">{emptyTitle}</p>
             {emptyDescription && (
-              <p className="text-sm text-slate-500 max-w-md mx-auto">
+              <p className="text-md text-slate-500 max-w-md mx-auto">
                 {emptyDescription}
               </p>
             )}
@@ -225,7 +225,7 @@ export function CardRepeatableSection<T>({
                 variant="outline"
                 size="sm"
                 onClick={handleStartAdd}
-                className="gap-1.5 rounded-xl font-semibold text-sm shadow-none"
+                className="gap-1.5 rounded-xl font-semibold text-md shadow-none"
               >
                 <Plus className="size-4" />
                 {addLabel}

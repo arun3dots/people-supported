@@ -108,7 +108,7 @@ export function AgreementBox({
         </Button>
         <div className="flex items-center gap-3">
           {disabledReason && (
-            <span className="text-sm text-slate-600">{disabledReason}</span>
+            <span className="text-md text-slate-600">{disabledReason}</span>
           )}
           <Button
             type="button"

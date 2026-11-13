@@ -87,7 +87,7 @@ export function TagMultiSelect({
               type="button"
               onClick={() => toggleItem(item)}
               className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium border transition-all cursor-pointer",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-medium border transition-all cursor-pointer",
                 isSelected
                   ? "bg-primary text-primary-foreground border-primary shadow-xs"
                   : "bg-surface-card-grey text-slate-700 border-slate-200 hover:bg-slate-100",
@@ -110,7 +110,7 @@ export function TagMultiSelect({
             }
           }}
           placeholder={customPlaceholder}
-          className="h-9 text-sm bg-white"
+          className="h-9 text-md bg-white"
         />
         <Button
           type="button"
@@ -165,13 +165,13 @@ export function AddPropertyRoomsSection({
   };
 
   return (
-    <div className="space-y-3 pt-2 border-t border-slate-200">
+    <div className="space-y-4 mt-4 pt-5 border-t border-slate-200">
       <div className="flex items-center justify-between">
         <div>
           <Text size="md" weight="semibold" className="text-slate-900">
             Rooms, Flats &amp; Bed Allocation ({rooms.length})
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Each unit creates a Room and its corresponding Beds for tenancy
             assignment.
           </Text>
@@ -187,7 +187,7 @@ export function AddPropertyRoomsSection({
         </Button>
       </div>
 
-      <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+      <div className="space-y-2">
         {rooms.map((room, idx) => (
           <Card
             key={idx}
@@ -195,7 +195,7 @@ export function AddPropertyRoomsSection({
             border="secondary"
             className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl [&_[data-slot=input-error]]:hidden"
           >
-            <div className="col-span-3">
+            <div className="col-span-4">
               <label className="text-md font-medium text-slate-600 block mb-0.5">
                 Unit / Room Name
               </label>
@@ -208,7 +208,7 @@ export function AddPropertyRoomsSection({
                   })
                 }
                 placeholder="e.g. Flat 1"
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
@@ -220,7 +220,7 @@ export function AddPropertyRoomsSection({
                 value={room.floor || "Ground floor"}
                 onValueChange={(val) => updateRoom(idx, { floor: val })}
               >
-                <SelectTrigger className="h-9 bg-white text-sm">
+                <SelectTrigger className="h-9 bg-white text-md">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -246,7 +246,7 @@ export function AddPropertyRoomsSection({
                   })
                 }
                 placeholder="158.00"
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
@@ -264,22 +264,11 @@ export function AddPropertyRoomsSection({
                     bedsCount: Math.max(1, Number(e.target.value) || 1),
                   })
                 }
-                className="h-9 bg-white text-sm"
+                className="h-9 bg-white text-md"
               />
             </div>
 
-            <div className="col-span-2 flex items-center justify-between pt-4 pl-1">
-              <label className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={Boolean(room.isAccessible)}
-                  onChange={(e) =>
-                    updateRoom(idx, { isAccessible: e.target.checked })
-                  }
-                  className="rounded border-slate-300 text-primary focus:ring-primary"
-                />
-                Accessible
-              </label>
+            <div className="col-span-1 flex items-center justify-end pt-5">
               {rooms.length > 1 && (
                 <button
                   type="button"

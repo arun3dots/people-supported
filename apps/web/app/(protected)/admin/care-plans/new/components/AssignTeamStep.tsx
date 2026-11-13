@@ -58,7 +58,7 @@ export function AssignTeamStep({
         <Text as="h2" size="lg" weight="semibold" className="text-slate-900 tracking-tight">
           Care Team Governance &amp; Statutory Consent
         </Text>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-1">
+        <Text size="md" weight="regular" className="text-slate-500 mt-1">
           Assign the author, Registered Manager approver, and document resident consultation in accordance with CQC Regulations 9 &amp; 11.
         </Text>
       </div>

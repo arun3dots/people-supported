@@ -16,6 +16,7 @@ import {
 } from '../../common/utils/pagination.util';
 import { toJsonValue } from '../../common/utils/json.util';
 import { AuditService } from '../../audit/audit.service';
+import { syncPropertyRoomsTx } from './property-rooms-sync.helper';
 import {
   buildDefaultSafetyCertificates,
   mapWingToPropertyWithDetails,
@@ -29,6 +30,50 @@ export type { PropertyRoomTenancy, PropertyWithDetails };
 export class PropertyService {
   constructor(private readonly auditService: AuditService) {}
 
+  private async assertUniquePropertyInBranch(
+    branchId: string,
+    name?: string,
+    code?: string | null,
+    excludeId?: string,
+  ): Promise<void> {
+    const trimmedName = name?.trim();
+    const trimmedCode = code?.trim();
+
+    if (trimmedName) {
+      const existingName = await prisma.wing.findFirst({
+        where: {
+          branchId,
+          deletedAt: null,
+          ...(excludeId ? { id: { not: excludeId } } : {}),
+          name: { equals: trimmedName, mode: 'insensitive' },
+        },
+        select: { id: true },
+      });
+      if (existingName) {
+        throw new ConflictException(
+          `Property "${trimmedName}" already exists in this branch.`,
+        );
+      }
+    }
+
+    if (trimmedCode) {
+      const existingCode = await prisma.wing.findFirst({
+        where: {
+          branchId,
+          deletedAt: null,
+          ...(excludeId ? { id: { not: excludeId } } : {}),
+          code: { equals: trimmedCode, mode: 'insensitive' },
+        },
+        select: { id: true },
+      });
+      if (existingCode) {
+        throw new ConflictException(
+          `Property with reference ID "${trimmedCode}" already exists.`,
+        );
+      }
+    }
+  }
+
   async createPropertyWithRooms(
     dto: CreatePropertyWithRoomsDTO,
     tenantId: string,
@@ -36,25 +81,13 @@ export class PropertyService {
     userId: string,
   ): Promise<Wing> {
     const trimmedName = dto.name.trim();
-    const existingName = await prisma.wing.findFirst({
-      where: {
-        branchId,
-        deletedAt: null,
-        name: { equals: trimmedName, mode: 'insensitive' },
-      },
-      select: { id: true },
-    });
-    if (existingName) {
-      throw new ConflictException(
-        `Property "${trimmedName}" already exists in this branch.`,
-      );
-    }
-
     const code = (
       dto.code ||
       dto.propertyDetails?.referenceId ||
       `PROP-${Math.floor(1000 + Math.random() * 9000)}`
     ).trim();
+
+    await this.assertUniquePropertyInBranch(branchId, trimmedName, code);
 
     const roomsList = dto.rooms ?? [];
     const roomMetaMap: Record<
@@ -186,8 +219,12 @@ export class PropertyService {
     query: Partial<WingListQueryDTO> = {},
   ): Promise<PaginatedResponse<PropertyWithDetails>> {
     const slice = resolvePagination(query);
-    const where: Prisma.WingWhereInput = { branchId, deletedAt: null };
-    if (query.status) where.status = query.status;
+    const isArchivedQuery = query.status === 'Archived';
+    const where: Prisma.WingWhereInput = {
+      branchId,
+      deletedAt: isArchivedQuery ? { not: null } : null,
+    };
+    if (query.status && !isArchivedQuery) where.status = query.status;
     if (query.schemeId) where.schemeId = query.schemeId;
     if (query.search?.trim()) {
       const term = query.search.trim();
@@ -255,7 +292,10 @@ export class PropertyService {
 
     return {
       ...pageResult,
-      data: pageResult.data.map(mapWingToPropertyWithDetails),
+      data: pageResult.data.map((w) => {
+        const mapped = mapWingToPropertyWithDetails(w);
+        return isArchivedQuery ? { ...mapped, status: 'Archived' } : mapped;
+      }),
     };
   }
 
@@ -270,30 +310,64 @@ export class PropertyService {
     });
     if (!existing) throw new NotFoundException('Property not found');
 
+    const nextCode = dto.code ?? dto.propertyDetails?.referenceId;
+    await this.assertUniquePropertyInBranch(
+      existing.branchId,
+      dto.name,
+      nextCode,
+      id,
+    );
+
     const existingDetails =
       existing.propertyDetails && typeof existing.propertyDetails === 'object'
         ? (existing.propertyDetails as Record<string, unknown>)
         : {};
+    const updatedRoomMetaMap = dto.rooms
+      ? Object.fromEntries(
+          dto.rooms.map((r) => [
+            r.roomNumber.trim(),
+            {
+              floor: r.floor ?? 'Ground floor',
+              weeklyRent: r.weeklyRent ?? null,
+              isAccessible: r.isAccessible ?? false,
+            },
+          ]),
+        )
+      : undefined;
     const mergedDetails = {
       ...existingDetails,
       ...(dto.propertyDetails ?? {}),
+      ...(updatedRoomMetaMap ? { roomMetaMap: updatedRoomMetaMap } : {}),
     };
 
-    const updated = await prisma.wing.update({
-      where: { id, tenantId },
-      data: {
-        ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
-        ...(dto.code !== undefined ? { code: dto.code.trim() } : {}),
-        ...(dto.description !== undefined ? { description: dto.description } : {}),
-        ...(dto.primaryContact !== undefined
-          ? { primaryContact: dto.primaryContact }
-          : {}),
-        ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
-        ...(dto.status !== undefined ? { status: dto.status } : {}),
-        ...(dto.schemeId !== undefined ? { schemeId: dto.schemeId } : {}),
-        propertyDetails: toJsonValue(mergedDetails) as Prisma.InputJsonValue,
-        updatedById: userId,
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      const wing = await tx.wing.update({
+        where: { id, tenantId },
+        data: {
+          ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
+          ...(nextCode !== undefined ? { code: nextCode.trim() } : {}),
+          ...(dto.description !== undefined ? { description: dto.description } : {}),
+          ...(dto.primaryContact !== undefined
+            ? { primaryContact: dto.primaryContact }
+            : {}),
+          ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
+          ...(dto.status !== undefined ? { status: dto.status } : {}),
+          ...(dto.schemeId !== undefined ? { schemeId: dto.schemeId } : {}),
+          propertyDetails: toJsonValue(mergedDetails) as Prisma.InputJsonValue,
+          updatedById: userId,
+        },
+      });
+      if (dto.rooms) {
+        await syncPropertyRoomsTx(
+          tx,
+          id,
+          existing.branchId,
+          nextCode || existing.code || 'PROP',
+          userId,
+          dto.rooms,
+        );
+      }
+      return wing;
     });
 
     void this.auditService.emit({

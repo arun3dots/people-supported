@@ -32,9 +32,13 @@ export function ResidentProfileHeaderCard({ resident }: Props) {
   const age = computeAge(resident.dob);
   const gender = resident.profile?.gender || (resident as { gender?: string }).gender || 'Not recorded';
   const residentIdDisplay = resident.id.slice(0, 8).toUpperCase();
+  const refCode = resident.supportedLivingDetails?.referenceCode;
+  const idLabel = refCode ? `Ref: ${refCode}` : `Person ID: ${residentIdDisplay}`;
 
   const admissionDateDisplay = formatAdmissionDate(resident.admissionDate);
-  const wingDisplay = resident.bed?.room?.wing?.name || 'Unassigned';
+  const wingName = resident.bed?.room?.wing?.name;
+  const wingScheme = resident.bed?.room?.wing?.scheme;
+  const wingDisplay = wingName && wingScheme ? `${wingName} · ${wingScheme}` : wingName || 'Unassigned';
   const roomDisplay = resident.bed?.room?.roomNumber ? `Room ${resident.bed.room.roomNumber}` : 'Unassigned';
   const bedDisplay = resident.bed?.bedLabel || (resident.bed?.number ? `Bed ${resident.bed.number}` : 'Unassigned');
 
@@ -59,23 +63,23 @@ export function ResidentProfileHeaderCard({ resident }: Props) {
           <Text className="text-xs text-muted-foreground font-medium mt-1">
             {gender} {age ? `| ${age} years` : ''}
           </Text>
-          <Text className="text-xs text-muted-foreground mt-0.5">Resident ID: {residentIdDisplay}</Text>
+          <Text className="text-xs text-muted-foreground mt-0.5">{idLabel}</Text>
         </View>
       </View>
 
-      {/* 2x2 Meta Grid (BUG-013: Admission Date untruncated with ample breathing room) */}
+      {/* 2x2 Meta Grid */}
       <View className="border-t border-slate-200/70 pt-3 pb-2 mb-3">
-        {/* Row 1: Admission Date & Wing */}
+        {/* Row 1: Tenancy Start & Property */}
         <View className="flex-row justify-between mb-2.5">
           <View className="flex-1 pr-2">
-            <Text className="text-xs text-muted-foreground">Admission Date</Text>
+            <Text className="text-xs text-muted-foreground">Tenancy Start</Text>
             <Text className="text-sm font-bold text-foreground mt-0.5">
               {admissionDateDisplay}
             </Text>
           </View>
           <View className="w-px bg-slate-200/70" />
           <View className="flex-1 pl-3">
-            <Text className="text-xs text-muted-foreground">Wing</Text>
+            <Text className="text-xs text-muted-foreground">Property</Text>
             <Text className="text-sm font-bold text-foreground mt-0.5" numberOfLines={1}>
               {wingDisplay}
             </Text>

@@ -84,10 +84,10 @@ export default function NotificationsPage() {
         accessorKey: "title",
         cell: ({ row }) => (
           <div className="min-w-52 max-w-xl space-y-0.5 py-1">
-            <Text size="sm" weight="semibold" className="text-slate-900">
+            <Text size="md" weight="semibold" className="text-slate-900">
               {row.original.title}
             </Text>
-            <Text size="sm" className="line-clamp-2 whitespace-pre-wrap break-words text-slate-600">
+            <Text size="md" className="line-clamp-2 whitespace-pre-wrap break-words text-slate-600">
               {row.original.message}
             </Text>
           </div>
@@ -109,7 +109,7 @@ export default function NotificationsPage() {
         header: "Received",
         accessorKey: "createdAt",
         cell: ({ row }) => (
-          <span className="whitespace-nowrap text-sm text-slate-600">
+          <span className="whitespace-nowrap text-md text-slate-600">
             {formatNotificationDate(row.original.createdAt)}
           </span>
         ),
@@ -153,13 +153,13 @@ export default function NotificationsPage() {
   const stats = (
     <div className="grid grid-cols-2 gap-3">
       <Card className="space-y-1 p-3 shadow-none">
-        <Text size="sm" variant="muted">Matching notifications</Text>
+        <Text size="md" variant="muted">Matching notifications</Text>
         <Text size="md" weight="bold" className="text-slate-900">
           {data?.total ?? 0}
         </Text>
       </Card>
       <Card className="space-y-1 p-3 shadow-none">
-        <Text size="sm" variant="muted">Unread on this page</Text>
+        <Text size="md" variant="muted">Unread on this page</Text>
         <Text size="md" weight="bold" className="text-emerald-800">
           {unreadOnPage}
         </Text>
@@ -272,7 +272,7 @@ export default function NotificationsPage() {
                 {selectedNotification.isRead ? "Read" : "Unread"}
               </Badge>
             </div>
-            <Text size="sm" className="max-h-[50vh] overflow-y-auto whitespace-pre-wrap break-words leading-relaxed text-slate-700">
+            <Text size="md" className="max-h-[50vh] overflow-y-auto whitespace-pre-wrap break-words leading-relaxed text-slate-700">
               {selectedNotification.message}
             </Text>
             <DialogFooter>

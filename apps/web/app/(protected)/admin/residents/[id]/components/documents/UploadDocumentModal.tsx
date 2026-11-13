@@ -161,7 +161,7 @@ export function UploadDocumentModal({
               </SelectContent>
             </Select>
             {errors.docType && (
-              <p className="text-sm text-text-error font-medium leading-tight mt-1">
+              <p className="text-md text-text-error font-medium leading-tight mt-1">
                 {errors.docType}
               </p>
             )}
@@ -211,12 +211,12 @@ export function UploadDocumentModal({
                 >
                   Browse Files
                 </Button>
-                <Text size="sm" weight="normal" className="text-slate-500">
+                <Text size="md" weight="normal" className="text-slate-500">
                   PDF, JPG, PNG, DOC (Max: 10MB)
                 </Text>
               </div>
               {fileName && (
-                <div className="px-3 py-1 rounded-md bg-white border border-border-secondary flex items-center gap-2 text-sm text-surface-primary font-medium">
+                <div className="px-3 py-1 rounded-md bg-white border border-border-secondary flex items-center gap-2 text-md text-surface-primary font-medium">
                   <span className="truncate max-w-64 font-medium">
                     📄 {fileName} ({fileSize})
                   </span>
@@ -237,7 +237,7 @@ export function UploadDocumentModal({
               )}
             </div>
             {errors.hasFile && (
-              <p className="text-sm text-text-error font-medium leading-tight mt-1">
+              <p className="text-md text-text-error font-medium leading-tight mt-1">
                 {errors.hasFile}
               </p>
             )}

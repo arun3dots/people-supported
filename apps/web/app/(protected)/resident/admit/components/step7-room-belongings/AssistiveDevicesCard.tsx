@@ -50,7 +50,7 @@ export function AssistiveDevicesCard({
           <Text as="h3" size="md" weight="bold">
             Assistive Devices Brought
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Select personal mobility and sensory equipment brought on admission.
           </Text>
         </div>

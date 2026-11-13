@@ -95,7 +95,7 @@ export function CarePlanGoalsCard({
                     </Badge>
                   </div>
 
-                  <div className="text-sm text-text-description flex items-center gap-3">
+                  <div className="text-md text-text-description flex items-center gap-3">
                     <span>Review: {goal.reviewFrequency || "Weekly"}</span>
                     <span>Next: {formatDate(goal.nextReviewDate)}</span>
                   </div>
@@ -105,7 +105,7 @@ export function CarePlanGoalsCard({
 
                 {/* Progress Bar */}
                 <div className="space-y-1 pt-1">
-                  <div className="flex justify-between text-sm font-medium text-text-description">
+                  <div className="flex justify-between text-md font-medium text-text-description">
                     <span>Progress</span>
                     <span>{goal.progressPercent}%</span>
                   </div>

@@ -109,7 +109,7 @@ export function OverviewFinancialCard({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-md">
             {admission.agreedRoomRate !== undefined && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Agreed Rate</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Agreed Rate</Text>
                 <Text size="md" weight="bold" className="text-slate-900">
                   {formatCurrency(admission.agreedRoomRate)} / {admission.agreedRoomRatePeriod || "Month"}
                 </Text>
@@ -117,7 +117,7 @@ export function OverviewFinancialCard({
             )}
             {admission.depositAmount !== undefined && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Deposit Amount</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Deposit Amount</Text>
                 <Text size="md" weight="bold" className="text-slate-900">
                   {formatCurrency(admission.depositAmount)}
                 </Text>
@@ -125,7 +125,7 @@ export function OverviewFinancialCard({
             )}
             {admission.depositDate && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Deposit Date</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Deposit Date</Text>
                 <Text size="md" weight="bold" className="text-slate-900">
                   {formatDate(admission.depositDate)}
                 </Text>
@@ -133,7 +133,7 @@ export function OverviewFinancialCard({
             )}
             {admission.paymentSchedule && (
               <div>
-                <Text size="sm" weight="medium" className="text-slate-500">Payment Schedule</Text>
+                <Text size="md" weight="medium" className="text-slate-500">Payment Schedule</Text>
                 <Text size="md" weight="bold" className="text-slate-900">
                   {admission.paymentSchedule}
                 </Text>
@@ -147,19 +147,19 @@ export function OverviewFinancialCard({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
         {billingParty.name && (
           <div className="space-y-1">
-            <Text size="sm" weight="medium" className="text-slate-600 font-bold">
+            <Text size="md" weight="medium" className="text-slate-600 font-bold">
               Billing Responsible Party
             </Text>
             <Text size="md" weight="bold" className="text-slate-900">
               {billingParty.name} {billingParty.relationship ? `(${billingParty.relationship})` : ""}
             </Text>
             {billingParty.phone && (
-              <Text size="sm" weight="regular" className="text-slate-600">
+              <Text size="md" weight="regular" className="text-slate-600">
                 Phone: {billingParty.phone}
               </Text>
             )}
             {billingParty.address && (
-              <Text size="sm" weight="regular" className="text-slate-600">
+              <Text size="md" weight="regular" className="text-slate-600">
                 Address: {billingParty.address}
               </Text>
             )}
@@ -167,14 +167,14 @@ export function OverviewFinancialCard({
         )}
 
         <div className="space-y-1">
-          <Text size="sm" weight="medium" className="text-slate-600 font-bold">
+          <Text size="md" weight="medium" className="text-slate-600 font-bold">
             Room Type &amp; Move-in
           </Text>
           <Text size="md" weight="bold" className="text-slate-900">
             Type: {admission.roomTypePreference || "Standard Single"}
           </Text>
           {admission.moveInDateTime && (
-            <Text size="sm" weight="regular" className="text-slate-500">
+            <Text size="md" weight="regular" className="text-slate-500">
               Move-in: {formatDate(admission.moveInDateTime)}
             </Text>
           )}

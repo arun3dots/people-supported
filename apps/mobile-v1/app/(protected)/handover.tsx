@@ -41,7 +41,7 @@ export default function HandoverScreen() {
         id: r.id,
         fullName: r.fullName,
         roomNumber: r.roomNumber ? (r.roomNumber.startsWith('Room') ? r.roomNumber : `Room ${r.roomNumber}`) : '',
-        needs: 'Care plan active. Routine observation.',
+        needs: 'Support plan active. Routine observation.',
       }));
     },
     enabled: isShiftStarted && assignedResidents.length === 0,
@@ -55,7 +55,7 @@ export default function HandoverScreen() {
           id: r.id,
           fullName: r.fullName,
           roomNumber: r.roomNumber.startsWith('Room') ? r.roomNumber : `Room ${r.roomNumber}`,
-          needs: r.communicationNeeds || 'Care plan active. Routine observation.',
+          needs: r.communicationNeeds || 'Support plan active. Routine observation.',
         }))
       : allResidents;
 
@@ -200,7 +200,7 @@ export default function HandoverScreen() {
           <Text className="text-base font-bold text-text-primary">Shift Overview</Text>
           <View className="rounded-full bg-white px-3 py-1">
             <Text className="text-xs font-bold text-primary">
-              {shift?.wardName || 'Assigned Ward'}
+              {shift?.wardName || 'Assigned Property'}
             </Text>
           </View>
         </View>
@@ -230,15 +230,15 @@ export default function HandoverScreen() {
       {/* 2. Residents in Care Card */}
       <View className="bg-surface rounded-2xl p-4 mb-4">
         <Text className="text-base font-bold text-text-primary mb-3">
-          Residents in Your Care ({displayResidents.length})
+          People Supported ({displayResidents.length})
         </Text>
 
         <View className="space-y-2">
           {displayResidents.length === 0 ? (
             <Text className="text-xs text-text-secondary">
               {!isShiftStarted
-                ? 'Clock in and start your shift to view assigned residents.'
-                : 'No residents currently assigned.'}
+                ? 'Clock in and start your shift to view assigned people supported.'
+                : 'No people supported currently assigned.'}
             </Text>
           ) : (
             displayResidents.map((r) => (

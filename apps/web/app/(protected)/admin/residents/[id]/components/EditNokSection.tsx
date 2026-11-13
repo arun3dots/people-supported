@@ -93,7 +93,7 @@ export function EditNokSection({
         />
       </div>
       <div className="border-t border-slate-200 pt-4">
-        <Text size="sm" weight="bold" className="text-slate-700 mb-3">
+        <Text size="md" weight="bold" className="text-slate-700 mb-3">
           Secondary Contact
         </Text>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

@@ -101,7 +101,7 @@ export function ReviewResidentAssignmentModal({
               <div>
                 <h4 className="text-base font-bold text-slate-900">{staffName}</h4>
                 <p className="text-md text-slate-500 font-medium">{staffRole}</p>
-                <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                <p className="text-md text-slate-400 font-medium mt-0.5">
                   {selectedResidents.length} resident{selectedResidents.length !== 1 ? "s" : ""} selected
                 </p>
               </div>
@@ -117,23 +117,23 @@ export function ReviewResidentAssignmentModal({
                       strokeDasharray={`${(compliancePercent / 100) * 87.96} 87.96`}
                       strokeLinecap="round" fill="transparent" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-800">{compliancePercent}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-md font-bold text-slate-800">{compliancePercent}%</span>
                 </div>
-                <div className="text-[11px] font-semibold text-slate-600">Compliance</div>
+                <div className="text-md font-semibold text-slate-600">Compliance</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">Max Capacity</div>
+                <div className="text-md font-medium text-slate-500">Max Capacity</div>
                 <div className="text-lg font-bold text-slate-900 mt-0.5">{maxCapacity.toString().padStart(2, '0')}</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">After Assign</div>
+                <div className="text-md font-medium text-slate-500">After Assign</div>
                 <div className="text-lg font-bold text-slate-900 mt-0.5">{newTotal.toString().padStart(2, '0')}</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">Remaining</div>
+                <div className="text-md font-medium text-slate-500">Remaining</div>
                 <div className={`text-lg font-bold mt-0.5 ${Math.max(0, maxCapacity - newTotal) === 0 ? "text-red-600" : "text-slate-900"}`}>
                   {Math.max(0, maxCapacity - newTotal).toString().padStart(2, '0')}
                 </div>
@@ -153,7 +153,7 @@ export function ReviewResidentAssignmentModal({
                   {String(readyCount).padStart(2, '0')}{" "}
                   <span className="text-md font-semibold text-[#3D5C57]">Ready to Assign</span>
                 </div>
-                <div className="text-[11px] font-medium text-slate-500 mt-0.5">All competencies met</div>
+                <div className="text-md font-medium text-slate-500 mt-0.5">All competencies met</div>
               </div>
             </div>
 
@@ -167,7 +167,7 @@ export function ReviewResidentAssignmentModal({
                   {String(reviewCount).padStart(2, '0')}{" "}
                   <span className="text-md font-semibold text-amber-700">Requires Review</span>
                 </div>
-                <div className="text-[11px] font-medium text-slate-500 mt-0.5">Partial competency match</div>
+                <div className="text-md font-medium text-slate-500 mt-0.5">Partial competency match</div>
               </div>
             </div>
 
@@ -181,7 +181,7 @@ export function ReviewResidentAssignmentModal({
                   {String(notMatchingCount).padStart(2, '0')}{" "}
                   <span className="text-md font-semibold text-red-600">Not Matching</span>
                 </div>
-                <div className="text-[11px] font-medium text-slate-500 mt-0.5">Missing mandatory skills</div>
+                <div className="text-md font-medium text-slate-500 mt-0.5">Missing mandatory skills</div>
               </div>
             </div>
 
@@ -189,7 +189,7 @@ export function ReviewResidentAssignmentModal({
             <div className="border border-slate-200 bg-slate-50/50 rounded-2xl p-4 flex flex-col justify-between space-y-3">
               <div>
                 <div className="text-md font-bold text-slate-900">Capacity Impact</div>
-                <div className="flex items-center justify-between text-[11px] mt-1">
+                <div className="flex items-center justify-between text-md mt-1">
                   <span className="font-bold text-slate-900">{newTotal}/{maxCapacity}</span>
                   <span className="text-slate-500">{Math.max(0, maxCapacity - newTotal)} Remaining</span>
                 </div>
@@ -199,12 +199,12 @@ export function ReviewResidentAssignmentModal({
                     style={{ width: `${Math.min(100, capacityPercent)}%` }}
                   />
                 </div>
-                <div className="text-[10px] text-slate-400 font-medium mt-1">After Assignment</div>
+                <div className="text-md text-slate-400 font-medium mt-1">After Assignment</div>
               </div>
 
               <div className="flex items-center justify-between pt-1 border-t border-slate-200/80">
-                <span className="text-[11px] font-semibold text-slate-600">Overall Risk Level</span>
-                <span className={`px-2.5 py-1 rounded-lg text-white text-[10px] font-bold flex items-center gap-1 ${riskLevel === "High" ? "bg-red-500" : riskLevel === "Medium" ? "bg-amber-500" : "bg-emerald-600"
+                <span className="text-md font-semibold text-slate-600">Overall Risk Level</span>
+                <span className={`px-2.5 py-1 rounded-lg text-white text-md font-bold flex items-center gap-1 ${riskLevel === "High" ? "bg-red-500" : riskLevel === "Medium" ? "bg-amber-500" : "bg-emerald-600"
                   }`}>
                   <ShieldAlert className="size-3" /> {riskLevel}
                 </span>
@@ -232,7 +232,7 @@ export function ReviewResidentAssignmentModal({
                   placeholder="Provide reason for assigning despite mismatch"
                   className="bg-white border-slate-200 rounded-2xl text-md p-4 min-h-[100px] shadow-2xs focus:ring-[#3D5C57] resize-none"
                 />
-                <div className="text-[11px] text-slate-400 text-right font-medium">
+                <div className="text-md text-slate-400 text-right font-medium">
                   {overrideReason.length}/250
                 </div>
               </div>
@@ -269,7 +269,7 @@ export function ReviewResidentAssignmentModal({
                 {selectedResidents.map((r) => (
                   <div key={r.id} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-md font-semibold text-slate-700">
                     <span>{r.name}</span>
-                    <span className={`text-[10px] font-bold ${r.overview === "Recommended" ? "text-emerald-600" :
+                    <span className={`text-md font-bold ${r.overview === "Recommended" ? "text-emerald-600" :
                       r.overview === "Assign Anyway" ? "text-amber-600" : "text-red-500"
                       }`}>
                       • {r.overview}

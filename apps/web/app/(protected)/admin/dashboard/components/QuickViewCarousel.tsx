@@ -65,7 +65,7 @@ export function QuickViewCarousel() {
       <div className="flex items-center gap-3">
         <Text
           as="h3"
-          size="sm"
+          size="md"
           weight="medium"
           className="text-slate-900 leading-tight"
         >

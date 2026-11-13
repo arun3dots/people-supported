@@ -101,7 +101,7 @@ export function UploadResidentDocumentModal({
     } catch (err: unknown) {
       const raw = err instanceof Error ? err.message : 'Failed to upload document.';
       if (raw.includes('403') || raw.toLowerCase().includes('forbidden')) {
-        setErrorMsg('Your current role does not have permission to upload resident documents (Nurse, Manager, or Admin required).');
+        setErrorMsg('Your current role does not have permission to upload documents (Nurse, Manager, or Admin required).');
       } else {
         setErrorMsg(raw);
       }
@@ -130,7 +130,7 @@ export function UploadResidentDocumentModal({
                 <Upload size={16} color="#4A706A" />
               </View>
               <View className="flex-1">
-                <Text className="text-lg font-bold text-foreground">Upload Resident Document</Text>
+                <Text className="text-lg font-bold text-foreground">Upload Document</Text>
                 <Text className="text-xs text-muted-foreground">
                   Encrypted upload to AWS S3 (PDF, JPG, PNG, WEBP · Max 10MB)
                 </Text>

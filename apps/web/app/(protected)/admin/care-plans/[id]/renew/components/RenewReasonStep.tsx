@@ -49,10 +49,10 @@ export function RenewReasonStep({
   return (
     <Card className="p-6 space-y-6 font-['Outfit',sans-serif]">
       <div className="space-y-1">
-        <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+        <Text as="h3" size="md" weight="medium" className="text-slate-900">
           1. Renewal Reason &amp; Validity Period
         </Text>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+        <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
           Define why this plan is being renewed and establish the new clinical validity dates.
         </Text>
       </div>

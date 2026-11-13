@@ -6,17 +6,17 @@ export default function PrivacyPolicyPage() {
       <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12 space-y-8">
         <header className="border-b border-slate-200 pb-6 space-y-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+            <p className="text-md font-bold uppercase tracking-wider text-emerald-800">
               CantraCare UK GDPR & Data Protection Act 2018 Transparency Notice
             </p>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 border border-emerald-200">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-md font-semibold text-emerald-800 border border-emerald-200">
               Version v1.0-2026-10 • Effective 29 October 2026
             </span>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">
             Privacy Notice (UK GDPR Articles 13 &amp; 14)
           </h1>
-          <p className="text-sm text-slate-600">
+          <p className="text-md text-slate-600">
             This Privacy Notice explains how CantraCare (&ldquo;we&rdquo;, &ldquo;us&rdquo;,
             &ldquo;our&rdquo;) processes personal data across our Care Home Management
             Platform in accordance with the UK General Data Protection Regulation
@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </header>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             1. Data Controller vs. Data Processor Roles (A-01 / A-04)
           </h2>
@@ -49,7 +49,7 @@ export default function PrivacyPolicyPage() {
               audit logs, and support communications.
             </li>
           </ul>
-          <div className="rounded-xl bg-slate-50 p-4 border border-slate-200 text-sm space-y-1">
+          <div className="rounded-xl bg-slate-50 p-4 border border-slate-200 text-md space-y-1">
             <p className="font-bold text-slate-900">
               Data Protection Officer (DPO) &amp; Privacy Contact:
             </p>
@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             2. Categories of Personal Data We Process
           </h2>
@@ -106,12 +106,12 @@ export default function PrivacyPolicyPage() {
           </ul>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             3. Lawful Bases for Processing (UK GDPR Articles 6 &amp; 9)
           </h2>
           <div className="overflow-x-auto rounded-xl border border-slate-200">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-md">
               <thead className="bg-slate-100 text-slate-800 font-bold">
                 <tr>
                   <th className="p-3">Processing Purpose</th>
@@ -165,7 +165,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             4. Sub-Processors &amp; International Data Transfers (H-02)
           </h2>
@@ -174,7 +174,7 @@ export default function PrivacyPolicyPage() {
             <strong>United Kingdom (Google Cloud `europe-west2` London)</strong>. We use
             the following vetted sub-processors:
           </p>
-          <ul className="list-disc pl-5 space-y-1.5 text-sm">
+          <ul className="list-disc pl-5 space-y-1.5 text-md">
             <li>
               <strong>Google Cloud Platform (UK - `europe-west2` London):</strong>{" "}
               Encrypted database hosting and Google Cloud Storage for resident clinical
@@ -199,7 +199,7 @@ export default function PrivacyPolicyPage() {
               Care Home tenants (no resident health data is ever shared with Razorpay).
             </li>
           </ul>
-          <p className="text-sm text-slate-600">
+          <p className="text-md text-slate-600">
             Where authorised engineering support or sub-processors operate outside the UK,
             transfers are safeguarded by the{" "}
             <strong>UK International Data Transfer Agreement (IDTA)</strong> and a
@@ -208,11 +208,11 @@ export default function PrivacyPolicyPage() {
           </p>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             5. Data Retention Schedule (NHS Records Management Code of Practice)
           </h2>
-          <ul className="list-disc pl-5 space-y-1.5 text-sm">
+          <ul className="list-disc pl-5 space-y-1.5 text-md">
             <li>
               <strong>Adult Social Care Resident Records:</strong> Retained for{" "}
               <strong>8 years</strong> following discharge or death in accordance with
@@ -239,7 +239,7 @@ export default function PrivacyPolicyPage() {
           </ul>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             6. Your Data Protection Rights &amp; DUAA s.103 Complaints Procedure
           </h2>
@@ -251,7 +251,7 @@ export default function PrivacyPolicyPage() {
             <strong>Restriction of Processing</strong>, <strong>Data Portability</strong>,
             and <strong>Objection</strong>.
           </p>
-          <p className="text-sm">
+          <p className="text-md">
             <strong>How to exercise your rights:</strong> Care Home residents, relatives,
             and care staff should submit requests directly to their Care Home Manager
             (who can generate a complete machine-readable JSON or printable PDF SAR
@@ -264,7 +264,7 @@ export default function PrivacyPolicyPage() {
             </a>
             .
           </p>
-          <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-4 text-sm space-y-1.5">
+          <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-4 text-md space-y-1.5">
             <p className="font-bold text-slate-900">
               Data Protection Complaints Procedure (Data (Use and Access) Act 2025 s.103) &amp;
               ICO Escalation:
@@ -299,7 +299,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
 
-        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500">
+        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-md text-slate-500">
           <div className="flex items-center gap-4">
             <Link href="/terms" className="font-semibold text-emerald-800 hover:underline">
               Terms of Service

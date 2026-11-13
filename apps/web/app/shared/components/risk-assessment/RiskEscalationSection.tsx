@@ -24,7 +24,7 @@ export function RiskEscalationSection({
         <AlertTriangle className="size-4 text-amber-600" />
         <span>Escalate as Critical Issue</span>
       </div>
-      <p className="text-sm text-amber-800">
+      <p className="text-md text-amber-800">
         Provide escalation notes. This risk will be escalated as Critical to the Clinical Governance &amp; CQC Oversight team with high priority notifications.
       </p>
       <Textarea

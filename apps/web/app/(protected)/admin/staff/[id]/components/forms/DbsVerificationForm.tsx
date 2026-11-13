@@ -164,7 +164,7 @@ export function DbsVerificationForm({
                 </SelectContent>
               </Select>
               {errors.type?.message && (
-                <p className="text-sm text-rose-500 mt-1">{errors.type.message}</p>
+                <p className="text-md text-rose-500 mt-1">{errors.type.message}</p>
               )}
             </div>
             <div className="space-y-1.5">
@@ -214,7 +214,7 @@ export function DbsVerificationForm({
               </SelectContent>
             </Select>
             {errors.status?.message && (
-              <p className="text-sm text-rose-500 mt-1">{errors.status.message}</p>
+              <p className="text-md text-rose-500 mt-1">{errors.status.message}</p>
             )}
           </div>
 

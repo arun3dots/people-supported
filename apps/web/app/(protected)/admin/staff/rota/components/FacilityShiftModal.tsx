@@ -157,10 +157,10 @@ export function FacilityShiftModal({ isOpen, onClose, wing }: FacilityShiftModal
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col min-w-0 gap-0.5">
-                        <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                        <Text size="md" weight="medium" className="text-slate-900 truncate">
                           {staff.name}
                         </Text>
-                        <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                        <Text size="md" weight="regular" className="text-slate-500 truncate">
                           {staff.nhs}
                         </Text>
                       </div>
@@ -176,14 +176,14 @@ export function FacilityShiftModal({ isOpen, onClose, wing }: FacilityShiftModal
                   <TableCell className="py-3.5">
                     <div className="flex items-center gap-1.5 text-slate-900">
                       <span className="size-2 rounded-full bg-emerald-500" />
-                      <Text size="sm" weight="medium">
+                      <Text size="md" weight="medium">
                         {staff.shiftStatus}
                       </Text>
                     </div>
                   </TableCell>
 
                   <TableCell className="py-3.5">
-                    <Text size="sm" weight="medium" className="text-slate-900">
+                    <Text size="md" weight="medium" className="text-slate-900">
                       {staff.hours}
                     </Text>
                   </TableCell>

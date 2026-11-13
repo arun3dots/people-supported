@@ -37,10 +37,10 @@ export function HandoverTasksSection({ tasks }: HandoverTasksSectionProps) {
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text size="sm" weight="bold" className="text-slate-900">
+          <Text size="md" weight="bold" className="text-slate-900">
             Carried-Over Shift Tasks ({tasks.length})
           </Text>
-          <Text size="sm" variant="subdued">
+          <Text size="md" variant="subdued">
             Pending tasks scheduled during shift to be prioritized or followed up by incoming staff.
           </Text>
         </div>
@@ -54,10 +54,10 @@ export function HandoverTasksSection({ tasks }: HandoverTasksSectionProps) {
               className="flex flex-col sm:flex-row sm:items-center justify-between p-3 gap-3 bg-white hover:bg-slate-50/50 transition-colors"
             >
               <div className="space-y-0.5">
-                <Text size="sm" weight="semibold" className="text-slate-900">
+                <Text size="md" weight="semibold" className="text-slate-900">
                   {task.title}
                 </Text>
-                <div className="flex items-center gap-2 text-sm text-slate-500">
+                <div className="flex items-center gap-2 text-md text-slate-500">
                   <span>{task.resident?.fullName || "Assigned resident"}</span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
@@ -71,7 +71,7 @@ export function HandoverTasksSection({ tasks }: HandoverTasksSectionProps) {
                 <Badge
                   variant="outline"
                   state="warning"
-                  className="p-0 px-2 py-0.5 text-sm font-semibold rounded-md shadow-none"
+                  className="p-0 px-2 py-0.5 text-md font-semibold rounded-md shadow-none"
                 >
                   {task.status || "Pending"}
                 </Badge>
@@ -80,7 +80,7 @@ export function HandoverTasksSection({ tasks }: HandoverTasksSectionProps) {
                   size="sm"
                   disabled={updateTaskMutation.isPending}
                   onClick={() => handleMarkComplete(task.id)}
-                  className="h-7 text-sm font-medium rounded-lg gap-1 border-slate-200 hover:border-emerald-600 hover:text-emerald-700 text-slate-600"
+                  className="h-7 text-md font-medium rounded-lg gap-1 border-slate-200 hover:border-emerald-600 hover:text-emerald-700 text-slate-600"
                 >
                   <CheckCircle2 className="size-3 text-emerald-600" />
                   <span>Complete</span>

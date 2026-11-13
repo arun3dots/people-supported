@@ -62,7 +62,7 @@ export function ModalDemo() {
                     Add Staff Member
                   </DialogTitle>
                   <DialogDescription className="text-primary-foreground/80 font-medium">
-                    Create a new profile for a care home staff member.
+                    Create a new profile for a supported living staff member.
                   </DialogDescription>
                   <div className="absolute -bottom-6 right-8 bg-white p-3 rounded-2xl shadow-lg ring-4 ring-primary">
                     <UserPlus className="h-6 w-6 text-primary" />

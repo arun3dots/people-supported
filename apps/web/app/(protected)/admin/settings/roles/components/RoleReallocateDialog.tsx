@@ -35,7 +35,7 @@ export function RoleReallocateDialog({
           <DialogTitle className="text-lg font-bold text-slate-900">
             Cannot Delete Role
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-600 leading-relaxed">
+          <DialogDescription className="text-md text-slate-600 leading-relaxed">
             The <span className="font-semibold text-slate-900">&ldquo;{roleName}&rdquo;</span> role currently has{" "}
             <span className="font-semibold text-amber-800">{userCount}</span> staff{" "}
             {userCount === 1 ? "member" : "members"} assigned to it.

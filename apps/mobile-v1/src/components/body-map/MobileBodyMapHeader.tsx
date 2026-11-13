@@ -27,7 +27,7 @@ export function MobileBodyMapHeader({
 }: Props) {
   const roomNumber = resident.bed?.room?.roomNumber;
   const bedLabel = resident.bed?.bedLabel || resident.bed?.number;
-  const roomMeta = roomNumber ? `Room ${roomNumber}${bedLabel ? ` · Bed ${bedLabel}` : ''}` : 'Resident';
+  const roomMeta = roomNumber ? `Room ${roomNumber}${bedLabel ? ` · Bed ${bedLabel}` : ''}` : 'Person Supported';
 
   return (
     <View className="flex-row items-center justify-between px-3 py-1.5 bg-white border-b border-slate-200/90 shadow-2xs">

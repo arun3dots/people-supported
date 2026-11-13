@@ -30,7 +30,7 @@ function NarrativeField({
 }: NarrativeFieldProps) {
   return (
     <div className="space-y-1.5">
-      <Text size="sm" weight="medium" className="text-slate-700">
+      <Text size="md" weight="medium" className="text-slate-700">
         {label}
       </Text>
       {isEditable ? (
@@ -52,13 +52,13 @@ function NarrativeField({
         )
       ) : (
         <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl min-h-[44px]">
-          <Text size="sm" className="text-slate-800 leading-relaxed">
+          <Text size="md" className="text-slate-800 leading-relaxed">
             {value || fallback}
           </Text>
         </div>
       )}
       {helpText && (
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           {helpText}
         </Text>
       )}
@@ -132,7 +132,7 @@ export function CarePlanNarrativeSections({
 
   const renderBasisSelector = () => (
     <div className="space-y-1.5">
-      <Text size="sm" weight="medium" className="text-slate-700">
+      <Text size="md" weight="medium" className="text-slate-700">
         Basis of this section *
       </Text>
       <div className="flex flex-wrap gap-1 p-1 bg-slate-100/80 rounded-xl w-fit">
@@ -144,7 +144,7 @@ export function CarePlanNarrativeSections({
             variant={basisOption === opt.id ? "primary" : "ghost"}
             onClick={() => setBasisOption?.(opt.id)}
           >
-            <Text size="sm" className={` ${basisOption === opt.id ? "text-white" : ""}`}>{opt.label}</Text>
+            <Text size="md" className={` ${basisOption === opt.id ? "text-white" : ""}`}>{opt.label}</Text>
           </Button>
         ))}
       </div>
@@ -204,36 +204,36 @@ export function CarePlanNarrativeSections({
             <Text size="md" weight="bold" className="text-slate-900">
               Statutory Capacity &amp; Legal Consent Reference
             </Text>
-            <Badge variant="secondary" state="success" className="text-sm font-semibold px-2 py-0.5 shadow-none">
+            <Badge variant="secondary" state="success" className="text-md font-semibold px-2 py-0.5 shadow-none">
               MCA 2005 Compliant
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-md">
             <div className="flex items-center gap-1.5">
-              <Text size="sm" variant="muted">Mental Capacity:</Text>
-              <Text size="sm" weight="medium" className="text-slate-800">
+              <Text size="md" variant="muted">Mental Capacity:</Text>
+              <Text size="md" weight="medium" className="text-slate-800">
                 Presumed capable of consenting to daily routine
               </Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <Text size="sm" variant="muted">Legal Representative:</Text>
-              <Text size="sm" className="text-slate-800">
+              <Text size="md" variant="muted">Legal Representative:</Text>
+              <Text size="md" className="text-slate-800">
                 {nokDesc}
               </Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <Text size="sm" variant="muted">General Consent:</Text>
-              <Text size="sm" className="text-slate-800">
+              <Text size="md" variant="muted">General Consent:</Text>
+              <Text size="md" className="text-slate-800">
                 Admission care consent on file
               </Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <Text size="sm" variant="muted">DNACPR Order:</Text>
+              <Text size="md" variant="muted">DNACPR Order:</Text>
               <Badge
                 variant="secondary"
                 state={resident?.dnarStatus ? "warning" : "inactive"}
-                className="text-sm font-semibold px-2 py-0.5 shadow-none"
+                className="text-md font-semibold px-2 py-0.5 shadow-none"
               >
                 {resident?.dnarStatus ? "DNACPR Recorded" : "Not recorded"}
               </Badge>
@@ -243,7 +243,7 @@ export function CarePlanNarrativeSections({
 
         {/* Resident Participation Level */}
         <div className="space-y-1.5">
-          <Text size="sm" weight="medium" className="text-slate-700">
+          <Text size="md" weight="medium" className="text-slate-700">
             Resident participation in plan *
           </Text>
           <div className="flex flex-wrap gap-1 p-1 bg-slate-100/80 rounded-xl w-fit">
@@ -259,7 +259,7 @@ export function CarePlanNarrativeSections({
                 variant={participationOption === opt.id ? "primary" : "ghost"}
                 onClick={() => setParticipationOption?.(opt.id)}
               >
-                <Text size="sm" className={` ${participationOption === opt.id ? "text-white" : "text-slate-700"}`}>{opt.label}</Text>
+                <Text size="md" className={` ${participationOption === opt.id ? "text-white" : "text-slate-700"}`}>{opt.label}</Text>
               </Button>
             ))}
           </div>

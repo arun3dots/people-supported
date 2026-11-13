@@ -93,7 +93,7 @@ export function MonthlyReviewModal({
           <DialogTitle className="text-lg font-bold text-slate-900">
             Monthly Care Plan Evaluation (CQC Reg 17)
           </DialogTitle>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Evaluating active care plan for <span className="font-semibold text-slate-800">{residentName}</span>.
           </Text>
         </DialogHeader>
@@ -115,7 +115,7 @@ export function MonthlyReviewModal({
                   <CheckCircle2 className="size-4 text-emerald-600" />
                   Maintained
                 </div>
-                <span className="text-sm text-slate-500">Resident stable, no changes needed.</span>
+                <span className="text-md text-slate-500">Resident stable, no changes needed.</span>
               </button>
 
               <button
@@ -130,7 +130,7 @@ export function MonthlyReviewModal({
                   <AlertTriangle className="size-4 text-amber-600" />
                   Minor Adjustments
                 </div>
-                <span className="text-sm text-slate-500">Routine tweak without new version.</span>
+                <span className="text-md text-slate-500">Routine tweak without new version.</span>
               </button>
 
               <button
@@ -145,7 +145,7 @@ export function MonthlyReviewModal({
                   <RefreshCw className="size-4 text-rose-600" />
                   Significant Change
                 </div>
-                <span className="text-sm text-slate-500">Triggers full care plan renewal.</span>
+                <span className="text-md text-slate-500">Triggers full care plan renewal.</span>
               </button>
             </div>
           </div>
@@ -161,7 +161,7 @@ export function MonthlyReviewModal({
                     key={domain}
                     type="button"
                     onClick={() => toggleDomain(domain)}
-                    className={`px-2.5 py-1 text-sm rounded-lg font-medium transition-all cursor-pointer border ${isSelected
+                    className={`px-2.5 py-1 text-md rounded-lg font-medium transition-all cursor-pointer border ${isSelected
                       ? "bg-emerald-800 text-white border-emerald-800"
                       : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                       }`}
@@ -228,7 +228,7 @@ export function MonthlyReviewModal({
           </div>
 
           {validationError && (
-            <Text size="sm" variant="destructive" weight="medium">
+            <Text size="md" variant="destructive" weight="medium">
               {validationError}
             </Text>
           )}

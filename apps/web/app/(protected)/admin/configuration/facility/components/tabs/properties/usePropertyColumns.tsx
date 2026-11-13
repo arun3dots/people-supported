@@ -1,17 +1,21 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Eye, DoorOpen, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Eye, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Badge, Text } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../../lib/types/facility";
 import { RowActions } from "../../../../../../../../lib/components/shared/RowActions";
 import type { TableColumn } from "../../../../../../../../lib/components/shared/tableColumns";
+import {
+  getPropertyManagerLabel,
+  getPropertyPartnerLabel,
+  getPropertySchemeLabel,
+} from "./propertyDisplay";
 
 interface UsePropertyColumnsProps {
   onSelectProperty: (property: PropertyItem) => void;
   onEdit: (property: PropertyItem) => void;
   onDelete: (id: string) => void;
-  onNavigate: (tab: string, extra?: Record<string, string>) => void;
 }
 
 function getInitials(name: string): string {
@@ -26,7 +30,6 @@ export function usePropertyColumns({
   onSelectProperty,
   onEdit,
   onDelete,
-  onNavigate,
 }: UsePropertyColumnsProps): TableColumn<PropertyItem>[] {
   return useMemo<TableColumn<PropertyItem>[]>(
     () => [
@@ -51,18 +54,18 @@ export function usePropertyColumns({
               onClick={() => onSelectProperty(p)}
               className="flex items-center gap-3 text-left group cursor-pointer"
             >
-              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-sm shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-primary text-md shrink-0">
                 {getInitials(p.name)}
               </div>
               <div className="flex flex-col min-w-0">
                 <Text
-                  size="sm"
+                  size="md"
                   weight="medium"
                   className="text-slate-900 group-hover:text-primary transition-colors truncate"
                 >
                   {p.name}
                 </Text>
-                <Text size="xs" variant="muted" className="truncate max-w-[230px]">
+                <Text size="md" variant="muted" className="truncate max-w-[230px]">
                   {addr || p.description || "Supported Living Home"} · ID: {refId}
                 </Text>
               </div>
@@ -77,19 +80,16 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const p = row.original;
           const pd = p.parsedPropertyDetails ?? {};
-          const schemeName = p.scheme?.name || "Supported Living Scheme";
-          const partner =
-            pd.landlordDetails?.name ||
-            p.scheme?.housingPartner ||
-            "Yorkshire Housing Association";
+          const schemeName = getPropertySchemeLabel(p);
+          const partner = getPropertyPartnerLabel(p);
           const unitType =
             pd.unitConfiguration || pd.propertyType || "Self-contained flats";
           return (
             <div className="flex flex-col min-w-0">
-              <Text size="sm" weight="medium" className="text-slate-900 truncate">
+              <Text size="md" weight="medium" className="text-slate-900 truncate">
                 {schemeName}
               </Text>
-              <Text size="xs" variant="muted" className="truncate max-w-[240px]">
+              <Text size="md" variant="muted" className="truncate max-w-[240px]">
                 {partner} · {unitType}
               </Text>
             </div>
@@ -101,20 +101,11 @@ export function usePropertyColumns({
         header: "Team Leader",
         enableSorting: false,
         cell: ({ row }) => {
-          const p = row.original;
-          const leader =
-            p.parsedPropertyDetails?.propertyManagerName ||
-            p.primaryContact ||
-            "Assigned Lead";
+          const leader = getPropertyManagerLabel(row.original);
           return (
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center shrink-0">
-                {getInitials(leader)}
-              </div>
-              <Text size="sm" weight="normal" className="text-slate-800 truncate">
-                {leader}
-              </Text>
-            </div>
+            <Text size="md" weight="normal" className="text-slate-800 truncate">
+              {leader}
+            </Text>
           );
         },
       },
@@ -127,10 +118,10 @@ export function usePropertyColumns({
           return (
             <div className="w-32 space-y-1">
               <div className="flex items-center justify-between">
-                <Text size="sm" weight="medium" className="text-slate-900">
+                <Text size="md" weight="medium" className="text-slate-900">
                   {p.occupiedBeds}/{p.totalBeds}
                 </Text>
-                <Text size="xs" variant="muted">
+                <Text size="md" variant="muted">
                   {p.occupancyRate}%
                 </Text>
               </div>
@@ -152,33 +143,33 @@ export function usePropertyColumns({
           const p = row.original;
           const { assignedCount, requiredCount } = p.staffToday;
           return (
-            <Text size="sm" weight="medium" className="text-slate-800">
+            <Text size="md" weight="medium" className="text-slate-800">
               {assignedCount}/{requiredCount} on shift
             </Text>
           );
         },
       },
-      {
-        id: "safetyEvidence",
-        header: "Safety Evidence",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const p = row.original;
-          const st = p.safetyEvidenceStatus;
-          const state =
-            st === "On track" ? "success" : st === "Due soon" ? "warning" : "danger";
-          return (
-            <Badge variant="secondary" state={state} className="border gap-1">
-              {st === "On track" ? (
-                <CheckCircle2 className="size-3" />
-              ) : (
-                <AlertTriangle className="size-3" />
-              )}
-              {st}
-            </Badge>
-          );
-        },
-      },
+      // {
+      //   id: "safetyEvidence",
+      //   header: "Safety Evidence",
+      //   enableSorting: false,
+      //   cell: ({ row }) => {
+      //     const p = row.original;
+      //     const st = p.safetyEvidenceStatus;
+      //     const state =
+      //       st === "On track" ? "success" : st === "Due soon" ? "warning" : "danger";
+      //     return (
+      //       <Badge variant="secondary" state={state} className="border gap-1">
+      //         {st === "On track" ? (
+      //           <CheckCircle2 className="size-3" />
+      //         ) : (
+      //           <AlertTriangle className="size-3" />
+      //         )}
+      //         {st}
+      //       </Badge>
+      //     );
+      //   },
+      // },
       {
         id: "status",
         header: "Status",
@@ -207,30 +198,21 @@ export function usePropertyColumns({
         cell: ({ row }) => {
           const p = row.original;
           return (
-            <div className="flex justify-center gap-2">
+            <div
+              className="flex justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               <RowActions
                 onEdit={() => onEdit(p)}
                 editLabel={`Edit ${p.name}`}
                 onDelete={() => onDelete(p.id)}
                 deleteLabel={`Delete ${p.name}`}
-                extra={[
-                  {
-                    label: "View Tenancies & Safety",
-                    icon: Eye,
-                    onClick: () => onSelectProperty(p),
-                  },
-                  {
-                    label: "Manage Rooms",
-                    icon: DoorOpen,
-                    onClick: () => onNavigate("rooms", { wingId: p.id }),
-                  },
-                ]}
               />
             </div>
           );
         },
       },
     ],
-    [onSelectProperty, onEdit, onDelete, onNavigate],
+    [onSelectProperty, onEdit, onDelete],
   );
 }

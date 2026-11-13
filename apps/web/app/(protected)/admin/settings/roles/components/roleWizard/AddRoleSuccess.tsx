@@ -38,7 +38,7 @@ export function AddRoleSuccess({
         </h2>
 
         {/* Subtitle */}
-        <p className="text-[10px] font-medium leading-[13px] text-[#5D5D5D] text-center">
+        <p className="text-md font-medium leading-[13px] text-[#5D5D5D] text-center">
           The new role has been created and is ready to use.
         </p>
       </div>
@@ -58,7 +58,7 @@ export function AddRoleSuccess({
         </h4>
 
         {/* Details Rows */}
-        <div className="flex flex-col gap-[10px] w-full text-[12px] leading-[15px] text-[#141F1E]">
+        <div className="flex flex-col gap-[10px] w-full text-md leading-[15px] text-[#141F1E]">
           {/* Row 1: Role Name */}
           <div className="flex justify-between items-center">
             <span className="font-normal">Role Name</span>

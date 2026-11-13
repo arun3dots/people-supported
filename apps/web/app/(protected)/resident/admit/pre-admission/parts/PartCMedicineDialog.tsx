@@ -210,7 +210,7 @@ export function PartCMedicineDialog({
               onChange={(imageUrls) => onPatch({ imageUrls })}
             />
           ) : (
-            <p className="text-sm text-slate-500">
+            <p className="text-md text-slate-500">
               Save admission details first to attach medication images.
             </p>
           )}
@@ -235,10 +235,10 @@ export function PartCMedicineDialog({
           />
 
           {scheduleError && (
-            <p className="text-sm font-medium text-red-600">{scheduleError}</p>
+            <p className="text-md font-medium text-red-600">{scheduleError}</p>
           )}
           {medicine.scheduleType && !hasSchedule && (
-            <p className="text-sm font-medium text-red-600">
+            <p className="text-md font-medium text-red-600">
               {isSingle
                 ? "Select a scheduled date and time."
                 : medicine.startDate &&

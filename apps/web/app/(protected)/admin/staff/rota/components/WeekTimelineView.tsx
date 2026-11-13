@@ -50,7 +50,7 @@ export function WeekTimelineView({
         <thead>
           <tr className="border-b border-slate-200 bg-slate-50/70">
             <th className="p-3.5 text-left w-[220px] border-r border-slate-200 sticky left-0 z-20 bg-slate-50/70">
-              <Text size="sm" weight="bold" className="text-slate-700">
+              <Text size="md" weight="bold" className="text-slate-700">
                 {viewMode === "staff" ? "Staff Member" : "Area / Level"}
               </Text>
             </th>
@@ -59,7 +59,7 @@ export function WeekTimelineView({
                 key={day.toISOString()}
                 className="p-2.5 text-center border-r border-slate-200/80 last:border-r-0 min-w-[130px]"
               >
-                <Text size="sm" weight="bold" className="text-slate-500 tracking-wider mb-0.5 uppercase">
+                <Text size="md" weight="bold" className="text-slate-500 tracking-wider mb-0.5 uppercase">
                   {format(day, "EEE")}
                 </Text>
                 <Text size="base" weight="semibold" className="text-base font-semibold text-slate-900">
@@ -81,7 +81,7 @@ export function WeekTimelineView({
                       </AvatarFallback>
                     </Avatar>
                   )}
-                  <Text size="sm" weight="semibold" className="text-slate-900 truncate">
+                  <Text size="md" weight="semibold" className="text-slate-900 truncate">
                     {row.name}
                   </Text>
                 </div>
@@ -118,27 +118,27 @@ export function WeekTimelineView({
                             className="p-1.5 px-2 rounded-lg border border-l-3 transition-all hover:scale-[1.01] hover:shadow-sm cursor-pointer overflow-hidden space-y-0.5"
                           >
                             <div className="flex items-center justify-between gap-1">
-                              <Text size="sm" weight="bold" className="text-slate-900 truncate">
+                              <Text size="md" weight="bold" className="text-slate-900 truncate">
                                 {shift.type?.name || "Custom"}
                               </Text>
                               {shift.status === "Draft" && (
-                                <Badge className="bg-amber-100 text-amber-800 text-sm px-1.5 py-0 border-0 h-4 font-bold shrink-0">
+                                <Badge className="bg-amber-100 text-amber-800 text-md px-1.5 py-0 border-0 h-4 font-bold shrink-0">
                                   Draft
                                 </Badge>
                               )}
                               {shift.status === "Cancelled" && (
-                                <Badge className="bg-rose-100 text-rose-800 text-sm px-1.5 py-0 border-0 h-4 font-bold shrink-0">
+                                <Badge className="bg-rose-100 text-rose-800 text-md px-1.5 py-0 border-0 h-4 font-bold shrink-0">
                                   Cancelled
                                 </Badge>
                               )}
                             </div>
 
                             <div className="flex items-center justify-between gap-1">
-                              <Text size="sm" weight="medium" className="text-sm text-slate-700">
+                              <Text size="md" weight="medium" className="text-md text-slate-700">
                                 {formatUkTime(shift.startTime)}-{formatUkTime(shift.endTime)}
                               </Text>
                               {(!shift.assignments || shift.assignments.length === 0) && (
-                                <Badge className="bg-rose-100 text-rose-700 text-sm px-1.5 py-0 border-0 h-4 font-bold shrink-0">
+                                <Badge className="bg-rose-100 text-rose-700 text-md px-1.5 py-0 border-0 h-4 font-bold shrink-0">
                                   Unassigned
                                 </Badge>
                               )}
@@ -158,7 +158,7 @@ export function WeekTimelineView({
                                       onEditShift({ ...shift, userIds: newUserIds, _quickUnassign: true });
                                     }}
                                   >
-                                    <AvatarFallback className="bg-slate-200 text-sm text-slate-800 font-bold">
+                                    <AvatarFallback className="bg-slate-200 text-md text-slate-800 font-bold">
                                       {a.user?.fullName?.charAt(0)}
                                     </AvatarFallback>
                                   </Avatar>
@@ -167,7 +167,7 @@ export function WeekTimelineView({
                             )}
 
                             {viewMode === "staff" && (
-                              <Text size="sm" weight="bold" className="text-sm text-slate-500 tracking-tight truncate">
+                              <Text size="md" weight="bold" className="text-md text-slate-500 tracking-tight truncate">
                                 {shift.wing?.name || shift.unit?.name || "Facility"}
                               </Text>
                             )}

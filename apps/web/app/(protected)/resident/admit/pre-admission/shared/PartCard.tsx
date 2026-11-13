@@ -26,11 +26,11 @@ export function PartCard({
       )}
     >
       <div className="pb-3 border-b border-slate-200/80">
-        <Text as="h3" size="sm" weight="bold" className="text-slate-900 tracking-wider">
+        <Text as="h3" size="md" weight="bold" className="text-slate-900 tracking-wider">
           {title}
         </Text>
         {description && (
-          <Text size="sm" className="text-slate-600 mt-1">
+          <Text size="md" className="text-slate-600 mt-1">
             {description}
           </Text>
         )}

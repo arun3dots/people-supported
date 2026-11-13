@@ -203,7 +203,7 @@ export function HeaderSearch() {
           }}
           onKeyDown={handleKeyDown}
           placeholder="Search by name, mobile, email, staff/resident ID, NHS ID..."
-          className="w-full h-full bg-transparent border-none text-[13px] leading-[16px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 p-0"
+          className="w-full h-full bg-transparent border-none text-md leading-[16px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0 p-0"
         />
         {query && (
           <button
@@ -226,7 +226,7 @@ export function HeaderSearch() {
         <div className="absolute top-[72px] left-0 w-full bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden z-50 animate-in fade-in-50 slide-in-from-top-2 duration-150">
           <div className="max-h-[420px] overflow-y-auto divide-y divide-slate-100">
             {totalMatches === 0 ? (
-              <div className="p-6 text-center text-slate-500 text-xs font-medium">
+              <div className="p-6 text-center text-slate-500 text-md font-medium">
                 No matching residents or staff found for &quot;<span className="text-slate-800 font-semibold">{query}</span>&quot;
               </div>
             ) : (
@@ -235,11 +235,11 @@ export function HeaderSearch() {
                 {results.residents.length > 0 && (
                   <div>
                     <div className="px-4 py-2 bg-slate-50/80 flex items-center justify-between border-b border-slate-100">
-                      <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
+                      <span className="text-md font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
                         <User className="w-3.5 h-3.5 text-emerald-600" />
                         Residents
                       </span>
-                      <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+                      <span className="text-md font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
                         {results.residents.length}
                       </span>
                     </div>
@@ -256,7 +256,7 @@ export function HeaderSearch() {
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden border border-emerald-200">
+                            <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-md shrink-0 overflow-hidden border border-emerald-200">
                               {item.photoUrl ? (
                                 <img src={item.photoUrl} alt={item.title} className="w-full h-full object-cover" />
                               ) : (
@@ -265,15 +265,15 @@ export function HeaderSearch() {
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className="text-xs font-semibold text-slate-900 truncate">{item.title}</p>
-                                <span className="text-[9px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                                <p className="text-md font-semibold text-slate-900 truncate">{item.title}</p>
+                                <span className="text-md font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
                                   {item.badge}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-slate-500 truncate mt-0.5">{item.subtitle}</p>
+                              <p className="text-md text-slate-500 truncate mt-0.5">{item.subtitle}</p>
                             </div>
                           </div>
-                          <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md shrink-0 ml-2">
+                          <span className="text-md font-medium text-emerald-600 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md shrink-0 ml-2">
                             {item.matchedBy}
                           </span>
                         </div>
@@ -286,11 +286,11 @@ export function HeaderSearch() {
                 {results.staff.length > 0 && (
                   <div>
                     <div className="px-4 py-2 bg-slate-50/80 flex items-center justify-between border-b border-slate-100">
-                      <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
+                      <span className="text-md font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1.5">
                         <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
                         Staff Members
                       </span>
-                      <span className="text-[10px] font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                      <span className="text-md font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
                         {results.staff.length}
                       </span>
                     </div>
@@ -307,7 +307,7 @@ export function HeaderSearch() {
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden border border-indigo-200">
+                            <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-md shrink-0 overflow-hidden border border-indigo-200">
                               {item.photoUrl ? (
                                 <img src={item.photoUrl} alt={item.title} className="w-full h-full object-cover" />
                               ) : (
@@ -316,15 +316,15 @@ export function HeaderSearch() {
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
-                                <p className="text-xs font-semibold text-slate-900 truncate">{item.title}</p>
-                                <span className="text-[9px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-1.5 py-0.5 rounded">
+                                <p className="text-md font-semibold text-slate-900 truncate">{item.title}</p>
+                                <span className="text-md font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-1.5 py-0.5 rounded">
                                   {item.badge}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-slate-500 truncate mt-0.5">{item.subtitle}</p>
+                              <p className="text-md text-slate-500 truncate mt-0.5">{item.subtitle}</p>
                             </div>
                           </div>
-                          <span className="text-[10px] font-medium text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-md shrink-0 ml-2">
+                          <span className="text-md font-medium text-indigo-600 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-md shrink-0 ml-2">
                             {item.matchedBy}
                           </span>
                         </div>

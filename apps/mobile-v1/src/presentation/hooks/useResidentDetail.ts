@@ -1,4 +1,6 @@
 
+import type { SupportedLivingDetailsDTO } from '@repo/schema';
+
 export interface ResidentTimelineItem {
   id: string;
   eventType: string;
@@ -91,8 +93,14 @@ export interface ResidentDetailData {
       name?: string | null;
       wing?: {
         name?: string | null;
+        scheme?: string | null;
       } | null;
     } | null;
+  } | null;
+  supportedLivingDetails?: SupportedLivingDetailsDTO | null;
+  keyworker?: {
+    id: string;
+    fullName: string;
   } | null;
   observations?: Array<{
     id: string;
@@ -202,7 +210,7 @@ export function useResidentDetail(initialId?: string, enabled: boolean = true) {
         return (response.data ?? []).map((entry) => ({
           id: entry.id,
           eventType: entry.actionType,
-          summary: 'Resident profile viewed',
+          summary: 'Profile viewed',
           timestamp: entry.timestamp,
           carer: { fullName: entry.userFullName ?? 'Staff member' },
         }));

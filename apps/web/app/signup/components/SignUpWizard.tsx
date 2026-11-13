@@ -249,9 +249,9 @@ export function SignUpWizard() {
   }
 
   const titles = [
-    { title: "Set up your care home", subtitle: "Tell us a little about your care home." },
+    { title: "Set up your supported living service", subtitle: "Tell us a little about your supported living service." },
     { title: "Your admin account", subtitle: "Create the first administrator account." },
-    { title: "Choose a plan", subtitle: "Pick the best plan to start managing your care home." },
+    { title: "Choose a plan", subtitle: "Pick the best plan to start managing your supported living service." },
   ];
   const activeHeader = titles[step - 1] || titles[0];
 
@@ -272,7 +272,7 @@ export function SignUpWizard() {
 
       {/* General Error Alert */}
       {error && (
-        <div className="p-3.5 rounded-xl bg-red-50 text-red-600 text-sm font-medium border border-red-100">
+        <div className="p-3.5 rounded-xl bg-red-50 text-red-600 text-md font-medium border border-red-100">
           {error}
         </div>
       )}

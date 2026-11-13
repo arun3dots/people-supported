@@ -81,7 +81,7 @@ export function useShiftResidentActivity(
               ...auditItems.map((entry) => ({
                 id: entry.id,
                 eventType: entry.actionType,
-                summary: 'Resident profile viewed',
+                summary: 'Profile viewed',
                 timestamp: entry.timestamp,
                 carer: { fullName: entry.userFullName ?? 'Staff member' },
                 residentName: resident.fullName,

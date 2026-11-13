@@ -103,7 +103,7 @@ export function RelationshipSelect({
         </div>
       )}
 
-      {error && <p className="text-sm text-red-600 mt-1 leading-tight">{error}</p>}
+      {error && <p className="text-md text-red-600 mt-1 leading-tight">{error}</p>}
     </div>
   );
 }

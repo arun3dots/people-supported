@@ -51,10 +51,10 @@ export function FindingPhotosSection({
     <div>
       <div className="flex items-center justify-between mb-2">
         <div>
-          <p className="text-sm font-semibold text-slate-700">
+          <p className="text-md font-semibold text-slate-700">
             Clinical Photographs ({photos.length})
           </p>
-          <p className="text-[11px] text-slate-400">JPG, PNG, WEBP (Max 5MB)</p>
+          <p className="text-md text-slate-400">JPG, PNG, WEBP (Max 5MB)</p>
         </div>
         {isOpen && (
           <>
@@ -69,7 +69,7 @@ export function FindingPhotosSection({
               size="sm"
               variant="outline"
               onClick={() => fileInputRef.current?.click()}
-              className="h-7 text-sm gap-1"
+              className="h-7 text-md gap-1"
             >
               <Camera className="size-3.5" />
               Attach Photo
@@ -99,7 +99,7 @@ export function FindingPhotosSection({
           })}
         </div>
       ) : (
-        <p className="text-sm text-slate-400 italic py-1">
+        <p className="text-md text-slate-400 italic py-1">
           No clinical photographs attached.
         </p>
       )}

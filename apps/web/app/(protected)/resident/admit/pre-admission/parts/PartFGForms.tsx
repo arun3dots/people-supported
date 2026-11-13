@@ -24,7 +24,7 @@ export function PartFForm({ value, onChange }: PartFormProps<PreAdmissionPartFDT
 
   return (
     <div className="space-y-6 font-sans">
-      <PartCard title="F · Advance care planning">
+      <PartCard title="Advance care planning">
         <FieldGrid cols={3}>
           <SelectField
             label="DNACPR"

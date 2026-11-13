@@ -27,7 +27,7 @@ export function PsychosocialPreferencesCard({
         <Text as="h3" size="md" weight="bold">
           Psychosocial &amp; Daily Routine Preferences
         </Text>
-        <Text size="sm" weight="regular" variant="subdued">
+        <Text size="md" weight="regular" variant="subdued">
           Social support dynamics, family visits, and individualized habits.
         </Text>
       </div>

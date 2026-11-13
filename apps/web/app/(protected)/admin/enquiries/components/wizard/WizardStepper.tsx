@@ -87,7 +87,7 @@ export function WizardStepper({
                       : "text-slate-500 font-medium"
                 )}
               >
-                <Text size="sm" weight={isActive ? "medium" : "regular"}>
+                <Text size="md" weight={isActive ? "medium" : "regular"}>
                   {step.title}
                 </Text>
               </Button>

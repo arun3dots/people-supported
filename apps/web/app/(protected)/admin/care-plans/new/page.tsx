@@ -90,7 +90,7 @@ function CreateCarePlanWizardContent() {
           <Text as="h1" size="xl" weight="bold">
             Create Master Care Plan
           </Text>
-          <Text size="sm" weight="regular" variant="muted">
+          <Text size="md" weight="regular" variant="muted">
             Set up goals, linked daily routines, and clinical assignments.
           </Text>
         </div>
@@ -110,7 +110,7 @@ function CreateCarePlanWizardContent() {
       {error && (
         <div className="flex items-center gap-2 p-3.5 bg-rose-50 border border-rose-200 rounded-2xl">
           <AlertCircle className="size-4 text-rose-700 shrink-0" />
-          <Text size="sm" weight="medium" variant="destructive">{error}</Text>
+          <Text size="md" weight="medium" variant="destructive">{error}</Text>
         </div>
       )}
 

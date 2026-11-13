@@ -78,16 +78,16 @@ export function PastShiftDetailsModal({
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Badge className="bg-slate-200 text-slate-800 border-0 text-xs font-medium">
+                <Badge className="bg-slate-200 text-slate-800 border-0 text-md font-medium">
                   Past Shift Review
                 </Badge>
                 {shift.status === "Cancelled" && (
-                  <Badge className="bg-rose-100 text-rose-800 border-0 text-xs font-medium">
+                  <Badge className="bg-rose-100 text-rose-800 border-0 text-md font-medium">
                     Cancelled
                   </Badge>
                 )}
                 {shift.status === "Draft" && (
-                  <Badge className="bg-amber-100 text-amber-800 border-0 text-xs font-medium">
+                  <Badge className="bg-amber-100 text-amber-800 border-0 text-md font-medium">
                     Draft
                   </Badge>
                 )}
@@ -98,7 +98,7 @@ export function PastShiftDetailsModal({
                 </Text>
               </DialogTitle>
               <DialogDescription asChild>
-                <div className="flex items-center gap-2 text-slate-500 text-sm mt-1">
+                <div className="flex items-center gap-2 text-slate-500 text-md mt-1">
                   <span className="flex items-center gap-1">
                     <Calendar className="size-3.5" />
                     {formattedDate}
@@ -119,7 +119,7 @@ export function PastShiftDetailsModal({
           <Card variant="surface" className="p-4 bg-slate-50 border border-slate-200/80 shadow-none">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <Text size="xs" weight="medium" className="text-slate-500 uppercase tracking-wider">
+                <Text size="md" weight="medium" className="text-slate-500 uppercase tracking-wider">
                   Scheduled Timing
                 </Text>
                 <div className="flex items-center gap-1.5 mt-1 text-slate-900 font-medium text-base">
@@ -129,7 +129,7 @@ export function PastShiftDetailsModal({
               </div>
 
               <div>
-                <Text size="xs" weight="medium" className="text-slate-500 uppercase tracking-wider">
+                <Text size="md" weight="medium" className="text-slate-500 uppercase tracking-wider">
                   Total Shift Duration
                 </Text>
                 <Text size="base" weight="medium" className="text-slate-900 mt-1">
@@ -138,7 +138,7 @@ export function PastShiftDetailsModal({
               </div>
 
               <div>
-                <Text size="xs" weight="medium" className="text-slate-500 uppercase tracking-wider">
+                <Text size="md" weight="medium" className="text-slate-500 uppercase tracking-wider">
                   Care Pattern
                 </Text>
                 <Text size="base" weight="medium" className="text-slate-900 mt-1">
@@ -155,13 +155,13 @@ export function PastShiftDetailsModal({
                 <Users className="size-4 text-emerald-700" />
                 Staff Attendance &amp; Clock-In Record
               </Text>
-              <Text size="xs" className="text-slate-500">
+              <Text size="md" className="text-slate-500">
                 {shift.assignments?.length || 0} carer(s) assigned
               </Text>
             </div>
 
             {(!shift.assignments || shift.assignments.length === 0) ? (
-              <Card variant="surface" className="p-4 border-dashed border-slate-200 text-center text-slate-500 text-sm">
+              <Card variant="surface" className="p-4 border-dashed border-slate-200 text-center text-slate-500 text-md">
                 No staff members were assigned to this past shift.
               </Card>
             ) : (
@@ -208,10 +208,10 @@ export function PastShiftDetailsModal({
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <Text size="sm" weight="medium" className="text-slate-900">
+                            <Text size="md" weight="medium" className="text-slate-900">
                               {staffName}
                             </Text>
-                            <Text size="xs" className="text-slate-500 truncate max-w-[220px]">
+                            <Text size="md" className="text-slate-500 truncate max-w-[220px]">
                               {staffEmail}
                             </Text>
                           </div>
@@ -221,11 +221,11 @@ export function PastShiftDetailsModal({
                         <div className="flex items-center gap-3">
                           {isClockedIn ? (
                             <div className="flex flex-col sm:items-end gap-1">
-                              <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 text-xs font-medium gap-1 self-start sm:self-auto">
+                              <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 text-md font-medium gap-1 self-start sm:self-auto">
                                 <UserCheck className="size-3.5" />
                                 {log?.status === "Completed" ? "Completed" : "Clocked In"}
                               </Badge>
-                              <div className="text-xs text-slate-600 flex items-center gap-1.5 flex-wrap">
+                              <div className="text-md text-slate-600 flex items-center gap-1.5 flex-wrap">
                                 <span>In: <span className="font-medium text-slate-800">{formatUkTime(log!.actualStartTime)}</span></span>
                                 <span>•</span>
                                 <span>Out: <span className="font-medium text-slate-800">{log?.actualEndTime ? formatUkTime(log.actualEndTime) : "Pending"}</span></span>
@@ -239,31 +239,31 @@ export function PastShiftDetailsModal({
                             </div>
                           ) : isDraft ? (
                             <div className="flex flex-col sm:items-end gap-1">
-                              <Badge className="bg-amber-100 text-amber-800 border-amber-300 text-xs font-medium gap-1 self-start sm:self-auto">
+                              <Badge className="bg-amber-100 text-amber-800 border-amber-300 text-md font-medium gap-1 self-start sm:self-auto">
                                 <FileText className="size-3.5" />
                                 Draft
                               </Badge>
-                              <Text size="xs" className="text-amber-700 font-medium">
+                              <Text size="md" className="text-amber-700 font-medium">
                                 Shift not published to staff
                               </Text>
                             </div>
                           ) : isCancelled ? (
                             <div className="flex flex-col sm:items-end gap-1">
-                              <Badge className="bg-slate-100 text-slate-700 border-slate-300 text-xs font-medium gap-1 self-start sm:self-auto">
+                              <Badge className="bg-slate-100 text-slate-700 border-slate-300 text-md font-medium gap-1 self-start sm:self-auto">
                                 <XCircle className="size-3.5" />
                                 Cancelled
                               </Badge>
-                              <Text size="xs" className="text-slate-500 font-medium">
+                              <Text size="md" className="text-slate-500 font-medium">
                                 Shift was cancelled
                               </Text>
                             </div>
                           ) : (
                             <div className="flex flex-col sm:items-end gap-1">
-                              <Badge className="bg-rose-100 text-rose-800 border-rose-300 text-xs font-medium gap-1 self-start sm:self-auto">
+                              <Badge className="bg-rose-100 text-rose-800 border-rose-300 text-md font-medium gap-1 self-start sm:self-auto">
                                 <UserX className="size-3.5" />
                                 Absent
                               </Badge>
-                              <Text size="xs" className="text-rose-600 font-medium">
+                              <Text size="md" className="text-rose-600 font-medium">
                                 Did not clock in
                               </Text>
                             </div>
@@ -273,7 +273,7 @@ export function PastShiftDetailsModal({
 
                       {/* Log tasks count if available */}
                       {log && typeof log.tasksCompleted === "number" && log.tasksTotal ? (
-                        <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-md text-slate-500">
                           <span className="flex items-center gap-1">
                             <CheckCircle2 className="size-3.5 text-emerald-600" />
                             Completed {log.tasksCompleted} of {log.tasksTotal} resident care tasks
@@ -290,7 +290,7 @@ export function PastShiftDetailsModal({
           {/* Resident Allocations */}
           {allAssignedResidentIds.length > 0 && (
             <div className="space-y-2 pt-1">
-              <Text size="sm" weight="medium" className="text-slate-900">
+              <Text size="md" weight="medium" className="text-slate-900">
                 Assigned Residents ({allAssignedResidentIds.length})
               </Text>
               <div className="flex flex-wrap gap-1.5">
@@ -299,7 +299,7 @@ export function PastShiftDetailsModal({
                   return (
                     <Badge
                       key={resId}
-                      className="bg-slate-100 text-slate-800 hover:bg-slate-200 border-slate-200 text-xs px-2.5 py-1"
+                      className="bg-slate-100 text-slate-800 hover:bg-slate-200 border-slate-200 text-md px-2.5 py-1"
                     >
                       {name}
                     </Badge>
@@ -312,11 +312,11 @@ export function PastShiftDetailsModal({
           {/* Notes / Handover if any */}
           {shift.notes && (
             <div className="space-y-1.5 pt-1">
-              <Text size="sm" weight="bold" className="text-slate-900 flex items-center gap-1.5">
+              <Text size="md" weight="bold" className="text-slate-900 flex items-center gap-1.5">
                 <FileText className="size-3.5 text-slate-500" />
                 Shift Notes &amp; Handover
               </Text>
-              <Card variant="surface" className="p-3 bg-slate-50 text-xs text-slate-700 leading-relaxed border border-slate-200/80">
+              <Card variant="surface" className="p-3 bg-slate-50 text-md text-slate-700 leading-relaxed border border-slate-200/80">
                 {shift.notes}
               </Card>
             </div>

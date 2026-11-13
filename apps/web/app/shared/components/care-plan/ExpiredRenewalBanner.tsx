@@ -44,12 +44,12 @@ export function ExpiredRenewalBanner({
           <Clock className="size-5 text-amber-600 mt-0.5 shrink-0" />
         )}
         <div className="space-y-0.5">
-          <Text as="h4" size="sm" weight="semibold" className={isExpired ? "text-red-950" : "text-amber-950"}>
+          <Text as="h4" size="md" weight="semibold" className={isExpired ? "text-red-950" : "text-amber-950"}>
             {isExpired
               ? "Care Plan Expired — Renewal Required"
               : "Care Plan Expiring Soon"}
           </Text>
-          <Text size="sm" variant="muted" className="leading-relaxed">
+          <Text size="md" variant="muted" className="leading-relaxed">
             {isExpired
               ? "This care plan is no longer valid. In accordance with clinical governance, create a renewal version to carry over unchanged goals and submit for sign-off."
               : `This plan is scheduled to expire on ${expiryDate?.toLocaleDateString()}. Prepare a renewal to prevent gaps in active care.`}

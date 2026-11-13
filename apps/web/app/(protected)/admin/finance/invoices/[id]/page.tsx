@@ -79,7 +79,7 @@ export default function InvoiceViewPage() {
         <Text size="xl" weight="bold" className="text-slate-900">
           Invoice Not Found
         </Text>
-        <Text size="sm" weight="regular" className="text-slate-500">
+        <Text size="md" weight="regular" className="text-slate-500">
           The invoice you are trying to view does not exist or has been deleted.
         </Text>
         <Link href="/admin/finance/invoices">

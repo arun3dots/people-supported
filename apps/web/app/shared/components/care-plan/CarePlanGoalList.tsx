@@ -86,8 +86,8 @@ export function CarePlanGoalList({
       {goals.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-200/80 p-6">
           <Target className="size-8 mx-auto mb-2 text-slate-300 stroke-[1.5]" />
-          <Text size="sm" weight="semibold" className="text-slate-700">No clinical goals defined yet</Text>
-          <Text size="sm" variant="muted" className="mt-1">Define outcomes to structure care routines and track resident progress.</Text>
+          <Text size="md" weight="semibold" className="text-slate-700">No clinical goals defined yet</Text>
+          <Text size="md" variant="muted" className="mt-1">Define outcomes to structure care routines and track resident progress.</Text>
           {isEditable && onAddGoal && (
             <Button
               variant="outline"
@@ -122,7 +122,7 @@ export function CarePlanGoalList({
       {resolvedUnassignedTasks.length > 0 && (
         <div className="pt-6 border-t border-slate-200/80 space-y-3">
           <div className="flex items-center justify-between">
-            <Text size="sm" weight="semibold" className="text-slate-900">
+            <Text size="md" weight="semibold" className="text-slate-900">
               General / Unassigned Interventions ({resolvedUnassignedTasks.length})
             </Text>
             {isEditable && onAddTaskToGoal && (

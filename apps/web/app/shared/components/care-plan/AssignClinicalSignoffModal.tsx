@@ -90,7 +90,7 @@ export function AssignClinicalSignoffModal({
               <DialogTitle className="text-base font-bold text-slate-900 tracking-tight">
                 Assign Clinical Sign-Off Team
               </DialogTitle>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Designate the clinicians responsible for reviewing and approving this care plan.
               </Text>
             </div>
@@ -162,7 +162,7 @@ export function AssignClinicalSignoffModal({
                       <div className="flex items-center justify-between w-full gap-2">
                         <span>{staff.fullName}</span>
                         {(staff.role?.name || staff.roleName) && (
-                          <Badge state="inactive" className="text-sm px-1.5 py-0 shadow-none ml-2">
+                          <Badge state="inactive" className="text-md px-1.5 py-0 shadow-none ml-2">
                             {staff.role?.name || staff.roleName}
                           </Badge>
                         )}

@@ -152,10 +152,10 @@ export function ImagePreviewModal({
               <Camera className="w-4 h-4" />
             </div>
             <div className="flex flex-col min-w-0">
-              <DialogTitle className="text-sm sm:text-base font-semibold text-slate-900 truncate">
+              <DialogTitle className="text-md sm:text-base font-semibold text-slate-900 truncate">
                 {title}
               </DialogTitle>
-              <DialogDescription className="text-sm text-slate-500 truncate">
+              <DialogDescription className="text-md text-slate-500 truncate">
                 {subtitle}
               </DialogDescription>
             </div>
@@ -172,7 +172,7 @@ export function ImagePreviewModal({
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </Button>
-            <span className="text-[11px] font-mono text-slate-700 w-11 text-center font-medium">
+            <span className="text-md font-mono text-slate-700 w-11 text-center font-medium">
               {Math.round(zoom * 100)}%
             </span>
             <Button
@@ -269,7 +269,7 @@ export function ImagePreviewModal({
 
           {/* Quick pan helper hint when zoomed */}
           {zoom > 1 && (
-            <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur text-white text-[10px] px-2 py-1 rounded-md flex items-center gap-1 pointer-events-none shadow">
+            <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur text-white text-md px-2 py-1 rounded-md flex items-center gap-1 pointer-events-none shadow">
               <Move className="w-3 h-3" />
               <span>Drag to pan · Scroll to zoom</span>
             </div>
@@ -277,8 +277,8 @@ export function ImagePreviewModal({
         </div>
 
         {/* Responsive Footer */}
-        <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-sm text-slate-500 shrink-0">
-          <span className="text-[11px] sm:text-sm truncate">
+        <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-md text-slate-500 shrink-0">
+          <span className="text-md truncate">
             Scroll or pinch to zoom · Click rotate to reorient
           </span>
           <div className="flex items-center gap-2 shrink-0">
@@ -287,7 +287,7 @@ export function ImagePreviewModal({
                 asChild
                 variant="outline"
                 size="sm"
-                className="h-8 text-sm"
+                className="h-8 text-md"
               >
                 <a href={imageUrl} download={title || "image"}>
                   <Download className="size-3.5" />
@@ -302,7 +302,7 @@ export function ImagePreviewModal({
                 handleReset();
                 onOpenChange(false);
               }}
-              className="h-8 text-sm"
+              className="h-8 text-md"
             >
               Close
             </Button>

@@ -62,7 +62,7 @@ export function CarePlanWizardStepper({
                   Step {step.id}
                 </span>
                 <Text
-                  size="sm"
+                  size="md"
                   weight={isCurrent ? "semibold" : "medium"}
                   className={`truncate ${isCurrent
                     ? "text-slate-900 font-bold"

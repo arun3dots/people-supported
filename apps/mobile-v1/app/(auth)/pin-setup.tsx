@@ -65,7 +65,7 @@ export default function PinSetupScreen() {
           {step === 'create' ? 'Set Point-of-Care Quick PIN' : 'Confirm Your Quick PIN'}
         </Text>
         <Text className="text-sm text-text-secondary text-center mt-1 px-4">
-          For rapid, secure unlocking between resident rooms compliant with CQC DSPT guidelines.
+          For rapid, secure unlocking between support visits compliant with CQC DSPT guidelines.
         </Text>
 
         {/* 4 dots */}

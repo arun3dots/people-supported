@@ -1,4 +1,4 @@
-import type { RiskCategory, ReviewFrequency, CreateRiskAssessmentDTO, RiskStatus } from "@repo/schema";
+import type { RiskCategory, CreateRiskAssessmentDTO, RiskStatus } from "@repo/schema";
 import type { RiskAssessmentResponse } from "../../../../lib/queries/risk";
 import type { FurtherAction } from "./RiskFurtherActionsSection";
 
@@ -10,15 +10,6 @@ export const CATEGORIES: RiskCategory[] = [
   "Individual",
 ];
 
-export const FREQUENCIES: ReviewFrequency[] = [
-  "Weekly",
-  "Monthly",
-  "Quarterly",
-  "SixMonthly",
-  "Annual",
-  "AfterIncident",
-];
-
 export interface FormState {
   templateId: string | null;
   category: RiskCategory | "";
@@ -28,7 +19,7 @@ export interface FormState {
   tool: string;
   likelihood: number;
   severity: number;
-  reviewFrequency: ReviewFrequency | "";
+  nextReviewDate: string;
   controlsText: string;
   furtherActions: FurtherAction[];
 }
@@ -42,7 +33,7 @@ export const blankState: FormState = {
   tool: "",
   likelihood: 0,
   severity: 0,
-  reviewFrequency: "",
+  nextReviewDate: "",
   controlsText: "",
   furtherActions: [],
 };
@@ -51,6 +42,7 @@ export interface FormValidationErrors {
   category?: string;
   title?: string;
   hazardDescription?: string;
+  nextReviewDate?: string;
   inherent?: string;
 }
 
@@ -64,6 +56,9 @@ export function validateRiskForm(state: FormState): FormValidationErrors {
   }
   if (!state.hazardDescription.trim() || state.hazardDescription.trim().length < 5) {
     errs.hazardDescription = "Hazard description must contain at least 5 characters";
+  }
+  if (!state.nextReviewDate) {
+    errs.nextReviewDate = "Please select the next review date";
   }
   if (state.likelihood === 0 || state.severity === 0) {
     errs.inherent = "Please select likelihood and severity from the matrix above";
@@ -90,7 +85,7 @@ export function buildRiskAssessmentDTO(
     likelihood: state.likelihood,
     severity: state.severity,
     status,
-    reviewFrequency: (state.reviewFrequency || "Quarterly") as ReviewFrequency,
+    nextReviewDate: state.nextReviewDate,
     factors,
     controls: [...stdControls, ...faControls],
   };
@@ -139,7 +134,7 @@ export function parseAssessmentToFormState(
     tool: assessment.tool || "",
     likelihood: assessment.likelihood,
     severity: assessment.severity,
-    reviewFrequency: (assessment.reviewFrequency || "Quarterly") as ReviewFrequency,
+    nextReviewDate: assessment.nextReviewDate.slice(0, 10),
     controlsText,
     furtherActions,
   };

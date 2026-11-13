@@ -31,6 +31,7 @@ interface AddPropertyFormFieldsProps {
   nameError?: string;
   referenceId: string;
   onReferenceIdChange: (value: string) => void;
+  referenceIdError?: string;
   schemeId: string;
   onSchemeIdChange: (value: string) => void;
   schemes: SchemeItem[];
@@ -40,8 +41,8 @@ interface AddPropertyFormFieldsProps {
   onStreetAddressChange: (value: string) => void;
   postcode: string;
   onPostcodeChange: (value: string) => void;
-  totalCapacity: number;
-  onCapacityChange: (value: number) => void;
+  totalCapacity: string;
+  onCapacityChange: (value: string) => void;
   landlordName: string;
   onLandlordNameChange: (value: string) => void;
   landlordPhone: string;
@@ -61,6 +62,7 @@ export function AddPropertyFormFields({
   nameError,
   referenceId,
   onReferenceIdChange,
+  referenceIdError,
   schemeId,
   onSchemeIdChange,
   schemes,
@@ -106,6 +108,9 @@ export function AddPropertyFormFields({
           value={referenceId}
           onChange={(e) => onReferenceIdChange(e.target.value)}
           placeholder="e.g. PROP-001"
+          errorMessage={referenceIdError}
+          disabled
+          className="bg-slate-50 text-slate-500 cursor-not-allowed"
         />
       </div>
 
@@ -134,7 +139,7 @@ export function AddPropertyFormFields({
         </Label>
         <Select value={propertyType} onValueChange={onPropertyTypeChange}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue placeholder="Select unit configuration" />
           </SelectTrigger>
           <SelectContent className="bg-white border-slate-200">
             {PROPERTY_TYPES.map((pt) => (
@@ -175,7 +180,8 @@ export function AddPropertyFormFields({
             min={1}
             max={30}
             value={totalCapacity}
-            onChange={(e) => onCapacityChange(Number(e.target.value) || 1)}
+            onChange={(e) => onCapacityChange(e.target.value)}
+            placeholder="e.g. 4"
           />
         </div>
       </div>
@@ -244,7 +250,7 @@ export function AddPropertyFormFields({
         </Label>
         <Select value={status} onValueChange={onStatusChange}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent className="bg-white border-slate-200">
             <SelectItem value="Active">Active</SelectItem>

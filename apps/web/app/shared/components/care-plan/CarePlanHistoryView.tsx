@@ -55,41 +55,41 @@ export function CarePlanHistoryView({
     const s = (st || "").toLowerCase();
     if (s === "active") {
       return (
-        <Badge variant="secondary" state="success" className="text-sm font-semibold px-2.5 py-0.5 shadow-none">
+        <Badge variant="secondary" state="success" className="text-md font-semibold px-2.5 py-0.5 shadow-none">
           Active
         </Badge>
       );
     }
     if (s.includes("pending") || s.includes("review")) {
       return (
-        <Badge variant="secondary" state="warning" className="text-sm font-semibold px-2.5 py-0.5 shadow-none">
+        <Badge variant="secondary" state="warning" className="text-md font-semibold px-2.5 py-0.5 shadow-none">
           Under Review
         </Badge>
       );
     }
     if (s.includes("change") || s.includes("returned")) {
       return (
-        <Badge variant="secondary" state="warning" className="text-sm font-semibold px-2.5 py-0.5 shadow-none">
+        <Badge variant="secondary" state="warning" className="text-md font-semibold px-2.5 py-0.5 shadow-none">
           Changes Requested
         </Badge>
       );
     }
     if (s === "superseded") {
       return (
-        <Badge variant="secondary" state="inactive" className="text-sm font-medium px-2.5 py-0.5 shadow-none">
+        <Badge variant="secondary" state="inactive" className="text-md font-medium px-2.5 py-0.5 shadow-none">
           Superseded
         </Badge>
       );
     }
     if (s === "expired") {
       return (
-        <Badge variant="secondary" state="danger" className="text-sm font-medium px-2.5 py-0.5 shadow-none">
+        <Badge variant="secondary" state="danger" className="text-md font-medium px-2.5 py-0.5 shadow-none">
           Expired
         </Badge>
       );
     }
     return (
-      <Badge variant="secondary" state="inactive" className="text-sm font-medium px-2.5 py-0.5 shadow-none">
+      <Badge variant="secondary" state="inactive" className="text-md font-medium px-2.5 py-0.5 shadow-none">
         Draft
       </Badge>
     );
@@ -99,7 +99,7 @@ export function CarePlanHistoryView({
     return (
       <div className="p-10 text-center bg-white rounded-2xl border border-slate-200/90 font-sans">
         <div className="size-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-        <Text size="sm" variant="muted">Loading care plan version history...</Text>
+        <Text size="md" variant="muted">Loading care plan version history...</Text>
       </div>
     );
   }
@@ -108,10 +108,10 @@ export function CarePlanHistoryView({
     return (
       <div className="p-8 text-center bg-white rounded-2xl border border-slate-200/90 font-sans space-y-2">
         <History className="size-8 text-slate-300 mx-auto" />
-        <Text size="sm" weight="semibold" className="text-slate-800">
+        <Text size="md" weight="semibold" className="text-slate-800">
           No Version History Available
         </Text>
-        <Text size="sm" variant="muted" className="max-w-md mx-auto">
+        <Text size="md" variant="muted" className="max-w-md mx-auto">
           This resident is currently on their initial care plan version. Subsequent reviews, approvals, and annual renewals will be versioned here.
         </Text>
       </div>
@@ -122,14 +122,14 @@ export function CarePlanHistoryView({
     <div className="space-y-4 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white border border-slate-200/90 rounded-2xl shadow-xs">
         <div>
-          <Text as="h3" size="sm" weight="bold" className="text-slate-900 flex items-center gap-2">
+          <Text as="h3" size="md" weight="bold" className="text-slate-900 flex items-center gap-2">
             <History className="size-4 text-primary" /> Care Plan Version History
           </Text>
-          <Text size="sm" variant="muted" className="mt-0.5">
+          <Text size="md" variant="muted" className="mt-0.5">
             Audit-tracked revisions for {residentName || "this resident"}. Click any version to inspect or compare changes.
           </Text>
         </div>
-        <Badge variant="secondary" state="info" className="self-start sm:self-auto text-sm px-2.5 py-1">
+        <Badge variant="secondary" state="info" className="self-start sm:self-auto text-md px-2.5 py-1">
           {versions.length} Version{versions.length > 1 ? "s" : ""} Recorded
         </Badge>
       </div>
@@ -164,21 +164,21 @@ export function CarePlanHistoryView({
 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono font-bold text-slate-900 text-sm">
+                    <span className="font-mono font-bold text-slate-900 text-md">
                       {`CP-${String(ver.versionNumber || versions.length - idx).padStart(4, "0")}`}
                     </span>
-                    <span className="font-mono text-sm font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                    <span className="font-mono text-md font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
                       {vNum}
                     </span>
                     {getStatusBadge(ver.status)}
                     {isCurrent && (
-                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      <span className="text-md font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                         Viewing Now
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3 text-sm text-slate-500 flex-wrap">
+                  <div className="flex items-center gap-3 text-md text-slate-500 flex-wrap">
                     <span className="flex items-center gap-1">
                       <Clock className="size-3 text-slate-400" />
                       Created {dateLabel}
@@ -203,7 +203,7 @@ export function CarePlanHistoryView({
                   variant="outline"
                   size="sm"
                   onClick={() => setComparingPlanId(ver.id)}
-                  className="h-8 px-3 text-sm font-medium rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50"
+                  className="h-8 px-3 text-md font-medium rounded-xl border-slate-300 text-slate-700 hover:bg-slate-50"
                 >
                   Compare Changes
                 </Button>
@@ -214,7 +214,7 @@ export function CarePlanHistoryView({
                     variant="primary"
                     size="sm"
                     onClick={() => onSelectVersion(ver.id)}
-                    className="h-8 px-3.5 text-sm font-semibold rounded-xl shadow-xs"
+                    className="h-8 px-3.5 text-md font-semibold rounded-xl shadow-xs"
                   >
                     Switch to Version
                   </Button>
@@ -226,7 +226,7 @@ export function CarePlanHistoryView({
                     variant="ghost"
                     size="sm"
                     onClick={() => onViewPlanDetail(ver.id)}
-                    className="h-8 px-2 text-sm font-medium text-slate-600 hover:text-slate-900"
+                    className="h-8 px-2 text-md font-medium text-slate-600 hover:text-slate-900"
                     title="Open Full Detail Page"
                   >
                     <Eye className="size-3.5" />

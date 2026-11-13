@@ -17,10 +17,10 @@ export function RiskWorkflowBadge({ status, level, inherentLevel }: Props) {
   const ss = getStatusStyle(status);
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <Badge className={cn(ss?.className || "bg-slate-200 text-slate-700", "text-sm font-medium px-2.5 py-0.5")}>
+      <Badge className={cn(ss?.className || "bg-slate-200 text-slate-700", "text-md font-medium px-2.5 py-0.5")}>
         {ss?.label || status || "Draft"}
       </Badge>
-      <Badge className={cn(ls?.badge || "bg-emerald-600 text-white", "text-sm font-medium px-2.5 py-0.5")}>
+      <Badge className={cn(ls?.badge || "bg-emerald-600 text-white", "text-md font-medium px-2.5 py-0.5")}>
         {effectiveLevel} risk
         {level && level !== inherentLevel ? " (residual)" : ""}
       </Badge>

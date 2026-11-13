@@ -44,7 +44,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex h-[44px] w-full items-center justify-between gap-2 rounded-md border border-border-secondary bg-surface-neutral px-3 text-sm text-text-body whitespace-nowrap outline-none focus:outline-none focus:border-border-primary focus:ring-1 focus:ring-surface-primary/20 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-slate-400 font-sans transition-colors [&>span]:line-clamp-1 [&>span]:min-w-0",
+        "flex h-[44px] w-full items-center justify-between gap-2 rounded-md border border-border-secondary bg-surface-neutral px-3 text-md text-text-body whitespace-nowrap outline-none focus:outline-none focus:border-border-primary focus:ring-1 focus:ring-surface-primary/20 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-slate-400 font-sans transition-colors [&>span]:line-clamp-1 [&>span]:min-w-0",
         className,
       )}
       {...props}
@@ -101,7 +101,7 @@ function SelectLabel({
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("px-2 py-1.5 text-xs font-medium text-text-description", className)}
+      className={cn("px-2 py-1.5 text-md font-medium text-text-description", className)}
       {...props}
     />
   );
@@ -116,7 +116,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-pointer items-center gap-2 rounded-sm py-2 pr-8 pl-2.5 text-sm text-text-body outline-none select-none focus:bg-surface-primary/10 focus:text-text-body data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-icon-primary",
+        "relative flex w-full cursor-pointer items-center gap-2 rounded-sm py-2 pr-8 pl-2.5 text-md text-text-body outline-none select-none focus:bg-surface-primary/10 focus:text-text-body data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-icon-primary",
         className,
       )}
       {...props}

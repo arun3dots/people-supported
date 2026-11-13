@@ -37,15 +37,15 @@ export function PresetTemplateCard({ template }: PresetTemplateCardProps) {
           </span>
         )}
       </div>
-      <Text as="h3" size="sm" weight="bold" className="text-slate-900">
+      <Text as="h3" size="md" weight="bold" className="text-slate-900">
         {template.name}
       </Text>
-      <Text size="sm" variant="muted">
+      <Text size="md" variant="muted">
         {template.description}
       </Text>
       <div className="pt-2 border-t border-slate-100 flex items-center justify-between font-mono">
-        <Text size="sm" className="text-slate-500">{template.questions.length} Questions</Text>
-        <Text size="sm" weight="medium" className="text-emerald-700">Ready to Use</Text>
+        <Text size="md" className="text-slate-500">{template.questions.length} Questions</Text>
+        <Text size="md" weight="medium" className="text-emerald-700">Ready to Use</Text>
       </div>
     </Card>
   );
@@ -93,17 +93,17 @@ export function CustomTemplateCard({
           </Button>
         </div>
       </div>
-      <Text as="h3" size="sm" weight="bold" className="text-slate-900">
+      <Text as="h3" size="md" weight="bold" className="text-slate-900">
         {template.name}
       </Text>
       {template.description && (
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           {template.description}
         </Text>
       )}
       <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-        <Text size="sm" className="text-slate-500">Custom Template</Text>
-        <Text size="sm" weight="semibold" className="text-emerald-700 flex items-center gap-1">
+        <Text size="md" className="text-slate-500">Custom Template</Text>
+        <Text size="md" weight="semibold" className="text-emerald-700 flex items-center gap-1">
           <CheckCircle2 className="size-3.5" /> Active
         </Text>
       </div>

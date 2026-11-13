@@ -106,7 +106,7 @@ export function renderTaskPriority(priority: string): React.JSX.Element {
   const p = priority.toLowerCase();
   const state = p === "critical" ? "danger" : p === "high" ? "warning" : p === "medium" ? "info" : "inactive";
   return (
-    <Badge variant="secondary" state={state} className="px-2 py-0.5 text-sm shadow-none">
+    <Badge variant="secondary" state={state} className="px-2 py-0.5 text-md shadow-none">
       {priority}
     </Badge>
   );

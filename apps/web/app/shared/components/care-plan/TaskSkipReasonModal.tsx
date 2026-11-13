@@ -139,7 +139,7 @@ export function TaskSkipReasonModal({
               </SelectContent>
             </Select>
             {errors.selectedReason && (
-              <p className="text-sm text-text-error font-medium min-h-[18px] mt-1">
+              <p className="text-md text-text-error font-medium min-h-[18px] mt-1">
                 {errors.selectedReason}
               </p>
             )}

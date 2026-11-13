@@ -33,7 +33,7 @@ const staff = [
     id: 1,
     name: "Sarah Williams",
     role: "Superintendent",
-    email: "sarah@carehome.com",
+    email: "sarah@example.com",
     phone: "+44 20 1234 5678",
     status: "Active",
     image: "https://i.pravatar.cc/150?u=sarah",
@@ -42,7 +42,7 @@ const staff = [
     id: 2,
     name: "James Miller",
     role: "Nurse",
-    email: "james@carehome.com",
+    email: "james@example.com",
     phone: "+44 20 8765 4321",
     status: "On Leave",
     image: "https://i.pravatar.cc/150?u=james",
@@ -51,7 +51,7 @@ const staff = [
     id: 3,
     name: "Emily Chen",
     role: "Care Worker",
-    email: "emily@carehome.com",
+    email: "emily@example.com",
     phone: "+44 20 5555 5555",
     status: "Active",
     image: "https://i.pravatar.cc/150?u=emily",
@@ -60,7 +60,7 @@ const staff = [
     id: 4,
     name: "Michael Ross",
     role: "Operations",
-    email: "michael@carehome.com",
+    email: "michael@example.com",
     phone: "+44 20 9999 8888",
     status: "Active",
     image: "https://i.pravatar.cc/150?u=michael",
@@ -78,7 +78,7 @@ export function TableViewDemo() {
             Staff Directory
           </h3>
           <p className="text-md text-gray-500 font-medium">
-            Manage and view all care home staff members.
+            Manage and view all supported living staff members.
           </p>
         </div>
         <Tabs

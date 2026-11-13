@@ -106,7 +106,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
       {/* Resident Name */}
       <View className="mb-3">
         <Text className="text-xs font-semibold text-text-secondary mb-1.5">
-          Resident Name <Text className="text-clinical-critical font-bold">*</Text>
+          Person Supported <Text className="text-clinical-critical font-bold">*</Text>
         </Text>
         <TouchableOpacity
           activeOpacity={0.7}
@@ -117,7 +117,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
             className={`text-sm ${form.residentName ? 'font-medium text-text-primary' : 'font-normal text-text-muted'
               }`}
           >
-            {form.residentName || 'Select Resident'}
+            {form.residentName || 'Select Person Supported'}
           </Text>
           <ChevronDown size={18} color="#7C8B87" />
         </TouchableOpacity>
@@ -234,7 +234,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
           >
             <Text className="text-lg font-bold text-text-primary mb-3">
               {activePicker === 'resident'
-                ? 'Select Resident'
+                ? 'Select Person Supported'
                 : activePicker === 'category'
                   ? 'Select Incident Category'
                   : activePicker === 'harm'
@@ -245,7 +245,7 @@ export function IncidentDetailsCard({ form, onChange, residents = [] }: Incident
               {activePicker === 'resident' &&
                 (residentList.length === 0 ? (
                   <Text className="text-xs text-slate-500 py-6 text-center">
-                    No residents found in directory.
+                    No people supported found in directory.
                   </Text>
                 ) : (
                   residentList.map((r) => (

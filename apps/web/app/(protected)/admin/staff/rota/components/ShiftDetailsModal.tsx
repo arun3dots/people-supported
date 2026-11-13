@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import { format } from "date-fns";
 import {
   Calendar,
   CheckCircle2,
   Clock,
   Edit2,
   Home,
+  Plus,
   User,
 } from "lucide-react";
 import {
@@ -29,6 +31,7 @@ import type { Resident } from "../../../../../../lib/types/resident";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import {
   getShiftAssignedResidentIds,
+  getShiftDateStr,
   getShiftPlannedHours,
   resolveShiftLocation,
 } from "./rotaDataUtils";
@@ -43,7 +46,9 @@ interface ShiftDetailsModalProps {
   residents?: Resident[];
   schemes?: SchemeItem[];
   properties?: PropertyItem[];
+  isLocked?: boolean;
   onEditShift: (shift: Shift) => void;
+  onAddAnotherShift?: (shift: Shift) => void;
 }
 
 export function ShiftDetailsModal({
@@ -56,13 +61,19 @@ export function ShiftDetailsModal({
   residents = [],
   schemes = [],
   properties = [],
+  isLocked = false,
   onEditShift,
+  onAddAnotherShift,
 }: ShiftDetailsModalProps): React.JSX.Element {
   if (!shift) return <></>;
 
   const careType = shift.careType || "Shared Care (Core Support)";
+  const computedWindow =
+    shift.startTime && shift.endTime
+      ? `${format(new Date(shift.startTime), "HH:mm")} - ${format(new Date(shift.endTime), "HH:mm")}`
+      : "Not specified";
   const windowLabel =
-    shift.shiftWindow || shift.timingFormatted || "Not specified";
+    shift.shiftWindow || shift.timingFormatted || computedWindow;
   const hours = getShiftPlannedHours(shift);
   const { propertyName, schemeName } = resolveShiftLocation(
     shift,
@@ -77,37 +88,49 @@ export function ShiftDetailsModal({
     .filter((r): r is Resident => Boolean(r));
 
   const is1to1 = careType.includes("1:1");
+  const is2to1 = careType.includes("2:1");
   const isSleepIn = careType.includes("Sleep-in");
   const isWakingNight = careType.includes("Waking Night");
 
-  const careState = is1to1
-    ? "success"
-    : isSleepIn
-      ? "warning"
-      : isWakingNight
-        ? "danger"
-        : "inactive";
+  const careState: "success" | "warning" | "danger" | "info" | "inactive" =
+    is2to1
+      ? "info"
+      : is1to1
+        ? "success"
+        : isSleepIn
+          ? "warning"
+          : isWakingNight
+            ? "danger"
+            : "inactive";
 
-  const shortCareLabel = is1to1
-    ? "1:1"
-    : isSleepIn
-      ? "Sleep-in"
-      : isWakingNight
-        ? "Night"
-        : "Shared";
+  const shortCareLabel = is2to1
+    ? "2:1"
+    : is1to1
+      ? "1:1"
+      : isSleepIn
+        ? "Sleep-in"
+        : isWakingNight
+          ? "Night"
+          : "Shared";
 
   const locationSummary = [propertyName || "Unassigned Property", schemeName]
     .filter(Boolean)
     .join(" · ");
 
+  const todayStr = new Date().toISOString().split("T")[0] ?? "";
+  const shiftDateStr = getShiftDateStr(shift);
+  const isPastShift =
+    (shiftDateStr ? shiftDateStr < todayStr : false) ||
+    new Date(shift.endTime).getTime() <= Date.now();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl font-sans max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-3 border-b border-slate-100">
+        <DialogHeader className="pb-3 pr-8 border-b border-slate-100">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Home className="size-4 text-primary" />
-              <Text as="span" size="sm" weight="medium" variant="muted">
+              <Text as="span" size="md" weight="medium" variant="muted">
                 {locationSummary}
               </Text>
             </div>
@@ -117,14 +140,14 @@ export function ShiftDetailsModal({
           </div>
 
           <div className="mt-2 flex items-center gap-3">
-            <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-sm shrink-0">
+            <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
               {staffName.slice(0, 2).toUpperCase()}
             </div>
             <div className="text-left">
               <DialogTitle className="text-lg font-semibold text-slate-900">
                 {staffName}
               </DialogTitle>
-              <Text as="span" size="sm" variant="muted" className="block">
+              <Text as="span" size="md" variant="muted" className="block">
                 {[staffRole, dayLabel].filter(Boolean).join(" · ")}
               </Text>
             </div>
@@ -161,10 +184,10 @@ export function ShiftDetailsModal({
 
         {/* Shift Brief & Handover Context */}
         <Card variant="surface" border="default" className="p-4 gap-2 shadow-none">
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Shift Brief &amp; Handover Context
           </Text>
-          <Text size="sm" className="text-slate-700 leading-relaxed">
+          <Text size="md" className="text-slate-700 leading-relaxed">
             {shift.notes?.trim()
               ? shift.notes
               : "No handover notes recorded for this shift."}
@@ -178,7 +201,7 @@ export function ShiftDetailsModal({
               <Text as="h3" size="md" weight="semibold" className="text-slate-900">
                 People Supported on this Shift
               </Text>
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Assigned people supported and recorded care outcomes
               </Text>
             </div>
@@ -194,7 +217,7 @@ export function ShiftDetailsModal({
               border="default"
               className="p-4 text-center shadow-none"
             >
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 No people supported are assigned to this shift yet.
               </Text>
             </Card>
@@ -207,10 +230,15 @@ export function ShiftDetailsModal({
                   .slice(0, 2)
                   .join("")
                   .toUpperCase();
-                const roomNum = person.bed?.room?.roomNumber;
+                const roomNum = person.bed?.room?.roomNumber?.trim();
+                const formattedLocation = roomNum
+                  ? (roomNum.toLowerCase().includes("flat") || roomNum.toLowerCase().includes("room")
+                    ? roomNum
+                    : `Flat / Room ${roomNum}`)
+                  : null;
                 const refCode = person.supportedLivingDetails?.referenceCode;
                 const metaParts = [
-                  roomNum ? `Room ${roomNum}` : null,
+                  formattedLocation,
                   refCode || null,
                   person.nhsNumber ? `NHS ${person.nhsNumber}` : null,
                 ].filter(Boolean);
@@ -227,15 +255,15 @@ export function ShiftDetailsModal({
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="size-8 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-xs text-primary shrink-0">
+                        <div className="size-8 rounded-full bg-surface-primary-light flex items-center justify-center font-medium text-md text-primary shrink-0">
                           {initials}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2">
-                          <Text as="span" size="sm" weight="medium" className="text-slate-900">
+                          <Text as="span" size="md" weight="medium" className="text-slate-900">
                             {person.fullName}
                           </Text>
                           {metaParts.length > 0 && (
-                            <Text as="span" size="xs" variant="muted">
+                            <Text as="span" size="md" variant="muted">
                               {metaParts.join(" · ")}
                             </Text>
                           )}
@@ -252,7 +280,7 @@ export function ShiftDetailsModal({
                           <Text
                             key={outcome.id}
                             as="li"
-                            size="sm"
+                            size="md"
                             variant="muted"
                             className="flex items-center gap-1.5"
                           >
@@ -269,25 +297,45 @@ export function ShiftDetailsModal({
           )}
         </div>
 
-        <DialogFooter className="pt-3 border-t border-slate-100 gap-2">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => onOpenChange(false)}
-          >
-            Close
-          </Button>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => {
-              onOpenChange(false);
-              onEditShift(shift);
-            }}
-          >
-            <Edit2 className="size-4" />
-            Edit shift block
-          </Button>
+        <DialogFooter className="pt-3 border-t border-slate-100 flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            {!isPastShift && !isLocked && !careType.includes("Off") && onAddAnotherShift && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-primary hover:text-primary hover:bg-emerald-50/70 font-semibold"
+                onClick={() => {
+                  onOpenChange(false);
+                  onAddAnotherShift(shift);
+                }}
+              >
+                <Plus className="size-4" />
+                Add another shift
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              size="default"
+              onClick={() => onOpenChange(false)}
+            >
+              Close
+            </Button>
+            {!isPastShift && !isLocked && (
+              <Button
+                variant="primary"
+                size="default"
+                onClick={() => {
+                  onOpenChange(false);
+                  onEditShift(shift);
+                }}
+              >
+                <Edit2 className="size-4" />
+                Edit shift block
+              </Button>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

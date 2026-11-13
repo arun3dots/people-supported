@@ -44,7 +44,7 @@ export function ReviewCareTasksCard({
           <Text as="h3" size="md" weight="bold" className="text-slate-900">
             Care plans &amp; scheduled carer tasks
           </Text>
-          <p className="text-sm text-slate-600 mt-0.5">
+          <p className="text-md text-slate-600 mt-0.5">
             {plans.length} care plan{plans.length === 1 ? "" : "s"} · {tasks.length}{" "}
             scheduled task{tasks.length === 1 ? "" : "s"}
           </p>
@@ -54,7 +54,7 @@ export function ReviewCareTasksCard({
             type="button"
             variant="outline"
             onClick={onEditAssessment}
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             Edit care plans &amp; tasks
           </Button>
@@ -66,7 +66,7 @@ export function ReviewCareTasksCard({
           {plans.map((plan) => (
             <span
               key={plan.id}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-800"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-md font-medium text-slate-800"
             >
               <FileText className="size-4 text-emerald-800 shrink-0" />
               <span>{plan.area}</span>
@@ -87,19 +87,19 @@ export function ReviewCareTasksCard({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-36 text-sm font-bold text-slate-800">
+                <TableHead className="w-36 text-md font-bold text-slate-800">
                   Shift &amp; Time
                 </TableHead>
-                <TableHead className="min-w-52 text-sm font-bold text-slate-800">
+                <TableHead className="min-w-52 text-md font-bold text-slate-800">
                   Task
                 </TableHead>
-                <TableHead className="w-52 text-sm font-bold text-slate-800">
+                <TableHead className="w-52 text-md font-bold text-slate-800">
                   Care plan
                 </TableHead>
-                <TableHead className="w-32 text-sm font-bold text-slate-800">
+                <TableHead className="w-32 text-md font-bold text-slate-800">
                   Role
                 </TableHead>
-                <TableHead className="w-52 text-sm font-bold text-slate-800">
+                <TableHead className="w-52 text-md font-bold text-slate-800">
                   Schedule
                 </TableHead>
               </TableRow>
@@ -114,7 +114,7 @@ export function ReviewCareTasksCard({
                         <Clock className="size-4 text-slate-500" />
                         {task.time || "Flexible"}
                       </span>
-                      <span className="block text-sm text-slate-500">
+                      <span className="block text-md text-slate-500">
                         {task.shift} shift
                       </span>
                     </TableCell>
@@ -132,7 +132,7 @@ export function ReviewCareTasksCard({
                         {describeTaskRecurrence(task.recurrence)}
                       </span>
                       {dateWindow && (
-                        <span className="block text-sm text-slate-500">
+                        <span className="block text-md text-slate-500">
                           {dateWindow}
                         </span>
                       )}

@@ -352,7 +352,7 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
     if (logs.length === 0) return;
 
     const cumulativeHash = createHmac('sha256', this.signingKey)
-      .update(logs.map((l) => l.recordHash).join(''))
+      .update(logs.map((l: { recordHash: string }) => l.recordHash).join(''))
       .digest('hex');
 
     const lastBlock = await this.auditClient.auditIntegrityBlock.findFirst({

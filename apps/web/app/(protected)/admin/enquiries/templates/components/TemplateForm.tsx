@@ -113,10 +113,10 @@ export function TemplateForm({ state, onChange }: TemplateFormProps) {
       {/* Questions List */}
       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
         <div className="flex items-center justify-between">
-          <Text as="h4" size="sm" weight="bold" className="text-slate-900">
+          <Text as="h4" size="md" weight="bold" className="text-slate-900">
             Questions in this Template
           </Text>
-          <Text size="sm" className="font-mono text-slate-500">
+          <Text size="md" className="font-mono text-slate-500">
             {state.questions.length} items
           </Text>
         </div>
@@ -127,10 +127,10 @@ export function TemplateForm({ state, onChange }: TemplateFormProps) {
             className="p-3 bg-white rounded-xl border border-slate-200 flex items-start justify-between gap-2"
           >
             <div className="space-y-1">
-              <Text size="sm" weight="semibold" className="text-slate-800">
+              <Text size="md" weight="semibold" className="text-slate-800">
                 {i + 1}. {q.questionText}
               </Text>
-              <Text size="sm" className="text-slate-400">
+              <Text size="md" className="text-slate-400">
                 Section: {q.section} • Type: {q.type}
               </Text>
             </div>
@@ -148,7 +148,7 @@ export function TemplateForm({ state, onChange }: TemplateFormProps) {
 
         {/* Add Question Sub-form */}
         <div className="p-3 bg-white rounded-xl border border-dashed border-slate-300 space-y-3">
-          <Text size="sm" weight="semibold" className="text-slate-700">
+          <Text size="md" weight="semibold" className="text-slate-700">
             + Add New Custom Question
           </Text>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -181,7 +181,7 @@ export function TemplateForm({ state, onChange }: TemplateFormProps) {
 
           {(newType === "radio" || newType === "checkbox") && (
             <div className="space-y-2 pt-1 border-t border-slate-100">
-              <Text size="sm" className="text-slate-500">
+              <Text size="md" className="text-slate-500">
                 Answer Options:
               </Text>
               <div className="flex flex-wrap gap-1.5">

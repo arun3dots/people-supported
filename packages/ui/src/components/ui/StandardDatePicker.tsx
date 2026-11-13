@@ -151,7 +151,7 @@ export function StandardDatePicker({
             id={id}
             disabled={disabled}
             className={cn(
-              "flex h-[44px] w-full items-center justify-between gap-2 rounded-md border border-border-secondary bg-surface-neutral px-3 py-2 text-sm text-text-body whitespace-nowrap outline-none focus:outline-none focus:border-border-primary focus:ring-1 focus:ring-surface-primary/20 font-sans transition-colors",
+              "flex h-[44px] w-full items-center justify-between gap-2 rounded-md border border-border-secondary bg-surface-neutral px-3 py-2 text-md text-text-body whitespace-nowrap outline-none focus:outline-none focus:border-border-primary focus:ring-1 focus:ring-surface-primary/20 font-sans transition-colors",
               disabled && "cursor-not-allowed opacity-50 bg-surface-card-grey",
               errorMessage && "border-border-error bg-surface-error",
               triggerClassName
@@ -209,7 +209,7 @@ export function StandardDatePicker({
                     e.stopPropagation();
                     handleSelect(p.date);
                   }}
-                  className="px-2 py-0.5 rounded-lg text-sm font-semibold bg-surface-card-grey text-text-body hover:bg-surface-primary-light hover:text-surface-primary transition-colors cursor-pointer"
+                  className="px-2 py-0.5 rounded-lg text-md font-semibold bg-surface-card-grey text-text-body hover:bg-surface-primary-light hover:text-surface-primary transition-colors cursor-pointer"
                 >
                   {p.label}
                 </div>
@@ -220,7 +220,7 @@ export function StandardDatePicker({
           {/* Quick Decade Jump Selector: exactly 2 rows of 5 pills */}
           {showDecadeJumps && (
             <div className="mb-2 pb-2 border-b border-border-secondary">
-              <div className="text-xs font-semibold text-text-description mb-1 px-0.5 uppercase tracking-wider">
+              <div className="text-md font-semibold text-text-description mb-1 px-0.5 uppercase tracking-wider">
                 Quick Decade Jump:
               </div>
               <div className="grid grid-cols-5 gap-1.5">
@@ -236,7 +236,7 @@ export function StandardDatePicker({
                         handleDecadeJump(dec);
                       }}
                       className={cn(
-                        "py-0.5 px-1 rounded-full text-xs font-semibold transition-colors text-center cursor-pointer",
+                        "py-0.5 px-1 rounded-full text-md font-semibold transition-colors text-center cursor-pointer",
                         isCurrentDecade
                           ? "bg-surface-primary text-white shadow-xs"
                           : "bg-surface-card-grey text-text-body hover:bg-surface-primary-light hover:text-surface-primary"
@@ -259,7 +259,7 @@ export function StandardDatePicker({
               value={currentMonth.getMonth()}
               onChange={handleMonthChange}
               aria-label="Select month"
-              className="flex-1 bg-surface-neutral border border-border-secondary rounded-full px-3 py-1 text-sm font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20 cursor-pointer appearance-auto h-8"
+              className="flex-1 bg-surface-neutral border border-border-secondary rounded-full px-3 py-1 text-md font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20 cursor-pointer appearance-auto h-8"
             >
               {MONTHS.map((m, idx) => (
                 <option key={m} value={idx}>{m}</option>
@@ -270,7 +270,7 @@ export function StandardDatePicker({
               value={currentMonth.getFullYear()}
               onChange={handleYearChange}
               aria-label="Select year"
-              className="w-20 bg-surface-neutral border border-border-secondary rounded-full px-2.5 py-1 text-sm font-bold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20 cursor-pointer appearance-auto h-8"
+              className="w-20 bg-surface-neutral border border-border-secondary rounded-full px-2.5 py-1 text-md font-bold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20 cursor-pointer appearance-auto h-8"
             >
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -310,11 +310,11 @@ export function StandardDatePicker({
               nav: "hidden",
               table: "w-full border-collapse",
               weekdays: "flex justify-between mb-1",
-              weekday: "w-9 text-center text-sm font-semibold text-text-description",
+              weekday: "w-9 text-center text-md font-semibold text-text-description",
               week: "flex justify-between w-full mt-0.5",
-              day: "p-0 text-center text-sm focus-within:relative focus-within:z-20",
+              day: "p-0 text-center text-md focus-within:relative focus-within:z-20",
               day_button: cn(
-                "size-9 p-0 flex items-center justify-center text-sm rounded-xl transition-colors font-medium text-text-body cursor-pointer",
+                "size-9 p-0 flex items-center justify-center text-md rounded-xl transition-colors font-medium text-text-body cursor-pointer",
                 "hover:bg-surface-primary-light hover:text-surface-primary focus:outline-none"
               ),
               today: "[&_button]:border [&_button]:border-surface-primary [&_button]:bg-surface-primary-light/50 [&_button]:font-bold [&_button]:text-surface-primary",
@@ -326,7 +326,7 @@ export function StandardDatePicker({
         </PopoverContent>
       </Popover>
 
-      {errorMessage && <span className="text-sm text-text-error mt-0.5">{errorMessage}</span>}
+      {errorMessage && <span className="text-md text-text-error mt-0.5">{errorMessage}</span>}
     </div>
   );
 }

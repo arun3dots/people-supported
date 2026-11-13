@@ -147,7 +147,7 @@ export function CarerShiftGate({
           </div>
         ) : (
           <div className="pt-2 space-y-2">
-            <Text size="sm" className="text-amber-800 font-medium">
+            <Text size="md" className="text-amber-800 font-medium">
               No shift is currently scheduled for today on your rota.
             </Text>
             <div>

@@ -95,7 +95,7 @@ export function CarerStatsGrid({ tasks }: CarerStatsGridProps) {
 
             {/* Status / Badge Footer */}
             <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
-              <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${item.badgeColor}`}>
+              <span className={`inline-flex items-center gap-1 text-md font-semibold px-2 py-0.5 rounded-full ${item.badgeColor}`}>
                 {item.badgeText}
               </span>
             </div>

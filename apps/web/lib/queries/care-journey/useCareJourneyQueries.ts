@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type {
   AssessmentRecordDTO,
+  CareTaskBoardDTO,
   CareTaskDayDTO,
   CareTaskDefinitionDTO,
   CareTaskShift,
@@ -10,6 +11,7 @@ import type {
 } from "@repo/schema";
 import {
   GET_ASSESSMENT,
+  GET_CARE_TASK_BOARD,
   GET_CARE_TASK_DAY,
   LIST_CARE_TASK_DEFINITIONS,
   LIST_NEED_CARE_PLANS,
@@ -69,6 +71,16 @@ export function useListCareTaskDefinitionsQuery(residentId: string) {
         { id: residentId },
       ),
     enabled: !!residentId,
+    staleTime: 0,
+  });
+}
+
+export function useGetCareTaskBoardQuery(date: string) {
+  return useQuery({
+    queryKey: careJourneyKeys.board(date),
+    queryFn: () =>
+      makeAPICall<CareTaskBoardDTO>(GET_CARE_TASK_BOARD, {}, { date }),
+    enabled: !!date,
     staleTime: 0,
   });
 }

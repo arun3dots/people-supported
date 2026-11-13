@@ -42,16 +42,16 @@ export function UserMenu() {
                 className="object-cover"
               />
             )}
-            <AvatarFallback className="bg-surface-primary-light text-icon-primary font-bold text-sm">
+            <AvatarFallback className="bg-surface-primary-light text-icon-primary font-bold text-md">
               {initials}
             </AvatarFallback>
           </Avatar>
 
           <div className="text-left hidden sm:block">
-            <div className="text-sm font-bold text-[#141F1E] font-sans leading-tight">
+            <div className="text-md font-bold text-[#141F1E] font-sans leading-tight">
               {displayName}
             </div>
-            <div className="text-xs text-[#5D5D5D] font-sans font-medium">
+            <div className="text-md text-[#5D5D5D] font-sans font-medium">
               {user?.roleName || profile?.role?.name || "Staff"}
             </div>
           </div>
@@ -71,15 +71,15 @@ export function UserMenu() {
                 className="object-cover"
               />
             )}
-            <AvatarFallback className="bg-surface-primary-light text-icon-primary font-bold text-xs">
+            <AvatarFallback className="bg-surface-primary-light text-icon-primary font-bold text-md">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-0.5 min-w-0">
-            <p className="text-sm font-semibold leading-tight text-slate-900 truncate">
+            <p className="text-md font-semibold leading-tight text-slate-900 truncate">
               {displayName}
             </p>
-            <p className="text-xs leading-none text-muted-foreground truncate">
+            <p className="text-md leading-none text-muted-foreground truncate">
               {user?.email || profile?.email}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function UserMenu() {
         <Link href={getProfileLink()}>
           <DropdownMenuItem className="flex cursor-pointer items-center py-2.5">
             <UserIcon className="mr-2 h-4 w-4" />
-            <span className="flex-1 text-sm">Profile</span>
+            <span className="flex-1 text-md">Profile</span>
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator className="bg-border" />
@@ -97,7 +97,7 @@ export function UserMenu() {
           onClick={() => logout()}
         >
           <LogOut className="mr-2 h-4 w-4" />
-          <span className="flex-1 text-sm font-medium">Log out</span>
+          <span className="flex-1 text-md font-medium">Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -224,10 +224,6 @@ export type MandatoryPreAdmissionPartEDTO = z.infer<
 
 export const MandatoryPreAdmissionRoomAllocationSchema =
   PreAdmissionRoomAllocationSchema.extend({
-    bedId: z.preprocess(
-      (value) => value ?? "",
-      z.string().trim().min(1, "Bed allocation is required"),
-    ),
     roomNumber: z.preprocess(
       (value) => value ?? "",
       z.string().trim().min(1, "Room number is required"),
@@ -371,7 +367,6 @@ export function getPreAdmissionSubmitIssues(
   need("partA", "dob", a?.dob?.trim(), "Date of birth is required");
   need("partA", "gender", a?.gender?.trim(), "Gender is required");
   need("partA", "maritalStatus", a?.maritalStatus?.trim(), "Marital status is required");
-  need("partA", "nhsNumber", a?.nhsNumber?.trim(), "NHS number is required");
   need("partA", "previousAddress", a?.previousAddress?.trim(), "Previous address is required");
   need("partA", "language", a?.language?.trim(), "Preferred language is required");
   need("partA", "stayType", a?.stayType, "Type of stay is required");

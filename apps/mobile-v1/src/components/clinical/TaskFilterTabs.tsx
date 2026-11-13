@@ -78,7 +78,7 @@ export const TaskFilterTabs: React.FC<TaskFilterTabsProps> = ({
       {residents.length > 0 && (
         <View className="flex-row items-center pt-0.5">
           <Text className="text-xs font-bold text-muted-foreground uppercase tracking-wider mr-2">
-            Resident
+            Person
           </Text>
           <ScrollView
             horizontal

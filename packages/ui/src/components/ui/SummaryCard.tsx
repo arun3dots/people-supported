@@ -59,10 +59,10 @@ export function SummaryCard({
           {value}
         </Text>
         {subtitle && (
-          <Text size={'sm'} weight={'regular'}
+          <Text size={'md'} weight={'regular'}
             suppressHydrationWarning
             className={cn(
-              "truncate",
+              "leading-snug",
               subtitleColor || "text-slate-500"
             )}
           >

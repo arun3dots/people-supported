@@ -3,10 +3,8 @@
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import {
-  shiftForTime,
   type CareTaskDefinitionDTO,
   type CareTaskRecurrenceDTO,
-  type CareTaskShift,
   type CreateCareTaskDTO,
 } from "@repo/schema";
 import { Button, Switch } from "@repo/ui/components/ui";
@@ -18,6 +16,9 @@ import {
   CarePlanTaskDialog,
   type TaskFormData,
 } from "../../../../shared/components/care-plan/CarePlanTaskDialog";
+import { careJourneyTaskFromForm } from "./careJourneyTaskForm";
+
+export { careJourneyTaskFromForm } from "./careJourneyTaskForm";
 
 export const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
@@ -35,51 +36,6 @@ export const formatTaskDateWindow = (
   if (endsOn) return `Until ${endsOn}`;
   return null;
 };
-
-export function careJourneyTaskFromForm(data: TaskFormData): CreateCareTaskDTO {
-  const rawTime = data.targetTime?.trim() ?? "";
-  const hasValidTime = /^([01]\d|2[0-3]):[0-5]\d$/.test(rawTime);
-  const slots = data.timeOfDay ?? [];
-  const hasDaySlot = slots.some(
-    (s) =>
-      s === "Morning" ||
-      s === "Afternoon" ||
-      s === "Evening" ||
-      s === "AllDay",
-  );
-  const shift: CareTaskShift = hasValidTime
-    ? shiftForTime(rawTime)
-    : !hasDaySlot && slots.includes("Night")
-      ? "Night"
-      : "Day";
-
-  const instructions = data.instructions?.trim();
-  const precautions = data.precautions?.trim();
-  const description = [
-    instructions,
-    precautions ? `Precautions: ${precautions}` : null,
-  ]
-    .filter(Boolean)
-    .join("\n\n");
-
-  const startsOn = data.startsOn?.trim() || undefined;
-  const endsOn = data.endsOn?.trim() || undefined;
-  const recurrence: CareTaskRecurrenceDTO =
-    data.frequency === "Weekly" && (data.recurrenceDays ?? []).length > 0
-      ? { type: "weekly", days: data.recurrenceDays ?? [] }
-      : { type: "daily", days: [] };
-
-  return {
-    title: data.title.trim(),
-    description: description || null,
-    time: hasValidTime ? rawTime : "",
-    shift,
-    role: data.careTaskRole ?? "Carer",
-    recurrence,
-    ...(startsOn ? { startsOn } : {}),
-    ...(endsOn ? { endsOn } : {}),
-  };
-}
 
 interface ModalTasksSectionProps {
   residentId: string;
@@ -118,13 +74,13 @@ export function ModalTasksSection({
   return (
     <div className="space-y-3 font-sans">
       {isAgreed && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           Tasks on an agreed care plan are read-only. Changes require a formal
           amendment.
         </p>
       )}
       {!isAgreed && hasAny && (
-        <p className="text-sm text-slate-600">
+        <p className="text-md text-slate-600">
           Created tasks appear in the final review step and on the carer shift list once the plan is agreed.
         </p>
       )}
@@ -144,7 +100,7 @@ export function ModalTasksSection({
                 <p className="text-md font-medium text-slate-800 truncate">
                   {task.title}
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-md text-slate-600">
                   {[
                     task.role,
                     task.time ? `${task.shift} shift` : null,
@@ -155,7 +111,7 @@ export function ModalTasksSection({
                     .join(" · ")}
                 </p>
               </div>
-              <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+              <label className="flex items-center gap-2 text-md text-slate-700 cursor-pointer">
                 <Switch
                   checked={task.isActive}
                   disabled={isAgreed || update.isPending}
@@ -185,7 +141,7 @@ export function ModalTasksSection({
                 <p className="text-md font-medium text-slate-800 truncate">
                   {task.title}
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-md text-slate-600">
                   {[
                     task.role,
                     task.time ? `${shiftLabel} shift` : null,
@@ -225,7 +181,7 @@ export function ModalTasksSection({
             type="button"
             variant="outline"
             onClick={() => setTaskDialogOpen(true)}
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             <Plus className="size-4" />
             Add task

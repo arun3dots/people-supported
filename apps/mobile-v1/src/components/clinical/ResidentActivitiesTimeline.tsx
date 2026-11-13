@@ -29,7 +29,7 @@ export function ResidentActivitiesTimeline({
       return {
         id: t.id,
         title: isAccessEvent
-          ? 'Resident Profile Viewed'
+          ? 'Profile Viewed'
           : t.eventType
               .replace(/_/g, ' ')
               .toLowerCase()

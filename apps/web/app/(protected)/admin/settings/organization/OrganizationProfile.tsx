@@ -51,8 +51,8 @@ export function OrganizationProfile() {
           <Text size={'xl'} weight={'bold'}>
             Organisational Profile
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
-            Manage your care home&apos;s identity, contact information, and physical address
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
+            Manage your supported living service&apos;s identity, contact information, and physical address
           </Text>
         </div>
 
@@ -103,10 +103,11 @@ export function OrganizationProfile() {
             id={profile?.id}
             createdAt={profile?.createdAt}
             status={profile?.status ?? null}
+            packageName={profile?.package?.name ?? null}
           />
 
           {/* ─── Documents ─── */}
-          <OrgDocumentsCard />
+          {/* <OrgDocumentsCard /> */}
         </div>
       </div>
 

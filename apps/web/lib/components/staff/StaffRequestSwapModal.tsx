@@ -101,21 +101,21 @@ export function StaffRequestSwapModal({
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           {error && (
-            <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
+            <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-md text-rose-700">
               {error}
             </div>
           )}
 
           {/* Selected shift preview banner */}
           <div className="rounded-xl border border-sky-100 bg-sky-50/70 p-3.5 space-y-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-sky-800">
+            <span className="text-md font-semibold uppercase tracking-wider text-sky-800">
               Selected Shift
             </span>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-900">
+              <span className="text-md font-bold text-slate-900">
                 {shiftTypeName}
               </span>
-              <span className="text-sm font-semibold text-slate-700">
+              <span className="text-md font-semibold text-slate-700">
                 {isValidDate
                   ? formatUkDate(startDate, {
                     weekday: "short",
@@ -127,7 +127,7 @@ export function StaffRequestSwapModal({
               </span>
             </div>
             {(timingDisplay || wingName) && (
-              <div className="flex items-center gap-3 text-sm text-slate-600">
+              <div className="flex items-center gap-3 text-md text-slate-600">
                 {timingDisplay && <span>{timingDisplay}</span>}
                 {timingDisplay && wingName && <span>•</span>}
                 {wingName && <span>{wingName}</span>}
@@ -136,7 +136,7 @@ export function StaffRequestSwapModal({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-semibold text-slate-800">
+            <Label className="text-md font-semibold text-slate-800">
               Request Type
             </Label>
             <Select
@@ -154,7 +154,7 @@ export function StaffRequestSwapModal({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-semibold text-slate-800">
+            <Label className="text-md font-semibold text-slate-800">
               Reason
             </Label>
             <Input
@@ -166,7 +166,7 @@ export function StaffRequestSwapModal({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-semibold text-slate-800">
+            <Label className="text-md font-semibold text-slate-800">
               Colleague / Additional Details (Optional)
             </Label>
             <Textarea

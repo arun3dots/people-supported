@@ -11,8 +11,7 @@ import { useExportResidentSarMutation } from "../../../../../../lib/queries/data
 import { useAuth } from "../../../../../../lib/context/AuthContext";
 import { ResidentHeroBanner } from "./ResidentHeroBanner";
 import { ResidentPageHeader } from "./ResidentPageHeader";
-import { ResidentRecordOverview } from "./record";
-import { SupportPlanTab } from "./SupportPlanTab";
+import { ResidentRecordOverview, ResidentRecordCarePlans } from "./record";
 import { ResidentAssessmentsTab } from "./ResidentAssessmentsTab";
 import { ResidentMarTab } from "./ResidentMarTab";
 import { ResidentIncidentsTab } from "./ResidentIncidentsTab";
@@ -217,7 +216,7 @@ export function ResidentProfileClient({ residentId }: ResidentProfileClientProps
         />
       )}
       {activeTab === "careplan" && (
-        <SupportPlanTab resident={resident} canEdit={isAdmin} />
+        <ResidentRecordCarePlans residentId={resident.id} />
       )}
       {activeTab === "assessments" && <ResidentAssessmentsTab resident={resident} />}
       {activeTab === "mar" && <ResidentMarTab resident={resident} />}

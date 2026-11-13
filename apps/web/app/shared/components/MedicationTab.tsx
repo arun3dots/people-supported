@@ -380,14 +380,14 @@ export function MedicationTab({
                           {round.isAdhoc ? (
                             <Badge
                               variant="outline"
-                              className="bg-amber-50 text-amber-700 border-amber-200 text-[10px]"
+                              className="bg-amber-50 text-amber-700 border-amber-200 text-md"
                             >
                               Ad-hoc / Unlisted
                             </Badge>
                           ) : (
                             <Badge
                               variant="outline"
-                              className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px]"
+                              className="bg-indigo-50 text-indigo-700 border-indigo-200 text-md"
                             >
                               Care Plan Scheduled
                             </Badge>
@@ -395,7 +395,7 @@ export function MedicationTab({
                           {round.status === "Administered" && (
                             <Badge
                               variant="default"
-                              className="bg-green-500 hover:bg-green-600 text-white border-none text-[10px]"
+                              className="bg-green-500 hover:bg-green-600 text-white border-none text-md"
                             >
                               Completed
                             </Badge>

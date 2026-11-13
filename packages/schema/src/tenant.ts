@@ -4,11 +4,11 @@ import { customPackageSchema } from "./billing";
 export const createTenantSchema = z.object({
   name: z
     .string()
-    .min(2, "Care home name must be at least 2 characters")
-    .max(100, "Care home name must not exceed 100 characters")
+    .min(2, "Supported living service name must be at least 2 characters")
+    .max(100, "Supported living service name must not exceed 100 characters")
     .regex(
       /^(?!\s*$)[a-zA-Z0-9\s\-'.&()]+$/,
-      "Care home name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
+      "Supported living service name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
     ),
   subdomain: z
     .string()
@@ -20,6 +20,11 @@ export const createTenantSchema = z.object({
   cqcNumber: z.string().optional().nullable(),
   cqcProviderId: z.string().optional().nullable(),
   cqcLocationId: z.string().optional().nullable(),
+  careHomeType: z.string().max(100).optional().nullable(),
+  registeredProvider: z.string().max(150).optional().nullable(),
+  establishedDate: z.string().max(50).optional().nullable(),
+  website: z.string().max(200).optional().nullable(),
+  primaryContactRole: z.string().max(100).optional().nullable(),
   addressLine1: z
     .string()
     .min(3, "Address must be at least 3 characters")
@@ -82,11 +87,11 @@ export const createTenantSchema = z.object({
 export const updateTenantSchema = z.object({
   name: z
     .string()
-    .min(2, "Care home name must be at least 2 characters")
-    .max(100, "Care home name must not exceed 100 characters")
+    .min(2, "Supported living service name must be at least 2 characters")
+    .max(100, "Supported living service name must not exceed 100 characters")
     .regex(
       /^(?!\s*$)[a-zA-Z0-9\s\-'.&()]+$/,
-      "Care home name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
+      "Supported living service name can only contain letters, numbers, spaces, and basic punctuation (- ' . & ())",
     )
     .optional(),
   subdomain: z
@@ -102,6 +107,11 @@ export const updateTenantSchema = z.object({
   cqcNumber: z.string().optional().nullable(),
   cqcProviderId: z.string().optional().nullable(),
   cqcLocationId: z.string().optional().nullable(),
+  careHomeType: z.string().max(100).optional().nullable(),
+  registeredProvider: z.string().max(150).optional().nullable(),
+  establishedDate: z.string().max(50).optional().nullable(),
+  website: z.string().max(200).optional().nullable(),
+  primaryContactRole: z.string().max(100).optional().nullable(),
   addressLine1: z
     .string()
     .min(3, "Address must be at least 3 characters")

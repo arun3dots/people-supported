@@ -91,7 +91,7 @@ export function CarerResidentCareTabs({
         </TabsTrigger>
         <TabsTrigger
           value="bodymap"
-          className="data-[state=active]:bg-[#3D5C57] data-[state=active]:text-white data-[state=active]:shadow-xs h-10 px-4 rounded-xl font-bold text-sm transition-all flex items-center gap-1.5"
+          className="data-[state=active]:bg-[#3D5C57] data-[state=active]:text-white data-[state=active]:shadow-xs h-10 px-4 rounded-xl font-bold text-md transition-all flex items-center gap-1.5"
         >
           <UserRound className="size-4" /> Body Map
         </TabsTrigger>

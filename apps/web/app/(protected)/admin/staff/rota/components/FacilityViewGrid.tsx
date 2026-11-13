@@ -123,10 +123,10 @@ export function FacilityViewGrid({ onViewShift }: FacilityViewGridProps) {
                       <Building2 className="size-5" />
                     </div>
                     <div className="flex flex-col min-w-0 gap-0.5">
-                      <Text size="sm" weight="medium" className="text-slate-900 truncate">
+                      <Text size="md" weight="medium" className="text-slate-900 truncate">
                         {wing.name}
                       </Text>
-                      <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                      <Text size="md" weight="regular" className="text-slate-500 truncate">
                         {wing.type}
                       </Text>
                     </div>
@@ -136,10 +136,10 @@ export function FacilityViewGrid({ onViewShift }: FacilityViewGridProps) {
                 {/* Total Staff */}
                 <TableCell className="py-3.5">
                   <div className="flex flex-col gap-0.5">
-                    <Text size="sm" weight="medium" className="text-slate-900">
+                    <Text size="md" weight="medium" className="text-slate-900">
                       {wing.totalStaff}
                     </Text>
-                    <Text size="sm" weight="regular" className="text-slate-500">
+                    <Text size="md" weight="regular" className="text-slate-500">
                       Registered
                     </Text>
                   </div>
@@ -148,7 +148,7 @@ export function FacilityViewGrid({ onViewShift }: FacilityViewGridProps) {
                 {/* On Duty Today */}
                 <TableCell className="py-3.5">
                   <div className="flex flex-col gap-1">
-                    <Text size="sm" weight="medium" className="text-slate-900">
+                    <Text size="md" weight="medium" className="text-slate-900">
                       {wing.onDuty} Staff
                     </Text>
                     <Badge variant="secondary" state="success" className="px-2 py-0.5 shadow-none w-fit">
@@ -174,14 +174,14 @@ export function FacilityViewGrid({ onViewShift }: FacilityViewGridProps) {
                     <div className="flex items-center gap-2">
                       <span className={`size-2 rounded-full ${wing.isUnderstaffed ? "bg-amber-500" : "bg-emerald-500"}`} />
                       <Text
-                        size="sm"
+                        size="md"
                         weight="medium"
                         className={wing.isUnderstaffed ? "text-amber-700" : "text-primary"}
                       >
                         {wing.status}
                       </Text>
                     </div>
-                    <Text size="sm" weight="regular" className="text-slate-500">
+                    <Text size="md" weight="regular" className="text-slate-500">
                       {wing.statusDetail}
                     </Text>
                   </div>

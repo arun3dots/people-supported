@@ -60,7 +60,7 @@ export function MobileActiveFindingsCard({
             No Active Findings
           </Text>
           <Text className="text-[11px] text-slate-400 text-center mt-0.5 max-w-[220px]">
-            No open pressure ulcers, tears, or wounds documented for this resident.
+            No open pressure ulcers, tears, or wounds documented for this person supported.
           </Text>
         </View>
       ) : (

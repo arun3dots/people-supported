@@ -86,7 +86,7 @@ export function CarePlanVersionHistoryCard({
                       </span>
                     </div>
                     {ver.renewalReason && (
-                      <p className="text-sm text-text-description mt-0.5">
+                      <p className="text-md text-text-description mt-0.5">
                         Renewal Reason: <span className="font-medium text-text-primary">{ver.renewalReason}</span>
                       </p>
                     )}

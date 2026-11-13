@@ -18,10 +18,10 @@ export function LocationAddressFields({
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Location & Physical Address
           </Text>
-          <Text size="sm" variant="muted" className="text-slate-500">
+          <Text size="md" variant="muted" className="text-slate-500">
             Registered facility location and postal correspondence details
           </Text>
         </div>

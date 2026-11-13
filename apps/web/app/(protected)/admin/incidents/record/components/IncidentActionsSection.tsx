@@ -161,7 +161,7 @@ export function IncidentActionsSection({
                   <p className="text-md font-semibold text-slate-800 truncate px-1">
                     {att.name}
                   </p>
-                  <p className="text-sm text-slate-400 truncate">
+                  <p className="text-md text-slate-400 truncate">
                     {att.timestamp}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ export function IncidentActionsSection({
               <span className="text-md font-semibold text-slate-700">
                 Upload Attachments
               </span>
-              <span className="text-sm text-slate-400 font-normal">
+              <span className="text-md text-slate-400 font-normal">
                 PDF, PNG, JPG (Max 10MB)
               </span>
             </label>
@@ -198,7 +198,7 @@ export function IncidentActionsSection({
           value={initialAssessment}
           onChange={(e) => setInitialAssessment(e.target.value)}
           rows={4}
-          placeholder="Record the resident's initial condition and assessment..."
+          placeholder="Record the tenant's initial condition and assessment..."
           className="min-h-[100px] resize-y"
         />
       </div>
@@ -211,7 +211,7 @@ export function IncidentActionsSection({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={4}
-          placeholder="Provide detailed clinical and operational notes on what occurred, resident demeanor, and subsequent steps taken..."
+          placeholder="Provide detailed clinical and operational notes on what occurred, tenant demeanor, and subsequent steps taken..."
           className="min-h-[100px] resize-y"
         />
       </div>

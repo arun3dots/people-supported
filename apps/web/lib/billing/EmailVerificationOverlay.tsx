@@ -78,13 +78,13 @@ export function EmailVerificationOverlay() {
         </p>
 
         {sent && (
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-green-600">
+          <div className="mt-4 flex items-center justify-center gap-2 text-md font-medium text-green-600">
             <CheckCircle2 className="h-4 w-4" />
             Verification email sent — check your inbox.
           </div>
         )}
         {error && (
-          <p className="mt-4 text-sm font-medium text-red-600">{error}</p>
+          <p className="mt-4 text-md font-medium text-red-600">{error}</p>
         )}
 
         <div className="mt-8 flex flex-col gap-3">
@@ -112,7 +112,7 @@ export function EmailVerificationOverlay() {
           </Button>
         </div>
 
-        <p className="mt-6 text-sm text-muted-foreground">
+        <p className="mt-6 text-md text-muted-foreground">
           Already verified? This will update automatically.
         </p>
       </div>

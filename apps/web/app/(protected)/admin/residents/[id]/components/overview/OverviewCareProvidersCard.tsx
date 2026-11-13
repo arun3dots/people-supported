@@ -69,7 +69,7 @@ export function OverviewCareProvidersCard({
           <Text as="h3" size="md" weight="bold" className="text-slate-900 tracking-wider">
             CARE PROVIDERS &amp; GP
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Primary care practitioner and specialist medical contacts.
           </Text>
         </div>
@@ -100,7 +100,7 @@ export function OverviewCareProvidersCard({
       <div className="space-y-6">
         {/* General Practitioner (GP) */}
         <div className="space-y-3">
-          <Text as="h4" size="sm" weight="bold" className="text-slate-900 tracking-wider">
+          <Text as="h4" size="md" weight="bold" className="text-slate-900 tracking-wider">
             GENERAL PRACTITIONER (GP) <span className="text-red-500">*</span>
           </Text>
 
@@ -115,7 +115,7 @@ export function OverviewCareProvidersCard({
                 value={gpPractice || "Not specified"}
               />
               <div className="flex flex-col gap-1">
-                <Text size="sm" weight="medium" className="text-slate-500">
+                <Text size="md" weight="medium" className="text-slate-500">
                   Phone *
                 </Text>
                 {gpPhone ? (
@@ -124,7 +124,7 @@ export function OverviewCareProvidersCard({
                     {gpPhone}
                   </a>
                 ) : (
-                  <Text size="sm" weight="regular" className="text-slate-400">
+                  <Text size="md" weight="regular" className="text-slate-400">
                     Not specified
                   </Text>
                 )}
@@ -132,7 +132,7 @@ export function OverviewCareProvidersCard({
             </div>
           ) : (
             <div className="p-4 bg-white rounded-xl border border-border-secondary/60 text-center">
-              <Text size="sm" weight="regular" className="text-slate-500 italic">
+              <Text size="md" weight="regular" className="text-slate-500 italic">
                 No GP surgery details registered. Click &quot;Add Provider&quot; to add details.
               </Text>
             </div>
@@ -142,7 +142,7 @@ export function OverviewCareProvidersCard({
         {/* Additional Healthcare Providers */}
         {otherProviders.length > 0 && (
           <div className="space-y-3 pt-4 border-t border-border-secondary/80">
-            <Text as="h4" size="sm" weight="bold" className="text-slate-900 tracking-wider">
+            <Text as="h4" size="md" weight="bold" className="text-slate-900 tracking-wider">
               Additional Healthcare Providers
             </Text>
             <div className="grid grid-cols-1 gap-3">
@@ -152,7 +152,7 @@ export function OverviewCareProvidersCard({
                   className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center bg-white p-3.5 rounded-xl border border-border-secondary/60 shadow-xs"
                 >
                   <div className="sm:col-span-3">
-                    <Text size="sm" weight="medium" className="text-slate-500">
+                    <Text size="md" weight="medium" className="text-slate-500">
                       Provider Type
                     </Text>
                     <Badge variant="secondary" state="info" className="mt-0.5 px-2.5 py-0.5 shadow-none">
@@ -161,7 +161,7 @@ export function OverviewCareProvidersCard({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <Text size="sm" weight="medium" className="text-slate-500">
+                    <Text size="md" weight="medium" className="text-slate-500">
                       Provider Name
                     </Text>
                     <Text size="md" weight="bold" className="text-slate-900 truncate">
@@ -170,7 +170,7 @@ export function OverviewCareProvidersCard({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <Text size="sm" weight="medium" className="text-slate-500">
+                    <Text size="md" weight="medium" className="text-slate-500">
                       Clinic / Practice
                     </Text>
                     <Text size="md" weight="regular" className="text-slate-700 truncate">
@@ -179,7 +179,7 @@ export function OverviewCareProvidersCard({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <Text size="sm" weight="medium" className="text-slate-500">
+                    <Text size="md" weight="medium" className="text-slate-500">
                       Phone
                     </Text>
                     {provider.phone ? (
@@ -187,7 +187,7 @@ export function OverviewCareProvidersCard({
                         {provider.phone}
                       </a>
                     ) : (
-                      <Text size="sm" weight="regular" className="text-slate-400">
+                      <Text size="md" weight="regular" className="text-slate-400">
                         N/A
                       </Text>
                     )}

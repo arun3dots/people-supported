@@ -92,7 +92,7 @@ export function InvoiceDetailModal({
                 </DialogTitle>
                 {getStatusBadge(invoice.status)}
               </div>
-              <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+              <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
                 Type: {invoice.invoiceType}
               </Text>
             </div>
@@ -103,26 +103,26 @@ export function InvoiceDetailModal({
           {/* Top Meta info */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-md">
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500">Resident</Text>
-              <Text size="sm" weight="semibold" className="text-slate-900 mt-0.5">
+              <Text size="md" weight="medium" className="text-slate-500">Resident</Text>
+              <Text size="md" weight="semibold" className="text-slate-900 mt-0.5">
                 {invoice.resident?.fullName || "—"}
               </Text>
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500">Issue Date</Text>
-              <Text size="sm" weight="semibold" className="text-slate-900 mt-0.5">
+              <Text size="md" weight="medium" className="text-slate-500">Issue Date</Text>
+              <Text size="md" weight="semibold" className="text-slate-900 mt-0.5">
                 {formatDate(invoice.issuedDate)}
               </Text>
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500">Due Date</Text>
-              <Text size="sm" weight="semibold" className="text-slate-900 mt-0.5">
+              <Text size="md" weight="medium" className="text-slate-500">Due Date</Text>
+              <Text size="md" weight="semibold" className="text-slate-900 mt-0.5">
                 {formatDate(invoice.dueDate)}
               </Text>
             </div>
             <div>
-              <Text size="sm" weight="medium" className="text-slate-500">Council PO</Text>
-              <Text size="sm" weight="semibold" className="text-slate-900 mt-0.5">
+              <Text size="md" weight="medium" className="text-slate-500">Council PO</Text>
+              <Text size="md" weight="semibold" className="text-slate-900 mt-0.5">
                 {invoice.councilPo?.poNumber || "Private"}
               </Text>
             </div>
@@ -130,7 +130,7 @@ export function InvoiceDetailModal({
 
           {/* Line items table */}
           <div>
-            <Text size="sm" weight="semibold" className="text-slate-900 mb-2">
+            <Text size="md" weight="semibold" className="text-slate-900 mb-2">
               Invoice Line Items
             </Text>
             <div className="border border-slate-200 rounded-xl overflow-hidden">
@@ -179,16 +179,16 @@ export function InvoiceDetailModal({
               </Table>
               <div className="bg-slate-50 p-3 border-t border-slate-200 space-y-1">
                 <div className="flex justify-between items-center text-md">
-                  <Text size="sm" weight="medium" className="text-slate-600">Total Invoiced Amount:</Text>
-                  <Text size="sm" weight="semibold" className="text-emerald-700">{formatCurrency(invoice.amount)}</Text>
+                  <Text size="md" weight="medium" className="text-slate-600">Total Invoiced Amount:</Text>
+                  <Text size="md" weight="semibold" className="text-emerald-700">{formatCurrency(invoice.amount)}</Text>
                 </div>
                 <div className="flex justify-between items-center text-md">
-                  <Text size="sm" weight="regular" className="text-slate-500">Amount Paid:</Text>
-                  <Text size="sm" weight="medium" className="text-slate-700">{formatCurrency(totalPaid)}</Text>
+                  <Text size="md" weight="regular" className="text-slate-500">Amount Paid:</Text>
+                  <Text size="md" weight="medium" className="text-slate-700">{formatCurrency(totalPaid)}</Text>
                 </div>
                 <div className="flex justify-between items-center text-md pt-1 border-t border-slate-200/80">
-                  <Text size="sm" weight="bold" className="text-slate-900">Balance Due:</Text>
-                  <Text size="sm" weight="bold" className="text-slate-900">{formatCurrency(balanceDue)}</Text>
+                  <Text size="md" weight="bold" className="text-slate-900">Balance Due:</Text>
+                  <Text size="md" weight="bold" className="text-slate-900">{formatCurrency(balanceDue)}</Text>
                 </div>
               </div>
             </div>
@@ -197,15 +197,15 @@ export function InvoiceDetailModal({
           {/* Notes */}
           {invoice.notes && (
             <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 text-md">
-              <Text size="sm" weight="semibold" className="text-slate-900 inline">Notes: </Text>
-              <Text size="sm" weight="regular" className="text-slate-600 inline">{invoice.notes}</Text>
+              <Text size="md" weight="semibold" className="text-slate-900 inline">Notes: </Text>
+              <Text size="md" weight="regular" className="text-slate-600 inline">{invoice.notes}</Text>
             </div>
           )}
 
           {/* Payment History */}
           {invoice.paymentHistory && invoice.paymentHistory.length > 0 && (
             <div>
-              <Text size="sm" weight="semibold" className="text-slate-900 mb-2">
+              <Text size="md" weight="semibold" className="text-slate-900 mb-2">
                 Payment History
               </Text>
               <div className="border border-slate-200 rounded-xl overflow-hidden text-md">

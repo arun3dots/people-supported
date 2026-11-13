@@ -27,7 +27,7 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
     return (
       <div className="p-12 text-center bg-white rounded-2xl border border-slate-200/80 font-['Outfit',sans-serif]">
         <div className="animate-spin size-6 border-2 border-emerald-800 border-t-transparent rounded-full mx-auto mb-2" />
-        <Text size="sm" variant="muted">Loading statutory reviews...</Text>
+        <Text size="md" variant="muted">Loading statutory reviews...</Text>
       </div>
     );
   }
@@ -36,10 +36,10 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
     return (
       <div className="p-12 text-center bg-white rounded-2xl border border-slate-200/80 font-['Outfit',sans-serif] space-y-2">
         <ClipboardList className="size-8 text-slate-300 mx-auto" />
-        <Text size="sm" weight="semibold" className="text-slate-800">
+        <Text size="md" weight="semibold" className="text-slate-800">
           No Monthly Reviews Recorded Yet
         </Text>
-        <Text size="sm" variant="muted" className="max-w-md mx-auto">
+        <Text size="md" variant="muted" className="max-w-md mx-auto">
           Under CQC Regulation 17, active care plans should undergo regular monthly evaluations to review progress against goals and record resident wishes.
         </Text>
       </div>
@@ -49,7 +49,7 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
   return (
     <div className="space-y-4 font-['Outfit',sans-serif]">
       <div className="flex items-center justify-between">
-        <Text size="sm" weight="bold" className="text-slate-900">
+        <Text size="md" weight="bold" className="text-slate-900">
           Statutory Evaluation History ({reviews.length})
         </Text>
       </div>
@@ -75,13 +75,13 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
                   ) : (
                     <RefreshCw className="size-4 text-rose-600 shrink-0" />
                   )}
-                  <Text size="sm" weight="semibold" className="text-slate-900">
+                  <Text size="md" weight="semibold" className="text-slate-900">
                     {format(new Date(rev.reviewedAt), "dd MMMM yyyy, HH:mm")}
                   </Text>
                   <Badge
                     variant="secondary"
                     state={isMaintained ? "success" : isMinor ? "warning" : "danger"}
-                    className="text-sm font-semibold px-2 py-0.5"
+                    className="text-md font-semibold px-2 py-0.5"
                   >
                     {isMaintained
                       ? "Maintained - Stable"
@@ -125,11 +125,11 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
               {/* Domains Evaluated */}
               {rev.domainsEvaluated && rev.domainsEvaluated.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  <span className="text-sm text-slate-400 font-medium">Domains:</span>
+                  <span className="text-md text-slate-400 font-medium">Domains:</span>
                   {(rev.domainsEvaluated || []).map((d: string) => (
                     <span
                       key={d}
-                      className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-sm font-medium"
+                      className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-md font-medium"
                     >
                       {d}
                     </span>
@@ -163,7 +163,7 @@ export function CarePlanReviewTimeline({ carePlanId }: CarePlanReviewTimelinePro
 
               {/* Next Scheduled Review */}
               {rev.nextScheduledReview && (
-                <div className="flex items-center gap-1.5 text-sm text-slate-400 pt-1">
+                <div className="flex items-center gap-1.5 text-md text-slate-400 pt-1">
                   <Calendar className="size-3" />
                   <span>
                     Next review due on {format(new Date(rev.nextScheduledReview), "dd MMM yyyy")}

@@ -241,11 +241,11 @@ export function AssignResidentModal({
               fill="transparent"
             />
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-extrabold text-slate-800">
+          <span className="absolute inset-0 flex items-center justify-center text-md font-extrabold text-slate-800">
             {percent}%
           </span>
         </div>
-        <span className={`text-[10px] font-semibold mt-0.5 ${textColor}`}>{label}</span>
+        <span className={`text-md font-semibold mt-0.5 ${textColor}`}>{label}</span>
       </div>
     );
   };
@@ -293,23 +293,23 @@ export function AssignResidentModal({
                       strokeDasharray={`${(compliancePercent / 100) * 87.96} 87.96`}
                       strokeLinecap="round" fill="transparent" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-800">{compliancePercent}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-md font-bold text-slate-800">{compliancePercent}%</span>
                 </div>
-                <div className="text-[11px] font-semibold text-slate-600">Compliance</div>
+                <div className="text-md font-semibold text-slate-600">Compliance</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">Max Capacity</div>
+                <div className="text-md font-medium text-slate-500">Max Capacity</div>
                 <div className="text-lg font-bold text-slate-900 mt-0.5">{maxCapacity.toString().padStart(2, '0')}</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">Current Residents</div>
+                <div className="text-md font-medium text-slate-500">Current Residents</div>
                 <div className="text-lg font-bold text-slate-900 mt-0.5">{currentResidents.toString().padStart(2, '0')}</div>
               </div>
 
               <div className="text-center border-l border-slate-200 pl-6">
-                <div className="text-[11px] font-medium text-slate-500">Remaining Capacity</div>
+                <div className="text-md font-medium text-slate-500">Remaining Capacity</div>
                 <div className="text-lg font-bold text-slate-900 mt-0.5">{remainingCapacity.toString().padStart(2, '0')}</div>
               </div>
             </div>
@@ -364,7 +364,7 @@ export function AssignResidentModal({
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="text-[11px] font-bold text-slate-600  border-b border-slate-200/80">
+                  <tr className="text-md font-bold text-slate-600  border-b border-slate-200/80">
                     <th className="py-3 px-4 w-10">
                       <input
                         type="checkbox"
@@ -399,7 +399,7 @@ export function AssignResidentModal({
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="size-9 rounded-full overflow-hidden bg-gradient-to-br from-violet-400 to-purple-600 shrink-0 flex items-center justify-center text-white text-[10px] font-bold">
+                            <div className="size-9 rounded-full overflow-hidden bg-gradient-to-br from-violet-400 to-purple-600 shrink-0 flex items-center justify-center text-white text-md font-bold">
                               {res.avatar ? (
 
                                 <img src={res.avatar} alt={res.name} className="object-cover size-full" />
@@ -409,7 +409,7 @@ export function AssignResidentModal({
                             </div>
                             <div>
                               <div className="font-bold text-slate-900">{res.name}</div>
-                              <div className="text-[11px] text-slate-500 font-medium">{res.roomBed}</div>
+                              <div className="text-md text-slate-500 font-medium">{res.roomBed}</div>
                             </div>
                           </div>
                         </td>
@@ -417,7 +417,7 @@ export function AssignResidentModal({
                         <td className="py-3.5 px-4">
                           <div className="flex flex-wrap gap-1 max-w-[210px]">
                             {res.conditions.map((c, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600 text-[10px] font-medium shadow-2xs">
+                              <span key={i} className="px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600 text-md font-medium shadow-2xs">
                                 {c}
                               </span>
                             ))}

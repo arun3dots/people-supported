@@ -260,7 +260,7 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
                   </Text>
                 </div>
                 {latestObs?.timestamp && (
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     {new Date(latestObs.timestamp).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -274,7 +274,7 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
               {/* Large Score + Critical Risk Badge */}
               <div className="flex items-center justify-between py-1">
                 <div>
-                  <Text size="sm" weight="medium" className="text-slate-500 tracking-wider">
+                  <Text size="md" weight="medium" className="text-slate-500 tracking-wider">
                     NEWS2 Clinical Score
                   </Text>
                   <Text size="4xl" weight="bold" className="text-slate-900 tracking-tight leading-none mt-1">
@@ -297,7 +297,7 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
                   >
                     {criticalLevelText}
                   </Badge>
-                  <Text size="sm" weight="regular" className="text-slate-500 block">
+                  <Text size="md" weight="regular" className="text-slate-500 block">
                     {monitoringText}
                   </Text>
                 </div>
@@ -307,37 +307,37 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
               {latestObs ? (
                 <div className="grid grid-cols-3 gap-2 bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-center">
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">Temp</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">Temp</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.temp ? `${latestObs.temp}°C` : "—"}
                     </Text>
                   </div>
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">Pulse</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">Pulse</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.pulse ? `${latestObs.pulse} bpm` : "—"}
                     </Text>
                   </div>
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">BP</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">BP</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.bpSystolic ? `${latestObs.bpSystolic}/${latestObs.bpDiastolic || "?"}` : "—"}
                     </Text>
                   </div>
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">SpO2</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">SpO2</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.spo2 ? `${latestObs.spo2}%` : "—"}
                     </Text>
                   </div>
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">Respiration</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">Respiration</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.respiration ? `${latestObs.respiration} rpm` : "—"}
                     </Text>
                   </div>
                   <div>
-                    <Text size="sm" weight="medium" className="text-slate-500">Consciousness</Text>
+                    <Text size="md" weight="medium" className="text-slate-500">Consciousness</Text>
                     <Text size="md" weight="bold" className="text-slate-900">
                       {latestObs.consciousness || "Alert"}
                     </Text>
@@ -345,7 +345,7 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
                 </div>
               ) : (
                 <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-center">
-                  <Text size="sm" weight="regular" className="text-slate-500 italic">
+                  <Text size="md" weight="regular" className="text-slate-500 italic">
                     No observations recorded yet.
                   </Text>
                 </div>
@@ -430,7 +430,7 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
             {!resident.dnarStatus &&
               (!resident.careProfile?.medicationAllergies || resident.careProfile.medicationAllergies.length === 0) &&
               (!resident.careProfile?.chronicConditions || resident.careProfile.chronicConditions.length === 0) && (
-                <Text size="sm" weight="regular" className="text-slate-500 italic">
+                <Text size="md" weight="regular" className="text-slate-500 italic">
                   No active risk alerts
                 </Text>
               )}
@@ -457,16 +457,16 @@ export function ResidentOverviewTab({ resident, readOnly }: ResidentOverviewTabP
                       <Plus className="size-3.5" />
                     </div>
                     <div>
-                      <Text as="h4" size="sm" weight="medium" className="text-[#141F1E]">
+                      <Text as="h4" size="md" weight="medium" className="text-[#141F1E]">
                         {event.eventType?.replace(/_/g, " ") || "Care Event"}
                       </Text>
-                      <Text size="sm" weight="regular" className="text-[#5D5D5D] leading-[16px]">
+                      <Text size="md" weight="regular" className="text-[#5D5D5D] leading-[16px]">
                         {event.summary || "No description"}
                       </Text>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <Text size="sm" weight="regular" className="text-[#5D5D5D]">
+                    <Text size="md" weight="regular" className="text-[#5D5D5D]">
                       {event.createdAt ? new Date(event.createdAt).toLocaleDateString() : ""}
                     </Text>
                   </div>

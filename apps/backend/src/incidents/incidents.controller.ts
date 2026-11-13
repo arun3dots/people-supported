@@ -34,7 +34,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { AuthenticatedRequest } from '../common/interfaces/request.interface';
 import { ZodValidationPipe } from '../common/pipes/zod.pipe';
-import { requireBranchId, resolveBranchId } from '../common/utils/scope.util';
+import { resolveBranchId } from '../common/utils/scope.util';
 
 @Controller('incidents')
 @UseGuards(JwtAuthGuard)
@@ -54,7 +54,7 @@ export class IncidentsController {
       dto,
       req.user.tenantId!,
       req.user.userId,
-      requireBranchId(req, dto.branchId),
+      resolveBranchId(req, dto.branchId),
     );
   }
 

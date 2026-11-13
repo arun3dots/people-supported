@@ -78,7 +78,7 @@ export function ComplianceReminderWidget({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-emerald-800 font-bold text-md">
             <CheckCircle2 className="size-4 text-emerald-700 shrink-0" />
-            <Text size={"sm"} weight={"bold"} className="text-emerald-800">
+            <Text size={"md"} weight={"bold"} className="text-emerald-800">
               Compliance Fulfilled
             </Text>
           </div>
@@ -92,13 +92,13 @@ export function ComplianceReminderWidget({
         </div>
 
         <div className="space-y-1 text-md text-slate-700">
-          <Text size={"xs"} weight={"medium"} className="text-slate-600">
+          <Text size={"md"} weight={"medium"} className="text-slate-600">
             All statutory CQC guidelines, family/GP notifications, and
             root-cause actions were documented within the required window.
           </Text>
           <div className="flex items-center gap-1.5 pt-1">
             <CheckCircle2 className="size-3 text-emerald-600" />
-            <Text size={"xs"} weight={"semibold"} className="text-emerald-700">
+            <Text size={"md"} weight={"semibold"} className="text-emerald-700">
               Safe &amp; Well-Led Governance Met
             </Text>
           </div>
@@ -129,7 +129,7 @@ export function ComplianceReminderWidget({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-rose-800 font-bold text-md">
             <AlertOctagon className="size-4 text-rose-600 shrink-0" />
-            <Text size={"sm"} weight={"bold"} className="text-rose-800">
+            <Text size={"md"} weight={"bold"} className="text-rose-800">
               Critical SLA Breach
             </Text>
           </div>
@@ -146,14 +146,14 @@ export function ComplianceReminderWidget({
           <div className="p-2.5 bg-rose-100/80 border border-rose-300/80 rounded-xl">
             <div className="flex items-center gap-1.5">
               <Clock className="size-3.5 text-rose-700" />
-              <Text size={"xs"} weight={"bold"} className="text-rose-900">
+              <Text size={"md"} weight={"bold"} className="text-rose-900">
                 Exceeded 12-Hour SLA by{" "}
                 {overdueHours > 0 ? `${overdueHours}h ` : ""}
                 {overdueMinutes}m
               </Text>
             </div>
             <Text
-              size={"xs"}
+              size={"md"}
               weight={"medium"}
               className="text-rose-800 mt-0.5 block"
             >
@@ -163,7 +163,7 @@ export function ComplianceReminderWidget({
           </div>
 
           <Text
-            size={"xs"}
+            size={"md"}
             weight={"regular"}
             className="text-slate-700 leading-tight"
           >
@@ -219,7 +219,7 @@ export function ComplianceReminderWidget({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <AlertTriangle className="size-4 text-amber-600 shrink-0" />
-          <Text size={"sm"} weight={"bold"} className="text-amber-800">
+          <Text size={"md"} weight={"bold"} className="text-amber-800">
             Compliance Reminder
           </Text>
         </div>
@@ -233,19 +233,19 @@ export function ComplianceReminderWidget({
       </div>
 
       <div className="space-y-1.5">
-        <Text size={"xs"} weight={"regular"} className="text-slate-600">
+        <Text size={"md"} weight={"regular"} className="text-slate-600">
           This action contributes to CQC Safe &amp; Well-led evidence.
         </Text>
 
         <div className="flex items-center gap-1.5 bg-amber-100/60 px-2.5 py-1 rounded-lg border border-amber-200/60 w-fit">
           <Clock className="size-3.5 text-amber-700" />
-          <Text size={"sm"} weight={"bold"} className="text-amber-900">
+          <Text size={"md"} weight={"bold"} className="text-amber-900">
             Due within {hoursRemaining}{" "}
             {hoursRemaining === 1 ? "hour" : "hours"}
           </Text>
         </div>
 
-        <Text size={"xs"} weight={"regular"} className="text-slate-600">
+        <Text size={"md"} weight={"regular"} className="text-slate-600">
           Investigation must be completed and logged before the 12-hour
           statutory window closes.
         </Text>

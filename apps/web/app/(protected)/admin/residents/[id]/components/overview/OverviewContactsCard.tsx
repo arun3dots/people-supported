@@ -110,13 +110,13 @@ export function OverviewContactsCard({
                   {data.nokName ? data.nokName.slice(0, 2).toUpperCase() : "NOK"}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <Text size="sm" weight="bold" className="text-emerald-800 tracking-wider">
+                  <Text size="md" weight="bold" className="text-emerald-800 tracking-wider">
                     Primary Contact
                   </Text>
                   <Text as="h4" size="md" weight="bold" className="text-slate-900 truncate">
                     {data.nokName || primaryNok.name || "Emergency Contact"}
                   </Text>
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     {data.nokRelation || primaryNok.relationship || primaryNok.relation || "Next of Kin"}
                   </Text>
                 </div>
@@ -130,7 +130,7 @@ export function OverviewContactsCard({
                   </div>
                 )}
                 {(primaryNok.email || primaryNok.emailAddress) && (
-                  <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                  <Text size="md" weight="regular" className="text-slate-500 truncate">
                     Email: {primaryNok.email || primaryNok.emailAddress}
                   </Text>
                 )}
@@ -154,13 +154,13 @@ export function OverviewContactsCard({
                     {secondaryNok.name ? secondaryNok.name.slice(0, 2).toUpperCase() : "2ND"}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <Text size="sm" weight="bold" className="text-slate-500 tracking-wider">
+                    <Text size="md" weight="bold" className="text-slate-500 tracking-wider">
                       Secondary Contact
                     </Text>
                     <Text as="h4" size="md" weight="bold" className="text-slate-900 truncate">
                       {secondaryNok.name}
                     </Text>
-                    <Text size="sm" weight="regular" className="text-slate-500">
+                    <Text size="md" weight="regular" className="text-slate-500">
                       {secondaryNok.relationship || secondaryNok.relation || "Secondary Contact"}
                     </Text>
                   </div>
@@ -174,7 +174,7 @@ export function OverviewContactsCard({
                     </div>
                   )}
                   {secondaryNok.emailAddress && (
-                    <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                    <Text size="md" weight="regular" className="text-slate-500 truncate">
                       Email: {secondaryNok.emailAddress}
                     </Text>
                   )}
@@ -202,19 +202,19 @@ export function OverviewContactsCard({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-border-secondary/60">
             {hasResponsibleParty && (
               <div className="space-y-1">
-                <Text size="sm" weight="bold" className="text-slate-500">
+                <Text size="md" weight="bold" className="text-slate-500">
                   Responsible Party for Care
                 </Text>
                 <Text size="md" weight="bold" className="text-slate-900">
                   {responsibleParty.name} {responsibleParty.relationship ? `(${responsibleParty.relationship})` : ""}
                 </Text>
                 {responsibleParty.phone && (
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Phone: {responsibleParty.phone}
                   </Text>
                 )}
                 {responsibleParty.address && (
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Address: {responsibleParty.address}
                   </Text>
                 )}
@@ -223,7 +223,7 @@ export function OverviewContactsCard({
 
             {hasLegalRep && (
               <div className="space-y-1">
-                <Text size="sm" weight="bold" className="text-slate-500">
+                <Text size="md" weight="bold" className="text-slate-500">
                   Legal Representative / Power of Attorney
                 </Text>
                 <Text size="md" weight="bold" className="text-slate-900">

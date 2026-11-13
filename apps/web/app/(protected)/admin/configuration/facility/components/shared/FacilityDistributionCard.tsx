@@ -134,7 +134,7 @@ export function FacilityDistributionCard({
               <Text size="xl" weight="semibold" className="text-slate-900 leading-none">
                 {totalCount}
               </Text>
-              <Text size="sm" variant="muted" className="mt-1">
+              <Text size="md" variant="muted" className="mt-1">
                 {totalLabel}
               </Text>
             </div>
@@ -192,7 +192,7 @@ export function FacilityDistributionCard({
               </Card>
 
               <div className="flex flex-col items-center justify-center w-full">
-                <Text size="sm" weight="medium" className="text-slate-700 text-center whitespace-nowrap">
+                <Text size="md" weight="medium" className="text-slate-700 text-center whitespace-nowrap">
                   {action.label}
                 </Text>
               </div>

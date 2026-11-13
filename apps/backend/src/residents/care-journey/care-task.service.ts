@@ -139,7 +139,6 @@ export class CareTaskService {
         branchId: plan.branchId,
         residentId,
         carePlanId: plan.id,
-        stepIndex: dto.stepIndex ?? null,
         title: dto.title,
         description: dto.description ?? null,
         shift,

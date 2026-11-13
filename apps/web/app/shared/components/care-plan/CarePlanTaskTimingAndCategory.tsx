@@ -134,7 +134,7 @@ export function CarePlanTaskTimingAndCategory({
           </div>
         </div>
         {dateError && (
-          <p className="text-sm text-red-500 font-medium" role="alert">
+          <p className="text-md text-red-500 font-medium" role="alert">
             {dateError}
           </p>
         )}
@@ -145,7 +145,7 @@ export function CarePlanTaskTimingAndCategory({
             Shift Timing &amp; Slots
           </Label>
           <div className="flex items-center gap-1.5 [&_[data-slot=input-error]]:hidden">
-            <Text size="sm" weight="medium" className="text-slate-700">
+            <Text size="md" weight="medium" className="text-slate-700">
               Target Time (24h):
             </Text>
             <div className="flex items-center gap-1">
@@ -159,7 +159,7 @@ export function CarePlanTaskTimingAndCategory({
               >
                 <SelectTrigger
                   aria-label="Target hour"
-                  className="h-8 w-20 text-sm bg-white border-slate-200"
+                  className="h-8 w-20 text-md bg-white border-slate-200"
                 >
                   <SelectValue placeholder="Hour" />
                 </SelectTrigger>
@@ -182,7 +182,7 @@ export function CarePlanTaskTimingAndCategory({
               >
                 <SelectTrigger
                   aria-label="Target minute"
-                  className="h-8 w-20 text-sm bg-white border-slate-200"
+                  className="h-8 w-20 text-md bg-white border-slate-200"
                 >
                   <SelectValue placeholder="Min" />
                 </SelectTrigger>
@@ -200,7 +200,7 @@ export function CarePlanTaskTimingAndCategory({
                   variant="ghost"
                   size="sm"
                   onClick={() => setFormData({ ...formData, targetTime: "" })}
-                  className="h-8 px-1.5 text-sm text-slate-400 hover:text-slate-700 rounded-lg"
+                  className="h-8 px-1.5 text-md text-slate-400 hover:text-slate-700 rounded-lg"
                   title="Clear target time"
                 >
                   Clear
@@ -221,7 +221,7 @@ export function CarePlanTaskTimingAndCategory({
                 aria-pressed={isSelected}
                 variant={isSelected ? "primary" : "outline"}
                 onClick={() => toggleTimeSlot(slot)}
-                className="h-8 px-3 text-sm font-semibold rounded-xl"
+                className="h-8 px-3 text-md font-semibold rounded-xl"
               >
                 {slot}
               </Button>
@@ -230,7 +230,7 @@ export function CarePlanTaskTimingAndCategory({
         </div>
 
         {timeError && (
-          <p className="text-sm text-red-500 font-medium" role="alert">
+          <p className="text-md text-red-500 font-medium" role="alert">
             {timeError}
           </p>
         )}
@@ -312,7 +312,7 @@ export function CarePlanTaskTimingAndCategory({
                   aria-pressed={active}
                   variant={active ? "primary" : "outline"}
                   onClick={() => toggleWeekday(idx)}
-                  className="h-8 px-3 text-sm font-semibold rounded-xl"
+                  className="h-8 px-3 text-md font-semibold rounded-xl"
                 >
                   {day}
                 </Button>

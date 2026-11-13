@@ -93,10 +93,10 @@ export function InvoiceItemsCard({
       {/* Header matching Staff cards */}
       <div className="w-full flex items-center justify-between">
         <div>
-          <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+          <Text as="h3" size="md" weight="medium" className="text-slate-900">
             Invoice Items
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Add line items, quantities, and pricing for this invoice
           </Text>
         </div>
@@ -112,8 +112,8 @@ export function InvoiceItemsCard({
       {/* Empty State */}
       {fields.length === 0 ? (
         <div className="py-8 px-4 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-center gap-2 bg-slate-50/50">
-          <Text size="sm" weight="medium" className="text-slate-700">No line items added yet</Text>
-          <Text size="sm" weight="regular" className="text-slate-500 max-w-sm">
+          <Text size="md" weight="medium" className="text-slate-700">No line items added yet</Text>
+          <Text size="md" weight="regular" className="text-slate-500 max-w-sm">
             Click "+ Add Item" above to add billable services, care fees, or additional items for this invoice.
           </Text>
           <Button
@@ -167,7 +167,7 @@ export function InvoiceItemsCard({
                         className="h-10 w-full"
                       />
                       {itemError?.description && (
-                        <Text variant="error" size="sm" className="mt-1">
+                        <Text variant="error" size="md" className="mt-1">
                           {itemError.description.message || "Required"}
                         </Text>
                       )}
@@ -260,7 +260,7 @@ export function InvoiceItemsCard({
 
                     {/* Amount */}
                     <TableCell className="p-2">
-                      <div className="flex h-10 w-full items-center justify-between rounded-md border border-border-secondary bg-slate-50 px-3 text-sm font-medium text-slate-800">
+                      <div className="flex h-10 w-full items-center justify-between rounded-md border border-border-secondary bg-slate-50 px-3 text-md font-medium text-slate-800">
                         <span className="text-slate-400 select-none mr-1">£</span>
                         <span>
                           {totalCalculated.toLocaleString("en-GB", {
@@ -289,7 +289,7 @@ export function InvoiceItemsCard({
                           </TooltipTrigger>
                           <TooltipContent
                             sideOffset={6}
-                            className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-sm font-medium shadow-lg"
+                            className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-lg"
                           >
                             Delete item
                           </TooltipContent>
@@ -307,7 +307,7 @@ export function InvoiceItemsCard({
       )}
 
       {errors?.items?.message && typeof errors.items.message === "string" && (
-        <Text variant="error" size="sm">
+        <Text variant="error" size="md">
           {errors.items.message}
         </Text>
       )}

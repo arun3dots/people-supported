@@ -54,7 +54,7 @@ export function StaffAllocationCardGrid({
             key={member.id}
             showRightDivider={idx % 3 !== 2 && idx !== staffList.length - 1}
             avatar={
-              <div className="size-11 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-sm shrink-0">
+              <div className="size-11 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
                 {initials}
               </div>
             }
@@ -96,7 +96,7 @@ export function StaffAllocationCardGrid({
                   e.stopPropagation();
                   onReassignStaff(member);
                 }}
-                className="h-8 rounded-lg bg-surface-primary-light hover:bg-emerald-100/70 text-primary gap-1.5 text-xs font-medium"
+                className="h-8 rounded-lg bg-surface-primary-light hover:bg-emerald-100/70 text-primary gap-1.5 text-md font-medium"
               >
                 <ArrowRightLeft className="size-3.5" />
                 Reassign

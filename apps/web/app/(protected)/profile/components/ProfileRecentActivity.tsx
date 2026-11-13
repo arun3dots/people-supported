@@ -129,7 +129,7 @@ export function ProfileRecentActivity({
           <Text size={'base'} weight={'bold'} className="text-slate-900">
             Recent Account Activity
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             A log of important changes and security events.
           </Text>
         </div>
@@ -180,7 +180,7 @@ export function ProfileRecentActivity({
               >
                 {/* Timestamp Column */}
                 <div className="w-full md:w-[130px] flex md:justify-end shrink-0">
-                  <Text size={'xs'} weight={'regular'} className="text-slate-500">
+                  <Text size={'md'} weight={'regular'} className="text-slate-500">
                     {new Date(item.timestamp).toLocaleString("en-GB", {
                       day: "2-digit",
                       month: "short",
@@ -205,10 +205,10 @@ export function ProfileRecentActivity({
                   </div>
 
                   <div className="flex flex-col justify-center gap-0.5">
-                    <Text size={'xs'} weight={'medium'} className="text-slate-900">
+                    <Text size={'md'} weight={'medium'} className="text-slate-900">
                       {titleFor(item.actionType)}
                     </Text>
-                    <Text size={'xs'} weight={'regular'} className="text-slate-500">
+                    <Text size={'md'} weight={'regular'} className="text-slate-500">
                       {describe(item, clientIp)}
                     </Text>
                   </div>

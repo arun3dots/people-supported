@@ -40,27 +40,27 @@ export function ObservationDetailModal({
     if (score === null) return null;
     if (score === 0) {
       return (
-        <Badge className="bg-[#4A706A] text-white border-none px-4 py-1 text-sm font-semibold rounded-full shadow-xs">
+        <Badge className="bg-[#4A706A] text-white border-none px-4 py-1 text-md font-semibold rounded-full shadow-xs">
           0 - Normal
         </Badge>
       );
     }
     if (score <= 4) {
       return (
-        <Badge className="bg-amber-500 text-white border-none px-4 py-1 text-sm font-semibold rounded-full shadow-xs">
+        <Badge className="bg-amber-500 text-white border-none px-4 py-1 text-md font-semibold rounded-full shadow-xs">
           {score} - Low Risk
         </Badge>
       );
     }
     if (score <= 6) {
       return (
-        <Badge className="bg-orange-500 text-white border-none px-4 py-1 text-sm font-semibold rounded-full shadow-xs">
+        <Badge className="bg-orange-500 text-white border-none px-4 py-1 text-md font-semibold rounded-full shadow-xs">
           {score} - Medium Risk
         </Badge>
       );
     }
     return (
-      <Badge className="bg-red-500 text-white border-none px-4 py-1 text-sm font-semibold rounded-full shadow-xs">
+      <Badge className="bg-red-500 text-white border-none px-4 py-1 text-md font-semibold rounded-full shadow-xs">
         {score} - High Risk
       </Badge>
     );
@@ -73,16 +73,16 @@ export function ObservationDetailModal({
           <Icon className="size-4" />
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-normal text-slate-500 truncate">{label}</p>
-          <p className="text-sm font-bold text-slate-900 truncate">
+          <p className="text-md font-normal text-slate-500 truncate">{label}</p>
+          <p className="text-md font-bold text-slate-900 truncate">
             {value || "—"}{" "}
-            {unit && <span className="text-sm font-normal text-slate-500">{unit}</span>}
+            {unit && <span className="text-md font-normal text-slate-500">{unit}</span>}
           </p>
         </div>
       </div>
       {score !== undefined && (
         <div
-          className={`size-6 rounded-md flex items-center justify-center font-bold text-sm text-white shrink-0 shadow-2xs ${
+          className={`size-6 rounded-md flex items-center justify-center font-bold text-md text-white shrink-0 shadow-2xs ${
             score === 0
               ? "bg-[#4A706A]"
               : score === 1
@@ -111,7 +111,7 @@ export function ObservationDetailModal({
               <DialogTitle className="text-base font-semibold text-slate-900">
                 Observation Details
               </DialogTitle>
-              <div className="flex items-center gap-1.5 text-sm font-normal text-slate-500 mt-0.5">
+              <div className="flex items-center gap-1.5 text-md font-normal text-slate-500 mt-0.5">
                 <Clock className="size-3.5 text-slate-400 shrink-0" />
                 <span>
                   {format(new Date(observation.timestamp), "MMM d, yyyy · h:mm a")}
@@ -124,13 +124,13 @@ export function ObservationDetailModal({
         {/* Central NEWS2 Score Card */}
         <div className="flex justify-center">
           <div className="text-center p-5 bg-white rounded-2xl border border-slate-200/80 shadow-xs w-full space-y-2">
-            <p className="text-sm font-medium text-slate-500">
+            <p className="text-md font-medium text-slate-500">
               NEWS2 Clinical Score
             </p>
             <div className="py-1">
               {getScoreBadge(observation.news2Score)}
             </div>
-            <p className="text-sm font-normal text-slate-500 italic">
+            <p className="text-md font-normal text-slate-500 italic">
               {observation.news2Score >= 5
                 ? "Urgent clinical response required"
                 : "Routine clinical monitoring"}
@@ -181,20 +181,20 @@ export function ObservationDetailModal({
         {/* Oxygen Details */}
         <Card className="border-slate-200/80 bg-white shadow-2xs rounded-xl">
           <CardContent className="p-3.5 space-y-2.5">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-md">
               <span className="text-slate-500 flex items-center gap-2">
                 <Clock className="size-4 text-slate-400" /> Oxygen Source
               </span>
-              <Badge variant="outline" className="font-medium text-slate-800 text-sm">
+              <Badge variant="outline" className="font-medium text-slate-800 text-md">
                 {observation.airOrOxygen || "Air"}
               </Badge>
             </div>
             <Separator />
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-md">
               <span className="text-slate-500 flex items-center gap-2">
                 <Activity className="size-4 text-slate-400" /> SpO2 Scale
               </span>
-              <Badge variant="outline" className="font-medium text-slate-800 text-sm">
+              <Badge variant="outline" className="font-medium text-slate-800 text-md">
                 Scale {observation.spo2Scale || 1}
               </Badge>
             </div>
@@ -204,7 +204,7 @@ export function ObservationDetailModal({
         {/* Clinical Outcomes & Actions */}
         <Card className="border-slate-200/80 bg-white shadow-2xs rounded-xl overflow-hidden">
           <div className="bg-slate-50/80 px-4 py-2.5 border-b border-slate-200/80">
-            <h4 className="text-sm font-semibold text-slate-800">
+            <h4 className="text-md font-semibold text-slate-800">
               Clinical Outcomes &amp; Actions
             </h4>
           </div>
@@ -222,7 +222,7 @@ export function ObservationDetailModal({
                     <CheckCircle2 className="size-4" />
                   )}
                 </div>
-                <p className="text-sm font-medium text-slate-800">
+                <p className="text-md font-medium text-slate-800">
                   {observation.isAbnormal
                     ? "Abnormal clinical status recorded"
                     : "Clinical status stable"}
@@ -232,7 +232,7 @@ export function ObservationDetailModal({
               {observation.notifyGP && (
                 <div className="flex items-center gap-2.5 p-3 bg-sky-50 border border-sky-100 rounded-lg text-sky-800">
                   <User className="size-4 shrink-0 text-sky-600" />
-                  <span className="text-sm font-medium">
+                  <span className="text-md font-medium">
                     GP Notification Sent
                   </span>
                 </div>
@@ -241,7 +241,7 @@ export function ObservationDetailModal({
               {observation.increaseMonitoring && (
                 <div className="flex items-center gap-2.5 p-3 bg-purple-50 border border-purple-100 rounded-lg text-purple-800">
                   <Clock className="size-4 shrink-0 text-purple-600" />
-                  <span className="text-sm font-medium">
+                  <span className="text-md font-medium">
                     Escalated Monitoring Frequency
                   </span>
                 </div>
@@ -250,10 +250,10 @@ export function ObservationDetailModal({
 
             {observation.notes && (
               <div className="mt-3 p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-1">
-                <p className="text-sm font-medium text-amber-800">
+                <p className="text-md font-medium text-amber-800">
                   Clinical Notes
                 </p>
-                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                <p className="text-md text-slate-700 leading-relaxed whitespace-pre-wrap">
                   {observation.notes}
                 </p>
               </div>

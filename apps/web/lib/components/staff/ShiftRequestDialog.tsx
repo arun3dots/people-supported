@@ -72,16 +72,27 @@ export function ShiftRequestDialog({
     if (isOpen) {
       const isPast = Boolean(selectedShift?.startTime && new Date(selectedShift.startTime).getTime() < Date.now());
       const targetShift = isPast ? null : selectedShift;
-      const initialType = targetShift ? "Change" : (defaultType || "");
+      const initialType = targetShift ? "Change" : (defaultType || "Leave");
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(8, 0, 0, 0);
+
+      const defaultStartTime = targetShift
+        ? targetShift.startTime || targetShift.rawStartTime || ""
+        : initialType === "Leave"
+          ? tomorrow.toISOString()
+          : "";
+      const defaultEndTime = targetShift
+        ? targetShift.endTime || targetShift.rawEndTime || ""
+        : initialType === "Leave"
+          ? new Date(tomorrow.getTime() + 8 * 3600 * 1000).toISOString()
+          : "";
+
       reset({
         type: initialType as any,
         shiftId: targetShift?.id || null,
-        startTime: targetShift
-          ? targetShift.startTime || targetShift.rawStartTime || ""
-          : "",
-        endTime: targetShift
-          ? targetShift.endTime || targetShift.rawEndTime || ""
-          : "",
+        startTime: defaultStartTime,
+        endTime: defaultEndTime,
         reason: "",
         notes: "",
       });
@@ -92,7 +103,10 @@ export function ShiftRequestDialog({
   const selectedShiftId = watch("shiftId");
 
   const onSubmit = async (data: CreateShiftRequestDTO) => {
-    if (data.startTime && new Date(data.startTime).getTime() < Date.now()) {
+    if (!data.startTime || isNaN(new Date(data.startTime).getTime())) {
+      return;
+    }
+    if (new Date(data.startTime).getTime() < Date.now()) {
       return;
     }
     const cleanEndTime = data.endTime && data.endTime !== "" ? data.endTime : undefined;
@@ -130,7 +144,7 @@ export function ShiftRequestDialog({
           <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">
             Submit Shift Request
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-md text-slate-500">
             Requests are sent to line managers and rotas will update upon approval.
           </DialogDescription>
         </DialogHeader>
@@ -139,12 +153,22 @@ export function ShiftRequestDialog({
           {/* Request Type & Optional Shift Selector */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
             <div className={cn("space-y-1", !(requestType === "Change" || requestType === "Cover") && "sm:col-span-2")}>
-              <Label className="text-sm font-semibold text-slate-700">Request Type</Label>
+              <Label className="text-md font-semibold text-slate-700">Request Type</Label>
               <Select
                 value={requestType || ""}
                 onValueChange={(v) => {
-                  setValue("type", v as "Leave" | "Change" | "Cover", { shouldValidate: true });
-                  if (v === "Leave") setValue("shiftId", null);
+                  const newType = v as "Leave" | "Change" | "Cover";
+                  setValue("type", newType, { shouldValidate: true });
+                  if (newType === "Leave") {
+                    setValue("shiftId", null);
+                    if (!watch("startTime")) {
+                      const tomorrow = new Date();
+                      tomorrow.setDate(tomorrow.getDate() + 1);
+                      tomorrow.setHours(8, 0, 0, 0);
+                      setValue("startTime", tomorrow.toISOString(), { shouldValidate: true });
+                      setValue("endTime", new Date(tomorrow.getTime() + 8 * 3600 * 1000).toISOString(), { shouldValidate: true });
+                    }
+                  }
                 }}
               >
                 <SelectTrigger>
@@ -157,14 +181,14 @@ export function ShiftRequestDialog({
                 </SelectContent>
               </Select>
               {errors.type && (
-                <p className="text-sm text-red-500 font-medium">Please select a request type</p>
+                <p className="text-md text-red-500 font-medium">Please select a request type</p>
               )}
             </div>
 
             {/* Shift Selector if swap/cover */}
             {(requestType === "Change" || requestType === "Cover") && (
               <div className="space-y-1">
-                <Label className="text-sm font-semibold text-slate-700">
+                <Label className="text-md font-semibold text-slate-700">
                   Select Shift to {requestType === "Change" ? "Swap" : "Cover"}
                 </Label>
                 <Select onValueChange={handleShiftSelect} value={selectedShiftId || undefined}>
@@ -194,7 +218,7 @@ export function ShiftRequestDialog({
           {/* Date & Time Range */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
             <div className="space-y-1">
-              <Label className="text-sm font-semibold text-slate-700">Start Time</Label>
+              <Label required className="text-md font-semibold text-slate-700">Start Time</Label>
               <Controller
                 name="startTime"
                 control={control}
@@ -211,7 +235,7 @@ export function ShiftRequestDialog({
                 )}
               />
               {errors.startTime && (
-                <Text size="sm" variant="error" className="text-sm text-rose-600">
+                <Text size="md" variant="error" className="text-md text-rose-600">
                   {errors.startTime.message}
                 </Text>
               )}
@@ -219,8 +243,8 @@ export function ShiftRequestDialog({
 
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <Label className="text-sm font-semibold text-slate-700">End Time</Label>
-                <span className="text-xs text-slate-400 font-normal">(Optional)</span>
+                <Label className="text-md font-semibold text-slate-700">End Time</Label>
+                <span className="text-md text-slate-400 font-normal">(Optional)</span>
               </div>
               <Controller
                 name="endTime"
@@ -228,9 +252,15 @@ export function ShiftRequestDialog({
                 render={({ field }) => (
                   <DateTimePicker
                     value={field.value ? getUkDateTimeForLocalDisplay(field.value) : undefined}
-                    onChange={(d) =>
-                      field.onChange(d ? convertLocalDateTimeToUk(d).toISOString() : "")
-                    }
+                    onChange={(d) => {
+                      const iso = d ? convertLocalDateTimeToUk(d).toISOString() : "";
+                      field.onChange(iso);
+                      if (d && !watch("startTime")) {
+                        const autoStart = new Date(d);
+                        autoStart.setHours(Math.max(0, d.getHours() - 8));
+                        setValue("startTime", autoStart.toISOString(), { shouldValidate: true });
+                      }
+                    }}
                     use12Hours={false}
                     minDate={new Date()}
                     placeholder="Select end time (optional)"
@@ -238,7 +268,7 @@ export function ShiftRequestDialog({
                 )}
               />
               {errors.endTime && (
-                <Text size="sm" variant="error" className="text-sm text-rose-600">
+                <Text size="md" variant="error" className="text-md text-rose-600">
                   {errors.endTime.message}
                 </Text>
               )}
@@ -247,7 +277,7 @@ export function ShiftRequestDialog({
 
           {/* Reason */}
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-700">Reason</Label>
+            <Label className="text-md font-semibold text-slate-700">Reason</Label>
             <Input
               placeholder="e.g. Family appointment, medical, personal"
               {...register("reason")}
@@ -256,10 +286,10 @@ export function ShiftRequestDialog({
 
           {/* Notes */}
           <div className="space-y-1">
-            <Label className="text-sm font-semibold text-slate-700">Additional Notes</Label>
+            <Label className="text-md font-semibold text-slate-700">Additional Notes</Label>
             <Textarea
               rows={2}
-              className="min-h-[58px] resize-none text-sm"
+              className="min-h-[58px] resize-none text-md"
               placeholder="Any details to help rota management..."
               {...register("notes")}
             />

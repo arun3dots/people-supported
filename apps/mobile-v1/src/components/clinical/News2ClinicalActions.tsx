@@ -41,7 +41,7 @@ export function News2ClinicalActions({ vitals, updateVital }: News2ClinicalActio
           />
           <View className="ml-3 flex-1">
             <Text className="text-sm font-bold text-text-primary">Notify GP</Text>
-            <Text className="text-xs text-text-secondary">Escalate finding to resident&apos;s General Practitioner</Text>
+            <Text className="text-xs text-text-secondary">Escalate finding to the person&apos;s General Practitioner</Text>
           </View>
         </TouchableOpacity>
 

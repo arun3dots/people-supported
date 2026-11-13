@@ -58,7 +58,7 @@ export function CarePlanTopBar({
           </Button>
         </Link>
         <span className="text-slate-300">/</span>
-        <Text size="sm" weight="semibold" className="text-slate-900">
+        <Text size="md" weight="semibold" className="text-slate-900">
           {residentName}
         </Text>
       </div>
@@ -118,7 +118,7 @@ export function CarePlanTopBar({
 
         {Array.isArray(versions) && versions.length > 1 ? (
           <div className="flex items-center gap-2">
-            <Text size="sm" weight="semibold" variant="muted">
+            <Text size="md" weight="semibold" variant="muted">
               Switch Version:
             </Text>
             <div className="flex items-center gap-1.5 bg-surface-card-grey p-1 rounded-xl">
@@ -137,7 +137,7 @@ export function CarePlanTopBar({
                     <button
                       key={v.id}
                       onClick={() => router.push(`/admin/care-plans/${v.id}`)}
-                      className={`px-2.5 py-1 text-sm font-mono rounded-lg transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 text-md font-mono rounded-lg transition-all cursor-pointer ${
                         isSelected
                           ? "bg-white text-slate-900 shadow-xs font-bold"
                           : "text-slate-500 hover:text-slate-900"

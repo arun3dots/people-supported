@@ -31,10 +31,10 @@ export function StaffWorkloadCard({
       {/* Header with Name, Role/Unit and Workload Badge */}
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-0.5">
-          <Text as="h3" size="sm" weight="bold" className="text-text-heading">
+          <Text as="h3" size="md" weight="bold" className="text-text-heading">
             {staff.fullName}
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             {roleName} · {unitName}
           </Text>
         </div>

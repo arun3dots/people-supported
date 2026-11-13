@@ -109,7 +109,7 @@ export function HighRiskResidentsModal({
                     </p>
                   </div>
                   <Badge
-                    className={`${style.badge} text-sm px-2 py-0.5`}
+                    className={`${style.badge} text-md px-2 py-0.5`}
                   >
                     {r.highestLevel}
                   </Badge>

@@ -44,11 +44,11 @@ export function GeneralInfoFields({
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             General Information
           </Text>
-          <Text size="sm" variant="muted" className="text-slate-500">
-            Care home identity, registration, and organisational details
+          <Text size="md" variant="muted" className="text-slate-500">
+            Supported living identity, registration, and organisational details
           </Text>
         </div>
       </div>
@@ -56,7 +56,7 @@ export function GeneralInfoFields({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
         <div className="flex flex-col gap-1.5">
           <Label required htmlFor="name">
-            Care Home Name
+            Supported Living Service Name
           </Label>
           <Input
             id="name"
@@ -80,13 +80,14 @@ export function GeneralInfoFields({
 
         <div className="flex flex-col gap-1.5">
           <Label>
-            Care Home Type
+            Supported Living Service Type
           </Label>
           <Select value={careHomeType} onValueChange={setCareHomeType}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="Supported Living">Supported Living</SelectItem>
               <SelectItem value="Residential Care Home">Residential Care Home</SelectItem>
               <SelectItem value="Nursing Home">Nursing Home</SelectItem>
               <SelectItem value="Dementia Care">Dementia Care</SelectItem>

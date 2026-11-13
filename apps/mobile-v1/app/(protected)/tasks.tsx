@@ -148,7 +148,7 @@ export default function TasksScreen() {
             </Text>
 
             <Text className="text-xs text-muted-foreground text-center leading-5 mb-5 max-w-[280px]">
-              Daily clinical tasks and resident care routines are accessible once your shift has started.
+              Daily clinical tasks and support routines are accessible once your shift has started.
             </Text>
 
             {shift ? (

@@ -82,7 +82,7 @@ export function ShiftSummaryCard({
             </div>
             <div className="flex flex-col">
               <span className="text-md font-bold text-slate-900">Coverage</span>
-              <span className="text-[11px] font-medium text-emerald-600 mt-0.5">Optimal status</span>
+              <span className="text-md font-medium text-emerald-600 mt-0.5">Optimal status</span>
             </div>
           </div>
         </div>
@@ -91,27 +91,27 @@ export function ShiftSummaryCard({
         <div className="md:col-span-5 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center sm:text-left">
           <div className="flex flex-col">
             <span className="text-xl sm:text-2xl font-bold text-slate-900">{totalResidents.toString().padStart(2, '0')}</span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5">Residents</span>
+            <span className="text-md font-medium text-slate-500 mt-0.5">Residents</span>
           </div>
 
           <div className="flex flex-col sm:border-l sm:border-gray-100 sm:pl-3">
             <span className="text-xl sm:text-2xl font-bold text-slate-900">{assignedResidents.toString().padStart(2, '0')}</span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5">Assigned</span>
+            <span className="text-md font-medium text-slate-500 mt-0.5">Assigned</span>
           </div>
 
           <div className="flex flex-col sm:border-l sm:border-gray-100 sm:pl-3">
             <span className="text-xl sm:text-2xl font-bold text-slate-900">{unassignedResidents.toString().padStart(2, '0')}</span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5">Unassigned</span>
+            <span className="text-md font-medium text-slate-500 mt-0.5">Unassigned</span>
           </div>
 
           <div className="flex flex-col sm:border-l sm:border-gray-100 sm:pl-3">
             <span className="text-xl sm:text-2xl font-bold text-slate-900">{staffsRequired.toString().padStart(2, '0')}</span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5">Staff Required</span>
+            <span className="text-md font-medium text-slate-500 mt-0.5">Staff Required</span>
           </div>
 
           <div className="flex flex-col sm:border-l sm:border-gray-100 sm:pl-3">
             <span className="text-xl sm:text-2xl font-bold text-slate-900">{staffScheduled.toString().padStart(2, '0')}</span>
-            <span className="text-[11px] font-medium text-slate-500 mt-0.5">Staff Scheduled</span>
+            <span className="text-md font-medium text-slate-500 mt-0.5">Staff Scheduled</span>
           </div>
         </div>
       </div>

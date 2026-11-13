@@ -81,7 +81,7 @@ export function AnatomyNavigator({
           <button
             type="button"
             onClick={() => onSelectNode(null)}
-            className="text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
+            className="text-md text-primary hover:text-primary-dark font-medium cursor-pointer"
           >
             Reset Region
           </button>
@@ -104,7 +104,7 @@ export function AnatomyNavigator({
                 }
               }}
               className={cn(
-                "flex items-center justify-between px-2.5 py-1.5 text-sm rounded-xl border transition-all cursor-pointer text-left min-w-0 shadow-2xs",
+                "flex items-center justify-between px-2.5 py-1.5 text-md rounded-xl border transition-all cursor-pointer text-left min-w-0 shadow-2xs",
                 isSelected
                   ? "border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/20"
                   : "border-slate-200/90 bg-white hover:bg-slate-50 text-slate-700 font-medium",
@@ -126,13 +126,13 @@ export function AnatomyNavigator({
       {selectedNode && (
         <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 space-y-2">
           <div className="flex items-center justify-between px-0.5">
-            <span className="text-sm text-slate-600 font-medium">
+            <span className="text-md text-slate-600 font-medium">
               Sub-parts of {selectedNode.label}:
             </span>
             <button
               type="button"
               onClick={handleBack}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-dark font-medium cursor-pointer"
+              className="flex items-center gap-1 text-md text-primary hover:text-primary-dark font-medium cursor-pointer"
             >
               <ArrowLeft className="size-3" />
               <span>Back</span>
@@ -140,7 +140,7 @@ export function AnatomyNavigator({
           </div>
 
           {childNodes.length === 0 ? (
-            <Text size="sm" variant="muted" className="italic py-1">
+            <Text size="md" variant="muted" className="italic py-1">
               Deepest detail level reached ({selectedNode.label}).
             </Text>
           ) : (
@@ -153,7 +153,7 @@ export function AnatomyNavigator({
                     type="button"
                     onClick={() => onSelectNode(child)}
                     className={cn(
-                      "flex items-center justify-between p-2 rounded-lg border transition-colors text-left text-sm font-medium cursor-pointer shadow-2xs",
+                      "flex items-center justify-between p-2 rounded-lg border transition-colors text-left text-md font-medium cursor-pointer shadow-2xs",
                       isChildActive
                         ? "border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/20"
                         : "border-slate-200/90 bg-white hover:bg-primary/10 hover:border-primary/40 text-slate-700",

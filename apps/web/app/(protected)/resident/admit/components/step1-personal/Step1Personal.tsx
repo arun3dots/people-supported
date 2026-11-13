@@ -46,7 +46,7 @@ export function Step1Personal({
           <Text as="h3" size="md" weight="bold" >
             Identity &amp; Demographics
           </Text>
-          <Text size="sm" weight="regular" variant="subdued" >
+          <Text size="md" weight="regular" variant="subdued" >
             Required legal identifiers, photo profile, and personal demographics.
           </Text>
         </div>
@@ -179,7 +179,7 @@ export function Step1Personal({
                 }
               />
               {Boolean(formData.nhsNumber && !isValidNhsNumber(formData.nhsNumber)) && (
-                <p className="text-xs text-rose-500 font-medium mt-1">
+                <p className="text-md text-rose-500 font-medium mt-1">
                   Invalid NHS number (fails Modulus 11 check).
                 </p>
               )}

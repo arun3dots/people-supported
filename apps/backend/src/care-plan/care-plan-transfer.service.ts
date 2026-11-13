@@ -109,7 +109,7 @@ export class CarePlanTransferService {
         name: activeCarePlan.representativeName,
         relationship:
           activeCarePlan.representativeRelationship || 'Representative',
-        phone: 'See Care Home records',
+        phone: 'See service records',
       });
     }
 
@@ -143,7 +143,7 @@ export class CarePlanTransferService {
             .filter(Boolean)
             .join(', ') || 'Not recorded',
         registeredManager:
-          resident.tenant.primaryContactName || 'Registered Care Home Manager',
+          resident.tenant.primaryContactName || 'Registered Service Manager',
       },
       resident: {
         id: resident.id,

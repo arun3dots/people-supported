@@ -46,6 +46,7 @@ export * from "./equipment-maintenance";
 export * from "./staff-supervision";
 export * from "./audit-schedule";
 export * from "./cqc-notification";
+export * from "./compliance-review";
 export * from "./reports";
 export * from "./utils";
 

@@ -6,22 +6,22 @@ export default function TermsPage() {
       <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12 space-y-8">
         <header className="border-b border-slate-200 pb-6 space-y-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+            <p className="text-md font-bold uppercase tracking-wider text-emerald-800">
               CantraCare SaaS Subscription Agreement
             </p>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 border border-emerald-200">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-md font-semibold text-emerald-800 border border-emerald-200">
               Version v1.0-2026-10 • Effective 29 October 2026
             </span>
           </div>
           <h1 className="text-3xl font-bold text-slate-900">Terms of Service</h1>
-          <p className="text-sm text-slate-600">
+          <p className="text-md text-slate-600">
             These Terms of Service govern the use of the CantraCare Care Home Management
             Platform by CQC-registered care providers (&ldquo;Customer&rdquo; or
             &ldquo;Tenant&rdquo;) and their authorised personnel.
           </p>
         </header>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             1. Scope of Service &amp; Clinical Responsibility
           </h2>
@@ -36,7 +36,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             2. Incorporation of the UK GDPR Article 28 Data Processing Agreement (A-02)
           </h2>
@@ -53,11 +53,11 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             3. Access Control, Multi-Factor Authentication &amp; Tenant Isolation
           </h2>
-          <ul className="list-disc pl-5 space-y-1.5 text-sm">
+          <ul className="list-disc pl-5 space-y-1.5 text-md">
             <li>
               <strong>Mandatory MFA:</strong> Multi-Factor Authentication (TOTP) is
               mandatory for all `SuperAdmin`, `Admin`, and `Manager` accounts, and may be
@@ -77,7 +77,7 @@ export default function TermsPage() {
           </ul>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             4. Offboarding, Data Return &amp; Statutory Retention
           </h2>
@@ -89,7 +89,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <section className="space-y-3 text-sm leading-6 text-slate-700">
+        <section className="space-y-3 text-md leading-6 text-slate-700">
           <h2 className="text-lg font-bold text-slate-900">
             5. Governing Law &amp; Jurisdiction
           </h2>
@@ -100,7 +100,7 @@ export default function TermsPage() {
           </p>
         </section>
 
-        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-sm text-slate-500">
+        <footer className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-md text-slate-500">
           <div className="flex items-center gap-4">
             <Link href="/privacy-policy" className="font-semibold text-emerald-800 hover:underline">
               Privacy Notice

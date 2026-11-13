@@ -87,7 +87,7 @@ export function TimeField({
           >
             <div className="flex items-center gap-2">
               <Clock className="size-4 text-slate-400 shrink-0" />
-              <span className={cn("text-sm", value ? "font-semibold text-slate-900" : "text-slate-400")}>
+              <span className={cn("text-md", value ? "font-semibold text-slate-900" : "text-slate-400")}>
                 {value || placeholder}
               </span>
             </div>
@@ -95,7 +95,7 @@ export function TimeField({
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-48 p-2 bg-white rounded-xl shadow-lg border border-slate-200 z-50">
-          <div className="grid grid-cols-2 text-sm font-semibold text-slate-500 pb-1.5 mb-1 border-b border-slate-100 text-center">
+          <div className="grid grid-cols-2 text-md font-semibold text-slate-500 pb-1.5 mb-1 border-b border-slate-100 text-center">
             <span>Hour</span>
             <span>Minute</span>
           </div>
@@ -107,7 +107,7 @@ export function TimeField({
                   type="button"
                   onClick={() => handleHourClick(h)}
                   className={cn(
-                    "w-full text-center py-1 rounded-md text-sm transition-colors cursor-pointer",
+                    "w-full text-center py-1 rounded-md text-md transition-colors cursor-pointer",
                     currentHour === h ? "bg-[#4A706A] text-white font-bold" : "text-slate-700 hover:bg-slate-100",
                   )}
                 >
@@ -122,7 +122,7 @@ export function TimeField({
                   type="button"
                   onClick={() => handleMinClick(m)}
                   className={cn(
-                    "w-full text-center py-1 rounded-md text-sm transition-colors cursor-pointer",
+                    "w-full text-center py-1 rounded-md text-md transition-colors cursor-pointer",
                     currentMin === m ? "bg-[#4A706A] text-white font-bold" : "text-slate-700 hover:bg-slate-100",
                   )}
                 >
@@ -133,7 +133,7 @@ export function TimeField({
           </div>
         </PopoverContent>
       </Popover>
-      {errorMessage && <p className="text-sm text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
+      {errorMessage && <p className="text-md text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
     </div>
   );
 }
@@ -219,7 +219,7 @@ export function TextAreaField({
         className={errorMessage ? "border-border-error" : ""}
         onChange={(e) => onChange(e.target.value)}
       />
-      {errorMessage && <p className="text-sm text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
+      {errorMessage && <p className="text-md text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
     </div>
   );
 }
@@ -254,7 +254,7 @@ export function SelectField({
           ))}
         </SelectContent>
       </Select>
-      {errorMessage && <p className="text-sm text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
+      {errorMessage && <p className="text-md text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
     </div>
   );
 }
@@ -279,7 +279,7 @@ export function DateField({
     <div className={cn("space-y-1.5", className)}>
       <Label required={required}>{label}</Label>
       <DatePicker variant={dob ? "dob" : "date"} value={value ?? ""} onChange={handle} disabled={disabled} />
-      {errorMessage && <p className="text-sm text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
+      {errorMessage && <p className="text-md text-text-error font-normal leading-tight mt-1">{errorMessage}</p>}
     </div>
   );
 }

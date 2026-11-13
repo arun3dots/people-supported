@@ -322,21 +322,21 @@ export function AddBedStep1({
           >
             <AlertCircle className="size-4 shrink-0 text-primary" />
             <div className="flex items-center gap-1.5 flex-wrap text-slate-700">
-              <Text size="sm" weight="medium" className="text-slate-700">
+              <Text size="md" weight="medium" className="text-slate-700">
                 Room capacity:{" "}
                 <span className="font-semibold text-slate-900">
                   {selectedRoom.totalBeds} beds
                 </span>
               </Text>
               <span className="text-slate-300">|</span>
-              <Text size="sm" weight="medium" className="text-slate-700">
+              <Text size="md" weight="medium" className="text-slate-700">
                 Occupied:{" "}
                 <span className="font-semibold text-slate-900">
                   {selectedRoom.occupiedBeds}
                 </span>
               </Text>
               <span className="text-slate-300">|</span>
-              <Text size="sm" weight="medium" className="text-slate-700">
+              <Text size="md" weight="medium" className="text-slate-700">
                 Available:{" "}
                 <span className="font-semibold text-slate-900">
                   {Math.max(

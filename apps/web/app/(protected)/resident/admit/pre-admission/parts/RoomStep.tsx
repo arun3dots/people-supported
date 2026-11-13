@@ -10,7 +10,7 @@ import { AssistiveDevicesCard } from "../../components/step7-room-belongings/Ass
 import { useScrollToFirstError } from "../shared/useScrollToFirstError";
 import type { PartFormProps } from "../shared/types";
 
-const ROOM_FIELD_ORDER = ["roomNumber", "bedId"] as const;
+const ROOM_FIELD_ORDER = ["roomNumber"] as const;
 
 /** Maps the room allocation JSON onto the form shape the existing room cards edit. */
 function toFormData(r: PreAdmissionRoomAllocationDTO): AdmissionFormData {
@@ -19,6 +19,7 @@ function toFormData(r: PreAdmissionRoomAllocationDTO): AdmissionFormData {
     assignedBedId: r.bedId ?? "",
     roomNumber: r.roomNumber ?? undefined,
     roomType: r.roomType ?? "",
+    landlord: r.landlord ?? "",
     moveInDateTime: r.moveInDateTime ?? undefined,
     roommate: r.roommateId ?? undefined,
     belongings: r.belongings.map((b) => ({
@@ -41,6 +42,7 @@ function toRoomPatch(
   if ("assignedBedId" in patch) out.bedId = patch.assignedBedId || null;
   if ("roomNumber" in patch) out.roomNumber = patch.roomNumber ?? null;
   if ("roomType" in patch) out.roomType = patch.roomType || null;
+  if ("landlord" in patch) out.landlord = patch.landlord?.trim() || null;
   if ("moveInDateTime" in patch) out.moveInDateTime = patch.moveInDateTime ?? null;
   if ("roommate" in patch) out.roommateId = patch.roommate ?? null;
   if (patch.belongings) {
@@ -71,7 +73,6 @@ export function RoomStep({
     onChange(toRoomPatch(patch));
   const visibleErrors = { ...errors };
   if (value.roomNumber?.trim()) delete visibleErrors.roomNumber;
-  if (value.bedId?.trim()) delete visibleErrors.bedId;
 
   useScrollToFirstError(errors, ROOM_FIELD_ORDER);
 

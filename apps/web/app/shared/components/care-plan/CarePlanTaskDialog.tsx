@@ -93,7 +93,7 @@ export function CarePlanTaskDialog({
                 ? "Add Care Task"
                 : "Add Daily Routine Task"}
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-600">
+          <DialogDescription className="text-md text-slate-600">
             Define the schedule dates, shift slots, timing, and care instructions.
           </DialogDescription>
         </DialogHeader>
@@ -153,7 +153,7 @@ export function CarePlanTaskDialog({
           </div>
 
           <div className="space-y-1.5 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3">
-            <div className="flex items-center gap-1.5 text-amber-800 text-sm font-semibold">
+            <div className="flex items-center gap-1.5 text-amber-800 text-md font-semibold">
               <ShieldAlert className="size-4" />
               <span>Safety Precautions / Things to Keep in Mind</span>
             </div>
@@ -207,7 +207,7 @@ export function CarePlanTaskDialog({
               </div>
             )}
 
-            <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-700 pt-1">
+            <div className="flex flex-wrap items-center gap-4 text-md font-medium text-slate-700 pt-1">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
                   checked={formData.requirePhotoOrNote}

@@ -89,6 +89,8 @@ export function AddSchemeFormFields({
             value={referenceId}
             onChange={(e) => onReferenceIdChange(e.target.value)}
             placeholder="e.g. SCH-1001"
+            disabled
+            className="bg-slate-50 text-slate-500 cursor-not-allowed"
           />
         </div>
 
@@ -179,7 +181,7 @@ export function AddSchemeFormFields({
           </Label>
           <Select value={status} onValueChange={onStatusChange}>
             <SelectTrigger className="w-full">
-              <SelectValue />
+              <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
               <SelectItem value="Active">Active</SelectItem>

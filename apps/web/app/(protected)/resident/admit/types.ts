@@ -201,6 +201,7 @@ export interface AdmissionFormData {
   assignedBedId: string;
   roomNumber?: string;
   roomType: string;
+  landlord?: string;
   moveInDateTime?: string;
   roommate?: string;
   belongings: BelongingItem[];

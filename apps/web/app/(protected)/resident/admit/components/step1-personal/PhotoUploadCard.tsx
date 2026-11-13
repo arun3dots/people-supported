@@ -193,7 +193,7 @@ export function PhotoUploadCard({
         )}
       </div>
 
-      <p className="text-sm sm:text-md text-slate-500 font-normal">
+      <p className="text-md text-slate-500 font-normal">
         {ADMISSION_UPLOAD_LIMITS.PHOTO.hint}
       </p>
     </div>

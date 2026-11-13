@@ -84,10 +84,10 @@ export function BillToCard({
       {/* Card Header matching Staff style */}
       <div className="w-full flex items-center justify-between">
         <div>
-          <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+          <Text as="h3" size="md" weight="medium" className="text-slate-900">
             Bill To
           </Text>
-          <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+          <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
             Select the resident and billing contact for this invoice
           </Text>
         </div>
@@ -129,7 +129,7 @@ export function BillToCard({
             placeholder="e.g. Camden London Borough Council / NHS ICB"
           />
           {errors?.payerName && (
-            <Text variant="error" size="sm">
+            <Text variant="error" size="md">
               {errors.payerName.message}
             </Text>
           )}
@@ -181,7 +181,7 @@ export function BillToCard({
                             {residentDisplayName.charAt(0) || "R"}
                           </AvatarFallback>
                         </Avatar>
-                        <Text as="span" size="sm" className="text-slate-900 font-normal">
+                        <Text as="span" size="md" className="text-slate-900 font-normal">
                           {residentDisplayName}
                         </Text>
                       </div>
@@ -199,7 +199,7 @@ export function BillToCard({
                               {r.fullName?.charAt(0) || "R"}
                             </AvatarFallback>
                           </Avatar>
-                          <Text as="span" size="sm">{r.fullName}</Text>
+                          <Text as="span" size="md">{r.fullName}</Text>
                         </div>
                       </SelectItem>
                     ))}
@@ -209,7 +209,7 @@ export function BillToCard({
             }}
           />
           {errors?.residentId && (
-            <Text variant="error" size="sm">
+            <Text variant="error" size="md">
               {errors.residentId.message || "Please select a resident"}
             </Text>
           )}
@@ -224,7 +224,7 @@ export function BillToCard({
             placeholder="e.g. 12, Maple Avenue"
           />
           {errors?.addressLine1 && (
-            <Text variant="error" size="sm">
+            <Text variant="error" size="md">
               {errors.addressLine1.message}
             </Text>
           )}
@@ -239,7 +239,7 @@ export function BillToCard({
             placeholder="e.g. London"
           />
           {errors?.city && (
-            <Text variant="error" size="sm">
+            <Text variant="error" size="md">
               {errors.city.message}
             </Text>
           )}
@@ -278,7 +278,7 @@ export function BillToCard({
             placeholder="e.g. SW1A 1AA"
           />
           {errors?.postcode && (
-            <Text variant="error" size="sm">
+            <Text variant="error" size="md">
               {errors.postcode.message}
             </Text>
           )}

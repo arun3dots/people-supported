@@ -14,6 +14,11 @@ import {
 } from "@repo/ui/components/ui";
 import type { PropertyItem } from "../../../../../../../lib/types/facility";
 import { PropertyDrawerSections } from "./PropertyDrawerSections";
+import {
+  getPropertyManagerLabel,
+  getPropertyPartnerLabel,
+  getPropertySchemeLabel,
+} from "../tabs/properties/propertyDisplay";
 
 interface PropertyDetailDrawerProps {
   property: PropertyItem | null;
@@ -44,12 +49,8 @@ export function PropertyDetailDrawer({
 
   const pd = property.parsedPropertyDetails ?? {};
   const certs = pd.safetyCertificates ?? [];
-  const housingPartner =
-    pd.landlordDetails?.name ||
-    property.scheme?.housingPartner ||
-    "Yorkshire Housing Association";
-  const teamLeader =
-    pd.propertyManagerName || property.primaryContact || "Assigned Lead";
+  const housingPartner = getPropertyPartnerLabel(property);
+  const teamLeader = getPropertyManagerLabel(property);
   const coreCharge = pd.landlordDetails?.coreChargePerWeek ?? 198;
   const addressLabel = [pd.streetAddress, pd.postcode]
     .filter(Boolean)
@@ -80,10 +81,10 @@ export function PropertyDetailDrawer({
           {/* Top Header */}
           <div className="p-6 pb-0 border-b border-slate-200 space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-sm font-medium text-slate-500">
+              <div className="flex items-center gap-1.5 text-md font-medium text-slate-500">
                 <Building2 className="size-3.5 text-primary" />
                 <span>
-                  {property.scheme?.name || "Supported Living Scheme"} · ID:{" "}
+                  {getPropertySchemeLabel(property)} · ID:{" "}
                   {pd.referenceId || property.code || property.id.slice(0, 8)}
                 </span>
               </div>
@@ -118,7 +119,7 @@ export function PropertyDetailDrawer({
                   <Text as="h2" size="xl" weight="semibold" className="text-slate-900">
                     {property.name}
                   </Text>
-                  <Text size="sm" variant="muted" className="flex items-center gap-1 mt-0.5">
+                  <Text size="md" variant="muted" className="flex items-center gap-1 mt-0.5">
                     <MapPin className="size-3.5 text-slate-400 shrink-0" />
                     <span>
                       {addressLabel || property.description || "Registered Home"}{" "}

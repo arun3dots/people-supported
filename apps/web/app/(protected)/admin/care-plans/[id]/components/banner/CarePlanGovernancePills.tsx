@@ -81,7 +81,7 @@ export function CarePlanGovernancePills({
       <button
         type="button"
         onClick={onOpenDolsTab}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-sm font-semibold border transition-colors cursor-pointer ${isExpired
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-md font-semibold border transition-colors cursor-pointer ${isExpired
             ? "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100"
             : isExpiringSoon
               ? "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100"
@@ -102,7 +102,7 @@ export function CarePlanGovernancePills({
       <button
         type="button"
         onClick={onOpenDolsTab}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-md font-medium border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer"
         title="No active DoLS safeguard found. Click to review capacity."
       >
         <ShieldCheck className="size-3.5 text-slate-400" />
@@ -117,7 +117,7 @@ export function CarePlanGovernancePills({
     <button
       type="button"
       onClick={onOpenDolsTab}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-sm font-semibold border transition-colors cursor-pointer ${lacksCapacityAssessment
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-md font-semibold border transition-colors cursor-pointer ${lacksCapacityAssessment
           ? "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
           : assessments.length > 0
             ? "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100"
@@ -148,7 +148,7 @@ export function CarePlanGovernancePills({
         <button
           type="button"
           onClick={onOpenReviewTab}
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-sm font-semibold border transition-colors cursor-pointer ${isOverdue
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-md font-semibold border transition-colors cursor-pointer ${isOverdue
               ? "bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100"
               : daysUntilReview <= 7
                 ? "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100"
@@ -174,7 +174,7 @@ export function CarePlanGovernancePills({
   return (
     <div className="flex items-center gap-2 flex-wrap font-['Outfit',sans-serif]">
       {/* Version Pill */}
-      <Badge variant="secondary" state="inactive" className="font-mono text-sm px-2.5 py-1 shadow-none">
+      <Badge variant="secondary" state="inactive" className="font-mono text-md px-2.5 py-1 shadow-none">
         {versionPill}
       </Badge>
 
@@ -182,7 +182,7 @@ export function CarePlanGovernancePills({
       <Badge
         variant="secondary"
         state={getStatusBadgeState(status)}
-        className="px-2.5 py-1 text-sm font-semibold shadow-none"
+        className="px-2.5 py-1 text-md font-semibold shadow-none"
       >
         {status}
       </Badge>

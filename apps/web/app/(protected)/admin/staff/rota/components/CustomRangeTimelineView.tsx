@@ -41,7 +41,7 @@ export function CustomRangeTimelineView({
         {/* Header Row */}
         <div className="flex border-b border-slate-200 bg-slate-50/70 sticky top-0 z-20">
           <div className="w-[220px] p-3 shrink-0 border-r border-slate-200 bg-slate-50/70 sticky left-0 z-30">
-            <Text size="sm" weight="bold" className="text-slate-700">
+            <Text size="md" weight="bold" className="text-slate-700">
               {viewMode === "staff" ? "Staff Member" : "Area / Level"}
             </Text>
           </div>
@@ -51,10 +51,10 @@ export function CustomRangeTimelineView({
                 key={day.toISOString()}
                 className="flex-1 min-w-[110px] p-2 text-center flex flex-col items-center justify-center"
               >
-                <Text size="sm" weight="medium" className="text-sm text-slate-500 tracking-wider mb-0.5 uppercase font-medium">
+                <Text size="md" weight="medium" className="text-md text-slate-500 tracking-wider mb-0.5 uppercase font-medium">
                   {format(day, "EEE")}
                 </Text>
-                <Text size="sm" weight="semibold" className="text-sm font-semibold text-slate-900">
+                <Text size="md" weight="semibold" className="text-md font-semibold text-slate-900">
                   {format(day, "MMM d")}
                 </Text>
               </div>
@@ -75,7 +75,7 @@ export function CustomRangeTimelineView({
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <Text size="sm" weight="semibold" className="text-slate-900 truncate">
+                <Text size="md" weight="semibold" className="text-slate-900 truncate">
                   {row.name}
                 </Text>
               </div>
@@ -123,21 +123,21 @@ export function CustomRangeTimelineView({
                             className="p-1.5 px-2 rounded-lg border border-l-3 transition-all hover:scale-[1.01] hover:shadow-xs overflow-hidden cursor-pointer"
                           >
                             <div className="flex items-center justify-between gap-1 mb-0.5">
-                              <Text size="sm" weight="bold" className="text-slate-900 truncate">
+                              <Text size="md" weight="bold" className="text-slate-900 truncate">
                                 {shift.type?.name || "Custom Shift"}
                               </Text>
                               {shift.status === "Draft" && (
-                                <Badge className="bg-amber-100 text-amber-800 text-sm px-1.5 py-0 border-0 h-4 font-bold shrink-0">
+                                <Badge className="bg-amber-100 text-amber-800 text-md px-1.5 py-0 border-0 h-4 font-bold shrink-0">
                                   Draft
                                 </Badge>
                               )}
                               {shift.status === "Cancelled" && (
-                                <Badge className="bg-rose-100 text-rose-800 text-sm px-1.5 py-0 border-0 h-4 font-bold shrink-0">
+                                <Badge className="bg-rose-100 text-rose-800 text-md px-1.5 py-0 border-0 h-4 font-bold shrink-0">
                                   Cancelled
                                 </Badge>
                               )}
                             </div>
-                            <Text size="sm" weight="medium" className="text-sm text-slate-600 flex items-center justify-between">
+                            <Text size="md" weight="medium" className="text-md text-slate-600 flex items-center justify-between">
                               {formatUkTime(shift.startTime)}-{formatUkTime(shift.endTime)}
                             </Text>
                           </div>

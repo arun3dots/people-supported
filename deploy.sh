@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 set -Eeuo pipefail
@@ -101,18 +102,11 @@ if [ -z "${AUDIT_DATABASE_URL:-}" ]; then
     exit 1
 fi
 
-# Generate both Prisma clients.
-echo
-echo "===== GENERATE MAIN PRISMA CLIENT ====="
+# Prisma clients are generated in GitHub Actions CI.
+# Do not generate them again on the production server.
+# This prevents tracked generated files from becoming modified.
 
-pnpm --filter @repo/db exec prisma generate --schema=prisma/schema.prisma
-
-echo
-echo "===== GENERATE AUDIT PRISMA CLIENT ====="
-
-pnpm --filter @repo/audit-db exec prisma generate --schema=prisma/schema.prisma
-
-# Build before applying migrations.
+# Build the application using the Prisma clients from CI.
 echo
 echo "===== BUILD APPLICATIONS ====="
 

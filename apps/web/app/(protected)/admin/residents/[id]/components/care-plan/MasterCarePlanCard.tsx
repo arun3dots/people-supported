@@ -91,7 +91,7 @@ export function MasterCarePlanCard({
           <div className="flex items-center gap-2.5">
             <AlertTriangle className="size-5 text-amber-600 shrink-0" />
             <div>
-              <p className="text-md sm:text-md font-bold">This Master Care Plan has expired ({formatDate(validTo)})</p>
+              <p className="text-md font-bold">This Master Care Plan has expired ({formatDate(validTo)})</p>
               <p className="text-md text-amber-700">Renew this plan to carry forward existing clinical goals and update daily task schedules.</p>
             </div>
           </div>
@@ -193,7 +193,7 @@ export function MasterCarePlanCard({
       {/* 5. Clinical Rationale */}
       {activeCarePlan.description ? (
         <div className="p-3.5 bg-slate-50/70 border border-slate-200/60 rounded-xl space-y-1">
-          <span className="text-sm font-bold text-text-description tracking-wider">
+          <span className="text-md font-bold text-text-description tracking-wider">
             Clinical Rationale & Notes
           </span>
           <p className="text-md text-text-primary leading-relaxed">{activeCarePlan.description as string}</p>

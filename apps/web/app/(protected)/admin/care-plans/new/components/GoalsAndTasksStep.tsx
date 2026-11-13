@@ -39,11 +39,11 @@ export function GoalsAndTasksStep({
           <div>
             <div className="flex items-center gap-2">
               <Target className="size-5 text-emerald-800" />
-              <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+              <Text as="h3" size="md" weight="medium" className="text-slate-900">
                 Clinical Goals &amp; Interventions
               </Text>
             </div>
-            <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+            <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
               Define measurable clinical outcomes and target timelines.
             </Text>
           </div>
@@ -60,15 +60,15 @@ export function GoalsAndTasksStep({
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Text size="sm" weight="semibold" className="text-slate-900">{goal.title}</Text>
+                  <Text size="md" weight="semibold" className="text-slate-900">{goal.title}</Text>
                   <Badge variant="outline" className="shadow-none">
                     {goal.category}
                   </Badge>
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Cadence: {goal.reviewFrequency}
                   </Text>
                 </div>
-                <Text size="sm" weight="regular" className="text-slate-500">{goal.targetDescription}</Text>
+                <Text size="md" weight="regular" className="text-slate-500">{goal.targetDescription}</Text>
               </div>
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="sm" onClick={() => onOpenEditGoal(goal)} className="cursor-pointer">
@@ -89,11 +89,11 @@ export function GoalsAndTasksStep({
           <div>
             <div className="flex items-center gap-2">
               <ListTodo className="size-5 text-emerald-800" />
-              <Text as="h3" size="sm" weight="medium" className="text-slate-900">
+              <Text as="h3" size="md" weight="medium" className="text-slate-900">
                 Daily Care Tasks Schedule
               </Text>
             </div>
-            <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+            <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
               Configure concrete tasks carers will complete during each shift.
             </Text>
           </div>
@@ -110,7 +110,7 @@ export function GoalsAndTasksStep({
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Text size="sm" weight="semibold" className="text-slate-900">{task.title}</Text>
+                  <Text size="md" weight="semibold" className="text-slate-900">{task.title}</Text>
                   <Badge variant="outline" className="shadow-none">
                     {task.category}
                   </Badge>
@@ -123,12 +123,12 @@ export function GoalsAndTasksStep({
                   >
                     {task.priority}
                   </Badge>
-                  <Text size="sm" weight="regular" className="text-slate-500">
+                  <Text size="md" weight="regular" className="text-slate-500">
                     Slots: {task.timeOfDay?.join(", ") || "AllDay"}
                   </Text>
                 </div>
                 {task.instructions && (
-                  <Text size="sm" weight="regular" className="text-slate-500">{task.instructions}</Text>
+                  <Text size="md" weight="regular" className="text-slate-500">{task.instructions}</Text>
                 )}
               </div>
               <div className="flex items-center gap-1">

@@ -158,15 +158,11 @@ function getRowStatus(
 function formatCoverage(
   commissioned: number,
   planned: number,
-  delivered: number,
 ): string {
-  const pct =
-    commissioned > 0
-      ? (delivered / commissioned) * 100
-      : planned > 0
-        ? (delivered / planned) * 100
-        : 0;
-  return `${pct.toFixed(1)}%`;
+  if (commissioned <= 0) {
+    return planned > 0 ? "100.0%" : "0.0%";
+  }
+  return `${((planned / commissioned) * 100).toFixed(1)}%`;
 }
 
 export function buildHoursBreakdownRows(params: {
@@ -225,8 +221,8 @@ export function buildHoursBreakdownRows(params: {
         commissioned,
         planned,
         delivered,
-        variance: roundHours(delivered - commissioned),
-        coverage: formatCoverage(commissioned, planned, delivered),
+        variance: commissioned > 0 ? roundHours(planned - commissioned) : 0,
+        coverage: formatCoverage(commissioned, planned),
         status: getRowStatus(commissioned, planned),
       };
     });
@@ -266,8 +262,8 @@ export function buildHoursBreakdownRows(params: {
       commissioned,
       planned,
       delivered,
-      variance: roundHours(delivered - commissioned),
-      coverage: formatCoverage(commissioned, planned, delivered),
+      variance: commissioned > 0 ? roundHours(planned - commissioned) : 0,
+      coverage: formatCoverage(commissioned, planned),
       status: getRowStatus(commissioned, planned),
     };
   });
@@ -289,8 +285,8 @@ export function buildHoursBreakdownRows(params: {
       commissioned: 0,
       planned,
       delivered,
-      variance: delivered,
-      coverage: formatCoverage(0, planned, delivered),
+      variance: 0,
+      coverage: formatCoverage(0, planned),
       status: getRowStatus(0, planned),
     });
   }

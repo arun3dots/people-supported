@@ -22,10 +22,10 @@ export function PrimaryContactFields({
     <Card className="p-5 sm:p-6 flex flex-col gap-4 border border-slate-200/80 shadow-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <div>
-          <Text as="h3" size="sm" weight="semibold" className="text-slate-900">
+          <Text as="h3" size="md" weight="semibold" className="text-slate-900">
             Primary Contact Details
           </Text>
-          <Text size="sm" variant="muted" className="text-slate-500">
+          <Text size="md" variant="muted" className="text-slate-500">
             Person managing administrative communications and notifications
           </Text>
         </div>
@@ -63,7 +63,7 @@ export function PrimaryContactFields({
           <Input
             id="primaryContactPhone"
             type="tel"
-            placeholder="e.g. +44 7700 900888"
+            placeholder="e.g. 7700 900888"
             {...register("primaryContactPhone")}
             errorMessage={errors.primaryContactPhone?.message}
           />
@@ -76,7 +76,7 @@ export function PrimaryContactFields({
           <Input
             id="primaryContactEmail"
             type="email"
-            placeholder="e.g. eleanor@carehome.com"
+            placeholder="e.g. eleanor@example.com"
             {...register("primaryContactEmail")}
             errorMessage={errors.primaryContactEmail?.message}
           />

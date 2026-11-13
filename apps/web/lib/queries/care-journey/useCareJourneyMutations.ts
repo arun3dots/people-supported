@@ -64,9 +64,14 @@ export function useCreateAssessmentMutation() {
   const refresh = useRefreshAssessment();
   return useMutation({
     mutationFn: (residentId: string) =>
-      makeAPICall<AssessmentRecordDTO>(CREATE_ASSESSMENT, {}, {}, {
-        id: residentId,
-      }),
+      makeAPICall<AssessmentRecordDTO>(
+        CREATE_ASSESSMENT,
+        {},
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: refresh,
     onError: failure("Could not start the assessment", "Please try again"),
   });
@@ -97,9 +102,14 @@ export function useCompleteAssessmentMutation() {
   const refresh = useRefreshAssessment();
   return useMutation({
     mutationFn: (residentId: string) =>
-      makeAPICall<AssessmentRecordDTO>(COMPLETE_ASSESSMENT, {}, {}, {
-        id: residentId,
-      }),
+      makeAPICall<AssessmentRecordDTO>(
+        COMPLETE_ASSESSMENT,
+        {},
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: refresh,
     onError: failure("Could not complete", "Completing the assessment failed"),
   });
@@ -114,6 +124,7 @@ function useRefreshPlans(residentId: string) {
     queryClient.invalidateQueries({
       queryKey: careJourneyKeys.definitions(residentId),
     });
+    queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll });
     queryClient.invalidateQueries({
       queryKey: careJourneyKeys.dayAll(residentId),
     });
@@ -134,7 +145,10 @@ export function useCreateNeedCarePlanMutation(residentId: string) {
         { id: residentId },
       ),
     onSuccess: refresh,
-    onError: failure("Could not create care plan", "Saving the care plan failed"),
+    onError: failure(
+      "Could not create care plan",
+      "Saving the care plan failed",
+    ),
   });
 }
 
@@ -239,10 +253,41 @@ export function useRecordCareTaskMutation(residentId: string) {
         { id: residentId, taskId },
       ),
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: careJourneyKeys.dayAll(residentId),
-      }),
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: careJourneyKeys.dayAll(residentId),
+        }),
+        queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll }),
+      ]),
     onError: failure("Could not record", "Please try again"),
+  });
+}
+
+export function useRecordCareTaskFromBoardMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      residentId,
+      taskId,
+      data,
+    }: {
+      residentId: string;
+      taskId: string;
+      data: RecordCareTaskDTO;
+    }) =>
+      makeAPICall<unknown>(
+        RECORD_CARE_TASK,
+        asPayload(data),
+        {},
+        { id: residentId, taskId },
+      ),
+    onSuccess: (_result, variables) => {
+      queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll });
+      queryClient.invalidateQueries({
+        queryKey: careJourneyKeys.dayAll(variables.residentId),
+      });
+    },
+    onError: failure("Could not record the task", "Please try again"),
   });
 }
 
@@ -252,9 +297,12 @@ export function useUndoCareTaskMutation(residentId: string) {
     mutationFn: (taskId: string) =>
       makeAPICall<unknown>(UNDO_CARE_TASK, {}, {}, { id: residentId, taskId }),
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: careJourneyKeys.dayAll(residentId),
-      }),
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: careJourneyKeys.dayAll(residentId),
+        }),
+        queryClient.invalidateQueries({ queryKey: careJourneyKeys.boardAll }),
+      ]),
     onError: failure("Could not undo", "Please try again"),
   });
 }
@@ -263,9 +311,14 @@ export function useCreateShiftNoteMutation(residentId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateShiftNoteDTO) =>
-      makeAPICall<ShiftNoteDTO>(CREATE_SHIFT_NOTE, asPayload(data), {}, {
-        id: residentId,
-      }),
+      makeAPICall<ShiftNoteDTO>(
+        CREATE_SHIFT_NOTE,
+        asPayload(data),
+        {},
+        {
+          id: residentId,
+        },
+      ),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: careJourneyKeys.dayAll(residentId),

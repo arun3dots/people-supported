@@ -78,14 +78,14 @@ export function StaffRequestLeaveModal({
 
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           {error && (
-            <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700">
+            <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-md text-rose-700">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             <div className="space-y-1.5">
-              <Label className="text-sm font-semibold text-slate-800">
+              <Label className="text-md font-semibold text-slate-800">
                 Start Date
               </Label>
               <Input
@@ -97,7 +97,7 @@ export function StaffRequestLeaveModal({
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-sm font-semibold text-slate-800">
+              <Label className="text-md font-semibold text-slate-800">
                 End Date
               </Label>
               <Input
@@ -110,7 +110,7 @@ export function StaffRequestLeaveModal({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-semibold text-slate-800">
+            <Label className="text-md font-semibold text-slate-800">
               Reason
             </Label>
             <Input
@@ -122,7 +122,7 @@ export function StaffRequestLeaveModal({
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-sm font-semibold text-slate-800">
+            <Label className="text-md font-semibold text-slate-800">
               Additional Notes (Optional)
             </Label>
             <Textarea

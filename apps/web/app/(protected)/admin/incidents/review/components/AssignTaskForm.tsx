@@ -93,9 +93,9 @@ export function AssignTaskForm({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter the Task"
-              className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md lg:text-md text-text-body px-3 pr-16"
+              className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body px-3 pr-16"
             />
-            <span className="absolute right-3 top-3 text-[10px] text-slate-400">
+            <span className="absolute right-3 top-3 text-md text-slate-400">
               {title.length}/250
             </span>
           </div>
@@ -112,9 +112,9 @@ export function AssignTaskForm({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the task in details..."
               rows={3}
-              className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md lg:text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20 pr-16"
+              className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20 pr-16"
             />
-            <span className="absolute bottom-2.5 right-3 text-[10px] text-slate-400">
+            <span className="absolute bottom-2.5 right-3 text-md text-slate-400">
               {description.length}/250
             </span>
           </div>
@@ -137,7 +137,7 @@ export function AssignTaskForm({
                 setAssignedToAvatarUrl(selectedStaff?.avatarUrl || "");
               }}
             >
-              <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md lg:text-md text-text-body">
+              <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
@@ -170,7 +170,7 @@ export function AssignTaskForm({
                 setPriority(val as "High" | "Medium" | "Low")
               }
             >
-              <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md lg:text-md text-text-body">
+              <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
@@ -222,7 +222,7 @@ export function AssignTaskForm({
                 value={taskTime}
                 onChange={(e) => setTaskTime(e.target.value)}
                 placeholder="e.g. 12:00 PM"
-                className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md lg:text-md text-text-body pr-8"
+                className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body pr-8"
               />
               <Clock className="size-4 text-slate-400 absolute right-2.5 top-3 pointer-events-none" />
             </div>
@@ -239,7 +239,7 @@ export function AssignTaskForm({
             <p className="text-md font-medium text-slate-800">
               Drag and drop your file here
             </p>
-            <p className="text-[11px] text-text-description my-1">or</p>
+            <p className="text-md text-text-description my-1">or</p>
             {/* Hidden real file input — BUG-036 fix */}
             <input
               ref={fileInputRef}
@@ -283,7 +283,7 @@ export function AssignTaskForm({
             >
               Browse Files
             </Button>
-            <p className="text-[10px] text-text-description mt-2">
+            <p className="text-md text-text-description mt-2">
               Supported formats: PDF, JPG, PNG (Max: 10 MB)
             </p>
           </div>

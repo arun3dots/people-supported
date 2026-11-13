@@ -135,7 +135,7 @@ export function ShiftTypeManager({ isOpen, onClose }: ShiftTypeManagerProps) {
                 className="bg-white border-slate-200 rounded-xl text-md"
               />
               {errors.name && (
-                <Text variant="error" size="sm">
+                <Text variant="error" size="md">
                   {String(errors.name.message)}
                 </Text>
               )}
@@ -171,7 +171,7 @@ export function ShiftTypeManager({ isOpen, onClose }: ShiftTypeManagerProps) {
                   {...register("color")}
                   className="h-10 w-16 p-1 rounded-xl cursor-pointer bg-white border-slate-200"
                 />
-                <Text size="sm" className="text-slate-500 flex items-center gap-1">
+                <Text size="md" className="text-slate-500 flex items-center gap-1">
                   <Palette className="size-3.5" /> Colour badge on rota grid
                 </Text>
               </div>
@@ -196,14 +196,14 @@ export function ShiftTypeManager({ isOpen, onClose }: ShiftTypeManagerProps) {
 
         {/* Existing Shift Types List */}
         <div className="space-y-3">
-          <Text variant="sm-bold" subdued className=" tracking-widest px-1 text-slate-500">
+          <Text variant="md-bold" subdued className=" tracking-widest px-1 text-slate-500">
             Configured Templates ({shiftTypes.length})
           </Text>
 
           {shiftTypes.length === 0 ? (
             <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl bg-white">
               <Clock className="size-8 text-slate-300 mx-auto mb-2" />
-              <Text size="sm" className="text-slate-400">
+              <Text size="md" className="text-slate-400">
                 No shift templates configured yet.
               </Text>
             </div>
@@ -220,10 +220,10 @@ export function ShiftTypeManager({ isOpen, onClose }: ShiftTypeManagerProps) {
                         style={{ backgroundColor: type.color || "#2563eb" }}
                     />
                     <div>
-                      <Text variant="sm-bold" className="text-slate-900 font-semibold">
+                      <Text variant="md-bold" className="text-slate-900 font-semibold">
                         {type.name}
                       </Text>
-                      <Text variant="sm-regular" className="text-slate-500">
+                      <Text variant="md-regular" className="text-slate-500">
                         {type.startTime} – {type.endTime}
                       </Text>
                     </div>

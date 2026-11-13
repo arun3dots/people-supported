@@ -7,6 +7,7 @@ import { prisma, Resident, PrismaTransactionClient } from '@repo/db';
 import { AdmitConfirmDTO, isUuid } from '@repo/schema';
 
 import { CarePlanAutoDraftService } from '../../care-plan/care-plan-auto-draft.service';
+import { toJsonValue } from '../../common/utils/json.util';
 
 @Injectable()
 export class ResidentAdmissionService {
@@ -30,13 +31,21 @@ export class ResidentAdmissionService {
       select: { roomAllocation: true },
     });
     const roomAllocation = currentPreAdmission?.roomAllocation;
-    const savedBedId =
+    const roomAllocationObj =
       roomAllocation &&
       typeof roomAllocation === 'object' &&
-      !Array.isArray(roomAllocation) &&
-      'bedId' in roomAllocation &&
-      typeof roomAllocation.bedId === 'string'
-        ? roomAllocation.bedId
+      !Array.isArray(roomAllocation)
+        ? (roomAllocation as Record<string, unknown>)
+        : null;
+    const savedBedId =
+      roomAllocationObj && typeof roomAllocationObj.bedId === 'string'
+        ? roomAllocationObj.bedId
+        : null;
+    const savedLandlord =
+      roomAllocationObj &&
+      typeof roomAllocationObj.landlord === 'string' &&
+      roomAllocationObj.landlord.trim()
+        ? roomAllocationObj.landlord.trim()
         : null;
     const bedId = savedBedId || dto.bedId;
     if (bedId && isUuid(bedId)) {
@@ -49,6 +58,29 @@ export class ResidentAdmissionService {
       }
     }
 
+    const existingSl =
+      resident.supportedLivingDetails &&
+      typeof resident.supportedLivingDetails === 'object' &&
+      !Array.isArray(resident.supportedLivingDetails)
+        ? (resident.supportedLivingDetails as Record<string, unknown>)
+        : {};
+    const existingTenancy =
+      existingSl.tenancy &&
+      typeof existingSl.tenancy === 'object' &&
+      !Array.isArray(existingSl.tenancy)
+        ? (existingSl.tenancy as Record<string, unknown>)
+        : {};
+    const nextSupportedLivingDetails =
+      savedLandlord && !existingTenancy.landlord
+        ? {
+            ...existingSl,
+            tenancy: {
+              ...existingTenancy,
+              landlord: savedLandlord,
+            },
+          }
+        : undefined;
+
     const confirmedResident = await prisma.$transaction(
       async (tx: PrismaTransactionClient) => {
         const updatedResident = await tx.resident.update({
@@ -59,6 +91,13 @@ export class ResidentAdmissionService {
             admissionStep: 11,
             admissionDate: new Date(),
             updatedById: creatorId,
+            ...(nextSupportedLivingDetails
+              ? {
+                  supportedLivingDetails: toJsonValue(
+                    nextSupportedLivingDetails,
+                  ),
+                }
+              : {}),
           },
         });
 

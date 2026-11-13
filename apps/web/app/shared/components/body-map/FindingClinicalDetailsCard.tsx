@@ -39,9 +39,9 @@ export function FindingClinicalDetailsCard({
       <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
         <div className="flex items-center gap-2 text-slate-600">
           <FileText className="size-4 text-slate-500" />
-          <p className="text-sm font-semibold text-slate-700">Clinical Description</p>
+          <p className="text-md font-semibold text-slate-700">Clinical Description</p>
         </div>
-        <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+        <p className="text-md text-slate-800 leading-relaxed whitespace-pre-wrap">
           {description}
         </p>
       </div>
@@ -120,7 +120,7 @@ export function FindingClinicalDetailsCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-2.5">
         <div className="flex items-center gap-2">
           <Layers className="size-4 text-teal-800 shrink-0" />
-          <Text size="sm" weight="bold" className="text-slate-900">
+          <Text size="md" weight="bold" className="text-slate-900">
             Clinical Assessment Details
           </Text>
         </div>
@@ -128,7 +128,7 @@ export function FindingClinicalDetailsCard({
         {classificationField && (
           <Badge
             variant="outline"
-            className="bg-teal-50 text-teal-900 border-teal-200 text-sm font-semibold px-2.5 py-0.5 rounded-full"
+            className="bg-teal-50 text-teal-900 border-teal-200 text-md font-semibold px-2.5 py-0.5 rounded-full"
           >
             {classificationField.value}
           </Badge>
@@ -145,11 +145,11 @@ export function FindingClinicalDetailsCard({
             >
               <div className="flex items-center gap-1.5 text-slate-500">
                 {getFieldIcon(field.type)}
-                <span className="text-[11px] font-semibold text-slate-600 truncate">
+                <span className="text-md font-semibold text-slate-600 truncate">
                   {field.label}
                 </span>
               </div>
-              <p className="text-sm font-semibold text-slate-900 leading-snug pl-5">
+              <p className="text-md font-semibold text-slate-900 leading-snug pl-5">
                 {field.value}
               </p>
             </div>
@@ -162,11 +162,11 @@ export function FindingClinicalDetailsCard({
         <div className="p-3 rounded-lg bg-white border border-slate-200/90 shadow-2xs space-y-1">
           <div className="flex items-center gap-1.5 text-slate-600">
             <FileText className="size-3.5 text-slate-500" />
-            <span className="text-[11px] font-semibold text-slate-700">
+            <span className="text-md font-semibold text-slate-700">
               Additional Clinical Observations
             </span>
           </div>
-          <p className="text-sm text-slate-800 leading-relaxed pl-5">
+          <p className="text-md text-slate-800 leading-relaxed pl-5">
             {notesValue}
           </p>
         </div>

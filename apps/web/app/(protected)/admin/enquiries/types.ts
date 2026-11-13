@@ -12,7 +12,7 @@ export const RELATIONSHIPS = [
 export const LOCATIONS = [
   "Home",
   "Hospital",
-  "Another Care Home",
+  "Another Supported Living Service",
   "Rehabilitation",
   "Other",
 ] as const;
@@ -23,6 +23,7 @@ export const CATEGORIES = [
   "Dementia",
   "Respite",
   "Nursing",
+  "Supported Living",
 ] as const;
 
 export const DEPENDENCY_LEVELS = ["Low", "Medium", "High", "Critical"] as const;

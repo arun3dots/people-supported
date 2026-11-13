@@ -259,13 +259,13 @@ export function EditCareProvidersModal({
 
             {otherProviders.length === 0 ? (
               <div className="p-6 bg-slate-50/60 border border-dashed border-slate-200 rounded-2xl text-center">
-                <p className="text-sm text-slate-500">
+                <p className="text-md text-slate-500">
                   No additional healthcare providers added yet. Click &quot;Add Specialist&quot; to register dental, optometry, or therapy contacts.
                 </p>
               </div>
             ) : (
               <div className="space-y-2">
-                <div className="hidden sm:grid sm:grid-cols-[130px_1fr_1fr_140px_36px] gap-2.5 px-3 text-sm font-semibold text-[#141F1E]">
+                <div className="hidden sm:grid sm:grid-cols-[130px_1fr_1fr_140px_36px] gap-2.5 px-3 text-md font-semibold text-[#141F1E]">
                   <div>Provider Type</div>
                   <div>Provider Name</div>
                   <div>Clinic / Practice</div>

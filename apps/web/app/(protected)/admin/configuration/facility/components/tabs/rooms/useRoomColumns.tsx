@@ -56,10 +56,10 @@ export function useRoomColumns({
                 {r.roomNumber.replace(/[^0-9]/g, "").slice(0, 2) || r.roomNumber.slice(0, 2)}
               </div>
               <div className="flex flex-col min-w-0">
-                <Text size="sm" className="text-slate-900 truncate">
+                <Text size="md" className="text-slate-900 truncate">
                   {label}
                 </Text>
-                <Text size="sm" weight="regular" className="text-slate-500 truncate">
+                <Text size="md" weight="regular" className="text-slate-500 truncate">
                   {r.name || "Resident Room"} · {r.wing?.name || r.wingName || "Unassigned"}
                 </Text>
               </div>

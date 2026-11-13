@@ -33,6 +33,7 @@ describe("rotaDataUtils & hoursSummaryUtils (no fallback data)", () => {
       totalHours: 0,
       sharedHours: 0,
       oneToOneHours: 0,
+      twoToOneHours: 0,
       sleepInHours: 0,
       wakingNightHours: 0,
     });
@@ -144,6 +145,26 @@ describe("rotaDataUtils & hoursSummaryUtils (no fallback data)", () => {
       planned: 12,
       delivered: 12,
       status: "Shortfall",
+    });
+  });
+
+  it("breaks down care types including 2:1 Support", () => {
+    const shift2to1 = {
+      id: "sh-2",
+      startTime: "2026-11-09T10:00:00Z",
+      endTime: "2026-11-09T14:00:00Z",
+      careType: "2:1 Dedicated Support",
+      durationHours: 4,
+    } as unknown as Shift;
+
+    const breakdown = getCareTypeBreakdown([shift2to1]);
+    expect(breakdown).toEqual({
+      totalHours: 4,
+      sharedHours: 0,
+      oneToOneHours: 0,
+      twoToOneHours: 4,
+      sleepInHours: 0,
+      wakingNightHours: 0,
     });
   });
 });

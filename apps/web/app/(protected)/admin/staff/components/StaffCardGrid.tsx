@@ -3,18 +3,31 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, Mail, Phone } from "lucide-react";
+import { Building2, Home, Mail, Phone, Trash2 } from "lucide-react";
 import {
-  Button,
   Avatar,
-  AvatarImage,
   AvatarFallback,
+  AvatarImage,
+  Badge,
+  Button,
+  Text,
 } from "@repo/ui/components/ui";
 import { EntityCard } from "../../../../../lib/components/shared";
+import type {
+  PropertyItem,
+  SchemeItem,
+} from "../../../../../lib/types/facility";
 import type { StaffMember } from "../../../../../lib/types/staff";
+import {
+  getStaffInitials,
+  getStaffRoleBadgeState,
+  resolveStaffLocation,
+} from "./staffUtils";
 
 export interface StaffCardProps {
   member: StaffMember;
+  schemes?: SchemeItem[];
+  properties?: PropertyItem[];
   showRightDivider?: boolean;
   onToggleStatus: (id: string, currentStatus: boolean) => void;
   onDelete: (id: string) => void;
@@ -22,19 +35,36 @@ export interface StaffCardProps {
 
 export function StaffCard({
   member,
+  schemes = [],
+  properties = [],
   showRightDivider = false,
   onToggleStatus,
   onDelete,
 }: StaffCardProps) {
   const router = useRouter();
-  const initial = member.fullName?.charAt(0)?.toUpperCase() || "S";
+  const initials = getStaffInitials(member.fullName);
+  const roleName = member.role?.name;
+  const { schemeName, propertyName } = resolveStaffLocation(
+    member,
+    schemes,
+    properties,
+  );
+  const phone = member.phoneNumber?.trim();
+  const subtitleParts = [
+    member.department,
+    member.contractType,
+  ].filter(Boolean);
 
   return (
     <EntityCard
       onClick={() => router.push(`/admin/staff/${member.id}`)}
       showRightDivider={showRightDivider}
+      className="border-slate-200/60 shadow-none hover:shadow-xs"
       avatar={
-        <Avatar size="sm" className="size-11 border border-slate-200 shrink-0 bg-surface-primary-light">
+        <Avatar
+          size="sm"
+          className="size-11 shrink-0 bg-surface-primary-light"
+        >
           {member.avatarUrl && (
             <AvatarImage
               src={member.avatarUrl}
@@ -42,8 +72,8 @@ export function StaffCard({
               className="object-cover"
             />
           )}
-          <AvatarFallback className="bg-surface-primary-light text-icon-primary font-bold text-base">
-            {initial}
+          <AvatarFallback className="bg-surface-primary-light text-primary font-semibold text-md">
+            {initials}
           </AvatarFallback>
         </Avatar>
       }
@@ -51,24 +81,49 @@ export function StaffCard({
         <Link
           href={`/admin/staff/${member.id}`}
           onClick={(e) => e.stopPropagation()}
-          className="hover:text-emerald-800 transition-colors"
+          className="block min-w-0 hover:text-primary transition-colors"
         >
-          {member.fullName}
+          <Text size="md" weight="semibold" className="text-slate-900 truncate">
+            {member.fullName}
+          </Text>
         </Link>
       }
-      subtitle={member.role?.name || "Staff Member"}
+      subtitle={subtitleParts.length > 0 ? subtitleParts.join(" · ") : member.email}
+      headerBadge={
+        <Badge
+          variant="secondary"
+          state={roleName ? getStaffRoleBadgeState(roleName) : "inactive"}
+          className="px-2.5 py-0.5 shadow-none font-medium text-md"
+        >
+          {roleName || "Unassigned"}
+        </Badge>
+      }
       meta={[
         {
-          icon: <Mail className="size-4 text-emerald-800 shrink-0" />,
-          value: member.email,
+          icon: <Building2 className="size-4 text-primary shrink-0" />,
+          label: "Scheme",
+          value: schemeName || "Unassigned",
         },
         {
-          icon: <Phone className="size-4 text-emerald-800 shrink-0" />,
-          value: member.phoneNumber || "No phone registered",
+          icon: <Home className="size-4 text-primary shrink-0" />,
+          label: "Property",
+          value: propertyName || "Unassigned",
+        },
+        {
+          icon: <Mail className="size-4 text-primary shrink-0" />,
+          value: member.email || "—",
+        },
+        {
+          icon: <Phone className="size-4 text-primary shrink-0" />,
+          value: phone || "No phone registered",
         },
       ]}
-      statusText={member.isOnLeave ? "On Leave" : member.isActive ? "Active" : "Inactive"}
-      statusState={member.isOnLeave ? "warning" : member.isActive ? "success" : "inactive"}
+      statusText={
+        member.isOnLeave ? "On Leave" : member.isActive ? "Active" : "Inactive"
+      }
+      statusState={
+        member.isOnLeave ? "warning" : member.isActive ? "success" : "inactive"
+      }
       onStatusClick={() => onToggleStatus(member.id, member.isActive)}
       actions={
         <Button
@@ -91,6 +146,8 @@ export function StaffCard({
 export interface StaffCardGridProps {
   staffList?: StaffMember[];
   paginatedStaff: StaffMember[];
+  schemes?: SchemeItem[];
+  properties?: PropertyItem[];
   isLoading: boolean;
   onToggleStatus: (id: string, currentStatus: boolean) => void;
   onDelete: (id: string) => void;
@@ -98,6 +155,8 @@ export interface StaffCardGridProps {
 
 export function StaffCardGrid({
   paginatedStaff,
+  schemes = [],
+  properties = [],
   onToggleStatus,
   onDelete,
 }: StaffCardGridProps) {
@@ -111,6 +170,8 @@ export function StaffCardGrid({
         <StaffCard
           key={member.id}
           member={member}
+          schemes={schemes}
+          properties={properties}
           showRightDivider={
             idx % 3 !== 2 && idx !== paginatedStaff.length - 1
           }

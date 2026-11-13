@@ -76,7 +76,7 @@ export function TaskDetailModal({
               Care Intervention Instruction
             </Text>
             <Text className="text-sm text-foreground leading-relaxed">
-              {task.description || 'Routine scheduled task for resident.'}
+              {task.description || 'Routine scheduled support task.'}
             </Text>
           </View>
 
@@ -97,7 +97,7 @@ export function TaskDetailModal({
                 <TextInput
                   value={signOffNotes}
                   onChangeText={setSignOffNotes}
-                  placeholder="e.g. Resident completed without distress, good fluid intake..."
+                  placeholder="e.g. Completed without distress, good fluid intake..."
                   placeholderTextColor="#9CA3AF"
                   style={{ fontFamily: theme.fonts.regular }}
                   className="border border-border rounded-xl p-3 text-xs text-foreground bg-[#F9FAFA]"

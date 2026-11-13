@@ -90,18 +90,16 @@ describe("PRE_ADMISSION_STEPS", () => {
     expect(validateStepOnSave(6, null, { hasAssessmentNeeds: true }).success).toBe(true);
   });
 
-  it("requires a room and bed allocation before leaving step 10", () => {
+  it("requires a room number before leaving step 10 without requiring bed allocation", () => {
     expect(validateStepOnSave(10, {}).success).toBe(false);
-    expect(
-      validateStepOnSave(10, { roomNumber: "101", bedId: null }).issues,
-    ).toContainEqual({
-      field: "bedId",
-      message: "Bed allocation is required",
+    expect(validateStepOnSave(10, { roomNumber: "" }).issues).toContainEqual({
+      field: "roomNumber",
+      message: "Room number is required",
     });
     expect(
       validateStepOnSave(10, {
         roomNumber: "101",
-        bedId: "bed-1",
+        bedId: null,
         belongings: [],
         assistiveDevices: [],
       }).success,

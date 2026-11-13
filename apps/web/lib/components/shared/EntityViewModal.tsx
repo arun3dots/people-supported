@@ -87,7 +87,7 @@ export function EntityViewModal({
               {badge && (
                 <span
                   className={cn(
-                    "inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200",
+                    "inline-flex items-center px-2.5 py-0.5 rounded-md text-md font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200",
                     badge.className
                   )}
                 >
@@ -98,7 +98,7 @@ export function EntityViewModal({
                 <Badge
                   variant={secondaryBadge.variant ?? "outline"}
                   className={cn(
-                    "text-xs font-mono text-slate-600 border-slate-200",
+                    "text-md font-mono text-slate-600 border-slate-200",
                     secondaryBadge.className
                   )}
                 >
@@ -113,7 +113,7 @@ export function EntityViewModal({
           </DialogTitle>
 
           {description && (
-            <DialogDescription className="text-xs text-slate-500 mt-1 break-words break-all [overflow-wrap:anywhere]">
+            <DialogDescription className="text-md text-slate-500 mt-1 break-words break-all [overflow-wrap:anywhere]">
               {description}
             </DialogDescription>
           )}
@@ -139,7 +139,7 @@ export function EntityViewModal({
                 >
                   {section.title && (
                     <Text
-                      size="sm"
+                      size="md"
                       weight="bold"
                       className="text-slate-900 mb-1"
                     >
@@ -148,7 +148,7 @@ export function EntityViewModal({
                   )}
                   {section.description && (
                     <Text
-                      size="xs"
+                      size="md"
                       weight="regular"
                       className="text-slate-500 mb-3 block"
                     >
@@ -166,9 +166,9 @@ export function EntityViewModal({
                         icon={field.icon}
                         multiline={field.multiline}
                         className={cn("min-w-0 overflow-hidden", field.className)}
-                        labelClassName="text-xs font-medium text-slate-500"
-                        valueClassName="text-sm font-semibold text-slate-900 break-words break-all [overflow-wrap:anywhere]"
-                        subValueClassName="text-xs font-normal text-slate-500 break-words break-all [overflow-wrap:anywhere]"
+                        labelClassName="text-md font-medium text-slate-500"
+                        valueClassName="text-md font-semibold text-slate-900 break-words break-all [overflow-wrap:anywhere]"
+                        subValueClassName="text-md font-normal text-slate-500 break-words break-all [overflow-wrap:anywhere]"
                       />
                     ))}
                   </div>
@@ -185,7 +185,7 @@ export function EntityViewModal({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="rounded-xl px-5 h-9 text-sm font-medium cursor-pointer"
+            className="rounded-xl px-5 h-9 text-md font-medium cursor-pointer"
           >
             Close
           </Button>

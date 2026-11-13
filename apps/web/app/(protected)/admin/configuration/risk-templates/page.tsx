@@ -72,7 +72,7 @@ export default function RiskTemplatesPage() {
           <Text size={'xl'} weight={'bold'}>
             Risk Assessment Templates
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Reusable risk and hazard templates that clinical and care staff can select when conducting resident risk assessments.
           </Text>
         </div>
@@ -92,10 +92,10 @@ export default function RiskTemplatesPage() {
         <Card className="rounded-2xl border-dashed border-slate-200 shadow-none">
           <CardContent className="py-16 text-center">
             <AlertTriangle className="size-8 mx-auto text-slate-400 mb-2" />
-            <Text size="sm" weight="semibold" className="text-slate-700">
+            <Text size="md" weight="semibold" className="text-slate-700">
               No risk templates found
             </Text>
-            <Text size="sm" weight="regular" className="text-slate-400 mt-1">
+            <Text size="md" weight="regular" className="text-slate-400 mt-1">
               Create a custom template or contact support to seed default templates.
             </Text>
           </CardContent>
@@ -124,7 +124,7 @@ export default function RiskTemplatesPage() {
                         </Badge>
                       )}
                     </div>
-                    <Text size="sm" weight="medium" className="text-slate-500">
+                    <Text size="md" weight="medium" className="text-slate-500">
                       {t.category === "Behavioral" ? "Behavioural" : t.category} · {t.tool ?? "General Assessment"} · Risk: L{t.defaultLikelihood} × S{t.defaultSeverity}
                     </Text>
                   </div>
@@ -132,26 +132,26 @@ export default function RiskTemplatesPage() {
               </CardHeader>
 
               <CardContent className="space-y-3 pt-0 flex-1 flex flex-col justify-between">
-                <Text size="sm" weight="regular" className="text-slate-600 line-clamp-3 leading-relaxed">
+                <Text size="md" weight="regular" className="text-slate-600 line-clamp-3 leading-relaxed">
                   {t.hazardDescription}
                 </Text>
 
                 {t.defaultControls && t.defaultControls.length > 0 && (
                   <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 space-y-1">
-                    <Text size="sm" weight="semibold" className="text-slate-700">
+                    <Text size="md" weight="semibold" className="text-slate-700">
                       Standard Controls ({t.defaultControls.length}):
                     </Text>
                     <ul className="list-disc pl-4 space-y-0.5">
                       {t.defaultControls.slice(0, 3).map((c, i) => (
                         <li key={i} className="truncate">
-                          <Text size="sm" weight="regular" className="text-slate-500">
+                          <Text size="md" weight="regular" className="text-slate-500">
                             {c}
                           </Text>
                         </li>
                       ))}
                       {t.defaultControls.length > 3 && (
                         <li className="list-none pt-0.5">
-                          <Text size="sm" weight="regular" className="text-slate-400">
+                          <Text size="md" weight="regular" className="text-slate-400">
                             +{t.defaultControls.length - 3} more controls…
                           </Text>
                         </li>

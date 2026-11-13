@@ -68,7 +68,7 @@ export function AssignResidentDialog({
             <UserCheck className="size-5 text-primary" />
             Assign Resident to Bed
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500">
+          <DialogDescription className="text-md text-slate-500">
             Assign an active resident to Bed{" "}
             <span className="font-medium text-slate-700">
               {bed?.number || bed?.code || ""}

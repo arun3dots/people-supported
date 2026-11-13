@@ -93,7 +93,7 @@ export default function RenewCarePlanPage({ params }: PageProps): React.JSX.Elem
             <Text as="h1" size="lg" weight="bold" className="text-slate-900">
               Renew Care Plan
             </Text>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               Creating next revision from v{p.versionNumber || 1} for {p.resident?.fullName || "Resident"}
             </Text>
           </div>

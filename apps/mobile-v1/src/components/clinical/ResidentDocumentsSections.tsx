@@ -119,7 +119,7 @@ export function ResidentDocumentsSections({ residentId, residentStatus }: Props)
         <View className="flex-1 pr-3">
           <Text className="text-lg font-bold text-foreground">Documents</Text>
           <Text className="text-xs text-muted-foreground mt-0.5">
-            View and upload clinical documents for this resident
+            View and upload clinical documents for this person supported
           </Text>
         </View>
 
@@ -199,7 +199,7 @@ export function ResidentDocumentsSections({ residentId, residentStatus }: Props)
           <Text className="text-xs text-muted-foreground mt-1 text-center">
             {searchQuery || selectedCategory !== 'All'
               ? 'Try adjusting your search or category filter'
-              : 'No clinical documents uploaded for this resident yet'}
+              : 'No clinical documents uploaded for this person supported yet'}
           </Text>
         </View>
       )}

@@ -46,7 +46,7 @@ export function McaBestInterestsSection({
     <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-3 font-['Outfit',sans-serif]">
       <div className="flex items-center gap-2">
         <Scale className="size-4 text-amber-700" />
-        <Text size="sm" weight="semibold" className="text-amber-900 uppercase tracking-wider">
+        <Text size="md" weight="semibold" className="text-amber-900 uppercase tracking-wider">
           Section 4 Best Interests Documentation
         </Text>
       </div>

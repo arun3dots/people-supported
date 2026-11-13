@@ -222,22 +222,44 @@ export class WingService {
     tenantId: string,
     userId: string,
   ): Promise<void> {
-    const roomsCount = await prisma.room.count({
-      where: { wingId: id, deletedAt: null },
+    const oldWing = await prisma.wing.findFirst({
+      where: { id, tenantId, deletedAt: null },
     });
-    if (roomsCount > 0) {
-      throw new ConflictException('Cannot delete wing with existing rooms');
+    if (!oldWing) {
+      throw new NotFoundException('Property not found');
     }
 
-    const oldWing = await prisma.wing.findFirst({ where: { id, tenantId } });
-
-    await prisma.wing.update({
-      where: { id, tenantId },
-      data: {
-        deletedAt: new Date(),
-        deletedById: userId,
+    const occupiedCount = await prisma.bed.count({
+      where: {
+        deletedAt: null,
+        room: { wingId: id, deletedAt: null },
+        OR: [{ status: 'Occupied' }, { residentId: { not: null } }],
       },
     });
+    if (occupiedCount > 0) {
+      throw new ConflictException(
+        `Cannot archive property with ${occupiedCount} occupied room(s). Transfer or discharge residents first.`,
+      );
+    }
+
+    const now = new Date();
+    await prisma.$transaction([
+      prisma.bed.updateMany({
+        where: { deletedAt: null, room: { wingId: id } },
+        data: { deletedAt: now, deletedById: userId },
+      }),
+      prisma.room.updateMany({
+        where: { wingId: id, deletedAt: null },
+        data: { deletedAt: now, deletedById: userId },
+      }),
+      prisma.wing.update({
+        where: { id, tenantId },
+        data: {
+          deletedAt: now,
+          deletedById: userId,
+        },
+      }),
+    ]);
 
     void this.auditService.emit({
       categoryType: 'SYSTEM',

@@ -62,7 +62,7 @@ export function Step5Legal({
           <Text as="h3" size="md" weight="bold">
             Mandatory Consents &amp; Authorisations
           </Text>
-          <Text size="sm" weight="regular" variant="subdued">
+          <Text size="md" weight="regular" variant="subdued">
             Verify execution of signed admission agreements and policies. (Supported uploads: {ADMISSION_UPLOAD_LIMITS.DOCUMENT.hint})
           </Text>
         </div>
@@ -76,10 +76,10 @@ export function Step5Legal({
                   onCheckedChange={() => toggleConsentSigned(index)}
                 />
                 <div>
-                  <Text as="h4" size="sm" weight="bold">
+                  <Text as="h4" size="md" weight="bold">
                     {item.name} {item.required && <span className="text-red-500">*</span>}
                   </Text>
-                  <Text size="sm" variant="subdued" className="mt-0.5">
+                  <Text size="md" variant="subdued" className="mt-0.5">
                     {item.signed ? "Signed & executed on file" : "Pending signature"}
                   </Text>
                 </div>

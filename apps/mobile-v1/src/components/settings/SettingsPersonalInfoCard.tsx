@@ -50,12 +50,12 @@ export function SettingsPersonalInfoCard() {
     : (u?.address as string | undefined) || 'Not recorded';
   const department = profile?.department || (u?.department as string | undefined) || 'General Care';
   const roleName = profile?.role?.name || u?.roleName || 'Staff';
-  const facility = (u?.facilityName as string | undefined) || (u?.branchName as string | undefined) || 'Care Facility';
+  const facility = (u?.facilityName as string | undefined) || (u?.branchName as string | undefined) || 'Supported Living Service';
 
   const handleEditNotice = (field: string) => {
     Alert.alert(
       `Edit ${field}`,
-      'To update official staff compliance records, contact your Care Home Ward Manager or HR administrator.'
+      'To update official staff compliance records, contact your Service Manager or HR administrator.'
     );
   };
 
@@ -211,7 +211,7 @@ export function SettingsPersonalInfoCard() {
               <MapPin size={16} color="#4A706A" />
             </View>
             <View>
-              <Text className="text-xs font-medium text-text-muted">Home Facility</Text>
+              <Text className="text-xs font-medium text-text-muted">Primary Service</Text>
               <Text className="text-sm font-semibold text-text-primary">{facility}</Text>
             </View>
           </View>

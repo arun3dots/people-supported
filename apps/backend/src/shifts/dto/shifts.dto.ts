@@ -34,6 +34,15 @@ export class CreateShiftDto implements Schema.CreateShiftScheduleDTO {
   @ApiProperty({ example: 'room-uuid', required: false })
   roomId?: string | null;
 
+  @ApiProperty({ example: 'Shared Care (Core Support)', required: false })
+  careType?: string | null;
+
+  @ApiProperty({ example: '07:00 - 15:00', required: false })
+  shiftWindow?: string | null;
+
+  @ApiProperty({ example: 8.0, required: false })
+  durationHours?: number | null;
+
   @ApiProperty({ example: '2024-05-01T08:00:00Z' })
   startTime!: string | Date;
 

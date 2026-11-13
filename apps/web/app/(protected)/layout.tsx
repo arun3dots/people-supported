@@ -9,8 +9,8 @@ import { PageViewTracker } from "../../lib/components/shared/PageViewTracker";
 import { cookies } from "next/headers";
 
 export const metadata = {
-  title: "Care Home | 3dots",
-  description: "Care Home | 3dots",
+  title: "Supported Living | 3dots",
+  description: "Supported Living | 3dots",
 };
 
 export default async function ProtectedLayout({

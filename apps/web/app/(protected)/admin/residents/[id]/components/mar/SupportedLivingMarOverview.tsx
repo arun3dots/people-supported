@@ -213,7 +213,7 @@ export function SupportedLivingMarOverview({
                   <Text as="h4" size="md" weight="semibold" className="text-slate-900">
                     {med.drugName}
                   </Text>
-                  <Text size="sm" variant="muted">
+                  <Text size="md" variant="muted">
                     {med.subtitle}
                   </Text>
                 </div>
@@ -222,7 +222,7 @@ export function SupportedLivingMarOverview({
                 </Badge>
               </div>
 
-              <Text size="sm" weight="normal" className="text-slate-700">
+              <Text size="md" weight="normal" className="text-slate-700">
                 For: {med.indication}
               </Text>
 
@@ -235,10 +235,10 @@ export function SupportedLivingMarOverview({
               </div>
 
               <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between">
-                <Text size="sm" variant="muted">
+                <Text size="md" variant="muted">
                   {med.prescriber}
                 </Text>
-                <Text size="sm" weight="medium" className="text-slate-800">
+                <Text size="md" weight="medium" className="text-slate-800">
                   {med.stockLabel}
                 </Text>
               </div>

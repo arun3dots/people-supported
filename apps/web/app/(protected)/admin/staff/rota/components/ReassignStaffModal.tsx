@@ -128,7 +128,7 @@ export function ReassignStaffModal({
               <DialogTitle className="text-lg font-semibold text-slate-900">
                 Reassign Staff Work
               </DialogTitle>
-              <DialogDescription className="text-sm text-slate-500">
+              <DialogDescription className="text-md text-slate-500">
                 Change the property, scheme, assignment type or working period for the selected staff member.
               </DialogDescription>
             </div>
@@ -139,14 +139,14 @@ export function ReassignStaffModal({
         <Card variant="surface" border="default" className="p-4 gap-3 shadow-none">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-sm shrink-0">
+              <div className="size-10 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
                 {staff.fullName.slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <Text size="sm" weight="semibold" className="text-slate-900">
+                <Text size="md" weight="semibold" className="text-slate-900">
                   {staff.fullName}
                 </Text>
-                <Text size="xs" variant="muted">
+                <Text size="md" variant="muted">
                   {[staff.roleName || "Staff", staff.email]
                     .filter(Boolean)
                     .join(" · ")}
@@ -305,7 +305,7 @@ export function ReassignStaffModal({
               <Label className="text-md font-medium text-slate-700">
                 Additional Notes (Optional)
               </Label>
-              <Text as="span" size="xs" variant="muted">
+              <Text as="span" size="md" variant="muted">
                 {notes.length}/250
               </Text>
             </div>

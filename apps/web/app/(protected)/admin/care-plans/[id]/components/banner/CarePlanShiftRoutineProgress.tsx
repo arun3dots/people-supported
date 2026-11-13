@@ -42,7 +42,7 @@ export function CarePlanShiftRoutineProgress({
       <div className="flex items-center justify-between gap-3 mb-2">
         <div className="flex items-center gap-1.5">
           <ListTodo className="size-4 text-emerald-800" />
-          <Text size="sm" weight="semibold" className="text-slate-800">
+          <Text size="md" weight="semibold" className="text-slate-800">
             Today&apos;s Routines
           </Text>
         </div>
@@ -78,7 +78,7 @@ export function CarePlanShiftRoutineProgress({
       </div>
 
       {/* Counters Breakdown */}
-      <div className="flex items-center justify-between gap-2 mt-2 text-sm text-slate-500">
+      <div className="flex items-center justify-between gap-2 mt-2 text-md text-slate-500">
         <span className="flex items-center gap-1">
           <CheckCircle2 className="size-3 text-emerald-600" />
           <strong className="text-slate-700">{completed}</strong> done

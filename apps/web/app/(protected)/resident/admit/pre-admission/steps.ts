@@ -11,7 +11,7 @@ export const PRE_ADMISSION_STEPS: AdmissionStepMeta[] = [
   { number: 7, title: "Activities of Daily Living (ADLs)", shortTitle: "ADLs", description: "Functional independence, mobility and daily living support" },
   { number: 8, title: "Capacity, consent, DoLS", shortTitle: "Capacity", description: "Capacity, consents and DoLS screen" },
   { number: 9, title: "Advance care planning", shortTitle: "Advance care", description: "DNACPR, ReSPECT and future plans" },
-  { number: 10, title: "Room and belongings", shortTitle: "Room", description: "Bed, belongings and devices" },
+  { number: 10, title: "Room and belongings", shortTitle: "Room", description: "Property, room, belongings and devices" },
   { number: 11, title: "Review and decision", shortTitle: "Review", description: "Check, submit and manager decision" },
 ];
 

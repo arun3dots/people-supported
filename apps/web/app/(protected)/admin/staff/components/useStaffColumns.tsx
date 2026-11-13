@@ -3,27 +3,38 @@
 import React, { useMemo } from "react";
 import { Mail, Phone, Home, Building2 } from "lucide-react";
 import { Badge, Text } from "@repo/ui/components/ui";
+import type {
+  PropertyItem,
+  SchemeItem,
+} from "../../../../../lib/types/facility";
 import type { StaffMember } from "../../../../../lib/types/staff";
 import { RowActions } from "../../../../../lib/components/shared/RowActions";
 import type {
   TableColumn,
   BadgeState,
 } from "../../../../../lib/components/shared/tableColumns";
+import {
+  getStaffInitials,
+  getStaffRoleBadgeState,
+  resolveStaffLocation,
+} from "./staffUtils";
 
 interface UseStaffColumnsProps {
   onToggleStatus: (id: string, currentStatus: boolean) => void;
   onDelete: (id: string) => void;
+  schemes?: SchemeItem[];
+  properties?: PropertyItem[];
 }
 
-export function getStaffStatusBadgeState(
-  isActive: boolean,
-): BadgeState {
+export function getStaffStatusBadgeState(isActive: boolean): BadgeState {
   return isActive ? "success" : "inactive";
 }
 
 export function useStaffColumns({
   onToggleStatus,
   onDelete,
+  schemes = [],
+  properties = [],
 }: UseStaffColumnsProps): TableColumn<StaffMember>[] {
   return useMemo<TableColumn<StaffMember>[]>(
     () => [
@@ -33,62 +44,33 @@ export function useStaffColumns({
         header: "#",
       },
       {
+        kind: "person",
         id: "staffMember",
+        accessorKey: "fullName",
         header: "Staff Member",
-        cell: ({ row }) => {
-          const m = row.original;
-          const initials = m.fullName
-            ? m.fullName
-                .split(" ")
-                .filter(Boolean)
-                .map((n) => n[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase()
-            : "ST";
-          const staffId = `STA-${m.id.slice(0, 3).toUpperCase()}`;
-          return (
-            <div className="flex items-center gap-3">
-              <div className="size-9 rounded-full bg-slate-800 text-white font-bold text-md flex items-center justify-center shrink-0">
-                {initials}
-              </div>
-              <div className="min-w-0">
-                <Text size="sm" weight="bold" className="text-slate-900 truncate">
-                  {m.fullName || "—"}
-                </Text>
-                <Text size="md" variant="subdued" className="text-slate-500">
-                  {staffId}
-                </Text>
-              </div>
-            </div>
-          );
-        },
+        maxWidthClassName: "max-w-60",
+        avatar: true,
+        avatarClassName: "size-10 shrink-0 bg-surface-primary-light",
+        fallbackClassName:
+          "bg-surface-primary-light text-primary font-semibold text-md",
+        getTitle: (m) => m.fullName || "—",
+        getSubtitle: (m) => m.department || m.contractType || null,
+        getInitials: (m) => getStaffInitials(m.fullName),
+        getImageUrl: (m) => m.avatarUrl || null,
       },
       {
         id: "role",
         header: "Role",
         cell: ({ row }) => {
-          const roleName = row.original.role?.name || "Support Worker";
-          const lower = roleName.toLowerCase();
-          const isSenior = lower.includes("senior") || lower.includes("leader");
-          const isNurse = lower.includes("nurse");
-          const isNight = lower.includes("night");
-
-          let colorClass = "bg-emerald-50 text-emerald-800 border-emerald-200/60";
-          if (isNurse) {
-            colorClass = "bg-rose-50 text-rose-800 border-rose-200/60";
-          } else if (isNight) {
-            colorClass = "bg-amber-50 text-amber-800 border-amber-200/60";
-          } else if (isSenior) {
-            colorClass = "bg-teal-50 text-teal-800 border-teal-200/60";
-          }
-
+          const roleName = row.original.role?.name;
           return (
-            <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold border ${colorClass}`}
+            <Badge
+              variant="secondary"
+              state={roleName ? getStaffRoleBadgeState(roleName) : "inactive"}
+              className="px-2.5 py-0.5 shadow-none font-medium"
             >
-              {roleName}
-            </span>
+              {roleName || "Unassigned"}
+            </Badge>
           );
         },
       },
@@ -96,16 +78,25 @@ export function useStaffColumns({
         id: "scheme",
         header: "Scheme",
         cell: ({ row }) => {
-          const m = row.original;
-          const schemeName =
-            m.scheme?.name ||
-            (m as { employmentDetails?: { schemeName?: string } })
-              ?.employmentDetails?.schemeName ||
-            "North Yorkshire Supported Living";
+          const { schemeName } = resolveStaffLocation(
+            row.original,
+            schemes,
+            properties,
+          );
           return (
-            <div className="flex items-center gap-1.5 text-slate-700 max-w-[200px]">
+            <div className="flex items-center gap-1.5 max-w-48">
               <Building2 className="size-3.5 text-slate-400 shrink-0" />
-              <span className="text-md truncate font-medium">{schemeName}</span>
+              <Text
+                size="md"
+                weight={schemeName ? "medium" : "regular"}
+                className={
+                  schemeName
+                    ? "text-slate-800 truncate"
+                    : "text-slate-400 truncate"
+                }
+              >
+                {schemeName || "Unassigned"}
+              </Text>
             </div>
           );
         },
@@ -114,13 +105,25 @@ export function useStaffColumns({
         id: "property",
         header: "Property",
         cell: ({ row }) => {
-          const m = row.original;
-          const propertyName =
-            m.property?.name || m.assignedWings?.[0]?.name || "Oak House";
+          const { propertyName } = resolveStaffLocation(
+            row.original,
+            schemes,
+            properties,
+          );
           return (
-            <div className="flex items-center gap-1.5 text-slate-700 max-w-[160px]">
+            <div className="flex items-center gap-1.5 max-w-44">
               <Home className="size-3.5 text-slate-400 shrink-0" />
-              <span className="text-md truncate font-medium">{propertyName}</span>
+              <Text
+                size="md"
+                weight={propertyName ? "medium" : "regular"}
+                className={
+                  propertyName
+                    ? "text-slate-800 truncate"
+                    : "text-slate-400 truncate"
+                }
+              >
+                {propertyName || "Unassigned"}
+              </Text>
             </div>
           );
         },
@@ -130,15 +133,24 @@ export function useStaffColumns({
         header: "Contact",
         cell: ({ row }) => {
           const member = row.original;
+          const phone = member.phoneNumber?.trim();
           return (
-            <div className="flex flex-col gap-0.5 text-md">
-              <div className="flex items-center gap-1.5 text-slate-700">
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-center gap-1.5">
                 <Phone className="size-3 text-slate-400 shrink-0" />
-                <span>{member.phoneNumber || "+44 7712 345678"}</span>
+                <Text
+                  size="md"
+                  weight={phone ? "medium" : "regular"}
+                  className={phone ? "text-slate-800" : "text-slate-400"}
+                >
+                  {phone || "No phone registered"}
+                </Text>
               </div>
-              <div className="flex items-center gap-1.5 text-slate-500">
+              <div className="flex items-center gap-1.5">
                 <Mail className="size-3 text-slate-400 shrink-0" />
-                <span className="truncate max-w-[180px]">{member.email}</span>
+                <Text size="md" variant="muted" className="truncate max-w-44">
+                  {member.email || "—"}
+                </Text>
               </div>
             </div>
           );
@@ -159,7 +171,7 @@ export function useStaffColumns({
               <Badge
                 variant="secondary"
                 state={getStaffStatusBadgeState(member.isActive)}
-                className="cursor-pointer px-2.5 py-0.5 shadow-none"
+                className="cursor-pointer px-2.5 py-0.5 shadow-none font-medium"
                 onClick={() => onToggleStatus(member.id, member.isActive)}
               >
                 {member.isActive ? "Active" : "Inactive"}
@@ -168,7 +180,7 @@ export function useStaffColumns({
                 <Badge
                   variant="secondary"
                   state="warning"
-                  className="px-2 py-0.5 shadow-none"
+                  className="px-2 py-0.5 shadow-none font-medium"
                 >
                   On Leave
                 </Badge>
@@ -197,6 +209,6 @@ export function useStaffColumns({
         },
       },
     ],
-    [onToggleStatus, onDelete],
+    [onToggleStatus, onDelete, schemes, properties],
   );
 }

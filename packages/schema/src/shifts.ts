@@ -20,6 +20,7 @@ export type CreateShiftTypeDTO = z.infer<typeof CreateShiftTypeSchema>;
 export const ShiftCareTypeEnum = z.enum([
   "Shared Care (Core Support)",
   "1:1 Dedicated Support",
+  "2:1 Dedicated Support",
   "Sleep-in (Overnight)",
   "Waking Night",
   "Off / Rest Day",
@@ -39,6 +40,9 @@ export const ShiftSchema = z.object({
   careType: z.string().optional().nullable(),
   shiftWindow: z.string().optional().nullable(),
   durationHours: z.number().optional().nullable(),
+  breakDurationMinutes: z.number().int().optional().nullable(),
+  requiredHeadcount: z.number().int().optional().nullable(),
+  assignmentType: z.enum(["Property", "Person", "Scheme"]).optional().nullable(),
   startTime: z.union([z.string(), z.date()]),
   endTime: z.union([z.string(), z.date()]),
   status: z.enum(["Draft", "Published", "Cancelled"]).default("Draft"),
@@ -93,8 +97,28 @@ export const ShiftRequestSchema = z.object({
   id: z.string().uuid().optional(),
   type: z.enum(["Leave", "Change", "Cover"]),
   status: z.enum(["Pending", "Approved", "Rejected"]).default("Pending"),
-  startTime: z.union([z.string(), z.date()]),
-  endTime: z.union([z.string(), z.date()]).optional().nullable(),
+  startTime: z
+    .union([z.string(), z.date()])
+    .refine(
+      (val) => {
+        if (!val || val === "") return false;
+        const d = new Date(val);
+        return !isNaN(d.getTime());
+      },
+      { message: "A valid start date and time is required" },
+    ),
+  endTime: z
+    .union([z.string(), z.date()])
+    .optional()
+    .nullable()
+    .refine(
+      (val) => {
+        if (!val || val === "") return true;
+        const d = new Date(val);
+        return !isNaN(d.getTime());
+      },
+      { message: "Invalid end date and time" },
+    ),
   reason: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
   shiftId: z.string().uuid().optional().nullable(),

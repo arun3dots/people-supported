@@ -77,7 +77,7 @@ export function EntityCard({
             )}
             {subtitle && (
               typeof subtitle === "string" ? (
-                <Text size="xs" weight="regular" subdued className="truncate text-slate-500">
+                <Text size="md" weight="regular" subdued className="truncate text-slate-500">
                   {subtitle}
                 </Text>
               ) : (
@@ -96,16 +96,16 @@ export function EntityCard({
 
         {/* 2. Middle Meta Rows */}
         {(meta && meta.length > 0) || children ? (
-          <div className="flex flex-col gap-2 pt-3 my-2 border-t border-slate-100 text-sm">
+          <div className="flex flex-col gap-2 pt-3 my-2 border-t border-slate-100 text-md">
             {meta?.map((item, idx) => (
               <div key={idx} className="flex items-center gap-2 text-slate-600 min-w-0">
                 {item.icon && <span className="text-emerald-800 shrink-0">{item.icon}</span>}
                 {item.label && (
-                  <Text size="xs" weight="medium" className="text-slate-500 shrink-0">
+                  <Text size="md" weight="medium" className="text-slate-500 shrink-0">
                     {item.label}:
                   </Text>
                 )}
-                <Text size="xs" className="text-slate-700 truncate">
+                <Text size="md" className="text-slate-700 truncate">
                   {item.value}
                 </Text>
               </div>

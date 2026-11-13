@@ -523,7 +523,7 @@ export function IncidentReviewClient({
     return (
       <div className="flex flex-col items-center justify-center min-h-[450px] gap-3">
         <Loader2 className="size-8 animate-spin text-surface-primary" />
-        <Text size={"sm"} weight={"medium"} className="text-slate-500">
+        <Text size={"md"} weight={"medium"} className="text-slate-500">
           Loading incident review details...
         </Text>
       </div>
@@ -570,14 +570,14 @@ export function IncidentReviewClient({
             className="h-auto cursor-pointer gap-2 p-0 text-slate-500 hover:text-slate-900"
           >
             <ArrowLeft className="size-4" />
-            <Text size="sm" weight="medium">
+            <Text size="md" weight="medium">
               Back to Directory
             </Text>
           </Button>
           <Text as="h1" size="xl" weight="bold">
             Incident Review
           </Text>
-          <Text size="sm" weight="regular" variant="muted">
+          <Text size="md" weight="regular" variant="muted">
             Review the incident escalation, take necessary actions &amp; resolve
             the incident.
           </Text>

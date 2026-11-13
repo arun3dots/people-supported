@@ -95,7 +95,7 @@ export default function SubscriptionsPage() {
     <>
       <EntityListView<BillingPayment>
         title="Subscriptions & Billing"
-        description="Manage your care home subscription plan, licence renewals, and billing history."
+        description="Manage your supported living subscription plan, licence renewals, and billing history."
         overviewTitle="Billing History"
         storageKey="subscriptions_billing_view_mode"
         stats={<BillingOverviewCard data={data} isLoading={isLoading} />}
@@ -126,7 +126,7 @@ export default function SubscriptionsPage() {
         isError={isError}
         errorMessage="Error loading billing history. Please try again."
         emptyTitle="No billing transactions found"
-        emptyDescription="Your care home subscription invoices and renewal receipts will automatically appear here."
+        emptyDescription="Your supported living subscription invoices and renewal receipts will automatically appear here."
         pagination={{
           currentPage,
           pageSize,

@@ -85,7 +85,7 @@ export function AddRoleStep2({ form }: AddRoleStep2Props) {
             <h3 className="text-[14px] font-medium leading-[18px] text-[#141F1E]">
               Module Permissions
             </h3>
-            <p className="text-[10px] font-normal leading-[13px] text-[#5D5D5D]">
+            <p className="text-md font-normal leading-[13px] text-[#5D5D5D]">
               Select the modules this role can access.
             </p>
           </div>
@@ -95,7 +95,7 @@ export function AddRoleStep2({ form }: AddRoleStep2Props) {
         <button
           type="button"
           onClick={handleSetAllFullAccess}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-emerald-50 text-[#4A706A] border border-[#BCD3CD] rounded-lg text-[11px] font-medium transition-colors cursor-pointer shadow-2xs"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-emerald-50 text-[#4A706A] border border-[#BCD3CD] rounded-lg text-md font-medium transition-colors cursor-pointer shadow-2xs"
         >
           <CheckCheck className="size-3.5" />
           Set All Full Access
@@ -118,7 +118,7 @@ export function AddRoleStep2({ form }: AddRoleStep2Props) {
                 <div className="size-[30px] rounded-lg bg-[#DEE9E6] flex items-center justify-center shrink-0">
                   <Icon className="size-[16px] text-[#4A706A]" />
                 </div>
-                <span className="text-[12px] font-normal leading-[15px] text-[#141F1E]">
+                <span className="text-md font-normal leading-[15px] text-[#141F1E]">
                   {mod.label}
                 </span>
               </div>
@@ -128,17 +128,17 @@ export function AddRoleStep2({ form }: AddRoleStep2Props) {
                 value={level}
                 onValueChange={(val) => handleLevelChange(mod.id, val)}
               >
-                <SelectTrigger className="w-[110px] h-[36px] !bg-white border border-[#BCD3CD] border-[0.5px] rounded-xl px-[10px] text-[10px] font-normal text-[#141F1E] focus:ring-0 focus:ring-offset-0 shadow-none justify-between">
+                <SelectTrigger className="w-[110px] h-[36px] !bg-white border border-[#BCD3CD] border-[0.5px] rounded-xl px-[10px] text-md font-normal text-[#141F1E] focus:ring-0 focus:ring-offset-0 shadow-none justify-between">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-[#BCD3CD] border-[0.5px] rounded-xl">
-                  <SelectItem value="Full Access" className="text-[10px]">
+                  <SelectItem value="Full Access" className="text-md">
                     Full Access
                   </SelectItem>
-                  <SelectItem value="Custom Access" className="text-[10px]">
+                  <SelectItem value="Custom Access" className="text-md">
                     Custom Access
                   </SelectItem>
-                  <SelectItem value="No Access" className="text-[10px]">
+                  <SelectItem value="No Access" className="text-md">
                     No Access
                   </SelectItem>
                 </SelectContent>

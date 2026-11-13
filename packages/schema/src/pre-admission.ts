@@ -57,6 +57,7 @@ export const PreAdmissionRoomAllocationSchema = z.object({
   bedId: z.string().nullable().optional(),
   roomNumber: z.string().nullable().optional(),
   roomType: z.string().nullable().optional(),
+  landlord: z.string().nullable().optional(),
   moveInDateTime: z.string().nullable().optional(),
   roommateId: z.string().nullable().optional(),
   belongings: z

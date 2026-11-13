@@ -67,14 +67,37 @@ describe("sidebar navActiveMatcher", () => {
     expect(activeTitles).toEqual(["Attendance"]);
   });
 
-  it("highlights query-parameterized Properties & Schemes sub-items individually", () => {
-    const params = new URLSearchParams("tab=schemes");
+  it("highlights the Properties Directory sub-item on its own route", () => {
+    const params = new URLSearchParams();
     const activeTitles = facilitySubItems
       .filter((sub) =>
         isSubItemActive(
           sub,
           facilitySubItems,
-          "/admin/configuration/facility",
+          "/admin/configuration/facility/properties",
+          params,
+        ),
+      )
+      .map((sub) => sub.title);
+
+    expect(activeTitles).toEqual(["Properties Directory"]);
+    expect(
+      isNavItemActive(
+        facilityItem,
+        "/admin/configuration/facility/properties",
+        params,
+      ),
+    ).toBe(true);
+  });
+
+  it("highlights the Supported Living Schemes sub-item on its own route", () => {
+    const params = new URLSearchParams();
+    const activeTitles = facilitySubItems
+      .filter((sub) =>
+        isSubItemActive(
+          sub,
+          facilitySubItems,
+          "/admin/configuration/facility/schemes",
           params,
         ),
       )

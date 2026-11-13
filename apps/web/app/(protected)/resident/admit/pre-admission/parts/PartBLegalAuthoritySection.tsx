@@ -44,7 +44,7 @@ export function PartBLegalAuthoritySection({
                 </div>
                 <p className="text-md font-bold text-slate-800 truncate">{o.holderName}</p>
                 {o.type && (
-                  <Badge variant="secondary" className="px-2.5 py-0.5 text-sm bg-purple-50 text-purple-800 border border-purple-200 font-medium">
+                  <Badge variant="secondary" className="px-2.5 py-0.5 text-md bg-purple-50 text-purple-800 border border-purple-200 font-medium">
                     {o.type}
                   </Badge>
                 )}
@@ -77,7 +77,7 @@ export function PartBLegalAuthoritySection({
             </div>
 
             {o.document?.gcsPath && (
-              <div className="flex items-center gap-2 text-sm text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
+              <div className="flex items-center gap-2 text-md text-slate-700 bg-slate-50 border border-slate-100 rounded-lg p-2.5">
                 <FileText className="size-4 text-purple-700 shrink-0" />
                 <span className="font-semibold text-slate-700">Document:</span>
                 <span className="text-slate-600 truncate">{o.document.name || "Order copy"}</span>
@@ -110,7 +110,7 @@ export function PartBLegalAuthoritySection({
               onChange={(url) => update({ document: doc(o.type || "Legal authority", url) })}
             />
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/60">
-              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-sm">
+              <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="rounded-xl font-medium text-md">
                 Cancel
               </Button>
               <Button
@@ -119,7 +119,7 @@ export function PartBLegalAuthoritySection({
                 size="sm"
                 onClick={onSave}
                 disabled={!o.holderName?.trim() || !o.type?.trim()}
-                className="rounded-xl font-semibold text-sm shadow-none"
+                className="rounded-xl font-semibold text-md shadow-none"
               >
                 {isNew ? "Add authority" : "Save changes"}
               </Button>

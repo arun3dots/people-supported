@@ -89,7 +89,7 @@ export const addUserFormSections: UserFormSection[] = [
         name: "phone",
         label: "Phone Number",
         type: "text",
-        placeholder: "+44 1234567802",
+        placeholder: "1234567802",
         visible: true,
         validationRules: {
           required: false,

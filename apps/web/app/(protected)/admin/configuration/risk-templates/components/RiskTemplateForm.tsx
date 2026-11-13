@@ -233,14 +233,14 @@ export function RiskTemplateForm({
                 className="flex min-h-6 items-center whitespace-nowrap text-md font-medium text-slate-700"
               >
                 <span>Assessment Tool</span>
-                <span className="ml-2 text-sm font-normal text-slate-400">(Optional)</span>
+                <span className="ml-2 text-md font-normal text-slate-400">(Optional)</span>
               </Label>
               <Input
                 id="t-tool"
                 placeholder="e.g. Waterlow / Morse"
                 value={state.tool ?? ""}
                 onChange={(e) => setState((s) => ({ ...s, tool: e.target.value }))}
-                className="h-10 rounded-xl border-slate-200 text-sm focus-visible:ring-emerald-800"
+                className="h-10 rounded-xl border-slate-200 text-md focus-visible:ring-emerald-800"
               />
             </div>
             <div className="space-y-1.5">
@@ -301,7 +301,7 @@ export function RiskTemplateForm({
               <Label htmlFor="t-controls">
                 Default Controls
               </Label>
-              <Text size="sm" weight="regular" className="text-slate-400">
+              <Text size="md" weight="regular" className="text-slate-400">
                 One item per line
               </Text>
             </div>

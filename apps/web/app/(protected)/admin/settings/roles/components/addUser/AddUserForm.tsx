@@ -301,7 +301,7 @@ export function AddUserForm({
                   </SelectTrigger>
                   <SelectContent>
                     {optionsList.length === 0 ? (
-                      <div className="px-3 py-2.5 text-center text-sm text-slate-500">
+                      <div className="px-3 py-2.5 text-center text-md text-slate-500">
                         {field.name === "department"
                           ? "No departments found"
                           : "No options found"}

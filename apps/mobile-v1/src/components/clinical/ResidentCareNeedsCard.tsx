@@ -22,7 +22,7 @@ export function ResidentCareNeedsCard({ resident }: Props) {
   const careProfile = resident.careProfile;
   const linkedRiskFlag = careProfile?.chronicConditions?.[0];
   const needs = [
-    { label: 'Care domain', value: careProfile?.careCategory },
+    { label: 'Support domain', value: careProfile?.careCategory },
     { label: 'Assessed need', value: careProfile?.primaryDiagnosis },
     { label: 'Support required', value: careProfile?.feedingAssistanceNeed },
     { label: 'Linked risk flag', value: linkedRiskFlag },
@@ -39,7 +39,7 @@ export function ResidentCareNeedsCard({ resident }: Props) {
         </View>
         <View className="flex-1">
           <Text className="text-base font-bold text-text-primary">
-            {careProfile?.primaryCareNeed || 'Assessed Care Needs'}
+            {careProfile?.primaryCareNeed || 'Assessed Support Needs'}
           </Text>
         </View>
       </View>
@@ -51,7 +51,7 @@ export function ResidentCareNeedsCard({ resident }: Props) {
           ))}
         </View>
       ) : (
-        <Text className="text-sm text-text-secondary">No assessed care needs recorded.</Text>
+        <Text className="text-sm text-text-secondary">No assessed support needs recorded.</Text>
       )}
     </Card>
   );

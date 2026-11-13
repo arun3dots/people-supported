@@ -62,27 +62,27 @@ export function TaskItemCard({
       <div className="flex items-start gap-4 flex-1 min-w-0">
         {/* Time Box */}
         <div className="text-center shrink-0 w-16 pt-0.5">
-          <Text as="span" size="sm" weight="bold" className="block leading-tight text-text-heading">
+          <Text as="span" size="md" weight="bold" className="block leading-tight text-text-heading">
             {targetTime}
           </Text>
-          <Text as="span" size="sm" variant="muted" className="block text-[11px]">
+          <Text as="span" size="md" variant="muted" className="block text-md">
             {dueBy}
           </Text>
         </div>
 
         {/* Task Title & Metadata */}
         <div className="space-y-1 flex-1 min-w-0">
-          <Text as="h4" size="sm" weight="bold" className="text-text-heading leading-snug">
+          <Text as="h4" size="md" weight="bold" className="text-text-heading leading-snug">
             {task.title}
           </Text>
 
           {/* Meta Line: Resident · Room · Plan · Assignee · Badges */}
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Text as="span" size="sm" weight="medium" className="text-text-heading">
+          <div className="flex flex-wrap items-center gap-2 text-md">
+            <Text as="span" size="md" weight="medium" className="text-text-heading">
               {residentName} · {roomDisplay}
             </Text>
             <span className="text-border-secondary">·</span>
-            <Text as="span" size="sm" variant="muted">
+            <Text as="span" size="md" variant="muted">
               {task.carePlanTask?.category || "Plan v1"}
               {task.carePlanTask?.goal?.title ? ` · ${task.carePlanTask.goal.title}` : ""}
             </Text>
@@ -91,14 +91,14 @@ export function TaskItemCard({
             {isAssignedToMe ? (
               <>
                 <span className="text-border-secondary">·</span>
-                <Text as="span" size="sm" variant="muted">
+                <Text as="span" size="md" variant="muted">
                   → You (me)
                 </Text>
               </>
             ) : assignedStaffMember ? (
               <>
                 <span className="text-border-secondary">·</span>
-                <Text as="span" size="sm" variant="muted">
+                <Text as="span" size="md" variant="muted">
                   → {assignedStaffMember.fullName.split(" ")[0]}
                 </Text>
               </>
@@ -126,7 +126,7 @@ export function TaskItemCard({
           {/* Log / Completed Notes */}
           {(task.notes || task.completedBy) && (
             <div className="mt-1">
-              <Text size="sm" variant="muted" className="italic text-text-description">
+              <Text size="md" variant="muted" className="italic text-text-description">
                 Done {task.completedAt ? `at ${task.completedAt.slice(11, 16)}` : ""}{" "}
                 {task.completedBy ? `by ${task.completedBy.fullName}` : ""}{" "}
                 {task.notes ? `· ${task.notes}` : ""}
@@ -136,7 +136,7 @@ export function TaskItemCard({
 
           {/* Instructions if available */}
           {task.carePlanTask?.instructions && !task.notes && (
-            <Text size="sm" variant="muted" className="line-clamp-1 text-text-description">
+            <Text size="md" variant="muted" className="line-clamp-1 text-text-description">
               {task.carePlanTask.instructions}
             </Text>
           )}
@@ -147,7 +147,7 @@ export function TaskItemCard({
       <div className="flex items-center gap-2 shrink-0 self-end lg:self-center">
         {canAllocate && staffList.length > 0 && (
           <div className="flex items-center gap-1 bg-surface-primary-light/60 p-1 rounded-xl border border-border-secondary/40 mr-2">
-            <Text as="span" size="sm" variant="muted" className="px-1 text-[11px] uppercase font-semibold">
+            <Text as="span" size="md" variant="muted" className="px-1 text-md uppercase font-semibold">
               Assign:
             </Text>
             {staffList.slice(0, 3).map((s) => {
@@ -161,7 +161,7 @@ export function TaskItemCard({
                   size="sm"
                   onClick={() => onReassign(task.id, s.id)}
                   title={`Assign to ${s.fullName}`}
-                  className="h-7 px-2.5 rounded-lg text-sm font-medium cursor-pointer"
+                  className="h-7 px-2.5 rounded-lg text-md font-medium cursor-pointer"
                 >
                   {firstName}
                 </Button>

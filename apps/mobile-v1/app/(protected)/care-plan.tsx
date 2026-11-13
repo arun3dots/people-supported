@@ -55,12 +55,12 @@ export default function CarePlanScreen() {
           >
             <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+          <Text className="text-lg font-bold text-foreground">Person Supported</Text>
           <View className="w-9" />
         </View>
         <View className="items-center justify-center py-24">
           <ActivityIndicator size="large" color="#4A706A" />
-          <Text className="text-xs text-muted-foreground mt-3 font-medium">Loading care plan...</Text>
+          <Text className="text-xs text-muted-foreground mt-3 font-medium">Loading support plan...</Text>
         </View>
       </ScreenWrapper>
     );
@@ -77,7 +77,7 @@ export default function CarePlanScreen() {
           >
             <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
           </TouchableOpacity>
-          <Text className="text-lg font-bold text-foreground">Resident Care Plan</Text>
+          <Text className="text-lg font-bold text-foreground">Support Plan</Text>
           <View className="w-9" />
         </View>
         <View className="items-center justify-center py-20 px-4">
@@ -85,17 +85,17 @@ export default function CarePlanScreen() {
             <HeartHandshake size={32} color="#4A706A" />
           </View>
           <Text className="text-lg font-bold text-foreground text-center">
-            No Resident Selected
+            No Person Selected
           </Text>
           <Text className="text-xs text-muted-foreground mt-1 text-center max-w-[260px]">
-            Please select a resident to view their clinical care plan and individual goals.
+            Please select a person supported to view their support plan and individual goals.
           </Text>
           <TouchableOpacity
             onPress={() => router.navigate('/residents' as Href)}
             className="mt-5 px-6 py-3 bg-primary rounded-full"
             activeOpacity={0.8}
           >
-            <Text className="text-white font-bold text-md">Select Resident</Text>
+            <Text className="text-white font-bold text-md">Select Person</Text>
           </TouchableOpacity>
         </View>
       </ScreenWrapper>
@@ -114,12 +114,12 @@ export default function CarePlanScreen() {
   }));
 
   const executions: CarePlanTaskItem[] = carePlanData?.tasks || [];
-  const planTitle = carePlanData?.title || 'Master Care Plan';
+  const planTitle = carePlanData?.title || 'Master Support Plan';
   const planStatus = carePlanData?.status || 'Active';
   const planDescription =
     carePlanData?.description ||
     resident.careProfile?.routinePreferences ||
-    'Comprehensive individualized care pathway and clinical risk management plan.';
+    'Comprehensive individualized support pathway and clinical risk management plan.';
   const reviewSchedule = carePlanData?.reviewSchedule || 'Monthly';
   const department = carePlanData?.department || 'Nursing';
 
@@ -135,16 +135,16 @@ export default function CarePlanScreen() {
         >
           <ChevronLeft size={22} color="#141F1E" strokeWidth={2.4} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-foreground">Resident Profile</Text>
+        <Text className="text-lg font-bold text-foreground">Person Supported</Text>
         <View className="w-9" />
       </View>
 
       {/* 2. Top Profile Card with Nested NEWS2 Score */}
       <ResidentProfileHeaderCard resident={resident} />
 
-      {/* 3. Care Plan Section */}
+      {/* 3. Support Plan Section */}
       <View className="pb-8">
-        <Text className="text-lg font-bold text-foreground mb-3">Care Plan</Text>
+        <Text className="text-lg font-bold text-foreground mb-3">Support Plan</Text>
 
         {/* Master Care Plan Card */}
         <Card className="p-4 mb-4">
@@ -277,7 +277,7 @@ export default function CarePlanScreen() {
               <View className="bg-surface rounded-2xl p-8 items-center justify-center my-2">
                 <Text className="text-md font-semibold text-foreground">No active goals found</Text>
                 <Text className="text-xs text-muted-foreground mt-1">
-                  Goals will appear here once defined in the care plan.
+                  Goals will appear here once defined in the support plan.
                 </Text>
               </View>
             )}

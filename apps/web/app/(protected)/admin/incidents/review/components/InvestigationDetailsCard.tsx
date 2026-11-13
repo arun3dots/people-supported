@@ -26,7 +26,7 @@ export function InvestigationDetailsCard({
           <Text size={'lg'} weight={'bold'}>
             Investigation Details
           </Text>
-          <Text size={'xs'} weight={'regular'} className="text-slate-500">
+          <Text size={'md'} weight={'regular'} className="text-slate-500">
             Review and document the investigation findings for this incident.
           </Text>
         </div>
@@ -57,10 +57,10 @@ export function InvestigationDetailsCard({
                     <Icon className="size-4" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <Text size={'sm'} weight={'semibold'} className="text-slate-900 truncate">
+                    <Text size={'md'} weight={'semibold'} className="text-slate-900 truncate">
                       {step.title}
                     </Text>
-                    <Text size={'xs'} weight={'regular'} className="text-slate-600 leading-relaxed">
+                    <Text size={'md'} weight={'regular'} className="text-slate-600 leading-relaxed">
                       {step.notes || "No investigation notes recorded for this step yet."}
                     </Text>
                   </div>

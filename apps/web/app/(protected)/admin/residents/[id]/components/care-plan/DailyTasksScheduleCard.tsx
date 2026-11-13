@@ -202,17 +202,17 @@ export function DailyTasksScheduleCard({
                   )}
 
                   {task.precautions && (
-                    <p className="text-sm text-amber-700 font-medium">Precaution: {task.precautions}</p>
+                    <p className="text-md text-amber-700 font-medium">Precaution: {task.precautions}</p>
                   )}
 
                   {isCompleted && task.completedBy && (
-                    <p className="text-sm text-emerald-700 font-medium">
+                    <p className="text-md text-emerald-700 font-medium">
                       Completed by {task.completedBy.fullName} at {task.completedAt ? format(new Date(task.completedAt), "HH:mm") : ""}
                     </p>
                   )}
 
                   {isSkipped && task.skipReason && (
-                    <p className="text-sm text-slate-600 italic">
+                    <p className="text-md text-slate-600 italic">
                       Skipped reason: &quot;{task.skipReason}&quot;
                     </p>
                   )}
@@ -240,7 +240,7 @@ export function DailyTasksScheduleCard({
                     </>
                   ) : (
                     <span
-                      className={`px-2.5 py-1 rounded-full text-sm font-semibold border ${isCompleted
+                      className={`px-2.5 py-1 rounded-full text-md font-semibold border ${isCompleted
                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                         : "bg-slate-100 text-slate-600 border-slate-200"
                         }`}

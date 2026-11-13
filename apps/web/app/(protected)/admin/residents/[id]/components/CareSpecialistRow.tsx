@@ -37,12 +37,12 @@ export function CareSpecialistRow({
     <div className="grid grid-cols-1 sm:grid-cols-[130px_1fr_1fr_140px_36px] gap-2.5 items-start bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs">
       {/* Provider Type */}
       <div className="space-y-1 sm:space-y-0">
-        <span className="sm:hidden text-sm font-semibold text-[#141F1E]">Provider Type</span>
+        <span className="sm:hidden text-md font-semibold text-[#141F1E]">Provider Type</span>
         <Select
           value={provider.type || "Dentist"}
           onValueChange={(val) => onUpdate(index, "type", val)}
         >
-          <SelectTrigger className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-sm font-medium text-slate-900 shadow-none">
+          <SelectTrigger className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-md font-medium text-slate-900 shadow-none">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -62,33 +62,33 @@ export function CareSpecialistRow({
 
       {/* Provider Name */}
       <div className="space-y-1 sm:space-y-0">
-        <span className="sm:hidden text-sm font-semibold text-[#141F1E]">Provider Name</span>
+        <span className="sm:hidden text-md font-semibold text-[#141F1E]">Provider Name</span>
         <Input
           type="text"
           placeholder="e.g. Sarah Khan"
           value={provider.name || ""}
           errorMessage={nameError}
           onChange={(e) => onUpdate(index, "name", e.target.value)}
-          className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-sm text-slate-900 shadow-none focus-visible:ring-[#4A706A]"
+          className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-md text-slate-900 shadow-none focus-visible:ring-[#4A706A]"
         />
       </div>
 
       {/* Clinic / Practice */}
       <div className="space-y-1 sm:space-y-0">
-        <span className="sm:hidden text-sm font-semibold text-[#141F1E]">Clinic / Practice</span>
+        <span className="sm:hidden text-md font-semibold text-[#141F1E]">Clinic / Practice</span>
         <Input
           type="text"
           placeholder="Clinic / Practice"
           value={provider.clinic || ""}
           errorMessage={clinicError}
           onChange={(e) => onUpdate(index, "clinic", e.target.value)}
-          className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-sm text-slate-900 shadow-none focus-visible:ring-[#4A706A]"
+          className="w-full h-10 bg-white border-[#BCD3CD] rounded-xl text-md text-slate-900 shadow-none focus-visible:ring-[#4A706A]"
         />
       </div>
 
       {/* Phone Number */}
       <div className="space-y-1 sm:space-y-0">
-        <span className="sm:hidden text-sm font-semibold text-[#141F1E]">Phone Number</span>
+        <span className="sm:hidden text-md font-semibold text-[#141F1E]">Phone Number</span>
         <PhoneInputWithValidation
           label=""
           placeholder="e.g. +44 7700 900077"

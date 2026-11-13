@@ -115,7 +115,7 @@ export function Avatar({
       !trimmed.startsWith('file://') &&
       !trimmed.startsWith('data:')
     ) {
-      const base = envApiUrl ? envApiUrl.replace(/\/api\/?$/, '') : 'https://devapi.cantracare.com';
+      const base = envApiUrl ? envApiUrl.replace(/\/api\/?$/, '') : 'https://api-demo.cantracare.com';
       trimmed = `${base}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
     }
 

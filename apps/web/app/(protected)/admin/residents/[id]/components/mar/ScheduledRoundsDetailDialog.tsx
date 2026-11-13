@@ -31,7 +31,7 @@ export function ScheduledRoundsDetailDialog({
           <Text size="lg" weight="bold" className="text-slate-900">
             {detailGroup?.drugName || "Medication"}
           </Text>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             {detailGroup?.dose} · {detailGroup?.route || "Oral"} · Scheduled rounds
           </Text>
         </div>
@@ -45,7 +45,7 @@ export function ScheduledRoundsDetailDialog({
                 className="flex flex-col gap-2 rounded-lg border border-slate-100 px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <Text size="sm" weight="medium" className="text-slate-800">
+                  <Text size="md" weight="medium" className="text-slate-800">
                     {item.scheduledTime ? format(new Date(item.scheduledTime), "dd MMM yyyy, HH:mm") : "Daily round"}
                   </Text>
                   <Badge variant="secondary" state={itemTaken ? "success" : "warning"} className="shadow-none">

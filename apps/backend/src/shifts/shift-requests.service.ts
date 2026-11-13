@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Optional,
+} from '@nestjs/common';
 import { prisma } from '@repo/db';
 import {
   CreateShiftRequestDto,
@@ -36,7 +41,16 @@ export class ShiftRequestsService {
       resolvedBranchId = shift.branchId;
     }
 
+    if (!data.startTime) {
+      throw new BadRequestException('Start time is required for shift requests.');
+    }
     const start = new Date(data.startTime);
+    if (isNaN(start.getTime())) {
+      throw new BadRequestException(
+        'A valid start date and time is required for shift requests.',
+      );
+    }
+
     let end: Date;
     if (data.endTime) {
       end = new Date(data.endTime);

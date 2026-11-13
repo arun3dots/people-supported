@@ -70,7 +70,7 @@ export function MentalCapacityDolsTab({
         <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-none">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+              <span className="text-md font-semibold text-slate-500 uppercase tracking-wider">
                 DoLS Safeguard Status
               </span>
               <ShieldCheck className="size-4 text-emerald-800" />
@@ -106,7 +106,7 @@ export function MentalCapacityDolsTab({
         <Card className="border border-slate-200/80 bg-white rounded-2xl shadow-none">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+              <span className="text-md font-semibold text-slate-500 uppercase tracking-wider">
                 MCA 2005 Decisions
               </span>
               <Brain className="size-4 text-emerald-800" />

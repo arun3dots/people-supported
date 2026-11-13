@@ -89,8 +89,54 @@ export function useAssessmentDraft(record: AssessmentRecordDTO | null) {
     setDirty(true);
   };
 
-  const addCustomNeed = (label: string) => {
-    const customAreaLabel = label.trim();
+  const upsertNeed = (
+    areaKey: string,
+    customAreaLabel: string | undefined,
+    patch: AssessmentNeedPatchDTO,
+  ) => {
+    setNeeds((prev) => {
+      if (prev.some((need) => need.areaKey === areaKey)) {
+        return prev.map((need): AssessmentNeedDTO => {
+          if (need.areaKey !== areaKey) return need;
+          if (need.customAreaLabel !== undefined) {
+            return {
+              ...need,
+              ...patch,
+              areaKey: need.areaKey,
+              customAreaLabel: need.customAreaLabel,
+            };
+          }
+          return {
+            ...need,
+            ...patch,
+            areaKey: need.areaKey,
+          };
+        });
+      }
+      if (areaKey.startsWith("custom:") && customAreaLabel?.trim()) {
+        const nextCustom: AssessmentNeedDTO = {
+          areaKey: areaKey as `custom:${string}`,
+          customAreaLabel: customAreaLabel.trim(),
+          supportLevel: patch.supportLevel ?? null,
+          found: patch.found ?? null,
+          source: patch.source ?? customAreaLabel.trim(),
+          toolKey: patch.toolKey ?? null,
+          associatedRisk: patch.associatedRisk ?? null,
+          becomesCarePlan: patch.becomesCarePlan ?? false,
+        };
+        return [...prev, nextCustom];
+      }
+      return prev;
+    });
+    editRevision.current += 1;
+    setDirty(true);
+  };
+
+  const addCustomNeed = (
+    label: string,
+    extra?: { found?: string | null; associatedRisk?: string | null },
+  ) => {
+    const customAreaLabel = label.trim().slice(0, 80);
     if (!customAreaLabel || needs.length >= ASSESSMENT_MAX_NEEDS) return;
     setNeeds((prev) => [
       ...prev,
@@ -98,7 +144,8 @@ export function useAssessmentDraft(record: AssessmentRecordDTO | null) {
         areaKey: `custom:${crypto.randomUUID()}`,
         customAreaLabel,
         supportLevel: null,
-        found: null,
+        found: extra?.found?.trim() || null,
+        associatedRisk: extra?.associatedRisk || null,
         source: null,
         toolKey: null,
         becomesCarePlan: false,
@@ -123,7 +170,11 @@ export function useAssessmentDraft(record: AssessmentRecordDTO | null) {
       tools: tools.filter(hasToolValue).map(normaliseToolResult),
       needs: needs.filter(
         (n) =>
-          n.customAreaLabel || n.supportLevel || n.found || n.becomesCarePlan,
+          n.customAreaLabel ||
+          n.supportLevel ||
+          n.found ||
+          n.associatedRisk ||
+          n.becomesCarePlan,
       ),
       dols: record?.dols ?? null,
     }),
@@ -136,6 +187,7 @@ export function useAssessmentDraft(record: AssessmentRecordDTO | null) {
     dirty,
     setTool,
     setNeed,
+    upsertNeed,
     addCustomNeed,
     removeCustomNeed,
     payload,

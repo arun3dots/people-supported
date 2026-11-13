@@ -52,13 +52,13 @@ export function AccountSecuritySection() {
           {/* Checkmark + Subtitle */}
           <div className="flex items-center gap-1.5 justify-center sm:justify-start w-full">
             <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
-            <Text size="sm" weight="regular" className="text-slate-500">
+            <Text size="md" weight="regular" className="text-slate-500">
               Last security check was completed 2 hours ago
             </Text>
           </div>
 
           {/* Body Description */}
-          <Text size="sm" weight="regular" className="text-slate-500 leading-relaxed">
+          <Text size="md" weight="regular" className="text-slate-500 leading-relaxed">
             We continuously monitor your account and data to keep your information safe and secure
           </Text>
 
@@ -139,12 +139,12 @@ export function AccountSecuritySection() {
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
-                    <Text size="sm" weight="medium" className="text-slate-800 truncate">
+                    <Text size="md" weight="medium" className="text-slate-800 truncate">
                       {item.label}
                     </Text>
                   </div>
 
-                  <Text size="sm" weight="semibold" className="text-emerald-700 text-right shrink-0">
+                  <Text size="md" weight="semibold" className="text-emerald-700 text-right shrink-0">
                     {item.value}
                   </Text>
                 </div>

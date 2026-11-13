@@ -246,7 +246,7 @@ export function mapRawTaskToMobile(item: RawDailyTask): MobileTaskItem {
     '';
 
   const residentId = item.resident?.id || item.residentId || '';
-  const residentName = item.resident?.fullName || 'Resident';
+  const residentName = item.resident?.fullName || 'Person Supported';
 
   return {
     id: item.id,

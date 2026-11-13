@@ -80,11 +80,11 @@ export function MedicationImageUploader({
             <ImageIcon className="size-3.5 text-slate-500" />
             Medication Images / Blister Packaging (Optional)
           </Label>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-md text-slate-500 mt-0.5">
             Supported formats: JPG, PNG, WEBP · Max size: 5MB per photo
           </p>
         </div>
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           {imageUrls.length} {imageUrls.length === 1 ? "image" : "images"} attached
         </Text>
       </div>

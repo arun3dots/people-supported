@@ -33,12 +33,12 @@ export function ShiftBriefing() {
               <h3 className="text-base font-bold text-slate-900 tracking-tight">
                 Shift Briefing
               </h3>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-md text-slate-500 font-medium">
                 Active clinical handover &amp; notes
               </p>
             </div>
           </div>
-          <span className="text-sm font-semibold px-2.5 py-1 rounded-full bg-emerald-100/70 text-emerald-800 border border-emerald-200 whitespace-nowrap shrink-0">
+          <span className="text-md font-semibold px-2.5 py-1 rounded-full bg-emerald-100/70 text-emerald-800 border border-emerald-200 whitespace-nowrap shrink-0">
             {currentShift ? (activeShiftData?.active ? "Active Shift" : "Next Shift") : "Off Duty"}
           </span>
         </div>
@@ -62,7 +62,7 @@ export function ShiftBriefing() {
                     {previousHandover?.shiftName || "Preceding Shift"}
                   </span>
                 </div>
-                <h5 className="font-bold text-md sm:text-md text-slate-900">
+                <h5 className="font-bold text-md text-slate-900">
                   Outgoing Team Notes
                 </h5>
                 <p className="text-md text-slate-600 leading-relaxed italic">
@@ -82,7 +82,7 @@ export function ShiftBriefing() {
                     {currentShift.wardName || "Main Facility"}
                   </span>
                 </div>
-                <h5 className="font-bold text-md sm:text-md text-slate-900">
+                <h5 className="font-bold text-md text-slate-900">
                   {currentShift.name || currentShift.type?.name || "Shift"} (
                   {formatUkTime(currentShift.startTime)}{" "}
                   -{" "}
@@ -93,7 +93,7 @@ export function ShiftBriefing() {
                   {shiftNotes || "Standard shift duties apply. Monitor assigned residents and complete scheduled care plan tasks."}
                 </p>
                 {incidentCount > 0 && (
-                  <div className="flex items-center gap-1.5 text-sm font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-md border border-rose-200 mt-1">
+                  <div className="flex items-center gap-1.5 text-md font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-md border border-rose-200 mt-1">
                     <ShieldAlert className="size-3" />
                     <span>{incidentCount} clinical incident(s) flagged during this period</span>
                   </div>
@@ -104,7 +104,7 @@ export function ShiftBriefing() {
             <div className="p-8 text-center bg-white rounded-xl border border-slate-200/80 space-y-2">
               <Clock className="size-6 text-slate-400 mx-auto" />
               <p className="text-md font-bold text-slate-700">No Shift Currently Scheduled</p>
-              <p className="text-sm text-slate-500">
+              <p className="text-md text-slate-500">
                 Check your weekly rota for upcoming scheduled duty.
               </p>
             </div>

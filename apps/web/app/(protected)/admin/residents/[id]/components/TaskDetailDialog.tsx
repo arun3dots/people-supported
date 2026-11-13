@@ -99,7 +99,7 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
             {task.taskTitle}
           </DialogTitle>
           {task.taskSubtitle && task.taskSubtitle !== "-" && (
-            <DialogDescription className="text-sm text-slate-600 font-normal break-words break-all [overflow-wrap:anywhere] leading-relaxed">
+            <DialogDescription className="text-md text-slate-600 font-normal break-words break-all [overflow-wrap:anywhere] leading-relaxed">
               {task.taskSubtitle}
             </DialogDescription>
           )}
@@ -111,15 +111,15 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0 w-full">
             {/* Date & Time */}
             <div className="p-3.5 bg-slate-50/80 rounded-xl border border-slate-100 space-y-1.5 min-w-0 overflow-hidden">
-              <div className="flex items-center gap-2 text-slate-500 text-sm font-medium">
+              <div className="flex items-center gap-2 text-slate-500 text-md font-medium">
                 <Calendar className="size-4 text-slate-400" />
                 <span>Date & Time</span>
               </div>
-              <div className="text-sm font-semibold text-slate-800 break-words break-all [overflow-wrap:anywhere]">
+              <div className="text-md font-semibold text-slate-800 break-words break-all [overflow-wrap:anywhere]">
                 {task.dateTime}
               </div>
               {task.timeDisplay && (
-                <div className="text-sm text-slate-500 flex items-center gap-1">
+                <div className="text-md text-slate-500 flex items-center gap-1">
                   <Clock className="size-3.5" />
                   <span>{task.timeDisplay}</span>
                 </div>
@@ -128,19 +128,19 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
 
             {/* Performed / Completed By */}
             <div className="p-3.5 bg-slate-50/80 rounded-xl border border-slate-100 space-y-1.5 min-w-0 overflow-hidden">
-              <div className="flex items-center gap-2 text-slate-500 text-sm font-medium">
+              <div className="flex items-center gap-2 text-slate-500 text-md font-medium">
                 <User className="size-4 text-slate-400" />
                 <span>Completed / Recorded By</span>
               </div>
               <div className="flex items-center gap-2.5 pt-0.5 min-w-0">
-                <div className="size-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-bold shrink-0">
+                <div className="size-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-md font-bold shrink-0">
                   {task.completedByInitials || "ST"}
                 </div>
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold text-slate-800 truncate">
+                  <div className="text-md font-semibold text-slate-800 truncate">
                     {task.completedBy || "Staff Member"}
                   </div>
-                  <div className="text-sm text-slate-500 truncate">
+                  <div className="text-md text-slate-500 truncate">
                     {task.completedByRole || "Staff"}
                   </div>
                 </div>
@@ -151,11 +151,11 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
           {/* Skip Reason if any */}
           {task.skipReason && (
             <div className="p-4 bg-rose-50 rounded-xl border border-rose-200 space-y-1 min-w-0 overflow-hidden">
-              <div className="flex items-center gap-2 text-rose-800 text-sm font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-rose-800 text-md font-bold uppercase tracking-wider">
                 <AlertTriangle className="size-4 text-rose-600" />
                 <span>Reason for Skipping / Incompletion</span>
               </div>
-              <p className="text-sm text-rose-900 font-medium break-words break-all [overflow-wrap:anywhere]">{task.skipReason}</p>
+              <p className="text-md text-rose-900 font-medium break-words break-all [overflow-wrap:anywhere]">{task.skipReason}</p>
             </div>
           )}
 
@@ -164,17 +164,17 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
             <div className="space-y-3 min-w-0 w-full">
               {task.instructions && (
                 <div className="p-3.5 bg-blue-50/60 rounded-xl border border-blue-100 space-y-1 min-w-0 overflow-hidden">
-                  <span className="text-sm font-bold text-blue-800 uppercase tracking-wider">Instructions</span>
-                  <p className="text-sm text-blue-900 break-words break-all [overflow-wrap:anywhere]">{task.instructions}</p>
+                  <span className="text-md font-bold text-blue-800 uppercase tracking-wider">Instructions</span>
+                  <p className="text-md text-blue-900 break-words break-all [overflow-wrap:anywhere]">{task.instructions}</p>
                 </div>
               )}
               {task.precautions && (
                 <div className="p-3.5 bg-amber-50/80 rounded-xl border border-amber-200 space-y-1 min-w-0 overflow-hidden">
-                  <div className="flex items-center gap-1.5 text-sm font-bold text-amber-800 uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5 text-md font-bold text-amber-800 uppercase tracking-wider">
                     <ShieldAlert className="size-4 text-amber-600" />
                     <span>Precautions</span>
                   </div>
-                  <p className="text-sm text-amber-900 break-words break-all [overflow-wrap:anywhere]">{task.precautions}</p>
+                  <p className="text-md text-amber-900 break-words break-all [overflow-wrap:anywhere]">{task.precautions}</p>
                 </div>
               )}
             </div>
@@ -182,11 +182,11 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
 
           {/* Notes Section */}
           <div className="space-y-2 min-w-0 w-full">
-            <div className="flex items-center gap-2 text-sm font-bold text-slate-700 uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-md font-bold text-slate-700 uppercase tracking-wider">
               <FileText className="size-4 text-slate-400" />
               <span>Full Notes & Summary</span>
             </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-sm text-slate-800 whitespace-pre-wrap leading-relaxed break-words break-all [overflow-wrap:anywhere] min-w-0 w-full overflow-hidden">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-md text-slate-800 whitespace-pre-wrap leading-relaxed break-words break-all [overflow-wrap:anywhere] min-w-0 w-full overflow-hidden">
               {task.notes && task.notes !== "-" ? task.notes : "No additional notes recorded for this task."}
             </div>
           </div>
@@ -197,7 +197,7 @@ export function TaskDetailDialog({ open, onOpenChange, task }: TaskDetailDialogP
           <Button
             type="button"
             variant="outline"
-            className="w-full sm:w-auto cursor-pointer text-sm"
+            className="w-full sm:w-auto cursor-pointer text-md"
             onClick={() => onOpenChange(false)}
           >
             Close

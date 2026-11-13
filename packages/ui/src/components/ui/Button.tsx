@@ -21,7 +21,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground rounded-full",
         link: "text-primary underline-offset-4 hover:underline",
         circle:
-          "rounded-full font-bold text-xs transition-all shrink-0 border border-border-secondary bg-white text-text-body z-10 relative hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-surface-primary",
+          "rounded-full font-bold text-md transition-all shrink-0 border border-border-secondary bg-white text-text-body z-10 relative hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-surface-primary",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -29,8 +29,8 @@ const buttonVariants = cva(
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
         circle: "size-8 p-0 rounded-full flex items-center justify-center",
-        "circle-sm": "size-7 p-0 rounded-full flex items-center justify-center text-xs",
-        "circle-lg": "size-10 p-0 rounded-full flex items-center justify-center text-sm",
+        "circle-sm": "size-7 p-0 rounded-full flex items-center justify-center text-md",
+        "circle-lg": "size-10 p-0 rounded-full flex items-center justify-center text-md",
       },
     },
     defaultVariants: {

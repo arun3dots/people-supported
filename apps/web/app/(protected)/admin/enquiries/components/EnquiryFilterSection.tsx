@@ -96,6 +96,7 @@ export function EnquiryFilterSection({
                   <SelectItem value="Dementia">Dementia</SelectItem>
                   <SelectItem value="Respite">Respite</SelectItem>
                   <SelectItem value="Nursing">Nursing</SelectItem>
+                  <SelectItem value="Supported Living">Supported Living</SelectItem>
                 </SelectContent>
               </Select>
             </div>

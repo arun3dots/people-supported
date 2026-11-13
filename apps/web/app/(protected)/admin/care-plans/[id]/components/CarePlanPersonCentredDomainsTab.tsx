@@ -81,7 +81,7 @@ export function CarePlanPersonCentredDomainsTab({
                 Person-Centred Care Domains (PRSB &amp; CQC Standard)
               </Text>
             </div>
-            <Text size="sm" variant="muted" className="mt-0.5">
+            <Text size="md" variant="muted" className="mt-0.5">
               Comprehensive holistic care documentation structured across all 9 statutory domains
             </Text>
           </div>
@@ -117,7 +117,7 @@ export function CarePlanPersonCentredDomainsTab({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <Text
-                        size="sm"
+                        size="md"
                         weight="bold"
                         className={`truncate ${isSelected ? "text-white" : "text-slate-900"}`}
                       >
@@ -130,7 +130,7 @@ export function CarePlanPersonCentredDomainsTab({
                         />
                       ) : (
                         <span
-                          className={`text-sm font-mono shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"
+                          className={`text-md font-mono shrink-0 ${isSelected ? "text-emerald-200" : "text-slate-400"
                             }`}
                         >
                           Draft
@@ -138,7 +138,7 @@ export function CarePlanPersonCentredDomainsTab({
                       )}
                     </div>
                     <p
-                      className={`truncate text-sm ${isSelected ? "text-emerald-100" : "text-slate-500"}`}
+                      className={`truncate text-md ${isSelected ? "text-emerald-100" : "text-slate-500"}`}
                     >
                       {domain.subtitle}
                     </p>
@@ -154,14 +154,14 @@ export function CarePlanPersonCentredDomainsTab({
               <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-200/60">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <Text size="sm" weight="bold" className="text-slate-900">
+                    <Text size="md" weight="bold" className="text-slate-900">
                       {selectedDomain.title}
                     </Text>
-                    <span className="text-sm font-semibold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600">
+                    <span className="text-md font-semibold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600">
                       {selectedDomain.cqcKLOE}
                     </span>
                   </div>
-                  <Text size="sm" variant="muted">
+                  <Text size="md" variant="muted">
                     {selectedDomain.subtitle}
                   </Text>
                 </div>
@@ -186,7 +186,7 @@ export function CarePlanPersonCentredDomainsTab({
                     {currentSection.content}
                   </div>
                   {currentSection.updatedAt && (
-                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-sm text-slate-400">
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-md text-slate-400">
                       <span>Last updated: {new Date(currentSection.updatedAt).toLocaleString("en-GB")}</span>
                       {currentSection.authorId && <span>Staff Ref: {currentSection.authorId}</span>}
                     </div>
@@ -194,10 +194,10 @@ export function CarePlanPersonCentredDomainsTab({
                 </div>
               ) : (
                 <div className="bg-white rounded-xl p-8 text-center border border-dashed border-slate-200 space-y-2">
-                  <Text size="sm" weight="medium" className="text-slate-600">
+                  <Text size="md" weight="medium" className="text-slate-600">
                     No narrative recorded for this person-centred domain yet.
                   </Text>
-                  <p className="text-sm text-slate-500 max-w-md mx-auto">
+                  <p className="text-md text-slate-500 max-w-md mx-auto">
                     Click "Edit Domain" above to capture person-centred preferences, care routines, and clinical instructions.
                   </p>
                   {isEditable && (
@@ -224,7 +224,7 @@ export function CarePlanPersonCentredDomainsTab({
             <DialogTitle className="text-md font-bold text-slate-900">
               Edit: {selectedDomain.title}
             </DialogTitle>
-            <Text size="sm" variant="muted">
+            <Text size="md" variant="muted">
               {selectedDomain.subtitle}
             </Text>
           </DialogHeader>
@@ -237,7 +237,7 @@ export function CarePlanPersonCentredDomainsTab({
               placeholder={selectedDomain.placeholder}
               className="text-md leading-relaxed"
             />
-            <p className="text-sm text-slate-500">
+            <p className="text-md text-slate-500">
               Use clear, person-centred language (e.g. "Eleanor prefers...", "Staff must ensure...").
             </p>
           </div>

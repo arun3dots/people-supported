@@ -117,11 +117,11 @@ export function FindingActionsSection({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Activity className="size-4 text-emerald-700" />
-          <Text size="sm" weight="semibold" className="text-slate-800">
+          <Text size="md" weight="semibold" className="text-slate-800">
             Action History ({actions.length})
           </Text>
           {isResolved && (
-            <Badge variant="secondary" state="inactive" className="text-[10px] py-0 px-1.5">
+            <Badge variant="secondary" state="inactive" className="text-md py-0 px-1.5">
               Read-only
             </Badge>
           )}
@@ -131,7 +131,7 @@ export function FindingActionsSection({
             size="sm"
             variant="outline"
             onClick={openForm}
-            className="h-7 text-sm gap-1 text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+            className="h-7 text-md gap-1 text-emerald-800 border-emerald-300 hover:bg-emerald-50"
           >
             <Plus className="size-3.5" />
             Action Taken
@@ -142,7 +142,7 @@ export function FindingActionsSection({
       {/* Add Action Form */}
       {!isResolved && isFormOpen && (
         <div className="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/90 space-y-2.5">
-          <Label className="text-sm font-semibold text-emerald-950">
+          <Label className="text-md font-semibold text-emerald-950">
             Record Action Taken
           </Label>
           <Textarea
@@ -150,7 +150,7 @@ export function FindingActionsSection({
             onChange={(e) => setNewDescription(e.target.value)}
             placeholder="Describe the action taken (e.g. Cleansed wound with saline and applied sterile dressing)..."
             rows={2}
-            className="text-sm bg-white resize-none"
+            className="text-md bg-white resize-none"
           />
           <div className="flex justify-end gap-2">
             <Button
@@ -161,7 +161,7 @@ export function FindingActionsSection({
                 closeForm();
               }}
               disabled={createMutation.isPending}
-              className="h-7 text-sm"
+              className="h-7 text-md"
             >
               <X className="size-3.5 mr-1" />
               Cancel
@@ -170,7 +170,7 @@ export function FindingActionsSection({
               size="sm"
               onClick={handleSaveNewAction}
               disabled={!newDescription.trim() || createMutation.isPending}
-              className="h-7 text-sm bg-emerald-700 hover:bg-emerald-800 text-white"
+              className="h-7 text-md bg-emerald-700 hover:bg-emerald-800 text-white"
             >
               <Check className="size-3.5 mr-1" />
               {createMutation.isPending ? "Saving..." : "Save Action"}
@@ -181,7 +181,7 @@ export function FindingActionsSection({
 
       {/* Action List */}
       {actions.length === 0 ? (
-        <p className="text-sm text-slate-400 italic py-1">
+        <p className="text-md text-slate-400 italic py-1">
           No actions recorded yet for this finding.
         </p>
       ) : (
@@ -194,7 +194,7 @@ export function FindingActionsSection({
                 className="p-3 rounded-lg border border-slate-200/80 bg-slate-50 hover:bg-white transition-colors space-y-1.5"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <div className="flex items-center gap-2 text-md text-slate-500">
                     <span className="flex items-center gap-1 font-medium text-slate-700">
                       <UserIcon className="size-3 text-slate-400" />
                       {act.createdByName || "Staff Member"}
@@ -224,7 +224,7 @@ export function FindingActionsSection({
                         </TooltipTrigger>
                         <TooltipContent
                           sideOffset={4}
-                          className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-sm font-medium shadow-md"
+                          className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-md"
                         >
                           Edit Action
                         </TooltipContent>
@@ -245,7 +245,7 @@ export function FindingActionsSection({
                         </TooltipTrigger>
                         <TooltipContent
                           sideOffset={4}
-                          className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-sm font-medium shadow-md"
+                          className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-md"
                         >
                           Delete Action
                         </TooltipContent>
@@ -260,7 +260,7 @@ export function FindingActionsSection({
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
                       rows={2}
-                      className="text-sm bg-white resize-none"
+                      className="text-md bg-white resize-none"
                     />
                     <div className="flex justify-end gap-1.5">
                       <Button
@@ -271,7 +271,7 @@ export function FindingActionsSection({
                           setEditDescription("");
                         }}
                         disabled={updateMutation.isPending}
-                        className="h-6 text-sm px-2"
+                        className="h-6 text-md px-2"
                       >
                         Cancel
                       </Button>
@@ -279,14 +279,14 @@ export function FindingActionsSection({
                         size="sm"
                         onClick={() => handleSaveEdit(act.id)}
                         disabled={!editDescription.trim() || updateMutation.isPending}
-                        className="h-6 text-sm px-2 bg-emerald-700 hover:bg-emerald-800 text-white"
+                        className="h-6 text-md px-2 bg-emerald-700 hover:bg-emerald-800 text-white"
                       >
                         {updateMutation.isPending ? "Saving..." : "Save"}
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-md text-slate-800 leading-relaxed whitespace-pre-wrap">
                     {act.description}
                   </p>
                 )}

@@ -38,7 +38,7 @@ export function AssessmentHistoryCard({
       <CardHeader className="pb-3 border-b border-border-secondary/40">
         <CardTitle className="flex items-center gap-1.5">
           <Clock className="size-3.5 text-slate-500" />
-          <Text size="sm" weight="semibold">
+          <Text size="md" weight="semibold">
             Assessment History ({assessments.length})
           </Text>
         </CardTitle>
@@ -50,7 +50,7 @@ export function AssessmentHistoryCard({
           </div>
         ) : assessments.length === 0 ? (
           <Text
-            size="sm"
+            size="md"
             variant="muted"
             className="italic py-3 text-center block"
           >
@@ -71,10 +71,10 @@ export function AssessmentHistoryCard({
                     onClick={() => onToggle(a.id)}
                   >
                     <div className="flex items-center gap-2">
-                      <Text size="sm" weight="semibold">
+                      <Text size="md" weight="semibold">
                         {format(new Date(a.assessedAt), "dd MMM yyyy, HH:mm")}
                       </Text>
-                      <Text size="sm" variant="muted">
+                      <Text size="md" variant="muted">
                         {a.findings.length} finding
                         {a.findings.length !== 1 ? "s" : ""}
                       </Text>
@@ -95,7 +95,7 @@ export function AssessmentHistoryCard({
                           onClick={() => onFindingSelect?.(f)}
                           className="flex items-center justify-between gap-2 p-1.5 bg-white rounded border border-border-secondary/40 cursor-pointer hover:bg-amber-50"
                         >
-                          <Text size="sm" className="font-mono">
+                          <Text size="md" className="font-mono">
                             {f.trackingId}: {f.findingType} on {f.locationLabel}
                           </Text>
                           <Badge

@@ -69,13 +69,10 @@ export function getStatusStyle(status?: string | null): {
   }
 }
 
-export function formatReviewFrequency(value: string): string {
-  switch (value) {
-    case "SixMonthly":
-      return "Every 6 months";
-    case "AfterIncident":
-      return "After incident";
-    default:
-      return value;
-  }
+export function formatReviewDate(value: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  if (!match) return value;
+
+  const [, year, month, day] = match;
+  return new Date(Number(year), Number(month) - 1, Number(day)).toLocaleDateString();
 }

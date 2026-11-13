@@ -80,7 +80,7 @@ export function ResidentDischargeHeroCard({ resident }: ResidentDischargeHeroCar
             <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900">
               {residentName}
             </h2>
-            <div className="flex items-center gap-2 text-md lg:text-md font-medium text-slate-500">
+            <div className="flex items-center gap-2 text-md font-medium text-slate-500">
               <span>{gender}</span>
               <span>|</span>
               <span>{age} years</span>
@@ -99,8 +99,8 @@ export function ResidentDischargeHeroCard({ resident }: ResidentDischargeHeroCar
               <CalendarIcon className="size-4" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Admission Date</p>
-              <p className="text-md lg:text-md font-bold text-slate-900">{admissionDateStr}</p>
+              <p className="text-md font-medium text-slate-500">Admission Date</p>
+              <p className="text-md font-bold text-slate-900">{admissionDateStr}</p>
             </div>
           </div>
 
@@ -110,8 +110,8 @@ export function ResidentDischargeHeroCard({ resident }: ResidentDischargeHeroCar
               <Building2 className="size-4" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Room Number</p>
-              <p className="text-md lg:text-md font-bold text-slate-900">{roomNumberStr}</p>
+              <p className="text-md font-medium text-slate-500">Room Number</p>
+              <p className="text-md font-bold text-slate-900">{roomNumberStr}</p>
             </div>
           </div>
 
@@ -121,8 +121,8 @@ export function ResidentDischargeHeroCard({ resident }: ResidentDischargeHeroCar
               <BedIcon className="size-4" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Bed Number</p>
-              <p className="text-md lg:text-md font-bold text-slate-900">{bedNumberStr}</p>
+              <p className="text-md font-medium text-slate-500">Bed Number</p>
+              <p className="text-md font-bold text-slate-900">{bedNumberStr}</p>
             </div>
           </div>
         </div>

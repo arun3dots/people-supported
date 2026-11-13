@@ -89,7 +89,7 @@ export function CarePlanContentSections({
 
       <PartCard
         title="HOW WE WILL SUPPORT"
-        description="Each step can become a timed carer task."
+        description="Describe support steps here; add scheduled tasks separately below."
       >
         <TextAreaField
           label="Outcome"
@@ -130,7 +130,7 @@ export function CarePlanContentSections({
             variant="outline"
             disabled={readOnly}
             onClick={() => setSteps([...steps, ""])}
-            className="rounded-xl text-sm font-semibold shadow-none cursor-pointer"
+            className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
             <Plus className="size-4" />
             Add step

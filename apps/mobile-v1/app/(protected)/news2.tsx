@@ -122,7 +122,7 @@ export default function News2ObservationScreen() {
 
   const handleSave = async () => {
     if (!currentResident) {
-      Alert.alert('No Resident Selected', 'Please select a resident to record observations.');
+      Alert.alert('No Person Selected', 'Please select a person supported to record observations.');
       return;
     }
     try {
@@ -132,10 +132,10 @@ export default function News2ObservationScreen() {
         : '';
       Alert.alert(
         'Observation Recorded',
-        `NEWS2 score of ${news2Result.totalScore} recorded contemporaneously for ${currentResident?.fullName || 'Resident'}.${offlineNotice}`,
+        `NEWS2 score of ${news2Result.totalScore} recorded contemporaneously for ${currentResident?.fullName || 'Person Supported'}.${offlineNotice}`,
         [
           {
-            text: 'Return to Resident',
+            text: 'Return to Profile',
             onPress: () => {
               if (router.canGoBack()) {
                 router.back();
@@ -191,7 +191,7 @@ export default function News2ObservationScreen() {
           {residentsList.length === 0 && (
             <View className="bg-clinical-warningBg rounded-2xl p-3.5 mb-4">
               <Text className="text-xs font-semibold text-clinical-warning">
-                No residents found. Please select a resident from the directory or refresh.
+                No people supported found. Please select a person supported from the directory or refresh.
               </Text>
             </View>
           )}
@@ -199,7 +199,7 @@ export default function News2ObservationScreen() {
           {/* Resident Selector */}
           <View className="mb-4">
             <Text className="text-sm font-semibold text-foreground mb-1.5">
-              Resident Name <Text className="text-clinical-critical font-bold">*</Text>
+              Person Supported <Text className="text-clinical-critical font-bold">*</Text>
             </Text>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -209,7 +209,7 @@ export default function News2ObservationScreen() {
               <Text className="text-md font-medium text-foreground">
                 {currentResident
                   ? `${currentResident.fullName}${currentResident.roomNumber ? ` (${currentResident.roomNumber})` : ''}`
-                  : 'Select Resident'}
+                  : 'Select Person'}
               </Text>
               <ChevronDown size={18} color="#5D5D5D" />
             </TouchableOpacity>
@@ -217,7 +217,7 @@ export default function News2ObservationScreen() {
 
           {/* Real-time NEWS2 Result Card */}
           <View className="mb-4">
-            <News2ScoreCard result={news2Result} residentName={currentResident?.fullName || 'Resident'} />
+            <News2ScoreCard result={news2Result} residentName={currentResident?.fullName || 'Person Supported'} />
           </View>
 
           {/* Physiological Parameters Form */}
@@ -234,7 +234,7 @@ export default function News2ObservationScreen() {
             <TextInput
               value={notes}
               onChangeText={setNotes}
-              placeholder="Document resident presentation, complaints of pain, or GP escalation..."
+              placeholder="Document presentation, complaints of pain, or GP escalation..."
               placeholderTextColor="#8E8E93"
               multiline
               numberOfLines={4}
@@ -288,7 +288,7 @@ export default function News2ObservationScreen() {
                 className="bg-white rounded-t-3xl px-5 pt-5 max-h-[60%]"
                 style={{ paddingBottom: sheetBottomPadding }}
               >
-                <Text className="text-lg font-bold text-foreground mb-3">Select Resident</Text>
+                <Text className="text-lg font-bold text-foreground mb-3">Select Person Supported</Text>
                 <ScrollView showsVerticalScrollIndicator={false}>
                   {residentsList.map((r, i) => (
                     <TouchableOpacity

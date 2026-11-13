@@ -6,6 +6,7 @@ import { Button, Text } from "@repo/ui/components/ui";
 import { ShiftRequest } from "../../../../../../lib/types/shifts";
 import { DataTable } from "../../../../../../lib/components/shared/DataTable";
 import type { TableColumn } from "../../../../../../lib/components/shared/tableColumns";
+import { getLeaveStaffInitials } from "./leaveRequestUtils";
 
 interface LeaveRequestTableProps {
   requests: ShiftRequest[];
@@ -66,18 +67,17 @@ export function LeaveRequestTable({
         align: "left",
       },
       {
+        kind: "person",
         id: "staffMember",
         header: "Staff Member",
-        cell: ({ row }) => (
-          <div className="flex flex-col min-w-0">
-            <Text size="md" weight="medium" className="text-slate-900 truncate">
-              {row.original.user?.fullName || "Staff Member"}
-            </Text>
-            <Text size="sm" weight="medium" className="text-slate-500 truncate">
-              {row.original.user?.role?.name || "Staff"}
-            </Text>
-          </div>
-        ),
+        maxWidthClassName: "max-w-60",
+        avatar: true,
+        avatarClassName: "size-10 shrink-0 bg-surface-primary-light",
+        fallbackClassName:
+          "bg-surface-primary-light text-primary font-semibold text-sm",
+        getTitle: (request) => request.user?.fullName || "Staff Member",
+        getSubtitle: (request) => request.user?.role?.name || null,
+        getInitials: (request) => getLeaveStaffInitials(request.user?.fullName),
       },
       {
         kind: "text",
@@ -92,7 +92,7 @@ export function LeaveRequestTable({
         header: "Leave Dates",
         accessorFn: (request) => formatLeaveDates(request),
         cell: ({ row }) => (
-          <Text size="md" weight="normal" className="text-slate-700 whitespace-nowrap">
+          <Text size="sm" weight="medium" className="text-slate-700 whitespace-nowrap">
             {formatLeaveDates(row.original)}
           </Text>
         ),
@@ -102,7 +102,7 @@ export function LeaveRequestTable({
         header: "Shift Swap",
         accessorFn: (request) => formatSwapDates(request),
         cell: ({ row }) => (
-          <Text size="md" weight="normal" className="text-slate-700 whitespace-nowrap">
+          <Text size="sm" weight="regular" className="text-slate-700 whitespace-nowrap">
             {formatSwapDates(row.original)}
           </Text>
         ),
@@ -128,12 +128,12 @@ export function LeaveRequestTable({
         cell: ({ row }) => (
           <Button
             size="sm"
-            variant={row.original.status === "Pending" ? "default" : "outline"}
+            variant={row.original.status === "Pending" ? "primary" : "secondary"}
             onClick={(e) => {
               e.stopPropagation();
               onReviewRequest(row.original);
             }}
-            className="rounded-xl border-slate-200"
+            className="h-8 px-3 rounded-xl text-xs font-medium shadow-none cursor-pointer"
           >
             {row.original.status === "Pending" ? "Review Request" : "View Details"}
           </Button>
@@ -146,7 +146,7 @@ export function LeaveRequestTable({
   return (
     <div className="w-full rounded-2xl border-none bg-surface-card-grey px-4 py-5 font-sans shadow-none sm:px-6">
       <div className="mb-4 flex items-center justify-between border-b border-border-secondary/50 pb-4">
-        <Text size="base" weight="bold" className="text-slate-900">
+        <Text size="base" weight="semibold" className="text-slate-900">
           Leave Request Overview
         </Text>
       </div>

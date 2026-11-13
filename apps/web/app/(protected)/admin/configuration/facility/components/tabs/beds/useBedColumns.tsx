@@ -67,10 +67,10 @@ export function useBedColumns({
                 {occupied ? initials : <BedDouble className="size-5 text-icon-primary" />}
               </div>
               <div className="flex flex-col min-w-0 gap-1">
-                <Text size="sm" className="truncate text-slate-900">
+                <Text size="md" className="truncate text-slate-900">
                   {b.residentName || "Unassigned"}
                 </Text>
-                <Text size="sm" weight="regular" className="text-slate-500">
+                <Text size="md" weight="regular" className="text-slate-500">
                   {occupied ? "Resident assigned" : "Available for assignment"}
                 </Text>
               </div>

@@ -32,7 +32,6 @@ export const CareTaskRecurrenceSchema = z.object({
 export type CareTaskRecurrenceDTO = z.infer<typeof CareTaskRecurrenceSchema>;
 
 const CreateCareTaskBaseSchema = z.object({
-  stepIndex: z.number().int().min(0).nullable().optional(),
   title: z.string().trim().min(1, "Title is required"),
   description: text,
   shift: CareTaskShiftEnum.optional(),
@@ -82,6 +81,32 @@ export const CareTaskDayQuerySchema = z.object({
 });
 export type CareTaskDayQueryDTO = z.infer<typeof CareTaskDayQuerySchema>;
 
+export const CareTaskBoardQuerySchema = z.object({
+  date: isoDate.optional(),
+});
+export type CareTaskBoardQueryDTO = z.infer<typeof CareTaskBoardQuerySchema>;
+
+export type CareTaskBoardStatus = "Pending" | "Completed" | "Skipped";
+
+export interface CareTaskBoardItemDTO {
+  taskId: string;
+  residentId: string;
+  title: string;
+  status: CareTaskBoardStatus;
+  timeSlot: CareTaskShift;
+  targetTime: string | null;
+  role: CareTaskRole;
+  instructions: string | null;
+  skipReason: string | null;
+  resident: { id: string; fullName: string };
+  carePlan: { id: string; area: string };
+}
+
+export interface CareTaskBoardDTO {
+  date: string;
+  items: CareTaskBoardItemDTO[];
+}
+
 export const UndoCareTaskSchema = z.object({ date: isoDate.optional() });
 export type UndoCareTaskDTO = z.infer<typeof UndoCareTaskSchema>;
 
@@ -103,7 +128,7 @@ export interface CareTaskDefinitionDTO {
   carePlanId: string;
   areaKey: AssessmentAreaKey;
   area: string;
-  stepIndex: number | null;
+  stepIndex: number | null; // Legacy metadata from tasks generated from support steps.
   title: string;
   description: string | null;
   shift: CareTaskShift;

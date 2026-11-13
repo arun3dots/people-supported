@@ -342,7 +342,7 @@ export function AddObservationDialog({
             className={`mt-6 p-4 rounded-xl text-white flex items-center justify-between shadow-lg ${getScoreColor(news2Info.score)}`}
           >
             <div>
-              <p className="text-sm font-semibold">
+              <p className="text-md font-semibold">
                 Total NEWS2 Score
               </p>
               <p className="text-md opacity-75 mt-1">

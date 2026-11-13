@@ -29,18 +29,46 @@ import { formatUkTime, getUkDateString } from '../../lib/date';
 
 export type { HandoverPersonInfo, PreviousShiftHandoverInfo, ShiftInfo };
 
+/** Unread notification surfaced on the dashboard as a critical alert. */
+export interface DashboardAlert {
+  id: string;
+  title: string;
+  message: string;
+  priority: string;
+  category: string;
+  createdAt: string | null;
+  actionUrl: string | null;
+}
+
 interface ShiftDashboardData {
   shift: ShiftInfo | null;
   upcomingShift: ShiftInfo | null;
   shiftList: ShiftInfo[];
   assignedResidents: Resident[];
-  urgentAlerts: string[];
+  urgentAlerts: DashboardAlert[];
+}
+
+interface RawNotificationAlert {
+  id?: string;
+  title?: string;
+  message?: string;
+  priority?: string;
+  category?: string;
+  isRead?: boolean;
+  actionUrl?: string | null;
+  createdAt?: string | Date;
+}
+
+function toIsoOrNull(value?: string | Date): string | null {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  return isNaN(date.getTime()) ? null : date.toISOString();
 }
 
 export function useShiftDashboard() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const [dismissedAlertIndices, setDismissedAlertIndices] = useState<number[]>([]);
+  const [dismissedAlertIds, setDismissedAlertIds] = useState<string[]>([]);
 
   // 1. TanStack Query for Active Shift, Shift Details, and Shift List
   const {
@@ -173,22 +201,27 @@ export function useShiftDashboard() {
       }
 
       // 1.4 Fetch real unread notifications/alerts
-      let urgentAlerts: string[] = [];
+      let urgentAlerts: DashboardAlert[] = [];
       try {
         const alertsRes = await makeMobileApiCall<
-          { data?: Array<{ title?: string; message?: string; priority?: string; isRead?: boolean }> } |
-          Array<{ title?: string; message?: string; priority?: string; isRead?: boolean }>
+          { data?: RawNotificationAlert[] } | RawNotificationAlert[]
         >(GET_NOTIFICATIONS, undefined, { limit: 20, isRead: false }).catch(() => null);
 
-        const list = Array.isArray(alertsRes)
+        const list: RawNotificationAlert[] = Array.isArray(alertsRes)
           ? alertsRes
           : Array.isArray(alertsRes?.data)
             ? alertsRes.data
             : [];
 
-        if (list.length > 0) {
-          urgentAlerts = list.map((a) => a.message || a.title || 'Notification Alert');
-        }
+        urgentAlerts = list.map((a, idx) => ({
+          id: a.id || `alert-${idx}`,
+          title: a.title?.trim() || a.message?.trim() || a.category?.trim() || 'Notification',
+          message: a.message?.trim() || '',
+          priority: a.priority?.trim() || 'Medium',
+          category: a.category?.trim() || 'SYSTEM',
+          createdAt: toIsoOrNull(a.createdAt),
+          actionUrl: a.actionUrl ?? null,
+        }));
       } catch {
         urgentAlerts = [];
       }
@@ -314,14 +347,14 @@ export function useShiftDashboard() {
     },
   });
 
-  const dismissAlert = useCallback((index: number) => {
-    setDismissedAlertIndices((prev) => [...prev, index]);
+  const dismissAlert = useCallback((alertId: string) => {
+    setDismissedAlertIds((prev) => (prev.includes(alertId) ? prev : [...prev, alertId]));
   }, []);
 
   const activeAlerts = useMemo(() => {
-    const rawAlerts = dashboardData?.urgentAlerts || [];
-    return rawAlerts.filter((_, idx) => !dismissedAlertIndices.includes(idx));
-  }, [dashboardData?.urgentAlerts, dismissedAlertIndices]);
+    const rawAlerts = dashboardData?.urgentAlerts ?? [];
+    return rawAlerts.filter((alert) => !dismissedAlertIds.includes(alert.id));
+  }, [dashboardData?.urgentAlerts, dismissedAlertIds]);
 
   const error = queryError instanceof Error ? queryError.message : null;
 

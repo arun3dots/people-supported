@@ -66,6 +66,9 @@ export function getResidentCareTypeBadgeState(type: string): BadgeState {
     case "Respite":
     case "Respite Care":
       return "info";
+    case "Supported Living":
+    case "Supported living":
+      return "success";
     default:
       return "inactive";
   }
@@ -126,10 +129,10 @@ export function useResidentColumns({
             <div className="flex items-start gap-2">
               <Building2 className="size-4 text-slate-400 mt-0.5 shrink-0" />
               <div className="flex flex-col">
-                <Text size="sm" weight="medium" className="text-slate-900">
+                <Text size="md" weight="medium" className="text-slate-900">
                   {propName}
                 </Text>
-                <Text size="xs" variant="muted">
+                <Text size="md" variant="muted">
                   {roomNum}
                 </Text>
               </div>
@@ -143,7 +146,10 @@ export function useResidentColumns({
         enableSorting: false,
         cell: ({ row }) => {
           const r = row.original;
+          const partC = r.preAdmissions?.[0]?.partC;
           const need =
+            partC?.primaryDiagnosis?.trim() ||
+            partC?.diagnoses?.[0]?.trim() ||
             r.supportedLivingDetails?.primaryNeed ||
             r.careProfile?.primaryCareNeed ||
             r.careProfile?.primaryDiagnosis ||
@@ -153,7 +159,7 @@ export function useResidentColumns({
             <Badge
               variant="secondary"
               state="inactive"
-              className="border font-normal text-xs"
+              className="border font-normal text-md"
             >
               {need}
             </Badge>
@@ -177,10 +183,10 @@ export function useResidentColumns({
           const oneToOne = r.supportedLivingDetails?.oneToOneHoursPerWeek ?? 6;
           return (
             <div className="flex flex-col">
-              <Text size="sm" weight="medium" className="text-slate-900">
+              <Text size="md" weight="medium" className="text-slate-900">
                 {totalHrs} hrs/wk
               </Text>
-              <Text size="xs" variant="muted">
+              <Text size="md" variant="muted">
                 {oneToOne}h 1:1
               </Text>
             </div>
@@ -210,7 +216,7 @@ export function useResidentColumns({
             <Badge
               variant="secondary"
               state={riskState}
-              className="border text-xs"
+              className="border text-md"
             >
               {risk}
             </Badge>
@@ -247,13 +253,13 @@ export function useResidentColumns({
               <Badge
                 variant="secondary"
                 state={planState}
-                className="border text-xs"
+                className="border text-md"
               >
                 {planStatus}
               </Badge>
               <Text
                 as="span"
-                size="xs"
+                size="md"
                 variant="muted"
                 className="inline-flex items-center gap-1"
               >

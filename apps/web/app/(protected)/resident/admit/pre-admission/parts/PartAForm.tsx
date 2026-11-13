@@ -45,7 +45,7 @@ export function PartAForm({
 
   return (
     <div className="space-y-6 font-sans">
-      <PartCard
+      {/* <PartCard
         title="Assessment details"
         description="Where and when the pre-admission assessment was carried out."
       >
@@ -67,7 +67,7 @@ export function PartAForm({
             onChange={(v) => onMetaChange({ assessedByName: v })}
           />
         </FieldGrid>
-      </PartCard>
+      </PartCard> */}
 
       <PhotoUploadCard
         photoUrl={value.photoUrl ?? undefined}
@@ -75,7 +75,7 @@ export function PartAForm({
         onPhotoChange={(photoUrl) => onChange({ photoUrl })}
       />
 
-      <PartCard title="A · Personal details">
+      <PartCard title="Personal details">
         <FieldGrid cols={3}>
           <TextField
             label="First name"
@@ -182,7 +182,7 @@ export function PartAForm({
         </FieldGrid>
       </PartCard>
 
-      <PartCard title="A · Admission">
+      <PartCard title="Admission">
         <FieldGrid cols={3}>
           <SelectField
             label="Type of stay"

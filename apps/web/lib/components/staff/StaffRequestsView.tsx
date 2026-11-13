@@ -59,19 +59,19 @@ export function StaffRequestsView() {
     switch (status) {
       case "Approved":
         return (
-          <Badge variant="outline" state="success" className="p-0 px-2 py-0.5 text-sm font-semibold rounded-md shadow-none">
+          <Badge variant="outline" state="success" className="p-0 px-2 py-0.5 text-md font-semibold rounded-md shadow-none">
             Approved
           </Badge>
         );
       case "Rejected":
         return (
-          <Badge variant="outline" state="danger" className="p-0 px-2 py-0.5 text-sm font-semibold rounded-md shadow-none">
+          <Badge variant="outline" state="danger" className="p-0 px-2 py-0.5 text-md font-semibold rounded-md shadow-none">
             Rejected
           </Badge>
         );
       default:
         return (
-          <Badge variant="outline" state="warning" className="p-0 px-2 py-0.5 text-sm font-semibold rounded-md shadow-none">
+          <Badge variant="outline" state="warning" className="p-0 px-2 py-0.5 text-md font-semibold rounded-md shadow-none">
             Pending
           </Badge>
         );
@@ -97,7 +97,7 @@ export function StaffRequestsView() {
           <Text size="xl" weight="bold" className="tracking-tight">
             Leave Management
           </Text>
-          <Text variant="subdued" size="sm" weight="regular">
+          <Text variant="subdued" size="md" weight="regular">
             Submit and manage annual leave requests, shift swaps, and coverage requests with senior management sign-off.
           </Text>
         </div>
@@ -131,7 +131,7 @@ export function StaffRequestsView() {
                   : "border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50/50 shadow-sm"
               )}
             >
-              <Text size="sm" weight="semibold" className="text-slate-700 leading-tight">
+              <Text size="md" weight="semibold" className="text-slate-700 leading-tight">
                 {tab.label}
               </Text>
               <Text size="2xl" weight="bold" className={cn("tracking-tight leading-none mt-2", tab.color)}>
@@ -178,13 +178,13 @@ export function StaffRequestsView() {
 
                     <div className="space-y-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <Text size="sm" weight="bold" className="text-slate-900">
+                        <Text size="md" weight="bold" className="text-slate-900">
                           {request.type === "Leave" ? "Annual Leave" : request.type === "Change" ? "Shift Swap" : "Cover Request"}
                         </Text>
                         {getStatusBadge(request.status)}
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-md text-slate-500">
                         {isValidDates && (
                           <span className="flex items-center gap-1.5 font-medium text-slate-700">
                             <Clock className="size-3.5 text-slate-400" />
@@ -193,7 +193,7 @@ export function StaffRequestsView() {
                         )}
 
                         {request.shift && (
-                          <span className="flex items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md font-medium text-[11px]">
+                          <span className="flex items-center gap-1 text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md font-medium text-md">
                             <MapPin className="size-3 text-slate-400" />
                             {request.shift.type?.name || "Shift"}
                           </span>
@@ -211,10 +211,10 @@ export function StaffRequestsView() {
 
                   <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 pt-2 sm:pt-0 border-t sm:border-0 border-slate-100">
                     <div className="text-left sm:text-right">
-                      <Text size="sm" variant="muted" className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                      <Text size="md" variant="muted" className="text-md uppercase font-bold tracking-wider text-slate-400">
                         Submitted
                       </Text>
-                      <Text size="sm" weight="semibold" className="text-slate-800">
+                      <Text size="md" weight="semibold" className="text-slate-800">
                         {formatUkDate(new Date(request.createdAt), { day: "numeric", month: "short", year: "numeric" })}
                       </Text>
                     </div>
@@ -226,11 +226,11 @@ export function StaffRequestsView() {
 
                 {request.notes && (
                   <div className="mt-3 pt-3 border-t border-slate-100">
-                    <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 text-sm text-slate-600">
-                      <Text size="sm" weight="bold" className="text-slate-800 uppercase text-[10px] tracking-wider mb-0.5">
+                    <div className="bg-slate-50 rounded-xl p-3 border border-slate-100 text-md text-slate-600">
+                      <Text size="md" weight="bold" className="text-slate-800 uppercase text-md tracking-wider mb-0.5">
                         Notes
                       </Text>
-                      <Text size="sm" className="text-slate-600 leading-relaxed">
+                      <Text size="md" className="text-slate-600 leading-relaxed">
                         {request.notes}
                       </Text>
                     </div>

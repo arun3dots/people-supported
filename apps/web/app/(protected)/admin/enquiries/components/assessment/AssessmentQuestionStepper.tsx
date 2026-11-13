@@ -32,7 +32,7 @@ export function AssessmentQuestionStepper({
   if (questions.length === 0) {
     return (
       <Card variant="secondary" className="p-8 text-center">
-        <Text size="sm" variant="muted">
+        <Text size="md" variant="muted">
           No questions defined for this assessment section yet.
         </Text>
       </Card>
@@ -68,7 +68,7 @@ export function AssessmentQuestionStepper({
           <Badge variant="outline" className="font-mono">
             Question {safeIndex + 1} of {questions.length}
           </Badge>
-          <Text size="sm" variant="muted">
+          <Text size="md" variant="muted">
             Section: {currentQuestion.section || "Clinical"}
           </Text>
         </div>
@@ -79,7 +79,7 @@ export function AssessmentQuestionStepper({
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <Text size="sm" weight="medium" className="text-slate-600 font-mono">
+          <Text size="md" weight="medium" className="text-slate-600 font-mono">
             {progressPercentage}%
           </Text>
         </div>
@@ -117,12 +117,12 @@ export function AssessmentQuestionStepper({
           <div className="flex items-center gap-2">
             <Badge variant="outline">{currentQuestion.type}</Badge>
             {currentQuestion.section && (
-              <Text size="sm" variant="muted">
+              <Text size="md" variant="muted">
                 Category: {currentQuestion.section}
               </Text>
             )}
           </div>
-          <Text size="sm" weight="semibold" className="text-slate-900 pt-1">
+          <Text size="md" weight="semibold" className="text-slate-900 pt-1">
             {currentQuestion.questionText}
           </Text>
         </div>

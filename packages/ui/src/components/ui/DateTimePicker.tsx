@@ -138,7 +138,7 @@ export function DateTimePicker({
             id={id}
             disabled={disabled}
             className={cn(
-              "flex h-[44px] w-full items-center justify-between rounded-xl border border-border-secondary bg-surface-neutral px-3 py-2 text-sm text-text-body transition-colors",
+              "flex h-[44px] w-full items-center justify-between rounded-xl border border-border-secondary bg-surface-neutral px-3 py-2 text-md text-text-body transition-colors",
               "hover:border-surface-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-primary/20",
               disabled && "cursor-not-allowed opacity-50 bg-surface-card-grey",
               errorMessage && "border-border-error bg-surface-error",
@@ -188,17 +188,17 @@ export function DateTimePicker({
             classNames={{
               months: "flex flex-col",
               month: "space-y-2",
-              month_caption: "flex justify-center items-center h-8 font-semibold text-xs text-text-heading",
+              month_caption: "flex justify-center items-center h-8 font-semibold text-md text-text-heading",
               nav: "flex justify-between items-center absolute inset-x-3 top-3 pointer-events-none",
               button_previous: "pointer-events-auto p-1 rounded-lg hover:bg-surface-card-grey text-text-description cursor-pointer",
               button_next: "pointer-events-auto p-1 rounded-lg hover:bg-surface-card-grey text-text-description cursor-pointer",
               table: "w-full border-collapse",
               weekdays: "flex justify-between mb-1",
-              weekday: "w-9 text-center text-xs font-medium text-text-description",
+              weekday: "w-9 text-center text-md font-medium text-text-description",
               week: "flex justify-between w-full mt-1",
-              day: "p-0 text-center text-xs focus-within:relative focus-within:z-20",
+              day: "p-0 text-center text-md focus-within:relative focus-within:z-20",
               day_button: cn(
-                "size-9 p-0 flex items-center justify-center text-xs rounded-xl transition-colors font-medium text-text-body",
+                "size-9 p-0 flex items-center justify-center text-md rounded-xl transition-colors font-medium text-text-body",
                 "cursor-pointer select-none pointer-events-auto hover:bg-surface-primary-light hover:text-surface-primary focus:outline-none"
               ),
               today: "[&_button]:border [&_button]:border-surface-primary [&_button]:font-bold [&_button]:text-surface-primary",
@@ -215,7 +215,7 @@ export function DateTimePicker({
 
           {/* Time Picker Controls */}
           <div className="pt-2.5 border-t border-border-secondary flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 text-xs text-text-body font-medium">
+            <div className="flex items-center gap-1.5 text-md text-text-body font-medium">
               <Clock className="size-3.5 text-surface-primary" />
               <span>Time:</span>
             </div>
@@ -233,7 +233,7 @@ export function DateTimePicker({
                     handleHourChange(val);
                   }
                 }}
-                className="bg-surface-card-grey border border-border-secondary rounded-lg px-1.5 py-1 text-xs font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20"
+                className="bg-surface-card-grey border border-border-secondary rounded-lg px-1.5 py-1 text-md font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20"
               >
                 {Array.from({ length: use12Hours ? 12 : 24 }, (_, i) => (use12Hours ? i + 1 : i)).map((h) => (
                   <option key={h} value={h}>
@@ -248,7 +248,7 @@ export function DateTimePicker({
               <select
                 value={minute}
                 onChange={(e) => handleMinuteChange(Number(e.target.value))}
-                className="bg-surface-card-grey border border-border-secondary rounded-lg px-1.5 py-1 text-xs font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20"
+                className="bg-surface-card-grey border border-border-secondary rounded-lg px-1.5 py-1 text-md font-semibold text-text-heading outline-none focus:border-surface-primary focus:ring-1 focus:ring-surface-primary/20"
               >
                 {Array.from({ length: 12 }, (_, i) => i * 5).map((m) => (
                   <option key={m} value={m}>
@@ -262,7 +262,7 @@ export function DateTimePicker({
                 <button
                   type="button"
                   onClick={toggleAMPM}
-                  className="px-2 py-1 rounded-lg text-xs font-bold bg-surface-primary-light text-surface-primary border border-border-secondary hover:bg-surface-brand-1"
+                  className="px-2 py-1 rounded-lg text-md font-bold bg-surface-primary-light text-surface-primary border border-border-secondary hover:bg-surface-brand-1"
                 >
                   {isPM ? "PM" : "AM"}
                 </button>
@@ -275,7 +275,7 @@ export function DateTimePicker({
             <button
               type="button"
               onClick={handleNow}
-              className="text-xs font-medium text-surface-primary hover:underline"
+              className="text-md font-medium text-surface-primary hover:underline"
             >
               Set to Now
             </button>
@@ -283,7 +283,7 @@ export function DateTimePicker({
               size="sm"
               variant="primary"
               onClick={handleApply}
-              className="h-7 text-xs px-3 rounded-lg"
+              className="h-7 text-md px-3 rounded-lg"
             >
               <Check className="size-3 mr-1" />
               Apply
@@ -293,7 +293,7 @@ export function DateTimePicker({
       </Popover>
 
       {errorMessage && (
-        <span className="text-xs text-text-error mt-0.5">{errorMessage}</span>
+        <span className="text-md text-text-error mt-0.5">{errorMessage}</span>
       )}
     </div>
   );

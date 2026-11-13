@@ -183,7 +183,7 @@ export function EnquiryDetailDialog({
           <div className="space-y-4">
             <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
               <Activity className="size-4 text-emerald-800" />
-              <Text size="sm" weight="medium" className="text-slate-900 font-semibold">
+              <Text size="md" weight="medium" className="text-slate-900 font-semibold">
                 Stage 2: Pre-Admission Assessment &amp; Fit Check
               </Text>
             </div>
@@ -279,7 +279,7 @@ export function EnquiryDetailDialog({
 
           {/* Stage 3 Prep */}
           <div className="space-y-3 pt-2">
-            <Text size="sm" weight="semibold" className="text-slate-900 tracking-wider">
+            <Text size="md" weight="semibold" className="text-slate-900 tracking-wider">
               Stage 3: Admission Prep Details
             </Text>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

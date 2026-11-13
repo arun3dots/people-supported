@@ -73,7 +73,7 @@ export function OverviewAdlCard({ resident }: OverviewAdlCardProps) {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-md">
             {Object.entries(katzMatrix).map(([domain, level]) => (
               <div key={domain} className="flex flex-col gap-1">
-                <Text size="sm" weight="medium" className="text-slate-500 capitalize">
+                <Text size="md" weight="medium" className="text-slate-500 capitalize">
                   {domain}
                 </Text>
                 <div>

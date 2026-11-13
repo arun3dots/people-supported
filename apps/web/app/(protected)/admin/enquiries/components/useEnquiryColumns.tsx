@@ -184,7 +184,7 @@ export function useEnquiryColumns({
                 </TooltipTrigger>
                 <TooltipContent
                   sideOffset={6}
-                  className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-sm font-medium shadow-lg"
+                  className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-lg"
                 >
                   Edit Enquiry
                 </TooltipContent>

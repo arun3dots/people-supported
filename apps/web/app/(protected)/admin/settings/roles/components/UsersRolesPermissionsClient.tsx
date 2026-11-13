@@ -132,7 +132,7 @@ export function UsersRolesPermissionsClient() {
       {/* Header */}
       <div>
         <Text size="xl" weight="bold">Roles &amp; Permissions</Text>
-        <Text size="sm" weight="regular" className="text-slate-500 mt-0.5">
+        <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
           Manage system access roles, define module permission scopes, and configure operational access levels.
         </Text>
       </div>

@@ -50,7 +50,7 @@ export function GoalCategoryTrackingInputs({
           {state.trackingMode === "fluid" && <Droplets className="size-4 text-sky-600" />}
           {state.trackingMode === "milestone" && <Target className="size-4 text-indigo-600" />}
           {state.trackingMode === "routine" && <ListTodo className="size-4 text-amber-600" />}
-          <Text size="sm" weight="semibold" className="text-slate-800 uppercase tracking-wider">
+          <Text size="md" weight="semibold" className="text-slate-800 uppercase tracking-wider">
             {state.trackingMode === "weight"
               ? "Quantitative Target Tracking (Weight / Vitals)"
               : state.trackingMode === "fluid"
@@ -74,7 +74,7 @@ export function GoalCategoryTrackingInputs({
                 }
                 onChange({ trackingMode: mode, progressPercent: initialPct });
               }}
-              className={`px-2 py-0.5 text-sm font-semibold rounded-lg capitalize transition-all cursor-pointer ${state.trackingMode === mode
+              className={`px-2 py-0.5 text-md font-semibold rounded-lg capitalize transition-all cursor-pointer ${state.trackingMode === mode
                 ? "bg-emerald-800 text-white shadow-xs"
                 : "text-slate-500 hover:text-slate-800"
                 }`}
@@ -186,7 +186,7 @@ export function GoalCategoryTrackingInputs({
               />
             </div>
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-md text-slate-500">
             Daily fluid charts track today&apos;s intake against the {state.dailyTargetMl} ml/day clinical target.
           </p>
         </div>
@@ -208,7 +208,7 @@ export function GoalCategoryTrackingInputs({
             onChange={(e) => onChange({ progressPercent: Number(e.target.value) })}
             className="w-full accent-emerald-800 cursor-pointer h-2 bg-slate-200 rounded-lg"
           />
-          <div className="flex justify-between text-sm text-slate-400 font-mono">
+          <div className="flex justify-between text-md text-slate-400 font-mono">
             <span>0% (Baseline)</span>
             <span>25% (Early)</span>
             <span>50% (Moderate)</span>
@@ -224,7 +224,7 @@ export function GoalCategoryTrackingInputs({
           <p className="font-medium text-slate-800">
             Automated Shift Routine Adherence
           </p>
-          <p className="text-sm text-slate-500">
+          <p className="text-md text-slate-500">
             Progress for this care goal is automatically computed in real time from the daily shift execution rate of all tasks linked to this goal.
           </p>
         </div>

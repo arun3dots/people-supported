@@ -93,13 +93,13 @@ export function SignUpSuccess({
               Payment Successful!
             </h2>
             <p className="text-md text-slate-500 font-medium leading-relaxed">
-              Your subscription is now active. We are setting up your care home workspace.
+              Your subscription is now active. We are setting up your supported living workspace.
             </p>
           </div>
 
           {/* Progress and Countdown Card */}
           <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-3 text-left">
-            <div className="flex items-center justify-between text-sm font-semibold">
+            <div className="flex items-center justify-between text-md font-semibold">
               <span className="text-slate-700">Auto-redirecting to dashboard</span>
               <span className="text-emerald-800 font-bold">{secondsLeft}s</span>
             </div>
@@ -112,7 +112,7 @@ export function SignUpSuccess({
               />
             </div>
 
-            <p className="text-sm text-slate-500 font-medium leading-normal">
+            <p className="text-md text-slate-500 font-medium leading-normal">
               Press <span className="font-semibold text-slate-700">Go to login</span> if you need to sign in manually, or wait to be automatically redirected to your admin dashboard.
             </p>
           </div>
@@ -150,7 +150,7 @@ export function SignUpSuccess({
           </div>
 
           {paymentError && (
-            <div className="p-3.5 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-200">
+            <div className="p-3.5 bg-red-50 text-red-600 text-md font-medium rounded-xl border border-red-200">
               {paymentError}
             </div>
           )}

@@ -252,7 +252,7 @@ export function DocumentsTab({ residentId }: DocumentsTabProps) {
                         <div className="flex items-center gap-3 text-md text-muted-foreground mt-1">
                           <Badge
                             variant="outline"
-                            className="text-[10px] rounded-full px-2 py-0 border-border/50"
+                            className="text-md rounded-full px-2 py-0 border-border/50"
                           >
                             {doc.category}
                           </Badge>

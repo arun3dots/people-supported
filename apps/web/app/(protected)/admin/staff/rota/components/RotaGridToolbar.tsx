@@ -100,7 +100,7 @@ export function RotaGridToolbar({
 
         <div className="flex items-center gap-2">
           <Calendar className="size-4 text-primary" />
-          <Text size="sm" weight="semibold" className="text-slate-900">
+          <Text size="md" weight="semibold" className="text-slate-900">
             {getDateLabel()}
           </Text>
         </div>
@@ -111,7 +111,7 @@ export function RotaGridToolbar({
         {/* From & To Date Range Inputs */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <Text size="sm" weight="medium" className="text-sm text-slate-500">
+            <Text size="md" weight="medium" className="text-md text-slate-500">
               From:
             </Text>
             <div className="w-44 min-w-[172px]">
@@ -133,7 +133,7 @@ export function RotaGridToolbar({
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Text size="sm" weight="medium" className="text-sm text-slate-500">
+            <Text size="md" weight="medium" className="text-md text-slate-500">
               To:
             </Text>
             <div className="w-44 min-w-[172px]">

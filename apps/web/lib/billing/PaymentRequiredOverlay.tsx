@@ -153,7 +153,7 @@ export function PaymentRequiredOverlay() {
             <h2 className="text-center text-2xl font-bold tracking-tight text-foreground">
               {hasPackage ? "Switch your plan" : "Choose your plan"}
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-center text-sm text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-md text-center text-md text-muted-foreground">
               Select a subscription package to continue. You&apos;ll be taken to
               payment next — access unlocks automatically once it&apos;s
               completed.
@@ -202,7 +202,7 @@ export function PaymentRequiredOverlay() {
             <h2 className="text-center text-2xl font-bold tracking-tight text-foreground">
               Subscription payment required
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-center text-sm text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-md text-center text-md text-muted-foreground">
               {billing?.packageName
                 ? `Complete payment for the ${billing.packageName} plan to use the features.`
                 : "Complete your subscription payment to use the features."}{" "}
@@ -243,7 +243,7 @@ export function PaymentRequiredOverlay() {
               </Button>
             </div>
 
-            <p className="mt-6 text-center text-xs text-muted-foreground">
+            <p className="mt-6 text-center text-md text-muted-foreground">
               Waiting for payment confirmation… this page updates automatically.
             </p>
           </>

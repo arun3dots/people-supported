@@ -131,7 +131,7 @@ export function AddRoleStep3({ form }: AddRoleStep3Props) {
           <h3 className="text-[14px] font-medium leading-[18px] text-[#141F1E]">
             {activeModLabel} Permissions
           </h3>
-          <p className="text-[10px] font-normal leading-[13px] text-[#5D5D5D]">
+          <p className="text-md font-normal leading-[13px] text-[#5D5D5D]">
             Set specific permissions for this module.
           </p>
         </div>
@@ -139,7 +139,7 @@ export function AddRoleStep3({ form }: AddRoleStep3Props) {
 
       {/* Two-Column Equal Grid Layout */}
       {form.formState.errors.root?.permissions && (
-        <p className="text-sm font-medium text-red-600">
+        <p className="text-md font-medium text-red-600">
           {String(form.formState.errors.root.permissions.message)}
         </p>
       )}
@@ -154,7 +154,7 @@ export function AddRoleStep3({ form }: AddRoleStep3Props) {
                 type="button"
                 onClick={() => setSelectedModule(mod.id)}
                 className={cn(
-                  "h-[37px] w-full px-[16px] flex items-center justify-start rounded-lg text-[12px] font-normal leading-[15px] transition-colors whitespace-nowrap",
+                  "h-[37px] w-full px-[16px] flex items-center justify-start rounded-lg text-md font-normal leading-[15px] transition-colors whitespace-nowrap",
                   isSelected
                     ? "bg-[#4A706A] text-white"
                     : "bg-transparent text-[#141F1E] hover:bg-black/5"
@@ -170,13 +170,13 @@ export function AddRoleStep3({ form }: AddRoleStep3Props) {
         <div className="h-full bg-[#F7F7F7] rounded-xl px-[15px] flex flex-col items-start py-[10px] overflow-y-auto">
           {/* Header with Select All toggle */}
           <div className="flex items-center justify-between w-full px-[10px] pb-1.5 mb-1 border-b border-[#BCD3CD]/40">
-            <span className="text-[11px] font-medium text-[#5D5D5D]">
+            <span className="text-md font-medium text-[#5D5D5D]">
               Permissions ({currentActions.length}/{ALL_GRANULAR_ACTION_IDS.length})
             </span>
             <button
               type="button"
               onClick={toggleSelectAll}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-[#4A706A] hover:underline cursor-pointer"
+              className="inline-flex items-center gap-1 text-md font-medium text-[#4A706A] hover:underline cursor-pointer"
             >
               <CheckCheck className="size-3" />
               {isAllSelected ? "Deselect All" : "Select All"}
@@ -210,7 +210,7 @@ export function AddRoleStep3({ form }: AddRoleStep3Props) {
                     </div>
 
                     {/* Action Label */}
-                    <span className="text-[12px] font-normal leading-[15px] text-[#141F1E]">
+                    <span className="text-md font-normal leading-[15px] text-[#141F1E]">
                       {label}
                     </span>
                   </div>

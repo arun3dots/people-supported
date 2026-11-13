@@ -78,7 +78,7 @@ export function PartDForm({ value, onChange }: PartFormProps<PreAdmissionPartDDT
         </div>
       </PartCard>
 
-      <PartCard title="E · Falls, diet and cognition">
+      <PartCard title="Falls, diet and cognition">
         <FieldGrid cols={3}>
           <SelectField label="Falls risk" options={RISK_LEVELS} value={value.fallsRiskLevel} onChange={(v) => onChange({ fallsRiskLevel: v as PreAdmissionPartDDTO["fallsRiskLevel"] })} />
           <TextField label="Falls in last 6 months" type="number" value={value.fallsLast6Months?.toString()} onChange={(v) => onChange({ fallsLast6Months: v ? Number(v) : null })} />

@@ -5,16 +5,16 @@ const text = z.string().trim().nullable().optional();
 
 // Standard areas default to plans; custom areas become plans when explicitly selected.
 export const CARE_AREAS = [
-  { key: "mobility", label: "Mobility and falls", source: "Part D · Mobility, Falls" },
-  { key: "skin", label: "Skin and pressure care", source: "Part D · Skin" },
-  { key: "nutrition", label: "Eating, drinking and diabetes", source: "Part C, D · Nutrition" },
-  { key: "continence", label: "Continence", source: "Part D · Continence" },
-  { key: "personalCare", label: "Personal care and dressing", source: "Part D, G · Personal care" },
-  { key: "medicines", label: "Medicines and pain", source: "Part C · Medicines" },
-  { key: "cognition", label: "Memory, mood and communication", source: "Part D, G · Cognition" },
-  { key: "sleep", label: "Sleep and night care", source: "Part D, G · Sleep" },
-  { key: "social", label: "Social life and faith", source: "Part G · About me" },
-  { key: "capacity", label: "Capacity, DoLS and advance care", source: "Part E, F" },
+  { key: "mobility", label: "Mobility and falls", source: "Mobility, Falls" },
+  { key: "skin", label: "Skin and pressure care", source: "Skin" },
+  { key: "nutrition", label: "Eating, drinking and diabetes", source: "Nutrition" },
+  { key: "continence", label: "Continence", source: "Continence" },
+  { key: "personalCare", label: "Personal care and dressing", source: "Personal care" },
+  { key: "medicines", label: "Medicines and pain", source: "Medicines" },
+  { key: "cognition", label: "Memory, mood and communication", source: "Cognition" },
+  { key: "sleep", label: "Sleep and night care", source: "Sleep" },
+  { key: "social", label: "Social life and faith", source: "About me" },
+  { key: "capacity", label: "Capacity, DoLS and advance care", source: "" },
 ] as const;
 export const CARE_AREA_KEYS = CARE_AREAS.map((a) => a.key) as [
   (typeof CARE_AREAS)[number]["key"],
@@ -36,6 +36,23 @@ export type AssessmentAreaKey = CareAreaKey | CustomAssessmentAreaKey;
 export const getCareArea = (key: string) =>
   CARE_AREAS.find((a) => a.key === key);
 
+const LEGACY_PART_SEGMENT =
+  /^Part\s+[A-Z](?:\s*,\s*[A-Z])*\s*(?:·\s*)?|\s*·\s*Part\s+[A-Z](?:\s*,\s*[A-Z])*/gi;
+
+export function cleanAreaSource(
+  areaKey: string,
+  source?: string | null,
+): string | null {
+  const canonical = getCareArea(areaKey)?.source;
+  if (!source) return canonical ?? null;
+  const trimmed = source.trim();
+  if (/^Part\s+[A-Z]/i.test(trimmed) && canonical !== undefined) {
+    return canonical;
+  }
+  const cleaned = trimmed.replace(LEGACY_PART_SEGMENT, "").trim();
+  return cleaned || (canonical ?? null);
+}
+
 export const ASSESSMENT_TOOLS = [
   { key: "waterlow", name: "Waterlow", kind: "scored" },
   { key: "falls", name: "Falls risk", kind: "category" },
@@ -55,6 +72,17 @@ export type AssessmentToolKey = z.infer<typeof AssessmentToolKeyEnum>;
 export const ASSESSMENT_RATINGS = ["none", "low", "med", "high"] as const;
 export const AssessmentRatingEnum = z.enum(ASSESSMENT_RATINGS);
 export type AssessmentRating = z.infer<typeof AssessmentRatingEnum>;
+
+export const ASSESSMENT_RISK_OPTIONS = [
+  "Fall Risk",
+  "Pressure Ulcer Risk",
+  "Malnutrition Risk",
+  "Dehydration Risk",
+  "Choking Risk",
+  "Infection Risk",
+  "No associated risk",
+] as const;
+export type AssessmentRiskOption = (typeof ASSESSMENT_RISK_OPTIONS)[number];
 
 /** The risk tool whose result feeds each area's "what the assessment found". */
 export const CARE_AREA_TOOL: Partial<Record<CareAreaKey, AssessmentToolKey>> = {
@@ -86,6 +114,7 @@ const AssessmentNeedFields = {
   found: text,
   source: text,
   toolKey: AssessmentToolKeyEnum.nullable().optional(),
+  associatedRisk: text,
 };
 
 export const AssessmentNeedSchema = z.union([
@@ -106,7 +135,12 @@ export type AssessmentNeedDTO = z.infer<typeof AssessmentNeedSchema>;
 export type AssessmentNeedPatchDTO = Partial<
   Pick<
     AssessmentNeedDTO,
-    "supportLevel" | "found" | "source" | "toolKey" | "becomesCarePlan"
+    | "supportLevel"
+    | "found"
+    | "source"
+    | "toolKey"
+    | "associatedRisk"
+    | "becomesCarePlan"
   >
 >;
 

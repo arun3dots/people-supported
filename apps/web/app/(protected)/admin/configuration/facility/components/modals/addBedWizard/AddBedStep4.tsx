@@ -79,7 +79,7 @@ export function AddBedStep4({
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">
+            <span className="text-md text-slate-400 font-medium">
               Bed Number / Label
             </span>
             <span className="text-md font-semibold text-slate-800 truncate">
@@ -88,7 +88,7 @@ export function AddBedStep4({
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">
+            <span className="text-md text-slate-400 font-medium">
               Unique Identifier
             </span>
             <span className="text-md font-semibold text-slate-800 truncate">
@@ -96,13 +96,13 @@ export function AddBedStep4({
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Bed Type</span>
+            <span className="text-md text-slate-400 font-medium">Bed Type</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {bedType}
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Status</span>
+            <span className="text-md text-slate-400 font-medium">Status</span>
             <div className="flex items-center gap-1.5 text-md font-semibold text-emerald-700">
               <span className="size-1.5 rounded-full bg-emerald-500" />
               <span>{status}</span>
@@ -121,31 +121,31 @@ export function AddBedStep4({
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
           <div className="bg-white border border-slate-200 rounded-xl p-2.5 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Length × Width</span>
+            <span className="text-md text-slate-400 font-medium">Length × Width</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {bedLength && bedWidth ? `${bedLength} × ${bedWidth} cm` : "—"}
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-2.5 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Safe Load</span>
+            <span className="text-md text-slate-400 font-medium">Safe Load</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {safeLoad ? `${safeLoad} kg` : "—"}
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-2.5 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Height Adj.</span>
+            <span className="text-md text-slate-400 font-medium">Height Adj.</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {heightAdj}
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-2.5 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Side Rails</span>
+            <span className="text-md text-slate-400 font-medium">Side Rails</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {sideRails}
             </span>
           </div>
           <div className="bg-white border border-slate-200 rounded-xl p-2.5 flex flex-col justify-center gap-0.5">
-            <span className="text-[10px] text-slate-400 font-medium">Pressure Matt.</span>
+            <span className="text-md text-slate-400 font-medium">Pressure Matt.</span>
             <span className="text-md font-semibold text-slate-800 truncate">
               {pressureMattress}
             </span>

@@ -48,11 +48,11 @@ export function CompetencyBadge({
             fill="transparent"
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-800">
+        <span className="absolute inset-0 flex items-center justify-center text-md font-bold text-slate-800">
           {percent}%
         </span>
       </div>
-      <Text size="sm" weight="medium" className={labelColor}>
+      <Text size="md" weight="medium" className={labelColor}>
         {label}
       </Text>
     </div>
@@ -87,7 +87,7 @@ export function ComplianceBadge({ percent }: { percent: number }) {
           fill="transparent"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-slate-800">
+      <span className="absolute inset-0 flex items-center justify-center text-md font-bold text-slate-800">
         {percent}%
       </span>
     </div>

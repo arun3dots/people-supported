@@ -69,7 +69,7 @@ export function CarePlansStep({
 
   return (
     <div className="space-y-6">
-      <Text size="sm" className="text-slate-600">
+      <Text size="md" className="text-slate-600">
         {plans.length} care plans · {agreedCount} agreed
       </Text>
 
@@ -92,7 +92,7 @@ export function CarePlansStep({
                   <span className="block text-md font-bold text-slate-800">
                     {p.area}
                   </span>
-                  <span className="block text-sm text-slate-600">
+                  <span className="block text-md text-slate-600">
                     {p.taskCount} task{p.taskCount === 1 ? "" : "s"}
                   </span>
                 </span>
