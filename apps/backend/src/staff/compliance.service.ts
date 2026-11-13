@@ -141,6 +141,14 @@ export class ComplianceService {
       },
     });
 
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        dbsExpiryDate: result.expiryDate,
+        dbsNumber: result.certificateNumber,
+      },
+    });
+
     void this.auditService.emit({
       categoryType: 'STAFF_ACTIVITY',
       actionType: 'DBS_UPDATED',
@@ -532,16 +540,13 @@ export class ComplianceService {
     if (!s3FileName) {
       throw new BadRequestException('Document path is required');
     }
-    try {
-      return await this.s3Service.getDownloadSignedUrl(s3FileName);
-    } catch (error) {
-      this.logger.warn(
-        `Failed to generate S3 signed URL (${error instanceof Error ? error.message : error}), falling back to direct stream route.`,
-      );
-      const cleanPath = encodeURIComponent(s3FileName);
-      const id = staffId || 'view';
-      return `/api/staff/${id}/compliance/document-stream?path=${cleanPath}`;
+    const meta = await this.s3Service.getObjectMetadata(s3FileName);
+    if (!meta.exists) {
+      throw new NotFoundException('Document file not found in storage');
     }
+    const cleanPath = encodeURIComponent(s3FileName);
+    const id = staffId || 'view';
+    return `/api/staff/${id}/compliance/document-stream?path=${cleanPath}`;
   }
 
   getFileStream(s3FileName: string) {

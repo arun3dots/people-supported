@@ -12,7 +12,7 @@ import type { ShiftBlockFormData } from "./ModifyShiftBlockModal";
 interface SaveShiftParams {
   formData: ShiftBlockFormData;
   editingShift: Shift | null;
-  slotToAdd: { staff: StaffMember; day: DayColumnInfo } | null;
+  slotToAdd: { staff?: StaffMember; day?: DayColumnInfo } | null;
   createShiftMutation: ReturnType<typeof useCreateShiftMutation>;
   updateShiftMutation: ReturnType<typeof useUpdateShiftMutation>;
 }

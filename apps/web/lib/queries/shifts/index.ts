@@ -19,3 +19,4 @@ export * from "./useStartShiftMutation";
 export * from "./useEndShiftMutation";
 export * from "./useGetShiftDetailsQuery";
 export * from "./useUpdateHandoverNotesMutation";
+export * from "./useGetStaffAllocationQuery";

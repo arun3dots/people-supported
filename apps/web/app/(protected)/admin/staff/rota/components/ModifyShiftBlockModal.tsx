@@ -15,7 +15,6 @@ import type { Resident } from "../../../../../../lib/types/resident";
 import type { StaffMember } from "../../../../../../lib/types/staff";
 import { ShiftCareTypePresetCards, type CareTypePreset } from "./ShiftCareTypePresetCards";
 import { ShiftStaffResidentSelectors } from "./ShiftStaffResidentSelectors";
-import { getShiftDateStr, resolveStaffLocation } from "./rotaDataUtils";
 import { extractErrorMessage } from "./rotaCoverageUtils";
 
 export interface ShiftBlockFormData {
@@ -86,7 +85,7 @@ export function ModifyShiftBlockModal({
   const { toast } = useToast();
 
   const [formError, setFormError] = useState<string | null>(null);
-  const [careType, setCareType] = useState<string>("Shared Care (Core Support)");
+  const [careType, setCareType] = useState<string>("");
   const [startDateTime, setStartDateTime] = useState<Date | undefined>(undefined);
   const [endDateTime, setEndDateTime] = useState<Date | undefined>(undefined);
   const [schemeId, setSchemeId] = useState<string>("");
@@ -100,6 +99,11 @@ export function ModifyShiftBlockModal({
   const isSleepIn = careType === "Sleep-in (Overnight)";
   const isOffDay = careType === "Off / Rest Day";
 
+  const activeResidents = useMemo(
+    () => residents.filter((r) => r.status === "Active"),
+    [residents],
+  );
+
   const filteredProperties = useMemo(() => {
     if (!schemeId) return properties;
     return properties.filter((p) => p.schemeId === schemeId);
@@ -108,17 +112,15 @@ export function ModifyShiftBlockModal({
   useEffect(() => {
     if (!open) return;
     setFormError(null);
-    const initialCareType = initialShift?.careType || "Shared Care (Core Support)";
+    const initialCareType = initialShift?.careType || "";
     setCareType(initialCareType);
 
     if (initialShift) {
       setStartDateTime(new Date(initialShift.startTime));
       setEndDateTime(new Date(initialShift.endTime));
     } else {
-      const targetDate = initialDateStr || format(new Date(), "yyyy-MM-dd");
-      const { start, end } = buildDateTimeFromWindow(targetDate, "07:00 - 15:00");
-      setStartDateTime(start);
-      setEndDateTime(end);
+      setStartDateTime(undefined);
+      setEndDateTime(undefined);
     }
 
     setNotes(initialShift?.notes || "");
@@ -126,20 +128,20 @@ export function ModifyShiftBlockModal({
     const assignedStaff =
       initialShift?.userIds && initialShift.userIds.length > 0
         ? initialShift.userIds
-        : initialStaffId ? [initialStaffId] : staffList[0] ? [staffList[0].id] : [];
+        : initialStaffId
+          ? [initialStaffId]
+          : [];
     setSelectedStaffIds(assignedStaff);
 
-    // Resolve initial Scheme & Property from shift.wingId or primary staff assignment
+    // Resolve initial Scheme & Property only when editing an existing shift
     const initPropId = initialShift?.wingId || "";
     if (initPropId) {
       const matchedProp = properties.find((p) => p.id === initPropId);
       setPropertyId(initPropId);
       setSchemeId(matchedProp?.schemeId || "");
     } else {
-      const primaryStaff = staffList.find((s) => s.id === assignedStaff[0]);
-      const loc = primaryStaff ? resolveStaffLocation(primaryStaff, schemes, properties) : null;
-      setSchemeId(loc?.schemeId || "");
-      setPropertyId(loc?.propertyId || "");
+      setSchemeId("");
+      setPropertyId("");
     }
 
     const initialRes =
@@ -147,20 +149,20 @@ export function ModifyShiftBlockModal({
         ? initialShift.residentIds
         : [];
     setSelectedResidentIds(initialRes);
-  }, [open, initialShift, initialStaffId, initialDateStr, staffList, residents, schemes, properties]);
+  }, [open, initialShift, initialStaffId, initialDateStr, properties]);
 
   const handleSelectCarePreset = (preset: CareTypePreset) => {
     setFormError(null);
     setCareType(preset.id);
-    const baseStr = startDateTime
-      ? format(startDateTime, "yyyy-MM-dd")
-      : initialDateStr || getShiftDateStr(initialShift as Shift) || format(new Date(), "yyyy-MM-dd");
-    const { start, end } = buildDateTimeFromWindow(
-      baseStr,
-      preset.id === "Off / Rest Day" ? "08:00 - 16:00" : preset.window,
-    );
-    setStartDateTime(start);
-    setEndDateTime(end);
+    if (startDateTime) {
+      const baseStr = format(startDateTime, "yyyy-MM-dd");
+      const { start, end } = buildDateTimeFromWindow(
+        baseStr,
+        preset.id === "Off / Rest Day" ? "08:00 - 16:00" : preset.window,
+      );
+      setStartDateTime(start);
+      setEndDateTime(end);
+    }
 
     if (preset.id !== "Shared Care (Core Support)" && preset.id !== "2:1 Dedicated Support" && selectedStaffIds.length > 1) {
       setSelectedStaffIds(selectedStaffIds.slice(0, 1));
@@ -168,20 +170,20 @@ export function ModifyShiftBlockModal({
 
     if (preset.id === "Off / Rest Day") {
       setSelectedResidentIds([]);
-    } else {
-      if (preset.id === "2:1 Dedicated Support" && selectedStaffIds.length < 2 && staffList.length >= 2) {
-        setSelectedStaffIds(staffList.slice(0, 2).map((s) => s.id));
-      }
-      if (preset.id !== "Shared Care (Core Support)" && preset.id !== "Sleep-in (Overnight)" && preset.id !== "Waking Night" && selectedResidentIds.length > 1) {
-        setSelectedResidentIds(selectedResidentIds.slice(0, 1));
-      }
+    } else if (
+      preset.id !== "Shared Care (Core Support)" &&
+      preset.id !== "Sleep-in (Overnight)" &&
+      preset.id !== "Waking Night" &&
+      selectedResidentIds.length > 1
+    ) {
+      setSelectedResidentIds(selectedResidentIds.slice(0, 1));
     }
   };
 
   const toggleStaffSelection = (id: string) => {
     setFormError(null);
     setSelectedStaffIds((prev) =>
-      prev.includes(id) ? (prev.length > 1 ? prev.filter((i) => i !== id) : prev) : [...prev, id],
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -194,6 +196,10 @@ export function ModifyShiftBlockModal({
 
   const handleFormSubmit = async () => {
     setFormError(null);
+    if (!careType) {
+      toast({ title: "Validation error", description: "Please select a care type.", variant: "destructive" });
+      return;
+    }
     if (!startDateTime || !endDateTime) {
       toast({ title: "Validation error", description: "Start and End date/time are required.", variant: "destructive" });
       return;
@@ -384,13 +390,13 @@ export function ModifyShiftBlockModal({
             selectedStaffIds={selectedStaffIds}
             onToggleStaff={toggleStaffSelection}
             onSetSingleStaff={(id) => setSelectedStaffIds([id])}
-            residents={residents}
+            residents={activeResidents}
             selectedResidentIds={selectedResidentIds}
             onToggleResident={toggleResidentSelection}
             onSetSingleResident={(id) => setSelectedResidentIds([id])}
             onSelectAllResidents={() => {
               setFormError(null);
-              setSelectedResidentIds(residents.map((r) => r.id));
+              setSelectedResidentIds(activeResidents.map((r) => r.id));
             }}
             onClearResidents={() => {
               setFormError(null);

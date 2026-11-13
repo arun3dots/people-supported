@@ -6,7 +6,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { GET_STAFF } from "@repo/endpoints";
 import { toast } from "@repo/ui/components/ui";
-import { cn } from "@repo/ui/lib/utils";
 import {
   useGetStaffQuery,
   useGetPaginatedStaffQuery,
@@ -41,7 +40,7 @@ export function StaffDirectory() {
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const [roleCategory, setRoleCategory] = useState<string>("all");
 
   const {
     page,
@@ -82,7 +81,6 @@ export function StaffDirectory() {
     page,
     limit,
     search,
-    roleId: filterParams.role,
     status:
       filterParams.status === "Active" || filterParams.status === "Inactive"
         ? filterParams.status
@@ -92,7 +90,6 @@ export function StaffDirectory() {
   const rawStaffList = paginatedResponse?.data ?? [];
   const totalRecords = paginatedResponse?.total ?? 0;
 
-  // Filter tabs calculation
   const counts = useMemo(() => {
     const list = allStaff ?? [];
     return {
@@ -126,6 +123,17 @@ export function StaffDirectory() {
     };
   }, [allStaff]);
 
+  const roleOptions = useMemo(
+    () => [
+      { key: "all", label: "All Staff", count: counts.all },
+      { key: "support", label: "Support Workers", count: counts.support },
+      { key: "managers", label: "Managers", count: counts.managers },
+      { key: "admin", label: "Admin", count: counts.admin },
+      { key: "other", label: "Other Roles", count: counts.other },
+    ],
+    [counts],
+  );
+
   const selectedScheme = filterParams.scheme;
   const selectedProperty = filterParams.property;
 
@@ -141,9 +149,9 @@ export function StaffDirectory() {
         if (propertyId !== selectedProperty) return false;
       }
 
-      if (activeTab === "all") return true;
+      if (roleCategory === "all") return true;
       const r = m.role?.name?.toLowerCase() || "";
-      if (activeTab === "support") {
+      if (roleCategory === "support") {
         return (
           r.includes("support") ||
           r.includes("worker") ||
@@ -151,9 +159,9 @@ export function StaffDirectory() {
           r.includes("carer")
         );
       }
-      if (activeTab === "managers") return r.includes("manager");
-      if (activeTab === "admin") return r.includes("admin");
-      if (activeTab === "other") {
+      if (roleCategory === "managers") return r.includes("manager");
+      if (roleCategory === "admin") return r.includes("admin");
+      if (roleCategory === "other") {
         return (
           !r.includes("support") &&
           !r.includes("worker") &&
@@ -165,7 +173,7 @@ export function StaffDirectory() {
       }
       return true;
     });
-  }, [rawStaffList, activeTab, selectedScheme, selectedProperty, schemes, properties]);
+  }, [rawStaffList, roleCategory, selectedScheme, selectedProperty, schemes, properties]);
 
   const statusMutation = useUpdateStaffStatusMutationQuery({
     onSuccess: () => {
@@ -218,14 +226,6 @@ export function StaffDirectory() {
     properties,
   });
 
-  const roleTabs = [
-    { key: "all", label: "All Staff", count: counts.all },
-    { key: "support", label: "Support Workers", count: counts.support },
-    { key: "managers", label: "Managers", count: counts.managers },
-    { key: "admin", label: "Admin", count: counts.admin },
-    { key: "other", label: "Other Roles", count: counts.other },
-  ];
-
   return (
     <>
       <EntityListView<StaffMember>
@@ -238,45 +238,25 @@ export function StaffDirectory() {
         addIcon={<Plus className="size-4" />}
         stats={<StaffStatCards staff={allStaff} />}
         filters={
-          <div className="space-y-4">
-            <StaffFilterSection
-              searchTerm={searchInput}
-              setSearchTerm={setSearchInput}
-              roleFilter={filters.role ?? STAFF_FILTERS.role}
-              setRoleFilter={(value) => setFilter("role", value)}
-              schemeFilter={filters.scheme ?? STAFF_FILTERS.scheme}
-              setSchemeFilter={(value) => setFilter("scheme", value)}
-              propertyFilter={filters.property ?? STAFF_FILTERS.property}
-              setPropertyFilter={(value) => setFilter("property", value)}
-              statusFilter={filters.status ?? STAFF_FILTERS.status}
-              setStatusFilter={(value) => setFilter("status", value)}
-              roles={roles}
-              schemes={schemes}
-              properties={properties}
-              onReset={resetFilters}
-            />
-
-            <div className="flex items-center gap-6 border-b border-slate-200/70 text-md overflow-x-auto pb-px">
-              {roleTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setActiveTab(tab.key)}
-                  className={cn(
-                    "pb-2.5 transition-colors whitespace-nowrap cursor-pointer",
-                    activeTab === tab.key
-                      ? "border-b-2 border-primary text-primary font-semibold"
-                      : "text-slate-500 hover:text-slate-800 font-medium",
-                  )}
-                >
-                  {tab.label}{" "}
-                  <span className="text-slate-400 font-normal">
-                    ({tab.count})
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <StaffFilterSection
+            searchTerm={searchInput}
+            setSearchTerm={setSearchInput}
+            roleFilter={roleCategory}
+            setRoleFilter={setRoleCategory}
+            roleOptions={roleOptions}
+            schemeFilter={filters.scheme ?? STAFF_FILTERS.scheme}
+            setSchemeFilter={(value) => setFilter("scheme", value)}
+            propertyFilter={filters.property ?? STAFF_FILTERS.property}
+            setPropertyFilter={(value) => setFilter("property", value)}
+            statusFilter={filters.status ?? STAFF_FILTERS.status}
+            setStatusFilter={(value) => setFilter("status", value)}
+            schemes={schemes}
+            properties={properties}
+            onReset={() => {
+              setRoleCategory("all");
+              resetFilters();
+            }}
+          />
         }
         columns={columns}
         data={displayStaffList}

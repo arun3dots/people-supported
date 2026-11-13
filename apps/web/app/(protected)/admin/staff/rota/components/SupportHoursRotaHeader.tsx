@@ -3,16 +3,12 @@
 import React from "react";
 import {
   Calendar,
-  CheckCircle2,
-  Download,
   Heart,
   Plus,
-  Send,
   TrendingUp,
   Users,
 } from "lucide-react";
 import {
-  Badge,
   Button,
   SummaryCardsGrid,
   Text,
@@ -29,7 +25,7 @@ export interface RotaHeaderMetrics {
 
 interface SupportHoursRotaHeaderProps {
   metrics: RotaHeaderMetrics;
-  activeView: "rota" | "hours";
+  activeView: "rota" | "hours" | "allocation";
   selectedMonth: string;
   selectedWeek: string;
   draftShiftCount?: number;
@@ -123,12 +119,6 @@ export function SupportHoursRotaHeader({
 
         <div className="flex flex-wrap items-center gap-2 shrink-0">
 
-          <Badge
-            variant="secondary"
-            className="h-9 px-3 rounded-xl bg-surface-card-grey text-slate-700 font-medium hidden md:inline-flex"
-          >
-            {selectedWeek}
-          </Badge>
 
           {/*<Button
             variant="secondary"
@@ -140,28 +130,7 @@ export function SupportHoursRotaHeader({
             Export Report
           </Button>*/}
 
-          {draftShiftCount > 0 && onPublishRota && (
-            <Button
-              onClick={onPublishRota}
-              variant="outline"
-              size="sm"
-              disabled={isPublishing}
-              className="h-9 rounded-xl px-3 border-emerald-300 text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100 font-medium"
-            >
-              <Send className="size-3.5 text-emerald-700" />
-              {isPublishing ? "Publishing..." : `Publish Rota (${draftShiftCount})`}
-            </Button>
-          )}
 
-          {draftShiftCount === 0 && metrics.plannedHours > 0 && (
-            <Badge
-              variant="outline"
-              className="h-9 px-3 rounded-xl border-emerald-300 bg-emerald-50 text-emerald-800 font-medium gap-1.5"
-            >
-              <CheckCircle2 className="size-3.5 text-emerald-700" />
-              Rota Published
-            </Badge>
-          )}
 
           <Button
             onClick={onCreateShift}

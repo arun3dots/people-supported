@@ -8,14 +8,17 @@ export interface DayHoursPoint {
   req: number;
   plan: number;
   del: number;
+  offCount: number;
 }
 
 interface HoursSummaryChartsProps {
   days: DayHoursPoint[];
   metrics: {
     required: number;
+    planned: number;
     delivered: number;
     gap: number;
+    offDays: number;
     coveragePercent: string;
   };
 }
@@ -28,7 +31,9 @@ export function HoursSummaryCharts({
     1,
     ...days.flatMap((d) => [d.req, d.plan, d.del]),
   );
-  const hasAnyHours = days.some((d) => d.req > 0 || d.plan > 0 || d.del > 0);
+  const hasAnyHours = days.some(
+    (d) => d.req > 0 || d.plan > 0 || d.del > 0 || d.offCount > 0,
+  );
   const clampedCoverage = Math.min(
     100,
     Math.max(0, Number.parseFloat(metrics.coveragePercent) || 0),
@@ -93,9 +98,19 @@ export function HoursSummaryCharts({
                     className="w-3 bg-blue-600 rounded-t-sm"
                   />
                 </div>
-                <Text as="span" size="md" weight="medium" variant="muted">
-                  {d.day}
-                </Text>
+                <div className="flex items-center gap-1">
+                  <Text as="span" size="md" weight="medium" variant="muted">
+                    {d.day}
+                  </Text>
+                  {d.offCount > 0 && (
+                    <span
+                      title={`${d.offCount} staff off / rest day`}
+                      className="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"
+                    >
+                      {d.offCount} off
+                    </span>
+                  )}
+                </div>
               </div>
             ))
           )}
@@ -148,6 +163,14 @@ export function HoursSummaryCharts({
         <Card variant="white" border="default" className="p-3.5 gap-2 shadow-none">
           <div className="flex justify-between">
             <Text as="span" size="md" variant="muted">
+              Planned Hours
+            </Text>
+            <Text as="span" size="md" weight="medium" className="text-slate-900">
+              {metrics.planned} hrs
+            </Text>
+          </div>
+          <div className="flex justify-between">
+            <Text as="span" size="md" variant="muted">
               Delivered Hours
             </Text>
             <Text as="span" size="md" weight="medium" className="text-slate-900">
@@ -168,6 +191,14 @@ export function HoursSummaryCharts({
             </Text>
             <Text as="span" size="md" weight="medium" className="text-slate-900">
               {metrics.required} hrs
+            </Text>
+          </div>
+          <div className="flex justify-between">
+            <Text as="span" size="md" variant="muted">
+              Off / Rest Days
+            </Text>
+            <Text as="span" size="md" weight="medium" className="text-slate-700">
+              {metrics.offDays} {metrics.offDays === 1 ? "shift" : "shifts"}
             </Text>
           </div>
         </Card>

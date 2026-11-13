@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { format } from "date-fns";
 import { Search, RotateCcw } from "lucide-react";
 import {
   Button,
@@ -11,7 +10,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  DatePicker,
 } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
 import {
@@ -97,7 +95,6 @@ export function FilterSection({
     normalizedStatus !== "All" ||
     normalizedCareType !== "All" ||
     normalizedDept !== "All" ||
-    Boolean(selectedDob) ||
     normalizedRoom !== "All" ||
     search.trim() !== "";
 
@@ -109,7 +106,6 @@ export function FilterSection({
     setSelectedStatus("All");
     setSelectedCareType("All");
     setSelectedDept("All");
-    setSelectedDob("");
     setSelectedRoom("All");
     setSearch("");
   };
@@ -208,21 +204,6 @@ export function FilterSection({
                 ))}
               </SelectContent>
             </Select>
-
-            {/* DOB DatePicker Filter */}
-            <div className="w-36 sm:w-44 h-10">
-              <DatePicker
-                variant="dob"
-                placeholder="Filter by DOB"
-                value={selectedDob || undefined}
-                onChange={(date) => {
-                  setSelectedDob(date ? format(date, "yyyy-MM-dd") : "");
-                }}
-                showAgeBadge={false}
-                minYear={1930}
-                triggerClassName="h-10 bg-white border-slate-200 rounded-xl text-md font-medium text-slate-700 cursor-pointer"
-              />
-            </div>
           </div>
 
           <Button

@@ -52,7 +52,7 @@ export function ImmunisationCard({
         staffId={staffId}
       />
       {/* Header Section */}
-      <div className="w-full flex items-center justify-between h-[44px]">
+      <div className="w-full flex flex-wrap items-center justify-between gap-3 min-h-[44px]">
         <h3 className="text-h7 font-medium text-[#141F1E]">
           Immunization Status
         </h3>
