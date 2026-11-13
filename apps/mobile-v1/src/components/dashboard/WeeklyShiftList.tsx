@@ -223,7 +223,19 @@ export function WeeklyShiftList({ onSelectShift }: WeeklyShiftListProps) {
                 <View className="gap-2 mt-3">
                   {day.shifts.map((shift: ShiftInfo) => {
                     const durationHours = calculateShiftDurationHours(shift);
+                    const isContinuingShift = Boolean(
+                      !shift.isCompleted &&
+                        shift.isStarted &&
+                        (shift.isContinuing || shift.status === 'Continuing'),
+                    );
                     const isActiveOrDone = Boolean(shift.isCompleted || shift.isStarted);
+                    const badgeVariant = shift.isCompleted
+                      ? 'clinicalSafe'
+                      : isContinuingShift
+                        ? 'clinicalWarning'
+                        : shift.isStarted
+                          ? 'clinicalSafe'
+                          : 'outline';
                     return (
                       <TouchableOpacity
                         key={shift.id}
@@ -256,22 +268,25 @@ export function WeeklyShiftList({ onSelectShift }: WeeklyShiftListProps) {
                           </View>
                         </View>
 
-                        <Badge
-                          variant={isActiveOrDone ? 'clinicalSafe' : 'outline'}
-                          size="sm"
-                        >
+                        <Badge variant={badgeVariant} size="sm">
                           <Text
                             className={`text-xs font-semibold ${
-                              isActiveOrDone ? 'text-clinical-safe' : 'text-muted-foreground'
+                              isContinuingShift
+                                ? 'text-clinical-warning'
+                                : isActiveOrDone
+                                  ? 'text-clinical-safe'
+                                  : 'text-muted-foreground'
                             }`}
                           >
                             {shift.isCompleted
                               ? 'Completed'
-                              : shift.isStarted
-                                ? 'Active Shift'
-                                : shift.status === 'Ended'
-                                  ? 'Ended'
-                                  : 'Scheduled'}
+                              : isContinuingShift
+                                ? 'Continuing'
+                                : shift.isStarted
+                                  ? 'Active Shift'
+                                  : shift.status === 'Ended'
+                                    ? 'Ended'
+                                    : 'Scheduled'}
                           </Text>
                         </Badge>
                       </TouchableOpacity>

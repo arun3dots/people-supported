@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient, UseMutationOptions } from "@tanstack/react-query";
+import { GET_STAFF } from "@repo/endpoints";
 import { makeAPICall } from "../../api";
 import { UPDATE_LEAVE_REQUEST_STATUS, GET_LEAVE_REQUESTS } from "@repo/endpoints";
 import { UpdateLeaveRequestStatusDTO } from "@repo/schema";
@@ -24,6 +25,7 @@ export function useUpdateLeaveRequestStatusMutation(
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: [GET_LEAVE_REQUESTS] });
+      queryClient.invalidateQueries({ queryKey: [GET_STAFF] });
       options?.onSuccess?.(data, variables, context, undefined as any);
     },
   });

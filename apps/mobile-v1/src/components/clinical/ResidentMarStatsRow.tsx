@@ -34,7 +34,7 @@ export function ResidentMarStatsRow({
       {/* Administered */}
       <View className="flex-1 bg-surface rounded-2xl p-2.5 items-center justify-between min-h-[76px]">
         <View className="px-2 py-0.5 rounded-full bg-teal-50">
-          <Text className="text-xs font-bold text-teal-600">2h</Text>
+          <Text className="text-xs font-bold text-teal-600">MAR</Text>
         </View>
         <Text className="text-xs font-medium text-text-secondary text-center" numberOfLines={1}>
           Given

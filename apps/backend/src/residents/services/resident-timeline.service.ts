@@ -11,7 +11,7 @@ import { prisma } from '@repo/db';
 export class ResidentTimelineService {
   async getTimeline(residentId: string, tenantId: string) {
     const resident = await prisma.resident.findFirst({
-      where: { id: residentId, tenantId },
+      where: { id: residentId, tenantId, deletedAt: null },
       select: { id: true },
     });
 
@@ -19,13 +19,18 @@ export class ResidentTimelineService {
       throw new NotFoundException('Resident not found');
     }
 
-    const [careTimelines, dailyTasks] = await Promise.all([
+    const [careTimelines, dailyTasks, careTaskRecords] = await Promise.all([
       prisma.careTimeline.findMany({
-        where: { residentId: resident.id, deletedAt: null },
+        where: {
+          residentId: resident.id,
+          resident: { tenantId },
+          deletedAt: null,
+        },
         orderBy: { timestamp: 'desc' },
         include: {
           carer: {
             select: {
+              id: true,
               fullName: true,
               role: { select: { name: true } },
             },
@@ -33,11 +38,12 @@ export class ResidentTimelineService {
         },
       }),
       prisma.dailyTask.findMany({
-        where: { residentId: resident.id },
+        where: { residentId: resident.id, resident: { tenantId } },
         orderBy: { scheduledDate: 'desc' },
         include: {
           completedBy: {
             select: {
+              id: true,
               fullName: true,
               role: { select: { name: true } },
             },
@@ -50,6 +56,17 @@ export class ResidentTimelineService {
             },
           },
         },
+      }),
+      prisma.residentCareTaskRecord.findMany({
+        where: {
+          tenantId,
+          residentId: resident.id,
+          undoneAt: null,
+          task: { tenantId, residentId: resident.id },
+        },
+        include: { task: { select: { title: true, description: true } } },
+        orderBy: { recordedAt: 'desc' },
+        take: 50,
       }),
     ]);
 
@@ -68,6 +85,7 @@ export class ResidentTimelineService {
       skipReason: t.skipReason || null,
       carer: t.completedBy
         ? {
+            id: t.completedBy.id,
             fullName: t.completedBy.fullName,
             role: t.completedBy.role ? { name: t.completedBy.role.name } : null,
           }
@@ -75,7 +93,25 @@ export class ResidentTimelineService {
       isDailyTask: true,
     }));
 
-    return [...careTimelines, ...mappedTasks].sort(
+    const recordedTasks = careTaskRecords.map((record) => ({
+      id: `care-task-${record.id}`,
+      residentId: record.residentId,
+      eventType:
+        record.outcome === 'Done'
+          ? 'CARE_TASK_COMPLETED'
+          : 'CARE_TASK_DECLINED',
+      title: record.task.title,
+      summary: `${record.task.title}: ${record.outcome === 'Done' ? 'completed' : 'declined'}${record.note ? `. ${record.note}` : ''}`,
+      notes: record.note ?? '',
+      status: record.outcome === 'Done' ? 'Completed' : 'Skipped',
+      timestamp: record.recordedAt,
+      carer: {
+        id: record.recordedById,
+        fullName: record.recordedByName ?? 'Staff member',
+      },
+    }));
+
+    return [...careTimelines, ...mappedTasks, ...recordedTasks].sort(
       (a, b) =>
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
     );

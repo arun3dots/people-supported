@@ -3,13 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import {
-  AlertTriangle,
   Calendar,
   Clock,
   DoorOpen,
-  ShieldCheck,
   User,
-  Wrench,
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -33,13 +30,8 @@ export function PropertyDrawerSections({
   coreCharge,
   onViewRooms,
 }: PropertyDrawerSectionsProps) {
-  const certs = property.parsedPropertyDetails?.safetyCertificates ?? [];
-  const maintenanceRooms = property.roomTenancies.filter(
-    (r) => r.tenancyStatus === "Maintenance" || r.tenancyStatus === "Void",
-  );
-
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-4">
+    <div className="space-y-4">
       <TabsContent value="tenancies" className="mt-0 space-y-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>
@@ -164,59 +156,6 @@ export function PropertyDrawerSections({
         </div>
       </TabsContent>
 
-      <TabsContent value="safety" className="mt-0 space-y-3">
-        <Text size="md" weight="semibold" className="text-slate-900">
-          Landlord Safety Evidence &amp; Compliance Certificates
-        </Text>
-        {certs.length === 0 ? (
-          <Card variant="surface" className="p-0">
-            <EmptyState
-              icon={<ShieldCheck className="size-6 text-primary" />}
-              title="No safety certificates recorded"
-              description="Statutory landlord safety inspection records will appear here once added."
-            />
-          </Card>
-        ) : (
-          certs.map((cert, idx) => {
-            const certState =
-              cert.status === "On track"
-                ? "success"
-                : cert.status === "Due soon"
-                  ? "warning"
-                  : "danger";
-
-            return (
-              <Card
-                key={cert.id || idx}
-                variant="surface"
-                border="secondary"
-                className="p-4 gap-3 flex-row items-center justify-between"
-              >
-                <div className="flex items-start gap-3">
-                  <ShieldCheck className="size-5 text-primary mt-0.5 shrink-0" />
-                  <div>
-                    <Text size="md" weight="medium" className="text-slate-900">
-                      {cert.name}
-                    </Text>
-                    <Text size="md" variant="muted">
-                      {cert.notes || "Statutory landlord safety inspection"} ·
-                      Expires: {cert.expiryDate || "Scheduled"}
-                    </Text>
-                  </div>
-                </div>
-                <Badge
-                  variant="secondary"
-                  state={certState}
-                  className="border shrink-0"
-                >
-                  {cert.status}
-                </Badge>
-              </Card>
-            );
-          })
-        )}
-      </TabsContent>
-
       <TabsContent value="shifts" className="mt-0 space-y-4">
         <Card
           variant="secondary"
@@ -272,62 +211,6 @@ export function PropertyDrawerSections({
               </div>
               <Badge variant="secondary" state="success" className="border">
                 {sh.staffNames.length} assigned
-              </Badge>
-            </Card>
-          ))
-        )}
-      </TabsContent>
-
-      <TabsContent value="maintenance" className="mt-0 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <Text size="md" weight="semibold" className="text-slate-900">
-            Void &amp; Maintenance Units
-          </Text>
-          {onViewRooms && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onViewRooms(property)}
-              className="gap-1.5"
-            >
-              <DoorOpen className="size-3.5" /> Manage Rooms &amp; Beds
-            </Button>
-          )}
-        </div>
-
-        {maintenanceRooms.length === 0 ? (
-          <Card variant="surface" className="p-0">
-            <EmptyState
-              icon={<Wrench className="size-6 text-primary" />}
-              title={`All units in ${property.name} are active and occupied`}
-              description="Any units placed into void or maintenance status will appear here."
-            />
-          </Card>
-        ) : (
-          maintenanceRooms.map((rm) => (
-            <Card
-              key={rm.id}
-              variant="surface"
-              border="secondary"
-              className="p-4 gap-3 flex-row items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="size-4 text-amber-600 shrink-0" />
-                <div>
-                  <Text size="md" weight="medium" className="text-slate-900">
-                    {rm.roomNumber} · {rm.floor}
-                  </Text>
-                  <Text size="md" variant="muted">
-                    {rm.notes || "Ready for referral or maintenance check"}
-                  </Text>
-                </div>
-              </div>
-              <Badge
-                variant="secondary"
-                state="warning"
-                className="border shrink-0"
-              >
-                {rm.tenancyStatus}
               </Badge>
             </Card>
           ))

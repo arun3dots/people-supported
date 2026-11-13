@@ -1,8 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { prisma, Prisma } from '@repo/db';
-import { resolveShiftTimings, formatTime } from './shift-timing.util';
 import { ShiftDetailsService } from './shift-details.service';
 import { getUkDayBoundaries } from '../../common/utils/time.util';
+import {
+  CONTINUOUS_SHIFT_MAX_GAP_MS,
+  findContinuousFollowUpShiftInList,
+  hasContinuousFollowingShiftForUser,
+} from './shift-continuity.util';
+import { buildActiveShiftItem, buildMyShiftItem } from './shift-query.mapper';
+
+const buildShiftInclude = (userId: string) => ({
+  type: true,
+  wing: true,
+  assignments: {
+    include: {
+      user: { select: { id: true, fullName: true, email: true } },
+    },
+  },
+  staffLogs: {
+    where: { userId },
+    orderBy: { createdAt: 'desc' as const },
+    take: 1,
+  },
+});
 
 @Injectable()
 export class ShiftQueryService {
@@ -39,22 +59,7 @@ export class ShiftQueryService {
 
     const shifts = await prisma.shift.findMany({
       where,
-      include: {
-        type: true,
-        wing: true,
-        assignments: {
-          include: {
-            user: {
-              select: { id: true, fullName: true, email: true },
-            },
-          },
-        },
-        staffLogs: {
-          where: { userId },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-      },
+      include: buildShiftInclude(userId),
       orderBy: { startTime: 'asc' },
     });
 
@@ -105,85 +110,43 @@ export class ShiftQueryService {
     }
 
     const now = new Date();
-    return shifts.map((shift) => {
+    const results: unknown[] = [];
+
+    for (const shift of shifts) {
       const latestLog = shift.staffLogs?.[0] || null;
       const isPast = shift.endTime.getTime() < now.getTime();
-      const isCompleted = isPast && latestLog?.status === 'Completed';
-      const isStarted = latestLog?.status === 'Started' && !isPast;
-      const timings = resolveShiftTimings(shift.startTime, shift.endTime);
+      const hasStartedLog =
+        latestLog?.status !== 'Completed' && latestLog?.status === 'Started';
 
-      const tasksCompleted =
-        completedTasksCount > 0
-          ? completedTasksCount
-          : latestLog?.tasksCompleted || 0;
-      const tasksTotal =
-        todayTasksCount > 0 ? todayTasksCount : latestLog?.tasksTotal || 0;
-
-      const userAssignment = shift.assignments.find((a) => a.userId === userId);
-      const userRoomIds = userAssignment?.assignedRoomIds || [];
-      const assignedRoomNames = userRoomIds
-        .map((rid) => roomMap.get(rid))
-        .filter(Boolean);
-      const location =
-        assignedRoomNames.length > 0
-          ? `Room ${assignedRoomNames.join(', ')}`
-          : shift.wing?.name || null;
-
-      let actualHoursWorked: number | null = null;
-      if (isCompleted || latestLog?.status === 'Completed') {
-        const start = latestLog?.actualStartTime
-          ? new Date(latestLog.actualStartTime)
-          : shift.startTime;
-        const end = latestLog?.actualEndTime
-          ? new Date(latestLog.actualEndTime)
-          : shift.endTime;
-        const diffMs = end.getTime() - start.getTime();
-        actualHoursWorked = Math.max(
-          0,
-          Math.round((diffMs / (1000 * 60 * 60)) * 10) / 10,
+      let hasContinuousNextShift =
+        findContinuousFollowUpShiftInList(shift, shifts) !== null;
+      if (
+        !hasContinuousNextShift &&
+        hasStartedLog &&
+        isPast &&
+        to &&
+        shift.endTime.getTime() + CONTINUOUS_SHIFT_MAX_GAP_MS > to.getTime()
+      ) {
+        hasContinuousNextShift = await hasContinuousFollowingShiftForUser(
+          tenantId,
+          userId,
+          shift,
         );
       }
 
-      const computedStatus =
-        shift.status === 'Cancelled'
-          ? 'Cancelled'
-          : shift.status === 'Absent'
-            ? 'Absent'
-            : shift.status === 'Draft'
-              ? 'Draft'
-              : isCompleted
-                ? 'Completed'
-                : isPast
-                  ? latestLog?.status === 'Started'
-                    ? 'Ended'
-                    : 'Missed'
-                  : isStarted
-                    ? 'Started'
-                    : shift.status || 'Scheduled';
+      results.push(
+        buildMyShiftItem(shift, {
+          now,
+          userId,
+          hasContinuousNextShift,
+          roomMap,
+          completedTasksCount,
+          todayTasksCount,
+        }),
+      );
+    }
 
-      return {
-        ...shift,
-        id: shift.id,
-        name: shift.type?.name || 'Shift',
-        location,
-        wardName: location,
-        actualHoursWorked,
-        startTime: shift.startTime,
-        endTime: shift.endTime,
-        formattedStartTime: timings.startTime,
-        formattedEndTime: timings.endTime,
-        rawStartTime: timings.rawStartTime,
-        rawEndTime: timings.rawEndTime,
-        timingFormatted: `${timings.startTime} - ${timings.endTime}`,
-        isStarted,
-        isCompleted,
-        currentLog: latestLog,
-        status: computedStatus,
-        shiftStatus: computedStatus,
-        tasksCompleted,
-        tasksTotal,
-      };
-    });
+    return results;
   }
 
   async findActiveOrNextShift(
@@ -213,23 +176,15 @@ export class ShiftQueryService {
             startTime: { lte: now },
             endTime: { gte: windowStart },
           },
+          {
+            staffLogs: {
+              some: { userId, status: 'Started', actualEndTime: null },
+            },
+          },
           { startTime: { gt: now, lte: windowEnd } },
         ],
       },
-      include: {
-        type: true,
-        wing: true,
-        assignments: {
-          include: {
-            user: { select: { id: true, fullName: true, email: true } },
-          },
-        },
-        staffLogs: {
-          where: { userId },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-      },
+      include: buildShiftInclude(userId),
       orderBy: { startTime: 'asc' },
     });
 
@@ -237,69 +192,64 @@ export class ShiftQueryService {
       (shift) => shift.endTime.getTime() > shift.startTime.getTime(),
     );
 
-    const enhanceShift = (shiftItem: (typeof shifts)[0] | null) => {
-      if (!shiftItem) return null;
-      const latestLog = shiftItem.staffLogs?.[0] || null;
-      const isStarted = latestLog?.status === 'Started';
-      const isCompleted =
-        latestLog?.status === 'Completed' &&
-        shiftItem.endTime.getTime() < now.getTime();
-      const timings = resolveShiftTimings(
-        shiftItem.startTime,
-        shiftItem.endTime,
-      );
-
-      let timeRemainingStr = '';
-      const msDiff = timings.rawEndTime.getTime() - now.getTime();
-      if (msDiff > 0) {
-        const hrs = Math.floor(msDiff / (1000 * 60 * 60));
-        const mins = Math.floor((msDiff % (1000 * 60 * 60)) / (1000 * 60));
-        timeRemainingStr = `Ends in ${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')} hrs`;
-      } else {
-        timeRemainingStr = 'Shift ended';
+    const resolveHasContinuousNext = async (
+      shiftItem: (typeof shifts)[0],
+    ): Promise<boolean> => {
+      if (findContinuousFollowUpShiftInList(shiftItem, validShifts) !== null) {
+        return true;
       }
-
-      return {
-        ...shiftItem,
-        id: shiftItem.id,
-        name: shiftItem.type?.name || 'Shift',
-        wardName: shiftItem.wing?.name || null,
-        startTime: shiftItem.startTime,
-        endTime: shiftItem.endTime,
-        formattedStartTime: timings.startTime,
-        formattedEndTime: timings.endTime,
-        rawStartTime: timings.rawStartTime,
-        rawEndTime: timings.rawEndTime,
-        timingFormatted: `${timings.startTime} - ${timings.endTime}`,
-        actualStartedTime: latestLog?.actualStartTime
-          ? formatTime(new Date(latestLog.actualStartTime))
-          : null,
-        timeRemainingStr,
-        isStarted,
-        isCompleted,
-        currentLog: latestLog,
-        status: latestLog?.status || shiftItem.status || 'Scheduled',
-        shiftStatus:
-          latestLog?.status ||
-          (isStarted ? 'Started' : isCompleted ? 'Completed' : 'Scheduled'),
-        tasksCompleted: latestLog?.tasksCompleted || 0,
-        tasksTotal: latestLog?.tasksTotal || 0,
-      };
+      // If a stale Started log ended >48h ago or outside the fetch window, double check DB.
+      if (shiftItem.endTime.getTime() < now.getTime()) {
+        return hasContinuousFollowingShiftForUser(tenantId, userId, shiftItem);
+      }
+      return false;
     };
 
-    const active =
-      validShifts.find((shift) => {
-        const latestStatus = shift.staffLogs?.[0]?.status;
-        const isStarted =
-          latestStatus === 'Started' &&
-          now.getTime() - shift.endTime.getTime() < 24 * 60 * 60 * 1000;
-        const isOngoing = shift.startTime <= now && shift.endTime >= now;
-        const isCompleted = shift.staffLogs?.[0]?.status === 'Completed';
-        return (isStarted || isOngoing) && !isCompleted;
-      }) || null;
+    let active: (typeof shifts)[0] | null = null;
+    let activeHasContinuousNext = false;
+
+    for (const shift of validShifts) {
+      const latestStatus = shift.staffLogs?.[0]?.status;
+      const isCompleted = latestStatus === 'Completed';
+      if (isCompleted) continue;
+
+      const hasStartedLog = latestStatus === 'Started';
+      const isPast = shift.endTime.getTime() < now.getTime();
+      const isOngoing = shift.startTime <= now && shift.endTime >= now;
+
+      if (hasStartedLog) {
+        const hasContinuous = await resolveHasContinuousNext(shift);
+        if (!isPast || !hasContinuous) {
+          active = shift;
+          activeHasContinuousNext = hasContinuous;
+          break;
+        }
+        continue;
+      }
+
+      if (isOngoing) {
+        active = shift;
+        activeHasContinuousNext =
+          findContinuousFollowUpShiftInList(shift, validShifts) !== null;
+        break;
+      }
+    }
 
     if (active) {
-      return { active: enhanceShift(active), next: null, lastCompleted: null };
+      const upcomingAfterActive =
+        validShifts.find(
+          (shift) =>
+            shift.id !== active.id &&
+            shift.startTime >= active.endTime &&
+            shift.staffLogs?.[0]?.status !== 'Completed',
+        ) || null;
+      return {
+        active: buildActiveShiftItem(active, now, activeHasContinuousNext),
+        next: upcomingAfterActive
+          ? buildActiveShiftItem(upcomingAfterActive, now)
+          : null,
+        lastCompleted: null,
+      };
     }
 
     const next =
@@ -319,20 +269,7 @@ export class ShiftQueryService {
         startTime: { gte: ukDay.start },
         endTime: { lt: now },
       },
-      include: {
-        type: true,
-        wing: true,
-        assignments: {
-          include: {
-            user: { select: { id: true, fullName: true, email: true } },
-          },
-        },
-        staffLogs: {
-          where: { userId },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-      },
+      include: buildShiftInclude(userId),
       orderBy: { startTime: 'desc' },
       take: 10,
     });
@@ -343,8 +280,8 @@ export class ShiftQueryService {
 
     return {
       active: null,
-      next: enhanceShift(next),
-      lastCompleted: enhanceShift(lastCompleted),
+      next: buildActiveShiftItem(next, now),
+      lastCompleted: buildActiveShiftItem(lastCompleted, now),
     };
   }
 

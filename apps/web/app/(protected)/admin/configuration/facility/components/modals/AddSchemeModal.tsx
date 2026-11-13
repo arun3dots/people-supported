@@ -16,7 +16,6 @@ import type {
   SchemeItem,
 } from "../../../../../../../lib/types/facility";
 import { useGetStaffQuery } from "../../../../../../../lib/queries/staff/useGetStaffQuery";
-import { useGetResidentsQuery } from "../../../../../../../lib/queries/residents/useGetResidentsQuery";
 import { AddSchemeFormFields } from "./AddSchemeFormFields";
 import { AddSchemeAssociationsSection } from "./AddSchemeAssociationsSection";
 
@@ -41,9 +40,6 @@ export function AddSchemeModal({
 }: AddSchemeModalProps) {
   const isEdit = Boolean(initialData);
   const { data: staffList = [] } = useGetStaffQuery({ enabled: isOpen });
-  const { data: residentsList = [] } = useGetResidentsQuery({
-    enabled: isOpen,
-  });
 
   const [name, setName] = useState("");
   const [referenceId, setReferenceId] = useState("");
@@ -56,8 +52,6 @@ export function AddSchemeModal({
   const [targetOccupancy, setTargetOccupancy] = useState("");
   const [status, setStatus] = useState("");
   const [selectedPropertyIds, setSelectedPropertyIds] = useState<string[]>([]);
-  const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
-  const [selectedResidentIds, setSelectedResidentIds] = useState<string[]>([]);
   const [nameError, setNameError] = useState<string | undefined>();
   const [formError, setFormError] = useState<string | undefined>();
 
@@ -92,8 +86,6 @@ export function AddSchemeModal({
       setSelectedPropertyIds(
         initialData.properties?.map((p) => p.id) ?? [],
       );
-      setSelectedStaffIds(initialData.schemeDetails?.staffIds ?? []);
-      setSelectedResidentIds(initialData.schemeDetails?.residentIds ?? []);
     } else {
       setName("");
       setReferenceId(`SCH-${Math.floor(1000 + Math.random() * 9000)}`);
@@ -106,8 +98,6 @@ export function AddSchemeModal({
       setTargetOccupancy("");
       setStatus("");
       setSelectedPropertyIds([]);
-      setSelectedStaffIds([]);
-      setSelectedResidentIds([]);
     }
   }, [isOpen, initialData]);
 
@@ -158,8 +148,6 @@ export function AddSchemeModal({
         housingPartner: housingPartner.trim() || undefined,
         schemeManagerName: selectedManager?.fullName || undefined,
         targetOccupancy: targetOccupancy ? Number(targetOccupancy) : undefined,
-        staffIds: selectedStaffIds,
-        residentIds: selectedResidentIds,
       },
     };
 
@@ -250,16 +238,6 @@ export function AddSchemeModal({
               selectedPropertyIds={selectedPropertyIds}
               onToggleProperty={(id) =>
                 toggleItem(id, selectedPropertyIds, setSelectedPropertyIds)
-              }
-              staffList={staffList}
-              selectedStaffIds={selectedStaffIds}
-              onToggleStaff={(id) =>
-                toggleItem(id, selectedStaffIds, setSelectedStaffIds)
-              }
-              residentsList={residentsList}
-              selectedResidentIds={selectedResidentIds}
-              onToggleResident={(id) =>
-                toggleItem(id, selectedResidentIds, setSelectedResidentIds)
               }
             />
 

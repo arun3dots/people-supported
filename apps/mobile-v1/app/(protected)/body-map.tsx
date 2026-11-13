@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ChevronLeft, Maximize2 } from 'lucide-react-native';
 import { ScreenWrapper } from '../../src/components/common/ScreenWrapper';
 import { Text } from '../../src/components/ui/text';
+import { ResidentLoadError } from '../../src/components/clinical/ResidentLoadError';
 import { useResidentDetail } from '../../src/presentation/hooks/useResidentDetail';
 import { ResidentProfileHeaderCard } from '../../src/components/clinical/ResidentProfileHeaderCard';
 import { useBodyMap, type BodyMapFindingItem } from '../../src/presentation/hooks/useBodyMap';
@@ -26,7 +27,7 @@ import { ANATOMY_BY_ID } from '@repo/schema';
 export default function BodyMapScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const router = useRouter();
-  const { resident, loading: residentLoading } = useResidentDetail(id);
+  const { resident, loading: residentLoading, error, refetch } = useResidentDetail(id);
 
   const {
     assessments,
@@ -131,6 +132,8 @@ export default function BodyMapScreen() {
     if (router.canGoBack()) router.back();
     else router.navigate('/residents' as Href);
   };
+
+  if (error) return <ResidentLoadError message={error} onRetry={() => { void refetch(); }} />;
 
   if (!resident) {
     return (

@@ -12,7 +12,10 @@ export interface ShiftProgressBarProps {
   timeRemainingStr?: string;
   completedTasks: number;
   totalTasks: number;
+  loadingTasks?: boolean;
+  taskError?: boolean;
   isCompleted?: boolean;
+  isContinuing?: boolean;
   onEndShift?: () => void;
   onPress?: () => void;
 }
@@ -24,14 +27,19 @@ export function ShiftProgressBar({
   timeRemainingStr = 'In progress',
   completedTasks,
   totalTasks,
+  loadingTasks = false,
+  taskError = false,
   isCompleted = false,
+  isContinuing = false,
   onEndShift,
   onPress,
 }: ShiftProgressBarProps) {
   const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
   const formattedCompleted = completedTasks < 10 ? `0${completedTasks}` : `${completedTasks}`;
   const formattedTotal = totalTasks < 10 ? `0${totalTasks}` : `${totalTasks}`;
-  const progressText = `${formattedCompleted}/${formattedTotal} Tasks Completed`;
+  const progressText = loadingTasks ? 'Loading tasks...'
+    : taskError ? 'Unable to load task count'
+      : `${formattedCompleted}/${formattedTotal} Tasks Completed`;
   const isShiftEnded = isCompleted;
   const timeHoursLabel = shiftStartTime && shiftEndTime ? ` (${shiftStartTime} - ${shiftEndTime})` : '';
 
@@ -50,7 +58,14 @@ export function ShiftProgressBar({
             Your Shift Progress
           </Text>
           <Text className="text-xs text-muted-foreground mt-0.5">
-            {shiftName}{timeHoursLabel} | <Text className="text-xs font-medium text-muted-foreground">{timeRemainingStr}</Text>
+            {shiftName}{timeHoursLabel} |{' '}
+            <Text
+              className={`text-xs font-medium ${
+                isContinuing && !isCompleted ? 'text-clinical-warning font-semibold' : 'text-muted-foreground'
+              }`}
+            >
+              {timeRemainingStr}
+            </Text>
           </Text>
         </View>
 
@@ -64,7 +79,10 @@ export function ShiftProgressBar({
           <Button
             size="sm"
             variant="softDestructive"
-            onPress={onEndShift}
+            onPress={(event) => {
+              event.stopPropagation();
+              onEndShift();
+            }}
             leftIcon={
               <View className="w-5 h-5 rounded-full bg-clinical-critical items-center justify-center">
                 <Power size={11} color="#FFFFFF" />

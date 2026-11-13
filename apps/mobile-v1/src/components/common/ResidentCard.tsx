@@ -113,7 +113,7 @@ export function ResidentCard({
               </Text>
             </View>
             <Text className="text-xs text-muted-foreground">
-              {resident.gender || 'Person Supported'}
+              {resident.gender}
               {resident.age ? ` · ${resident.age} yrs` : ''}
             </Text>
           </View>
@@ -133,13 +133,17 @@ export function ResidentCard({
           <View className="flex-row items-center gap-1 rounded-full bg-clinical-criticalBg px-2.5 py-0.5">
             <AlertTriangle size={11} color="#FF3B2F" />
             <Text className="text-xs font-semibold text-clinical-critical">
-              Allergy: {resident.allergies[0]?.allergen || 'Active'}
+              Allergy: {resident.allergies?.[0]?.allergen}
             </Text>
           </View>
-        ) : (
+        ) : resident.noKnownAllergies === true ? (
           <View className="rounded-full bg-clinical-safeBg px-2.5 py-0.5">
             <Text className="text-xs font-semibold text-clinical-safe">NKDA</Text>
           </View>
+        ) : resident.allergySummary ? (
+          <Text className="text-sm text-foreground">Allergies: {resident.allergySummary}</Text>
+        ) : (
+          <Text className="text-sm text-muted-foreground">Allergies not recorded</Text>
         )}
 
         {isHighFall && (
@@ -160,9 +164,9 @@ export function ResidentCard({
           </View>
         )}
 
-        {!hasAllergies && !isHighFall && !isHighPressure && !isDnacpr && (
+        {!riskBadge && (
           <View className="rounded-full bg-white px-2.5 py-0.5">
-            <Text className="text-xs font-medium text-muted-foreground">Low Clinical Risk</Text>
+            <Text className="text-sm font-medium text-muted-foreground">Risk not recorded</Text>
           </View>
         )}
       </View>
@@ -178,12 +182,12 @@ export function ResidentCard({
           </View>
 
           <View className="flex-row items-center gap-3">
-            <View className="flex-row items-center gap-1">
+            {typeof resident.fluidTargetMl === 'number' && <View className="flex-row items-center gap-1">
               <Droplet size={13} color="#0284C7" />
               <Text className="text-xs font-semibold text-foreground">
-                {resident.fluidTargetMl || 2000}ml
+                {resident.fluidTargetMl}ml
               </Text>
-            </View>
+            </View>}
             {resident.mustScore !== undefined && (
               <View className="flex-row items-center gap-1">
                 <Text className="text-xs text-muted-foreground">MUST:</Text>

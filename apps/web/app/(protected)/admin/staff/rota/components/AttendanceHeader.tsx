@@ -10,15 +10,19 @@ import {
 } from "lucide-react";
 import {
   Button,
-  Input,
   SummaryCardsGrid,
   Text,
   type SummaryCardItem,
 } from "@repo/ui/components/ui";
+import { WeekNavigator } from "./WeekNavigator";
 
 interface AttendanceHeaderProps {
-  selectedDateStr: string;
-  onDateChange: (dateStr: string) => void;
+  currentWeekStart: Date;
+  onPreviousWeek: () => void;
+  onNextWeek: () => void;
+  onCurrentWeek: () => void;
+  onSelectDate: (date: Date) => void;
+  isSingleDayFiltered?: boolean;
   onExport?: () => void;
   totalScheduled: number;
   clockedInCount: number;
@@ -29,8 +33,12 @@ interface AttendanceHeaderProps {
 }
 
 export function AttendanceHeader({
-  selectedDateStr,
-  onDateChange,
+  currentWeekStart,
+  onPreviousWeek,
+  onNextWeek,
+  onCurrentWeek,
+  onSelectDate,
+  isSingleDayFiltered = false,
   onExport,
   totalScheduled,
   clockedInCount,
@@ -39,11 +47,12 @@ export function AttendanceHeader({
   punctuality,
   totalHoursLogged,
 }: AttendanceHeaderProps): React.JSX.Element {
+  const scopeLabel = isSingleDayFiltered ? "selected day" : "this week";
   const kpiCards: SummaryCardItem[] = [
     {
       title: "Clocked In",
       value: `${clockedInCount}/${totalScheduled}`,
-      subtitle: "Scheduled shifts today",
+      subtitle: `Scheduled shifts ${scopeLabel}`,
       subtitleColor: "text-slate-500",
       icon: <UserCheck className="size-5 text-primary" />,
       iconClassName: "bg-surface-primary-light",
@@ -75,7 +84,7 @@ export function AttendanceHeader({
     {
       title: "Hours Logged",
       value: `${totalHoursLogged}h`,
-      subtitle: "Clocked time today",
+      subtitle: `Clocked time ${scopeLabel}`,
       subtitleColor: "text-primary font-medium",
       icon: <Clock className="size-5 text-primary" />,
       iconClassName: "bg-slate-100",
@@ -94,12 +103,14 @@ export function AttendanceHeader({
           </Text>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Input
-            type="date"
-            value={selectedDateStr}
-            onChange={(e) => onDateChange(e.target.value)}
-            className="h-9 px-3 rounded-xl bg-white border-slate-200 text-sm font-medium w-40"
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <WeekNavigator
+            currentDate={currentWeekStart}
+            onPreviousWeek={onPreviousWeek}
+            onNextWeek={onNextWeek}
+            onCurrentWeek={onCurrentWeek}
+            onSelectDate={onSelectDate}
+            showWeekRange
           />
           <Button
             type="button"
@@ -114,7 +125,8 @@ export function AttendanceHeader({
         </div>
       </div>
 
-      <SummaryCardsGrid cards={kpiCards} className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" />
+      <SummaryCardsGrid cards={kpiCards} className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4"
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { TriangleAlert, ChevronRight, ArrowRight } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import { theme } from '../../theme';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 export interface AlertItem {
   id: string;
@@ -13,6 +14,7 @@ export interface AlertItem {
   priorityLabel?: string;
   timestamp?: string;
   actionUrl?: string | null;
+  category?: string;
   isDismissed?: boolean;
 }
 
@@ -38,7 +40,7 @@ export function AlertCard({
   const primaryAlert = visibleAlerts[0];
   const priorityLabel =
     primaryAlert.priorityLabel || (primaryAlert.priority ? `${primaryAlert.priority} Priority` : null);
-  const alertTitle = primaryAlert.title;
+  const alertTitle = supportPlanLabel(primaryAlert.title);
   const alertDescription = primaryAlert.description;
   const alertTimestamp = primaryAlert.timestamp;
   const remainingCount = visibleAlerts.length - 1;

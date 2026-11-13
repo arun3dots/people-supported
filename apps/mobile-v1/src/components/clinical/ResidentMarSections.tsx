@@ -22,13 +22,16 @@ import {
 import { makeMobileApiCall } from '../../data/api/client';
 import { enqueueMutation } from '../../data/api/offlineQueue';
 import { safeLogger } from '../../data/security/safeLogger';
+import { isNetworkError } from '../../data/api/errors';
+import { Button } from '../../presentation/components/common';
 
 interface Props {
   residentId?: string;
   allergies?: string[];
+  onboardingMedicineCount?: number;
 }
 
-export function ResidentMarSections({ residentId, allergies = [] }: Props) {
+export function ResidentMarSections({ residentId, allergies = [], onboardingMedicineCount = 0 }: Props) {
   const queryClient = useQueryClient();
 
   const [scheduleFilter, setScheduleFilter] = useState<'today' | 'all'>('today');
@@ -37,11 +40,11 @@ export function ResidentMarSections({ residentId, allergies = [] }: Props) {
   const [expandedRecent, setExpandedRecent] = useState(false);
   const [actionItem, setActionItem] = useState<MarAdminActionItem | null>(null);
 
-  const { isLoading, scheduledList, prnList, recentList } = useResidentMarData(residentId);
+  const { isLoading, error, refetch, scheduledList, prnList, recentList } = useResidentMarData(residentId);
 
   // Dynamic KPI counts matching Web
   const dueCount = scheduledList.filter((s) => s.status === 'Due').length;
-  const administeredCount = recentList.length;
+  const administeredCount = recentList.filter((item) => item.status === 'Given').length;
   const missedCount = scheduledList.filter((s) => s.status === 'Missed').length;
   const prnCount = prnList.length;
   const onHoldCount = scheduledList.filter((s) => s.status === 'On Hold').length;
@@ -75,6 +78,7 @@ export function ResidentMarSections({ residentId, allergies = [] }: Props) {
       try {
         await makeMobileApiCall(ADMINISTER_MEDICATION, payload);
       } catch (err) {
+        if (!isNetworkError(err)) throw err;
         safeLogger.warn('Failed to administer medication online; queuing for sync', err);
         await enqueueMutation(ADMINISTER_MEDICATION, payload);
         queuedOffline = true;
@@ -96,8 +100,9 @@ export function ResidentMarSections({ residentId, allergies = [] }: Props) {
       safeLogger.error('Failed to record medication administration', err);
       Alert.alert(
         'Medication Not Recorded',
-        `Could not record ${actionItem.drugName}. Please retry when the connection is available.`
+        err instanceof Error ? err.message : `Could not record ${actionItem.drugName}.`
       );
+      return;
     }
 
     setActionItem(null);
@@ -107,8 +112,19 @@ export function ResidentMarSections({ residentId, allergies = [] }: Props) {
   const displayedPrn = expandedPrn ? prnList : prnList.slice(0, 2);
   const displayedRecent = expandedRecent ? recentList : recentList.slice(0, 2);
 
+  if (isLoading) return <ActivityIndicator size="large" accessibilityLabel="Loading medication records" />;
+  if (error) return <Card className="p-4 gap-3">
+    <Text className="text-base font-bold text-foreground">Unable to load medication records</Text>
+    <Text className="text-base text-muted-foreground">{error.message}</Text>
+    <Button onPress={() => { void refetch(); }}>Retry</Button>
+  </Card>;
+
   return (
     <View className="pb-8">
+      {onboardingMedicineCount > 0 && scheduledList.length === 0 && prnList.length === 0 && <Card className="p-4 mb-4">
+        <Text className="text-base font-bold text-foreground">No MAR schedule recorded</Text>
+        <Text className="text-base text-muted-foreground mt-2">Onboarding contains medicines, but no medication rounds or prescriptions were returned. Ask a manager to review the medication schedule.</Text>
+      </Card>}
       {/* 1. Allergies Safety Alert Banner (Matching Web) */}
       {allergies.length > 0 && (
         <View className="bg-clinical-criticalBg rounded-2xl p-3.5 mb-3.5 flex-row items-center gap-2.5">

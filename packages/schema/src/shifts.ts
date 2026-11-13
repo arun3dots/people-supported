@@ -181,8 +181,13 @@ export const ShiftDetailsTaskSchema = z.object({
 export type ShiftDetailsTaskDTO = z.infer<typeof ShiftDetailsTaskSchema>;
 
 export const PreviousShiftHandoverSchema = z.object({
+  id: z.string().optional(),
+  staffId: z.string().optional(),
   shiftName: z.string().optional().nullable(),
   staffName: z.string().optional().nullable(),
+  staffRole: z.string().optional().nullable(),
+  staffAvatarUrl: z.string().optional().nullable(),
+  startTime: z.union([z.string(), z.date()]).optional().nullable(),
   endTime: z.union([z.string(), z.date()]).optional().nullable(),
   handoverNotes: z.string(),
 });
@@ -222,6 +227,8 @@ export const ShiftDetailsResponseSchema = z.object({
   timeRemainingStr: z.string().optional().nullable(),
   status: z.string().optional(),
   isStarted: z.boolean().optional(),
+  isContinuing: z.boolean().optional(),
+  hasContinuousNextShift: z.boolean().optional(),
   actualStartTime: z.union([z.string(), z.date()]).optional().nullable(),
   actualEndTime: z.union([z.string(), z.date()]).optional().nullable(),
   tasksCompleted: z.number(),
@@ -231,6 +238,7 @@ export const ShiftDetailsResponseSchema = z.object({
   shiftNotes: z.string().optional().nullable(),
   handoverNotes: z.string().optional().nullable(),
   previousShiftHandover: PreviousShiftHandoverSchema.optional().nullable(),
+  previousShiftHandovers: z.array(PreviousShiftHandoverSchema).optional(),
   nextShift: NextShiftDetailsSchema.optional().nullable(),
   assignedResidents: z.array(ShiftDetailsResidentSchema).optional(),
   tasks: z.array(ShiftDetailsTaskSchema).optional(),
@@ -252,6 +260,8 @@ export const ActiveShiftItemSchema = z.object({
   timeRemainingStr: z.string().optional().nullable(),
   isStarted: z.boolean().optional(),
   isCompleted: z.boolean().optional(),
+  isContinuing: z.boolean().optional(),
+  hasContinuousNextShift: z.boolean().optional(),
   status: z.string().optional(),
   shiftStatus: z.string().optional(),
   tasksCompleted: z.number().optional(),
@@ -285,6 +295,85 @@ export const UpdateHandoverNotesSchema = z.object({
   handoverNotes: z.string().min(1, "Handover notes are required"),
 });
 export type UpdateHandoverNotesDTO = z.infer<typeof UpdateHandoverNotesSchema>;
+
+export const StaffAllocationWingSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  branchId: z.string(),
+  branchName: z.string().nullable(),
+});
+export type StaffAllocationWingDTO = z.infer<typeof StaffAllocationWingSchema>;
+
+export const StaffAllocationCareMixSchema = z.object({
+  sharedHours: z.number(),
+  oneToOneHours: z.number(),
+  twoToOneHours: z.number(),
+  sleepInHours: z.number(),
+  wakingNightHours: z.number(),
+});
+export type StaffAllocationCareMixDTO = z.infer<
+  typeof StaffAllocationCareMixSchema
+>;
+
+export const StaffAllocationItemSchema = z.object({
+  id: z.string(),
+  fullName: z.string(),
+  email: z.string(),
+  roleName: z.string(),
+  contractType: z.string().nullable(),
+  contractedHoursPerWeek: z.number(),
+  isActive: z.boolean(),
+  isOnLeave: z.boolean(),
+  assignedWings: z.array(StaffAllocationWingSchema),
+  allocatedPropertyNames: z.array(z.string()),
+  assignedResidentsCount: z.number(),
+  scheduledShiftsCount: z.number(),
+  scheduledHours: z.number(),
+  utilizationPercent: z.number(),
+  careMix: StaffAllocationCareMixSchema,
+  assignmentType: z.string(),
+  availability: z.enum(["Inactive", "On Leave", "Fully Booked", "Available"]),
+});
+export type StaffAllocationItemDTO = z.infer<typeof StaffAllocationItemSchema>;
+
+export const PropertyAllocationSummarySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  branchId: z.string(),
+  branchName: z.string().nullable(),
+  assignedStaffCount: z.number(),
+  scheduledShiftsCount: z.number(),
+  activeResidentsCount: z.number(),
+  isCovered: z.boolean(),
+});
+export type PropertyAllocationSummaryDTO = z.infer<
+  typeof PropertyAllocationSummarySchema
+>;
+
+export const StaffAllocationSummarySchema = z.object({
+  totalStaff: z.number(),
+  assignedStaffCount: z.number(),
+  onLeaveCount: z.number(),
+  availableStaffCount: z.number(),
+  activeSchemes: z.number(),
+  totalProperties: z.number(),
+  coveredProperties: z.number(),
+  unfilledShiftsCount: z.number(),
+  totalScheduledHours: z.number(),
+});
+export type StaffAllocationSummaryDTO = z.infer<
+  typeof StaffAllocationSummarySchema
+>;
+
+export const StaffAllocationResponseSchema = z.object({
+  summary: StaffAllocationSummarySchema,
+  staff: z.array(StaffAllocationItemSchema),
+  properties: z.array(PropertyAllocationSummarySchema),
+});
+export type StaffAllocationResponseDTO = z.infer<
+  typeof StaffAllocationResponseSchema
+>;
+
 
 
 

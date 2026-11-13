@@ -13,6 +13,7 @@ import type {
   UpdateFoodFluidLogDTO,
 } from '@repo/schema';
 import { makeMobileApiCall } from '../../data/api/client';
+import { isNetworkError } from '../../data/api/errors';
 import { enqueueMutation } from '../../data/api/offlineQueue';
 import { safeLogger } from '../../data/security/safeLogger';
 import {
@@ -26,7 +27,7 @@ import { getUkDateString, formatUkTime } from '../../lib/date';
 export function useFluidTracker(
   residentId: string,
   selectedDateStr?: string,
-  dailyTargetMl = 2000
+  dailyTargetMl?: number
 ) {
   const queryClient = useQueryClient();
   const activeDateStr = useMemo(
@@ -99,6 +100,7 @@ export function useFluidTracker(
           { id: residentId }
         );
       } catch (err) {
+        if (!isNetworkError(err)) throw err;
         safeLogger.warn('Network call failed for fluid log, enqueuing offline', err);
         await enqueueMutation(CREATE_FOOD_FLUID_LOG, payload, { id: residentId });
         return { queuedOffline: true };
@@ -145,7 +147,8 @@ export function useFluidTracker(
   }, [logs, residentId]);
 
   const summary: FluidBalanceSummary = useMemo(() => {
-    const target = summaryData?.dailyTargetMl || dailyTargetMl;
+    // The summary API supplies a fixed adult baseline, not a resident's recorded target.
+    const target = dailyTargetMl && dailyTargetMl > 0 ? dailyTargetMl : null;
     const fluidLogs = logs.filter((l) => l.type === 'Fluid');
     const computedTotal = fluidLogs.reduce((acc, curr) => {
       const pct =
@@ -157,6 +160,10 @@ export function useFluidTracker(
 
     const currentTotal =
       logs.length > 0 ? computedTotal : (summaryData?.totalFluidIntakeMl ?? 0);
+    if (target === null) return {
+      totalIntakeMl: currentTotal, dailyTargetMl: null, percentageCompleted: null,
+      remainingMl: null, isDehydratedRisk: false, statusLabel: 'Clinical target not recorded',
+    };
     const progressPct = Math.min(Math.round((currentTotal / target) * 100), 100);
     const remainingMl = Math.max(target - currentTotal, 0);
     const isDehydratedRisk = progressPct < 50;

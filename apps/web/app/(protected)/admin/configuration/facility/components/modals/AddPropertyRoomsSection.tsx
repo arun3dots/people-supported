@@ -7,11 +7,6 @@ import {
   Card,
   Input,
   Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Text,
 } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
@@ -169,11 +164,10 @@ export function AddPropertyRoomsSection({
       <div className="flex items-center justify-between">
         <div>
           <Text size="md" weight="semibold" className="text-slate-900">
-            Rooms, Flats &amp; Bed Allocation ({rooms.length})
+            Rooms &amp; Flats Allocation ({rooms.length})
           </Text>
           <Text size="md" variant="muted">
-            Each unit creates a Room and its corresponding Beds for tenancy
-            assignment.
+            Each unit creates a Room / Flat for tenancy assignment.
           </Text>
         </div>
         <Button
@@ -195,7 +189,7 @@ export function AddPropertyRoomsSection({
             border="secondary"
             className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl [&_[data-slot=input-error]]:hidden"
           >
-            <div className="col-span-4">
+            <div className="col-span-5">
               <label className="text-md font-medium text-slate-600 block mb-0.5">
                 Unit / Room Name
               </label>
@@ -212,23 +206,16 @@ export function AddPropertyRoomsSection({
               />
             </div>
 
-            <div className="col-span-3">
+            <div className="col-span-4">
               <label className="text-md font-medium text-slate-600 block mb-0.5">
                 Floor
               </label>
-              <Select
-                value={room.floor || "Ground floor"}
-                onValueChange={(val) => updateRoom(idx, { floor: val })}
-              >
-                <SelectTrigger className="h-9 bg-white text-md">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value="Ground floor">Ground floor</SelectItem>
-                  <SelectItem value="First floor">First floor</SelectItem>
-                  <SelectItem value="Second floor">Second floor</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                value={room.floor || ""}
+                onChange={(e) => updateRoom(idx, { floor: e.target.value })}
+                placeholder="e.g. Ground floor"
+                className="h-9 bg-white text-md"
+              />
             </div>
 
             <div className="col-span-2">
@@ -246,24 +233,6 @@ export function AddPropertyRoomsSection({
                   })
                 }
                 placeholder="158.00"
-                className="h-9 bg-white text-md"
-              />
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-md font-medium text-slate-600 block mb-0.5">
-                Beds
-              </label>
-              <Input
-                type="number"
-                min={1}
-                max={6}
-                value={room.bedsCount ?? 1}
-                onChange={(e) =>
-                  updateRoom(idx, {
-                    bedsCount: Math.max(1, Number(e.target.value) || 1),
-                  })
-                }
                 className="h-9 bg-white text-md"
               />
             </div>

@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { FileText, Calendar } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import type { ResidentDocumentItem } from './residentDocuments.types';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 interface Props {
   item: ResidentDocumentItem;
@@ -24,7 +25,7 @@ export function ResidentDocumentCard({ item, onViewPress }: Props) {
             {item.isRequired && <Text className="text-md font-bold text-clinical-critical ml-0.5">*</Text>}
           </View>
           <Text className="text-xs text-muted-foreground mt-0.5 leading-4" numberOfLines={2}>
-            {item.subtitle}
+            {supportPlanLabel(item.subtitle)}
           </Text>
         </View>
       </View>
