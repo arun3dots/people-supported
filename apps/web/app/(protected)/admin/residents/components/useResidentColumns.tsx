@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import { format } from "date-fns";
-import { Building2, Calendar } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { Badge, Text } from "@repo/ui/components/ui";
 import type { Resident } from "../../../../../lib/types/resident";
 import type {
@@ -163,110 +163,6 @@ export function useResidentColumns({
             >
               {need}
             </Badge>
-          );
-        },
-      },
-      {
-        kind: "person",
-        id: "keyworker",
-        header: "Key Worker",
-        avatar: false,
-        getTitle: (r) => r.keyworker?.fullName || "Unassigned",
-      },
-      {
-        id: "supportHours",
-        header: "Support Hours",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const totalHrs = r.supportedLivingDetails?.supportHoursPerWeek ?? 28;
-          const oneToOne = r.supportedLivingDetails?.oneToOneHoursPerWeek ?? 6;
-          return (
-            <div className="flex flex-col">
-              <Text size="md" weight="medium" className="text-slate-900">
-                {totalHrs} hrs/wk
-              </Text>
-              <Text size="md" variant="muted">
-                {oneToOne}h 1:1
-              </Text>
-            </div>
-          );
-        },
-      },
-      {
-        id: "riskLevel",
-        header: "Risk",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const risk =
-            r.supportedLivingDetails?.riskLevel ||
-            (r.careProfile?.careComplexity === "High"
-              ? "High"
-              : r.careProfile?.careComplexity === "Low"
-                ? "Low"
-                : "Medium");
-          const riskState =
-            risk === "High"
-              ? "danger"
-              : risk === "Low"
-                ? "success"
-                : "warning";
-          return (
-            <Badge
-              variant="secondary"
-              state={riskState}
-              className="border text-md"
-            >
-              {risk}
-            </Badge>
-          );
-        },
-      },
-      {
-        id: "supportPlan",
-        header: "Support Plan",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const latestPlan = r.carePlans?.[0];
-          const planHeader = r.supportedLivingDetails?.supportPlanHeader;
-          const rawReviewDate =
-            planHeader?.nextReviewDate ||
-            latestPlan?.reviewDate ||
-            (latestPlan as { nextReviewDate?: string })?.nextReviewDate;
-          const parsedDate = rawReviewDate ? new Date(rawReviewDate) : null;
-          const dateLabel =
-            parsedDate && !isNaN(parsedDate.getTime())
-              ? format(parsedDate, "dd/MM/yyyy")
-              : "18/02/2027";
-          const planStatus = planHeader?.status || "In date";
-          const planState =
-            planStatus === "Overdue"
-              ? "danger"
-              : planStatus === "Due soon"
-                ? "warning"
-                : "success";
-
-          return (
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                state={planState}
-                className="border text-md"
-              >
-                {planStatus}
-              </Badge>
-              <Text
-                as="span"
-                size="md"
-                variant="muted"
-                className="inline-flex items-center gap-1"
-              >
-                <Calendar className="size-3 text-slate-400" />
-                {dateLabel}
-              </Text>
-            </div>
           );
         },
       },

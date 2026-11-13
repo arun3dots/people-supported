@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { format } from "date-fns";
+import { addDays, addWeeks, format, startOfWeek, subWeeks } from "date-fns";
 import { Search } from "lucide-react";
 import {
   Input,
@@ -30,6 +30,11 @@ interface AttendanceViewProps {
   staff: StaffMember[];
   schemes: SchemeItem[];
   properties: PropertyItem[];
+  currentWeekStart?: Date;
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
+  onCurrentWeek?: () => void;
+  onSelectDate?: (date: Date) => void;
   onExport?: () => void;
 }
 
@@ -38,28 +43,77 @@ export function AttendanceView({
   staff,
   schemes,
   properties,
+  currentWeekStart: controlledWeekStart,
+  onPreviousWeek,
+  onNextWeek,
+  onCurrentWeek,
+  onSelectDate,
   onExport,
 }: AttendanceViewProps): React.JSX.Element {
-  const [selectedDateStr, setSelectedDateStr] = useState<string>(() =>
-    format(new Date(), "yyyy-MM-dd"),
+  const [internalWeekStart, setInternalWeekStart] = useState<Date>(() =>
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
+  const weekStart = controlledWeekStart ?? internalWeekStart;
+
+  const handlePreviousWeek = () => {
+    setDayFilter("all");
+    if (onPreviousWeek) onPreviousWeek();
+    else setInternalWeekStart((prev) => subWeeks(prev, 1));
+  };
+  const handleNextWeek = () => {
+    setDayFilter("all");
+    if (onNextWeek) onNextWeek();
+    else setInternalWeekStart((prev) => addWeeks(prev, 1));
+  };
+  const handleCurrentWeek = () => {
+    setDayFilter("all");
+    if (onCurrentWeek) onCurrentWeek();
+    else setInternalWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  };
+  const handleSelectDate = (d: Date) => {
+    setDayFilter("all");
+    if (onSelectDate) onSelectDate(d);
+    else setInternalWeekStart(startOfWeek(d, { weekStartsOn: 1 }));
+  };
+
+  const [dayFilter, setDayFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [propertyFilter, setPropertyFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [adjustingRecord, setAdjustingRecord] = useState<AttendanceRecord | null>(null);
   const [localOverrides, setLocalOverrides] = useState<Record<string, Partial<AttendanceRecord>>>({});
 
+  const weekDays = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+    [weekStart],
+  );
+
   const initialRecords = useMemo(() => {
     const records: AttendanceRecord[] = [];
-    const dayShifts = shifts.filter((s) => getShiftDateStr(s) === selectedDateStr);
+    const weekDateStrings = new Set(weekDays.map((d) => format(d, "yyyy-MM-dd")));
+    const targetShifts = shifts.filter((s) => {
+      if (s.status === "Cancelled" || s.careType?.includes("Off")) return false;
+      const dStr = getShiftDateStr(s);
+      if (!dStr || !weekDateStrings.has(dStr)) return false;
+      if (dayFilter !== "all" && dStr !== dayFilter) return false;
+      return true;
+    });
 
-    dayShifts.forEach((shift) => {
+    const now = new Date();
+
+    targetShifts.forEach((shift) => {
+      const shiftDateStr = getShiftDateStr(shift);
+      const dateLabel = shiftDateStr
+        ? format(new Date(`${shiftDateStr}T00:00:00`), "dd MMM yyyy")
+        : "-";
       const staffIds = getShiftStaffIds(shift);
       const appearance = getCareBlockAppearance(shift.careType, 0);
-      const targetStaffList =
-        staffIds.length > 0
-          ? (staffIds.map((id) => staff.find((m) => m.id === id)).filter(Boolean) as StaffMember[])
-          : staff.slice(0, 1);
+      const targetStaffList = staffIds
+        .map((id) => staff.find((m) => m.id === id))
+        .filter(Boolean) as StaffMember[];
+
+      const shiftStart = shift.startTime ? new Date(shift.startTime) : null;
+      const shiftEnd = shift.endTime ? new Date(shift.endTime) : null;
 
       targetStaffList.forEach((member) => {
         const loc = resolveStaffLocation(member, schemes, properties);
@@ -71,25 +125,58 @@ export function AttendanceView({
         let hoursLogged: string | null = null;
         let status: AttendanceRecord["status"] = "Not started";
 
-        if (shiftLog) {
-          if (shiftLog.actualStartTime) {
-            clockInTime = format(new Date(shiftLog.actualStartTime), "HH:mm");
+        if (member.isOnLeave) {
+          status = "On leave";
+        } else if (shiftLog) {
+          const actualStart = shiftLog.actualStartTime
+            ? new Date(shiftLog.actualStartTime)
+            : null;
+          const actualEnd = shiftLog.actualEndTime
+            ? new Date(shiftLog.actualEndTime)
+            : null;
+
+          if (actualStart) {
+            clockInTime = format(actualStart, "HH:mm");
+            if (shiftStart) {
+              const lateMins = Math.round(
+                (actualStart.getTime() - shiftStart.getTime()) / 60_000,
+              );
+              if (lateMins > 5) {
+                clockInLateMinutes = lateMins;
+              }
+            }
           }
-          if (shiftLog.actualEndTime) {
-            clockOutTime = format(new Date(shiftLog.actualEndTime), "HH:mm");
-            status = "On time";
+
+          if (actualEnd) {
+            clockOutTime = format(actualEnd, "HH:mm");
+            if (actualStart) {
+              const loggedHrs = Math.max(
+                0,
+                (actualEnd.getTime() - actualStart.getTime()) / 3_600_000,
+              );
+              hoursLogged = loggedHrs.toFixed(1);
+            }
+            if (
+              shiftEnd &&
+              (shiftEnd.getTime() - actualEnd.getTime()) / 60_000 > 5
+            ) {
+              status = "Left early";
+            } else if (clockInLateMinutes && clockInLateMinutes > 5) {
+              status = "Late";
+            } else {
+              status = "On time";
+            }
           } else if (clockInTime) {
-            status = "On shift";
+            status =
+              clockInLateMinutes && clockInLateMinutes > 5
+                ? "Late"
+                : "On shift";
           }
-        } else {
-          const startHours = shift.shiftWindow?.split("-")[0]?.trim();
-          if (startHours) {
-            clockInTime = startHours;
-            status = "On time";
-          }
+        } else if (shiftStart && now > shiftStart) {
+          status = "Absent";
         }
 
-        if (shift.durationHours && shift.durationHours > 0) {
+        if (!hoursLogged && shiftLog?.actualStartTime && shift.durationHours) {
           hoursLogged = `${shift.durationHours}`;
         }
 
@@ -107,13 +194,16 @@ export function AttendanceView({
           staffId: member.id,
           staffName: member.fullName,
           staffRole: member.role?.name || "Support Worker",
-          property: loc.propertyName || "Oak House",
+          staffPhone: member.phoneNumber || null,
+          property: loc.propertyName || "Unassigned",
+          dateLabel,
+          shiftDateStr: shiftDateStr || undefined,
           scheduledTime: shift.shiftWindow || "08:00 - 16:00",
           careType: appearance.shortLabel || "Shared",
           careTypeColor: dotClass,
           clockInTime,
           clockInLateMinutes,
-          clockInMethod: "app",
+          clockInMethod: shiftLog ? "app" : undefined,
           clockOutTime,
           hoursLogged,
           status,
@@ -123,7 +213,7 @@ export function AttendanceView({
     });
 
     return records;
-  }, [shifts, staff, schemes, properties, selectedDateStr]);
+  }, [shifts, staff, schemes, properties, weekDays, dayFilter]);
 
   const records = useMemo(() => {
     return initialRecords.map((r) => {
@@ -161,12 +251,69 @@ export function AttendanceView({
     .reduce((acc, r) => acc + (Number.parseFloat(r.hoursLogged || "0") || 0), 0)
     .toFixed(1);
 
+  const handleExportTimesheet = () => {
+    if (onExport) {
+      onExport();
+      return;
+    }
+    const escapeCsv = (val: string | number | null | undefined): string => {
+      const str = String(val ?? "");
+      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+    const headers = [
+      "Date",
+      "Staff Member",
+      "Role",
+      "Property",
+      "Care Type",
+      "Scheduled",
+      "Clock In",
+      "Clock Out",
+      "Hours Logged",
+      "Status",
+    ];
+    const csvRows = [
+      headers.join(","),
+      ...filteredRecords.map((r) =>
+        [
+          r.dateLabel,
+          r.staffName,
+          r.staffRole,
+          r.property,
+          r.careType,
+          r.scheduledTime,
+          r.clockInTime || "",
+          r.clockOutTime || "",
+          r.hoursLogged ? `${r.hoursLogged}h` : "",
+          r.status,
+        ]
+          .map(escapeCsv)
+          .join(","),
+      ),
+    ];
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `attendance-timesheet-${format(weekStart, "yyyy-MM-dd")}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6 pb-12 font-sans animate-in fade-in duration-300">
       <AttendanceHeader
-        selectedDateStr={selectedDateStr}
-        onDateChange={setSelectedDateStr}
-        onExport={onExport}
+        currentWeekStart={weekStart}
+        onPreviousWeek={handlePreviousWeek}
+        onNextWeek={handleNextWeek}
+        onCurrentWeek={handleCurrentWeek}
+        onSelectDate={handleSelectDate}
+        isSingleDayFiltered={dayFilter !== "all"}
+        onExport={handleExportTimesheet}
         totalScheduled={totalScheduled}
         clockedInCount={clockedInCount}
         lateCount={lateCount}
@@ -188,7 +335,24 @@ export function AttendanceView({
               />
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Select value={dayFilter} onValueChange={setDayFilter}>
+                <SelectTrigger className="w-36 h-10 bg-white rounded-xl text-sm font-medium">
+                  <SelectValue placeholder="All Days" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Week</SelectItem>
+                  {weekDays.map((d) => {
+                    const value = format(d, "yyyy-MM-dd");
+                    return (
+                      <SelectItem key={value} value={value}>
+                        {format(d, "EEE dd MMM")}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+
               <Select value={propertyFilter} onValueChange={setPropertyFilter}>
                 <SelectTrigger className="w-40 h-10 bg-white rounded-xl text-sm font-medium">
                   <SelectValue placeholder="All Properties" />
@@ -230,7 +394,7 @@ export function AttendanceView({
           <AttendanceSidebar
             records={records}
             shifts={shifts}
-            referenceDateStr={selectedDateStr}
+            weekStart={weekStart}
             onRecordReason={(record) => setAdjustingRecord(record)}
           />
         </div>

@@ -55,7 +55,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
     //     },
     //   ],
     // },
-   
+
     {
       category: "PROPERTIES & SCHEMES",
       icon: Building2,
@@ -72,7 +72,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
         },
       ],
     },
-     {
+    {
       category: "PEOPLE SUPPORTED",
       icon: Heart,
       items: [
@@ -107,7 +107,7 @@ export const ROLE_NAVIGATION: Record<string, NavGroup[]> = {
           hasSubmenu: true,
           subItems: [
             { title: "Shift Planner", url: "/admin/staff/rota" },
-            { title: "Hours Summary", url: "/admin/staff/rota?tab=hours" },
+            // { title: "Hours Summary", url: "/admin/staff/rota?tab=hours" },
             // { title: "Staff Allocation", url: "/admin/staff/rota?tab=allocation" },
             { title: "Leave Management", url: "/admin/staff/requests" },
             { title: "Attendance", url: "/admin/staff/rota?tab=attendance" },

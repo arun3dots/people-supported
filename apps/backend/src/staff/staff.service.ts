@@ -78,11 +78,18 @@ export class StaffService {
     isOnLeave?: boolean,
   ): StaffDetail {
     const profile = user.profile as UserProfile | null | undefined;
+    const dbsCheck = user.dbsCheck as
+      | { expiryDate?: Date | null; certificateNumber?: string | null; status?: string | null }
+      | null
+      | undefined;
     const quals = (profile?.qualifications as Record<string, any>) || {};
-    const { profile: _p, niNumber, ...rest } = user;
+    const { profile: _p, dbsCheck: _dbs, niNumber, ...rest } = user;
 
     return {
       ...rest,
+      dbsNumber: dbsCheck?.certificateNumber ?? user.dbsNumber ?? null,
+      dbsExpiryDate: dbsCheck?.expiryDate ?? user.dbsExpiryDate ?? null,
+      dbsStatus: dbsCheck?.status ?? null,
       niNumber: this.safeDecrypt(niNumber ?? null),
       avatarUrl: profile?.profilePhotoUrl ?? null,
       phoneNumber: profile?.phoneNumber ?? null,
@@ -342,6 +349,7 @@ export class StaffService {
             assignedBeds: true,
             assignedResidents: true,
             profile: true,
+            dbsCheck: true,
           },
         }),
       () => prisma.user.count({ where }),

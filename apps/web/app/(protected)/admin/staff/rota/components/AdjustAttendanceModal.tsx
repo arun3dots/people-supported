@@ -9,14 +9,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Input,
+  Label,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Text,
+  Textarea,
 } from "@repo/ui/components/ui";
+import { TimeField } from "../../../../resident/admit/pre-admission/shared/fields";
 import type { AttendanceRecord } from "./AttendanceTable";
 
 interface AdjustAttendanceModalProps {
@@ -78,29 +79,23 @@ export function AdjustAttendanceModal({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-700">Clock In Time</label>
-              <Input
-                value={clockIn}
-                onChange={(e) => setClockIn(e.target.value)}
-                placeholder="e.g. 07:05"
-                className="h-10 rounded-xl"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-700">Clock Out Time</label>
-              <Input
-                value={clockOut}
-                onChange={(e) => setClockOut(e.target.value)}
-                placeholder="e.g. 15:00"
-                className="h-10 rounded-xl"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <TimeField
+              label="Clock In Time (24h)"
+              value={clockIn}
+              onChange={setClockIn}
+              placeholder="HH:mm"
+            />
+            <TimeField
+              label="Clock Out Time (24h)"
+              value={clockOut}
+              onChange={setClockOut}
+              placeholder="HH:mm"
+            />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700">Attendance Status</label>
+            <Label className="text-xs font-semibold text-slate-700">Attendance Status</Label>
             <Select value={status} onValueChange={(val) => setStatus(val as AttendanceRecord["status"])}>
               <SelectTrigger className="h-10 rounded-xl bg-white">
                 <SelectValue placeholder="Select status" />
@@ -118,13 +113,12 @@ export function AdjustAttendanceModal({
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700">Follow-up Notes / Reason</label>
-            <textarea
+            <Label className="text-xs font-semibold text-slate-700">Follow-up Notes / Reason</Label>
+            <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Traffic on motorway - manager approved late start"
               rows={3}
-              className="w-full text-sm p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
         </div>

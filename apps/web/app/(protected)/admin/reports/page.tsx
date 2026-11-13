@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   X,
@@ -46,10 +46,30 @@ import {
 } from "../../../../lib/queries/reports";
 import { toast } from "@repo/ui/components/ui";
 
+const REPORTS_HISTORY_KEY = "lcm_generated_reports_history";
+
 export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
-  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>([]);
+  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const saved = window.localStorage.getItem(REPORTS_HISTORY_KEY);
+      return saved ? (JSON.parse(saved) as GeneratedReportLog[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const serializable = reportLogs.slice(0, 50).map(({ content: _c, ...rest }) => rest);
+      window.localStorage.setItem(REPORTS_HISTORY_KEY, JSON.stringify(serializable));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [reportLogs]);
 
   const filteredReports = REPORT_DEFINITIONS.filter((rep) => {
     const matchesSearch =

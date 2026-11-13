@@ -9,6 +9,7 @@ import {
   useGetShiftsQuery,
   useUpdateShiftMutation,
   useCreateShiftMutation,
+  useGetStaffAllocationQuery,
 } from "../../../../../../lib/queries/shifts";
 import { useGetStaffQuery } from "../../../../../../lib/queries/staff";
 import {
@@ -63,19 +64,20 @@ export function RotaContainer(): React.JSX.Element {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [activeView, setActiveView] = useState<
-    "rota" | "hours" | "attendance"
+    "rota" | "hours" | "allocation" | "attendance"
   >("rota");
 
   const [filters, setFilters] = useState<RotaFilterState>(INITIAL_FILTERS);
 
   useEffect(() => {
     if (tabParam === "hours") setActiveView("hours");
+    else if (tabParam === "allocation") setActiveView("allocation");
     else if (tabParam === "attendance") setActiveView("attendance");
     else setActiveView("rota");
   }, [tabParam]);
 
   const handleViewChange = (
-    nextView: "rota" | "hours" | "attendance",
+    nextView: "rota" | "hours" | "allocation" | "attendance",
   ): void => {
     setActiveView(nextView);
     const params = new URLSearchParams(searchParams?.toString() ?? "");
@@ -88,7 +90,7 @@ export function RotaContainer(): React.JSX.Element {
   const [detailsShift, setDetailsShift] = useState<Shift | null>(null);
   const [detailsContext, setDetailsContext] = useState<{ staffName: string; staffRole?: string; dayLabel: string }>({ staffName: "", dayLabel: "" });
   const [editingShift, setEditingShift] = useState<Shift | null>(null);
-  const [slotToAdd, setSlotToAdd] = useState<{ staff: StaffMember; day: DayColumnInfo } | null>(null);
+  const [slotToAdd, setSlotToAdd] = useState<{ staff?: StaffMember; day?: DayColumnInfo } | null>(null);
   const [reassignStaff, setReassignStaff] = useState<StaffMember | null>(null);
   const [lockedWeeks, setLockedWeeks] = useState<Record<string, boolean>>({});
   const weekKey = format(currentWeekStart, "yyyy-MM-dd");
@@ -99,6 +101,14 @@ export function RotaContainer(): React.JSX.Element {
   const { data: schemes = [] } = useGetSchemesQuery();
   const { data: properties = [] } = useGetPropertiesQuery();
   const { data: residentsData } = useGetResidentsQuery();
+  const { data: allocationData } = useGetStaffAllocationQuery(
+    {
+      from: format(currentWeekStart, "yyyy-MM-dd"),
+      to: format(addDays(currentWeekStart, 6), "yyyy-MM-dd"),
+      wingId: filters.propertyId !== "all" ? filters.propertyId : undefined,
+    },
+    { enabled: activeView === "allocation" },
+  );
 
   const updateShiftMutation = useUpdateShiftMutation();
   const createShiftMutation = useCreateShiftMutation();
@@ -122,7 +132,13 @@ export function RotaContainer(): React.JSX.Element {
 
   const shifts: Shift[] = useMemo(() => (Array.isArray(shiftsData) ? shiftsData : []), [shiftsData]);
   const staffList: StaffMember[] = useMemo(() => (Array.isArray(staffData) ? staffData : []), [staffData]);
-  const residents = useMemo(() => (Array.isArray(residentsData) ? residentsData : []), [residentsData]);
+  const residents = useMemo(
+    () =>
+      Array.isArray(residentsData)
+        ? residentsData.filter((r) => r.status === "Active")
+        : [],
+    [residentsData],
+  );
 
   const days: DayColumnInfo[] = useMemo(() => {
     return Array.from({ length: 7 }, (_, i) => {
@@ -253,6 +269,11 @@ export function RotaContainer(): React.JSX.Element {
         staff={staffList}
         schemes={schemes}
         properties={properties}
+        currentWeekStart={currentWeekStart}
+        onPreviousWeek={() => setCurrentWeekStart((prev) => subWeeks(prev, 1))}
+        onNextWeek={() => setCurrentWeekStart((prev) => addWeeks(prev, 1))}
+        onCurrentWeek={() => setCurrentWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
+        onSelectDate={(d) => setCurrentWeekStart(startOfWeek(d, { weekStartsOn: 1 }))}
       />
     );
   }
@@ -275,9 +296,8 @@ export function RotaContainer(): React.JSX.Element {
             toast({ title: "Rota is locked", description: "Unlock the rota to add or edit shifts.", variant: "destructive" });
             return;
           }
-          const todayDateStr = format(new Date(), "yyyy-MM-dd");
-          const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
-          if (staffList[0] && targetDay) setSlotToAdd({ staff: staffList[0], day: targetDay });
+          setEditingShift(null);
+          setSlotToAdd({});
         }}
         onExport={handleExportRotaCsv}
       />
@@ -291,6 +311,13 @@ export function RotaContainer(): React.JSX.Element {
         schemes={schemes}
         properties={properties}
         staff={staffList}
+        weekNavigation={{
+          currentDate: currentWeekStart,
+          onPreviousWeek: () => setCurrentWeekStart((prev) => subWeeks(prev, 1)),
+          onNextWeek: () => setCurrentWeekStart((prev) => addWeeks(prev, 1)),
+          onCurrentWeek: () => setCurrentWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 })),
+          onSelectDate: (d) => setCurrentWeekStart(startOfWeek(d, { weekStartsOn: 1 })),
+        }}
       />
 
       {activeView === "rota" && (
@@ -321,7 +348,20 @@ export function RotaContainer(): React.JSX.Element {
               setEditingShift(null);
               setSlotToAdd({ staff, day });
             }}
-            onReassignStaff={(staff) => setReassignStaff(staff)}
+            onReassignStaff={(staff) => {
+            if (isRotaLocked) {
+              toast({
+                title: "Rota is locked",
+                description: "Unlock the rota to assign shifts.",
+                variant: "destructive",
+              });
+              return;
+            }
+            const todayDateStr = format(new Date(), "yyyy-MM-dd");
+            const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
+            handleViewChange("rota");
+            if (targetDay) setSlotToAdd({ staff, day: targetDay });
+          }}
           />
 
           <RotaSummaryWidgets
@@ -338,7 +378,7 @@ export function RotaContainer(): React.JSX.Element {
               });
             }}
             onViewHours={() => handleViewChange("hours")}
-            onViewAllocation={() => router.push("/admin/staff")}
+            onViewAllocation={() => handleViewChange("allocation")}
             onExportPdf={() => typeof window !== "undefined" && window.print()}
             onExportExcel={handleExportRotaCsv}
             onViewAudit={() => router.push("/admin/audit-log")}
@@ -361,19 +401,33 @@ export function RotaContainer(): React.JSX.Element {
         />
       )}
 
-      {/* {activeView === "allocation" && (
+      {activeView === "allocation" && (
         <StaffAllocationView
           schemes={schemes}
           properties={properties}
           staff={staffList}
           shifts={weekShifts}
+          allocationData={allocationData}
           activeCareType={filters.careType}
           schemeFilter={filters.schemeId}
           propertyFilter={filters.propertyId}
           staffFilter={filters.staffId}
-          onReassignStaff={(staff) => setReassignStaff(staff)}
+          onReassignStaff={(staff) => {
+            if (isRotaLocked) {
+              toast({
+                title: "Rota is locked",
+                description: "Unlock the rota to assign shifts.",
+                variant: "destructive",
+              });
+              return;
+            }
+            const todayDateStr = format(new Date(), "yyyy-MM-dd");
+            const targetDay = days.find((d) => d.dateStr === todayDateStr) || days[0];
+            handleViewChange("rota");
+            if (targetDay) setSlotToAdd({ staff, day: targetDay });
+          }}
         />
-      )} */}
+      )}
 
       <RotaModalsContainer
         detailsShift={detailsShift}

@@ -176,11 +176,11 @@ export function ResidentDirectoryClient({
       onAdd={
         isAdmin
           ? () => {
-              if (typeof window !== "undefined") {
-                window.sessionStorage.removeItem("lcm_admission_draft_new");
-              }
-              router.push("/admin/residents/admit");
+            if (typeof window !== "undefined") {
+              window.sessionStorage.removeItem("lcm_admission_draft_new");
             }
+            router.push("/admin/residents/admit");
+          }
           : undefined
       }
       addLabel="Add Person"

@@ -21,6 +21,9 @@ export function StaffStatCards({ staff = [] }: StaffStatCardsProps) {
 
   const nowMs = Date.now();
   const dbsDueCount = staff.filter((s) => {
+    if (s.dbsStatus === "Expired" || s.dbsStatus === "Action Required") {
+      return true;
+    }
     if (!s.dbsExpiryDate) return false;
     const expiryMs = new Date(s.dbsExpiryDate).getTime();
     if (!Number.isFinite(expiryMs)) return false;
