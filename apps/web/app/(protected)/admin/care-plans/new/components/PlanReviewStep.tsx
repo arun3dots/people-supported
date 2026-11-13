@@ -21,7 +21,7 @@ export function PlanReviewStep({
   primaryDoctorName,
 }: PlanReviewStepProps) {
   const reviewItems = [
-    { label: "Resident", value: residentName },
+    { label: "Tenant", value: residentName },
     { label: "Validity Period", value: `${validFrom} to ${validTo}` },
     { label: "Clinical Goals Defined", value: `${goalsCount} Goal${goalsCount === 1 ? "" : "s"}` },
     { label: "Linked Routine Tasks", value: `${tasksCount} Scheduled Task${tasksCount === 1 ? "" : "s"}` },

@@ -103,7 +103,7 @@ export function QuickViewCarousel() {
             )}
           >
             <User className="size-3.5 text-emerald-800" />
-            Residents
+            Tenants
           </Button>
         </div>
       </div>

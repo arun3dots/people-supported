@@ -12,6 +12,7 @@ export interface AlertItem {
   priority?: 'High' | 'Medium' | 'Low';
   priorityLabel?: string;
   timestamp?: string;
+  actionUrl?: string | null;
   isDismissed?: boolean;
 }
 
@@ -35,11 +36,14 @@ export function AlertCard({
 
   // Primary alert to highlight on the home screen
   const primaryAlert = visibleAlerts[0];
-  const priorityLabel = primaryAlert.priorityLabel || (primaryAlert.priority ? `${primaryAlert.priority} Priority` : 'High Priority');
-  const alertTitle = primaryAlert.title || 'Overdue Care Tasks';
-  const alertDescription =
-    primaryAlert.description ||
-    'Please complete them to stay on track and ensure support safety';
+  const priorityLabel =
+    primaryAlert.priorityLabel || (primaryAlert.priority ? `${primaryAlert.priority} Priority` : null);
+  const alertTitle = primaryAlert.title;
+  const alertDescription = primaryAlert.description;
+  const alertTimestamp = primaryAlert.timestamp;
+  const remainingCount = visibleAlerts.length - 1;
+  const primaryPriority = (primaryAlert.priority ?? 'High').toLowerCase();
+  const isUrgentPriority = primaryPriority === 'high' || primaryPriority === 'urgent' || primaryPriority === 'critical';
 
   return (
     <View style={[styles.wrapper, style]}>
@@ -71,20 +75,46 @@ export function AlertCard({
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={() => (onPressAlert ? onPressAlert(primaryAlert) : onSeeAllAlerts?.())}
-        style={styles.alertCard}
+        style={[
+          styles.alertCard,
+          isUrgentPriority ? styles.alertCardUrgent : styles.alertCardWarning,
+        ]}
       >
         {/* Left Alert Icon Badge */}
-        <View style={styles.iconBadge}>
-          <TriangleAlert size={20} color="#FF3B2F" strokeWidth={2.2} />
+        <View
+          style={[
+            styles.iconBadge,
+            isUrgentPriority ? styles.iconBadgeUrgent : styles.iconBadgeWarning,
+          ]}
+        >
+          <TriangleAlert
+            size={20}
+            color={isUrgentPriority ? '#FF3B2F' : '#B45309'}
+            strokeWidth={2.2}
+          />
         </View>
 
         {/* Center Alert Details */}
         <View style={styles.contentColumn}>
           {/* Priority Pill */}
-          <View style={styles.priorityPill}>
-            <Text className="text-xs font-bold text-clinical-critical">
-              {priorityLabel}
-            </Text>
+          <View style={styles.priorityRow}>
+            <View
+              style={[
+                styles.priorityPill,
+                isUrgentPriority ? styles.priorityPillUrgent : styles.priorityPillWarning,
+              ]}
+            >
+              <Text
+                className={`text-xs font-bold ${
+                  isUrgentPriority ? 'text-clinical-critical' : 'text-clinical-warning'
+                }`}
+              >
+                {priorityLabel}
+              </Text>
+            </View>
+            {alertTimestamp ? (
+              <Text className="text-xs text-muted-foreground">{alertTimestamp}</Text>
+            ) : null}
           </View>
 
           {/* Title */}
@@ -93,13 +123,20 @@ export function AlertCard({
           </Text>
 
           {/* Description */}
-          <Text className="text-xs text-muted-foreground" numberOfLines={2}>
-            {alertDescription}
-          </Text>
+          {alertDescription ? (
+            <Text className="text-xs text-muted-foreground" numberOfLines={2}>
+              {alertDescription}
+            </Text>
+          ) : null}
         </View>
 
-        {/* Right Chevron */}
+        {/* Right Chevron + remaining count */}
         <View style={styles.chevronWrapper}>
+          {remainingCount > 0 && (
+            <Text className="text-xs font-semibold text-muted-foreground mb-0.5">
+              +{remainingCount}
+            </Text>
+          )}
           <ChevronRight size={20} color={theme.colors.primary.DEFAULT} strokeWidth={2.5} />
         </View>
       </TouchableOpacity>
@@ -131,7 +168,6 @@ const styles = StyleSheet.create({
   alertCard: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#FFACA6',
     borderRadius: 20,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -139,24 +175,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
+  alertCardUrgent: {
+    borderColor: '#FFACA6',
+  },
+  alertCardWarning: {
+    borderColor: '#FBD38D',
+  },
   iconBadge: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#FFF2F1',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconBadgeUrgent: {
+    backgroundColor: '#FFF2F1',
+  },
+  iconBadgeWarning: {
+    backgroundColor: '#FFF8E6',
   },
   contentColumn: {
     flex: 1,
     gap: 2,
   },
   priorityPill: {
-    backgroundColor: '#FFF2F1',
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 9999,
     alignSelf: 'flex-start',
+  },
+  priorityPillUrgent: {
+    backgroundColor: '#FFF2F1',
+  },
+  priorityPillWarning: {
+    backgroundColor: '#FFF8E6',
+  },
+  priorityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     marginBottom: 2,
   },
   chevronWrapper: {

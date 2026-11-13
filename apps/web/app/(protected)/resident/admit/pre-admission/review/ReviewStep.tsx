@@ -178,7 +178,7 @@ export function ReviewStep({
             className="rounded-xl font-semibold shadow-none"
           >
             <CheckCircle2 className="size-4" />
-            Admit resident
+            Admit tenant
           </Button>
         </div>
       )}

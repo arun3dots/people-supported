@@ -159,19 +159,8 @@ export function LeaveRequestManagementClient(): React.JSX.Element {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Text as="span" size="md" weight="medium" variant="muted">
-              Rota Management
-            </Text>
-            <Text as="span" size="md" variant="muted">
-              &rsaquo;
-            </Text>
-            <Text as="span" size="md" weight="medium" className="text-slate-800">
-              Leave Request Management
-            </Text>
-          </div>
           <Text as="h1" size="2xl" weight="semibold" className="tracking-tight text-slate-900">
-            Leave Request Management
+            Leave Management
           </Text>
           <Text variant="muted" size="md" className="mt-0.5">
             Review annual, sick and training leave, see rota impact and arrange

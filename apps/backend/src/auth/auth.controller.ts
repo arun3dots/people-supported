@@ -156,7 +156,8 @@ export class AuthController {
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-    @Body(new ZodValidationPipe(refreshTokenSchema)) body?: RefreshTokenDTO,
+    @Body(new ZodValidationPipe(refreshTokenSchema.optional().default({})))
+    body?: RefreshTokenDTO,
   ) {
     const oldRefreshToken: string =
       (req.cookies?.refresh_token as string) || body?.refreshToken || '';

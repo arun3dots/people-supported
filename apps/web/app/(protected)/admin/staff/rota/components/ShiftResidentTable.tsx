@@ -83,9 +83,7 @@ export function ShiftResidentTable({
     return matchesSearch && matchesUnit && matchesWing && matchesRoom && matchesBed;
   });
 
-  const eligibleResidents = filteredResidents.filter(
-    (resident) => Boolean(resident.roomId && resident.bedId),
-  );
+  const eligibleResidents = filteredResidents;
 
   const facilityLabel =
     selectedBedId && selectedBedId !== "none"
@@ -185,7 +183,7 @@ export function ShiftResidentTable({
                     }
                     description={
                       hasNoResidentsInFacility
-                        ? "Residents must be admitted and assigned to a room and bed before you can schedule a shift."
+                        ? "Admit a person supported before you can schedule a shift."
                         : "Try clearing or changing the Wing, Room, Bed, or search filters above."
                     }
                     action={

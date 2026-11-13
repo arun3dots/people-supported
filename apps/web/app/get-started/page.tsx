@@ -29,7 +29,7 @@ export default function GetStartedPage() {
               Let&apos;s Get Started
             </h1>
             <p className="text-md sm:text-md font-medium text-slate-500 max-w-xs mx-auto leading-relaxed">
-              Join thousands of care teams already using Cantra to deliver better care
+              Join thousands of supported workers already using Cantra to deliver better care
             </p>
           </div>
 

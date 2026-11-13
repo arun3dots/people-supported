@@ -93,8 +93,8 @@ export function WeeklyRotaScheduleTable({
       className="p-5 lg:p-6 gap-0 border-none shadow-none font-sans"
     >
       {/* Pack Header & Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 pb-4 border-b border-border-secondary/50 mb-4">
-        <div>
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 pb-4 border-b border-border-secondary/50 mb-4">
+        <div className="min-w-0">
           <Text as="h2" size="base" weight="semibold" className="text-slate-900">
             Weekly Staff Rota &amp; Care Type Schedule
           </Text>
@@ -102,7 +102,7 @@ export function WeeklyRotaScheduleTable({
             Click any shift block to view the people supported, medication rounds, 1:1 tasks or reassign cover.
           </Text>
         </div>
-        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 min-w-0">
           {/* Week Stepper (< This Week >) */}
           {onPreviousWeek && onNextWeek && (
             <div className="flex items-center gap-0.5 bg-surface-card-grey p-1 rounded-xl border border-slate-200/80">
@@ -154,7 +154,7 @@ export function WeeklyRotaScheduleTable({
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0 sm:pl-3 sm:border-l sm:border-slate-200">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 sm:pl-3 sm:border-l sm:border-slate-200">
             {LEGEND_ITEMS.map((item) => (
               <Text
                 key={item.label}
