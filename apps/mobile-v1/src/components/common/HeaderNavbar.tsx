@@ -192,7 +192,7 @@ export function HeaderNavbar({
                 <View className="mt-1 self-start">
                   <Badge variant="clinicalSafe" size="sm">
                     <Text className="text-xs font-semibold text-clinical-safe">
-                      {user?.roleName || 'Carer'}
+                      {'Support Staff'}
                     </Text>
                   </Badge>
                 </View>

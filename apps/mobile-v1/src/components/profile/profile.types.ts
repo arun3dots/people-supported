@@ -1,3 +1,5 @@
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
+
 export interface MyProfileData {
   id: string;
   fullName: string;
@@ -59,9 +61,11 @@ export function formatAuditActionTitle(actionType: string): string {
   };
   if (map[actionType]) return map[actionType];
 
-  return actionType
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ');
+  return supportPlanLabel(
+    actionType
+      .split('_')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' '),
+  );
 }
 

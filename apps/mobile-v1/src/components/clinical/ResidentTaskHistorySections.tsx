@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react-native';
 import { useQuery } from '@tanstack/react-query';
-import { GET_DAILY_TASKS } from '@repo/endpoints';
+import { GET_RESIDENT_TIMELINE } from '@repo/endpoints';
 import { Text } from '../ui/text';
 import {
   type ResidentTaskHistoryItem,
@@ -10,7 +10,8 @@ import {
 } from './residentTaskHistory.types';
 import { ResidentTaskHistoryCard } from './ResidentTaskHistoryCard';
 import { makeMobileApiCall } from '../../data/api/client';
-import { formatUkDate } from '../../lib/date';
+import { mapTaskHistory } from './residentTimelineRecords';
+import { Button } from '../../presentation/components/common';
 import { theme } from '../../theme/tokens';
 
 interface Props {
@@ -24,64 +25,24 @@ export function ResidentTaskHistorySections({ residentId }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
-  const { data: rawTasks = [], isLoading } = useQuery<Array<Record<string, unknown>>>({
+  const { data: rawTasks = [], isLoading, error, refetch } = useQuery<Array<Record<string, unknown>>>({
     queryKey: ['resident-task-history', residentId],
     queryFn: async () => {
       if (!residentId) return [];
       const res = await makeMobileApiCall<Array<Record<string, unknown>>>(
-        GET_DAILY_TASKS,
+        GET_RESIDENT_TIMELINE,
         undefined,
-        { residentId }
-      ).catch(() => []);
-      return Array.isArray(res) ? res : [];
+        undefined,
+        { id: residentId }
+      );
+      if (!Array.isArray(res)) throw new Error('Invalid task history response');
+      return res;
     },
     enabled: Boolean(residentId),
     staleTime: 1000 * 60 * 3,
   });
 
-  const tasks: ResidentTaskHistoryItem[] = useMemo(() => {
-    return rawTasks.map((t, idx) => {
-      const carePlanTask = t.carePlanTask as Record<string, unknown> | undefined;
-      const assignedStaff = t.assignedStaff as Record<string, unknown> | undefined;
-      const completedBy = t.completedBy as Record<string, unknown> | undefined;
-
-      const rawCategory = String(t.category || carePlanTask?.category || '').toLowerCase();
-      let taskType: ResidentTaskHistoryItem['taskType'] = 'observation';
-      if (rawCategory.includes('med')) taskType = 'medication';
-      else if (rawCategory.includes('fluid') || rawCategory.includes('hydration')) taskType = 'fluid';
-      else if (rawCategory.includes('reposition') || rawCategory.includes('turn')) taskType = 'reposition';
-      else if (rawCategory.includes('nutrition') || rawCategory.includes('meal')) taskType = 'nutrition';
-
-      const rawStatus = String(t.status || 'Pending');
-      let status: TaskHistoryStatus = 'Pending';
-      if (rawStatus === 'Completed') status = 'Completed';
-      else if (rawStatus === 'Skipped' || rawStatus === 'Overdue') status = 'Over Due';
-
-      const dateStr = t.scheduledDate || t.createdAt
-        ? formatUkDate(t.scheduledDate || t.createdAt)
-        : 'Recorded';
-
-      return {
-        id: String(t.id || `task-${idx}`),
-        title: String(t.title || carePlanTask?.instructions || 'Daily Task'),
-        subtitle: String(
-          t.description ||
-          t.instructions ||
-          carePlanTask?.instructions ||
-          'Scheduled care routine'
-        ),
-        taskType,
-        dateStr,
-        assignedStaffName: String(
-          completedBy?.fullName ||
-          assignedStaff?.fullName ||
-          'Care Staff'
-        ),
-        assignedStaffAvatar: undefined,
-        status,
-      };
-    });
-  }, [rawTasks]);
+  const tasks: ResidentTaskHistoryItem[] = useMemo(() => mapTaskHistory(rawTasks), [rawTasks]);
 
   // Filter tasks based on query and status filter
   const filteredTasks = useMemo(() => {
@@ -117,6 +78,12 @@ export function ResidentTaskHistorySections({ residentId }: Props) {
     else setRowsPerPage(5);
     setCurrentPage(1);
   };
+
+  if (error) return <View className="p-4 gap-3">
+    <Text className="text-base font-bold text-foreground">Unable to load task history</Text>
+    <Text className="text-base text-muted-foreground">{error.message}</Text>
+    <Button onPress={() => { void refetch(); }}>Retry</Button>
+  </View>;
 
   return (
     <View className="pb-8">
@@ -163,7 +130,7 @@ export function ResidentTaskHistorySections({ residentId }: Props) {
       {/* Filter Chips Drawer (collapsible) */}
       {isFilterOpen && (
         <View className="flex-row flex-wrap gap-2 mb-3.5 pb-1">
-          {(['All', 'Completed', 'Over Due', 'Pending'] as const).map((st) => (
+          {(['All', 'Completed', 'Skipped', 'Over Due', 'Pending'] as const).map((st) => (
             <TouchableOpacity
               key={st}
               activeOpacity={0.7}

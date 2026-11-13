@@ -75,10 +75,12 @@ export function ResidentRiskAssessmentSections({ residentId }: Props) {
       case 'high':
         return { bg: 'bg-clinical-criticalBg', text: 'text-clinical-critical', label: 'High Risk' };
       case 'medium':
+      case 'moderate':
         return { bg: 'bg-clinical-warningBg', text: 'text-clinical-warning', label: 'Medium Risk' };
       case 'low':
-      default:
         return { bg: 'bg-clinical-safeBg', text: 'text-clinical-safe', label: 'Low Risk' };
+      default:
+        return { bg: 'bg-surface', text: 'text-muted-foreground', label: 'Risk not recorded' };
     }
   };
 

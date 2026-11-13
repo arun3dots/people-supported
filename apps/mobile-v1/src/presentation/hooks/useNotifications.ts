@@ -32,9 +32,9 @@ interface RawNotificationItem {
 }
 
 export function formatNotificationTime(rawDate?: string | Date): string {
-  if (!rawDate) return 'Just now';
+  if (!rawDate) return 'Date not recorded';
   const date = new Date(rawDate);
-  if (isNaN(date.getTime())) return 'Just now';
+  if (isNaN(date.getTime())) return 'Date not recorded';
 
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -66,25 +66,26 @@ export function useNotifications() {
           { data?: RawNotificationItem[] } | RawNotificationItem[]
         >(GET_NOTIFICATIONS, undefined, { limit: 50 });
 
-        const rawList: RawNotificationItem[] = Array.isArray(res)
+        const rawList: RawNotificationItem[] | null = Array.isArray(res)
           ? res
           : Array.isArray(res?.data)
             ? res.data
-            : [];
+            : null;
+        if (!rawList) throw new Error('Invalid notifications response');
 
         return rawList.map((item) => ({
           id: item.id,
           title: item.title || 'Notification',
           message: item.message || '',
-          category: item.category || 'SYSTEM',
-          priority: item.priority || 'Medium',
+          category: item.category || 'Uncategorized',
+          priority: item.priority || 'Not recorded',
           isRead: Boolean(item.isRead),
           actionUrl: item.actionUrl || null,
-          createdAt: item.createdAt ? new Date(item.createdAt).toISOString() : new Date().toISOString(),
+          createdAt: item.createdAt && Number.isFinite(new Date(item.createdAt).getTime()) ? new Date(item.createdAt).toISOString() : '',
           formattedTime: formatNotificationTime(item.createdAt),
         }));
-      } catch {
-        return [];
+      } catch (error) {
+        throw error;
       }
     },
     staleTime: 1000 * 15,

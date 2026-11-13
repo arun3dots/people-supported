@@ -31,6 +31,7 @@ import {
 import { OfflineSyncProvider } from '../src/presentation/context/OfflineSyncContext';
 import { InactivityLockModal } from '../src/components/clinical/InactivityLockModal';
 import { OTAUpdateModal } from '../src/presentation/components/common';
+import { WebAlertProvider } from '../src/presentation/components/common/WebAlertProvider';
 import { queryClient } from '../src/data/api/queryClient';
 import { theme } from '../src/theme';
 import '../global.css';
@@ -131,8 +132,10 @@ export default function RootLayout() {
       <AuthProvider>
         <BiometricLockProvider>
           <OfflineSyncProvider>
-            <StatusBar style="dark" />
-            <NavigationGuard />
+            <WebAlertProvider>
+              <StatusBar style="dark" />
+              <NavigationGuard />
+            </WebAlertProvider>
           </OfflineSyncProvider>
         </BiometricLockProvider>
       </AuthProvider>

@@ -43,7 +43,7 @@ export function FluidIntakeSummaryCard({
     statusLabel,
   } = summary;
 
-  const progressSub = isDehydratedRisk
+  const progressSub = percentageCompleted === null ? 'Clinical target not recorded' : isDehydratedRisk
     ? 'Below daily target'
     : percentageCompleted >= 100
       ? 'Daily target reached'
@@ -63,7 +63,7 @@ export function FluidIntakeSummaryCard({
             {totalIntakeMl.toLocaleString()} ml
           </Text>
           <Text className="text-xs text-muted-foreground mt-0.5">
-            Target: {dailyTargetMl.toLocaleString()} ml
+            Target: {dailyTargetMl === null ? 'Not recorded' : `${dailyTargetMl.toLocaleString()} ml`}
           </Text>
         </View>
 
@@ -73,7 +73,7 @@ export function FluidIntakeSummaryCard({
             <Text className="text-xs font-medium text-muted-foreground">Target Progress</Text>
             <TrendingUp size={13} color="#4A706A" />
           </View>
-          <Text className="text-md font-bold text-foreground">{percentageCompleted}%</Text>
+          <Text className="text-md font-bold text-foreground">{percentageCompleted === null ? 'Not recorded' : `${percentageCompleted}%`}</Text>
           <Text
             className={`text-xs font-medium mt-0.5 ${
               isDehydratedRisk ? 'text-clinical-critical' : 'text-primary'
@@ -109,7 +109,7 @@ export function FluidIntakeSummaryCard({
               isDehydratedRisk ? 'text-clinical-critical' : 'text-primary'
             }`}
           >
-            {isDehydratedRisk ? 'Needs fluid prompt' : 'Hydration adequate'}
+            {percentageCompleted === null ? 'Review the recorded support plan' : isDehydratedRisk ? 'Below recorded target' : 'Intake recorded'}
           </Text>
         </View>
 
@@ -127,11 +127,11 @@ export function FluidIntakeSummaryCard({
       </View>
 
       {/* Progress Bar */}
-      <Progress
+      {percentageCompleted !== null && <Progress
         value={percentageCompleted}
         indicatorClassName={isDehydratedRisk ? 'bg-clinical-critical' : 'bg-primary'}
         className="h-2 bg-white"
-      />
+      />}
 
       {isDehydratedRisk && (
         <View className="flex-row items-center gap-1.5 rounded-xl bg-clinical-warningBg px-3 py-2 mt-2.5">

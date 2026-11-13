@@ -22,7 +22,7 @@ export default function ProtectedLayout() {
 
   // Dynamic bottom padding to ensure zero overlap with iOS home indicator or Android navigation bar
   const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 24 : 12);
-  const tabHeight = (Platform.OS === 'android' ? 72 : 64) + bottomInset;
+  const tabHeight = 80 + bottomInset;
 
   return (
     <View className="flex-1 bg-background">
@@ -61,13 +61,15 @@ export default function ProtectedLayout() {
           },
           tabBarLabelStyle: {
             fontFamily: theme.fonts.semibold,
-            fontSize: 10,
+            fontSize: 12,
+            lineHeight: 18,
+            flexShrink: 0,
             marginTop: 2,
             marginBottom: Platform.OS === 'android' ? 6 : 2,
           },
           tabBarItemStyle: {
-            paddingTop: 4,
-            paddingBottom: Platform.OS === 'android' ? 6 : 2,
+            paddingTop: 0,
+            paddingBottom: 0,
             justifyContent: 'center',
             alignItems: 'center',
           },
@@ -131,6 +133,13 @@ export default function ProtectedLayout() {
             ======================================================= */}
         <Tabs.Screen
           name="alerts"
+          options={{
+            tabBarItemStyle: { display: 'none' },
+            tabBarButton: () => null,
+          }}
+        />
+        <Tabs.Screen
+          name="previous-handover"
           options={{
             tabBarItemStyle: { display: 'none' },
             tabBarButton: () => null,

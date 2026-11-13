@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ChevronLeft, FileText } from 'lucide-react-native';
 import { ScreenWrapper } from '../../src/components/common/ScreenWrapper';
 import { Text } from '../../src/components/ui/text';
+import { ResidentLoadError } from '../../src/components/clinical/ResidentLoadError';
 import { useResidentDetail } from '../../src/presentation/hooks/useResidentDetail';
 import { ResidentProfileHeaderCard } from '../../src/components/clinical/ResidentProfileHeaderCard';
 import { ResidentDocumentsSections } from '../../src/components/clinical/ResidentDocumentsSections';
@@ -11,7 +12,7 @@ import { ResidentDocumentsSections } from '../../src/components/clinical/Residen
 export default function DocumentsScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const router = useRouter();
-  const { resident, loading } = useResidentDetail(id);
+  const { resident, loading, error, refetch } = useResidentDetail(id);
 
   if (loading && !resident) {
     return (
@@ -34,6 +35,8 @@ export default function DocumentsScreen() {
       </ScreenWrapper>
     );
   }
+
+  if (error) return <ResidentLoadError message={error} onRetry={() => { void refetch(); }} />;
 
   if (!resident) {
     return (

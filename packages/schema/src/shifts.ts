@@ -181,8 +181,13 @@ export const ShiftDetailsTaskSchema = z.object({
 export type ShiftDetailsTaskDTO = z.infer<typeof ShiftDetailsTaskSchema>;
 
 export const PreviousShiftHandoverSchema = z.object({
+  id: z.string().optional(),
+  staffId: z.string().optional(),
   shiftName: z.string().optional().nullable(),
   staffName: z.string().optional().nullable(),
+  staffRole: z.string().optional().nullable(),
+  staffAvatarUrl: z.string().optional().nullable(),
+  startTime: z.union([z.string(), z.date()]).optional().nullable(),
   endTime: z.union([z.string(), z.date()]).optional().nullable(),
   handoverNotes: z.string(),
 });
@@ -222,6 +227,8 @@ export const ShiftDetailsResponseSchema = z.object({
   timeRemainingStr: z.string().optional().nullable(),
   status: z.string().optional(),
   isStarted: z.boolean().optional(),
+  isContinuing: z.boolean().optional(),
+  hasContinuousNextShift: z.boolean().optional(),
   actualStartTime: z.union([z.string(), z.date()]).optional().nullable(),
   actualEndTime: z.union([z.string(), z.date()]).optional().nullable(),
   tasksCompleted: z.number(),
@@ -231,6 +238,7 @@ export const ShiftDetailsResponseSchema = z.object({
   shiftNotes: z.string().optional().nullable(),
   handoverNotes: z.string().optional().nullable(),
   previousShiftHandover: PreviousShiftHandoverSchema.optional().nullable(),
+  previousShiftHandovers: z.array(PreviousShiftHandoverSchema).optional(),
   nextShift: NextShiftDetailsSchema.optional().nullable(),
   assignedResidents: z.array(ShiftDetailsResidentSchema).optional(),
   tasks: z.array(ShiftDetailsTaskSchema).optional(),
@@ -252,6 +260,8 @@ export const ActiveShiftItemSchema = z.object({
   timeRemainingStr: z.string().optional().nullable(),
   isStarted: z.boolean().optional(),
   isCompleted: z.boolean().optional(),
+  isContinuing: z.boolean().optional(),
+  hasContinuousNextShift: z.boolean().optional(),
   status: z.string().optional(),
   shiftStatus: z.string().optional(),
   tasksCompleted: z.number().optional(),

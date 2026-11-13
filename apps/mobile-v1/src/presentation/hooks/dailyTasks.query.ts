@@ -44,7 +44,7 @@ export async function loadDailyTasks(
   if (shiftTasksRes.status === 'fulfilled') appendTasks(shiftTasksRes.value);
   if (assignedTasksRes.status === 'fulfilled') appendTasks(assignedTasksRes.value);
 
-  const { tasks: careTasks, failedRequests, requestCount } =
+  const { tasks: careTasks, failedRequests } =
     await loadAgreedCareTasks(
       assignedResidents,
       assignedResidentIds,
@@ -54,12 +54,12 @@ export async function loadDailyTasks(
     );
 
   if (
-    shiftTasksRes.status === 'rejected' &&
-    assignedTasksRes.status === 'rejected' &&
-    failedRequests === requestCount
+    shiftTasksRes.status === 'rejected' ||
+    assignedTasksRes.status === 'rejected' ||
+    failedRequests > 0
   ) {
-    safeLogger.warn(`Failed to fetch assigned shift tasks for ${date}`, shiftTasksRes.reason);
-    throw shiftTasksRes.reason || new Error('Failed to fetch tasks');
+    safeLogger.warn(`Unable to load the complete assigned task list for ${date}`);
+    throw new Error('Unable to load all assigned tasks. Please refresh to try again.');
   }
 
   return [...rawTasks.map(mapRawTaskToMobile), ...careTasks];

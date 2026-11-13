@@ -25,6 +25,7 @@ export interface ShiftTodayViewProps {
   timeRemainingStr?: string;
   isShiftStarted: boolean;
   isCompleted?: boolean;
+  isContinuing?: boolean;
   nextShiftName?: string | null;
   nextShiftStartTime?: string | null;
   nextShiftHandoverPerson?: HandoverPersonInfo | null;
@@ -45,6 +46,7 @@ export function ShiftTodayView({
   timeRemainingStr = '',
   isShiftStarted,
   isCompleted = false,
+  isContinuing = false,
   nextShiftName,
   nextShiftStartTime,
   nextShiftHandoverPerson,
@@ -82,7 +84,11 @@ export function ShiftTodayView({
             <Text className="text-xs font-bold text-primary">Shift End</Text>
           </View>
           <Text className="text-lg font-bold text-foreground">{scheduledEndTime || 'Scheduled'}</Text>
-          <Text className="text-xs font-semibold text-clinical-safe mt-0.5">
+          <Text
+            className={`text-xs font-semibold mt-0.5 ${
+              isShiftStarted && isContinuing && !isCompleted ? 'text-clinical-warning' : 'text-clinical-safe'
+            }`}
+          >
             {isShiftStarted ? timeRemainingStr || 'In progress' : 'Expected handover'}
           </Text>
         </View>
@@ -259,8 +265,8 @@ export function ShiftTodayView({
               ? res.bedNumber.startsWith('Bed')
                 ? res.bedNumber
                 : `Bed ${res.bedNumber}`
-              : 'Standard Bed';
-            const wingLabel = res.wingName || 'Main Property';
+              : 'Bed not recorded';
+            const wingLabel = res.wingName || 'Property not recorded';
 
             return (
               <View

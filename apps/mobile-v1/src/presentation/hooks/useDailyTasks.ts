@@ -1,16 +1,17 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   UPDATE_DAILY_TASK_STATUS,
   RECORD_CARE_TASK,
 } from '@repo/endpoints';
 import { makeMobileApiCall } from '../../data/api/client';
+import { isNetworkError } from '../../data/api/errors';
 import { enqueueMutation } from '../../data/api/offlineQueue';
 import { safeLogger } from '../../data/security/safeLogger';
 import { useAuth } from '../context/AuthContext';
 import { useShiftDashboard } from './useShiftDashboard';
 import { type MobileTaskItem } from './dailyTasks.utils';
-import { loadDailyTasks } from './dailyTasks.query';
+import { useAssignedShiftTasks } from './useAssignedShiftTasks';
 import { formatUkTime, getUkDateString } from '../../lib/date';
 
 export type { MobileTaskItem };
@@ -27,42 +28,14 @@ export function useDailyTasks() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const { shift, assignedResidents } = useShiftDashboard();
-  const assignedResidentIds = useMemo(
-    () =>
-      shift?.isStarted
-        ? [...new Set(assignedResidents.map((resident) => resident.id))].sort()
-        : [],
-    [assignedResidents, shift?.id, shift?.isStarted],
-  );
-  const taskShift: 'Day' | 'Night' =
-    shift?.name.toLowerCase().includes('night') ? 'Night' : 'Day';
-  const taskQueryKey = [
-    'carer-assigned-resident-tasks',
-    dateStr,
-    shift?.id ?? null,
-    assignedResidentIds,
-    user?.roleName ?? null,
-  ] as const;
-
-  // 1. Load tasks visible to this carer for the selected date (combining shift assignments and keyworker tasks - BUG-036)
   const {
     data: tasks = [],
     isLoading: loading,
     isRefetching: refreshing,
     error: queryError,
     refetch,
-  } = useQuery<MobileTaskItem[]>({
     queryKey: taskQueryKey,
-    queryFn: () =>
-      loadDailyTasks(
-        dateStr,
-        assignedResidents,
-        assignedResidentIds,
-        taskShift,
-        user?.roleName,
-      ),
-    staleTime: 1000 * 60,
-  });
+  } = useAssignedShiftTasks(shift, assignedResidents, user?.roleName, dateStr);
 
   // 2. Sign-off / Complete Task Mutation
   const completeMutation = useMutation({
@@ -85,6 +58,7 @@ export function useDailyTasks() {
       try {
         await makeMobileApiCall(UPDATE_DAILY_TASK_STATUS, payload, undefined, { taskId: task.id });
       } catch (err) {
+        if (!isNetworkError(err)) throw err;
         safeLogger.warn('Network error updating task status, queueing offline mutation', err);
         await enqueueMutation(UPDATE_DAILY_TASK_STATUS, payload, { taskId: task.id });
       }
@@ -125,6 +99,7 @@ export function useDailyTasks() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: taskQueryKey });
       queryClient.invalidateQueries({ queryKey: ['active-shift'] });
+      queryClient.invalidateQueries({ queryKey: ['shift-resident-activity'] });
     },
   });
 
@@ -158,6 +133,7 @@ export function useDailyTasks() {
       try {
         await makeMobileApiCall(UPDATE_DAILY_TASK_STATUS, payload, undefined, { taskId: task.id });
       } catch (err) {
+        if (!isNetworkError(err)) throw err;
         safeLogger.warn('Network error skipping task, queueing offline mutation', err);
         await enqueueMutation(UPDATE_DAILY_TASK_STATUS, payload, { taskId: task.id });
       }
@@ -196,6 +172,7 @@ export function useDailyTasks() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: taskQueryKey });
       queryClient.invalidateQueries({ queryKey: ['active-shift'] });
+      queryClient.invalidateQueries({ queryKey: ['shift-resident-activity'] });
     },
   });
 

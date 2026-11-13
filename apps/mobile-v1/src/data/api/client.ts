@@ -15,6 +15,7 @@ import {
   clearTokens,
 } from '../security/secureStorage';
 import { safeLogger } from '../security/safeLogger';
+import { MobileNetworkError } from './errors';
 
 export function getApiBaseUrl(): string {
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -173,12 +174,16 @@ export async function makeMobileApiCall<TResponse = unknown>(
       ? (isFormData ? (payload as BodyInit) : JSON.stringify(payload))
       : undefined;
 
-    return fetch(fullUrl, {
-      method: info.requestType,
-      credentials: Platform.OS === 'web' ? 'include' : 'omit',
-      headers,
-      body,
-    });
+    try {
+      return await fetch(fullUrl, {
+        method: info.requestType,
+        credentials: Platform.OS === 'web' ? 'include' : 'omit',
+        headers,
+        body,
+      });
+    } catch {
+      throw new MobileNetworkError();
+    }
   };
 
   let token = await getAccessToken();

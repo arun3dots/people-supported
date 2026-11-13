@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { Card } from '../ui/card';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 export interface GoalItem {
   id: string;
@@ -32,7 +33,7 @@ export function CarePlanGoalCard({ goal }: Props) {
         <Text className="text-base font-bold text-text-primary flex-1 mr-2">{goal.title}</Text>
         <View className="flex-row items-center gap-2">
           <View className="bg-sky-50 px-2.5 py-1 rounded-full">
-            <Text className="text-xs font-semibold text-sky-600">{goal.category}</Text>
+            <Text className="text-xs font-semibold text-sky-600">{supportPlanLabel(goal.category)}</Text>
           </View>
           {isCollapsed ? (
             <ChevronUp size={16} color="#64748B" />
