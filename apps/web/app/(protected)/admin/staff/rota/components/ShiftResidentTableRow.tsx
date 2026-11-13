@@ -38,7 +38,8 @@ export function ShiftResidentTableRow({
   onToggle,
 }: ShiftResidentTableRowProps) {
   const isAssigned = Boolean(resident.assignedStaffId);
-  const hasBedAssignment = Boolean(resident.roomId && resident.bedId);
+  // Supported living has no bed allocation, so every listed person can be rostered.
+  const hasBedAssignment = true;
 
   const getDependencyBadgeState = (dep?: string) => {
     switch (dep) {
@@ -83,7 +84,7 @@ export function ShiftResidentTableRow({
               {resident.name}
             </Text>
             <Text size="md" weight="regular" className="text-slate-500 truncate">
-            {resident.roomBed || "No room or bed assigned"}
+            {resident.roomBed || "No property linked"}
             </Text>
           </div>
         </div>
