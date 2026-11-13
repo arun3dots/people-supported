@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { GET_STAFF } from "@repo/endpoints";
 import { makeAPICall } from "../../api";
 import { UPDATE_SHIFT_REQUEST_STATUS, GET_SHIFT_REQUESTS } from "@repo/endpoints";
 
@@ -11,6 +12,7 @@ export function useUpdateShiftRequestStatusMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_SHIFT_REQUESTS] });
+      queryClient.invalidateQueries({ queryKey: [GET_STAFF] });
     },
   });
 }

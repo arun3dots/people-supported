@@ -31,6 +31,7 @@ import { paginate, resolvePagination } from '../common/utils/pagination.util';
 import { S3StorageService } from '../storage/s3.service';
 import type { ActorContext } from '../common/interfaces/actor.interface';
 import { PasswordGeneratorService } from '../common/services/password-generator.service';
+import { getStaffOnLeaveIds } from './staff-leave.util';
 
 /**
  * A staff record flattened for the frontend: the `UserProfile` contact fields
@@ -348,23 +349,7 @@ export class StaffService {
 
     const users = pageResult.data;
 
-    const now = new Date();
-    const userIds = users.map((u) => u.id);
-    const activeLeaves =
-      userIds.length > 0
-        ? await prisma.shiftRequest.findMany({
-            where: {
-              branchId,
-              type: 'Leave',
-              status: 'Approved',
-              userId: { in: userIds },
-              startTime: { lte: now },
-              endTime: { gte: now },
-            },
-            select: { userId: true },
-          })
-        : [];
-    const onLeaveUserIds = new Set(activeLeaves.map((l) => l.userId));
+    const onLeaveUserIds = await getStaffOnLeaveIds(users, branchId);
 
     const staffDetails = users.map((user) =>
       this.toStaffDetail(user, onLeaveUserIds.has(user.id)),
