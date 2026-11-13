@@ -514,9 +514,56 @@ export class ResidentQueryService {
       });
     }
 
+    const missingBedIds: string[] = [];
+    for (const r of paginatedResult.data) {
+      if (!r.bed && Array.isArray(r.preAdmissions) && r.preAdmissions.length > 0) {
+        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })?.roomAllocation;
+        if (
+          alloc &&
+          typeof alloc === 'object' &&
+          !Array.isArray(alloc) &&
+          'bedId' in alloc &&
+          typeof (alloc as { bedId: unknown }).bedId === 'string'
+        ) {
+          missingBedIds.push((alloc as { bedId: string }).bedId);
+        }
+      }
+    }
+
+    const resolvedBedsById = new Map<string, unknown>();
+    if (missingBedIds.length > 0) {
+      const beds = await prisma.bed.findMany({
+        where: {
+          id: { in: Array.from(new Set(missingBedIds)) },
+          deletedAt: null,
+        },
+        include: {
+          room: {
+            include: { wing: { include: { branch: true, scheme: true } } },
+          },
+        },
+      });
+      for (const b of beds) {
+        resolvedBedsById.set(b.id, b);
+      }
+    }
+
     const formattedData = paginatedResult.data.map((r) => {
       const dec = this.decryptResidentFields(r) as Record<string, unknown>;
-      const bed = dec.bed as {
+      let assignedBed = dec.bed;
+      if (!assignedBed && Array.isArray(r.preAdmissions) && r.preAdmissions.length > 0) {
+        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })?.roomAllocation;
+        if (
+          alloc &&
+          typeof alloc === 'object' &&
+          !Array.isArray(alloc) &&
+          'bedId' in alloc &&
+          typeof (alloc as { bedId: unknown }).bedId === 'string'
+        ) {
+          assignedBed = resolvedBedsById.get((alloc as { bedId: string }).bedId) ?? null;
+        }
+      }
+      const bed = assignedBed as {
         wingName?: string | null;
         branchName?: string | null;
         room?: {
@@ -527,6 +574,7 @@ export class ResidentQueryService {
         bed.wingName = bed.room?.wing?.name ?? null;
         bed.branchName = bed.room?.wing?.branch?.name ?? null;
       }
+      dec.bed = bed;
       if (Array.isArray(dec.carePlans)) {
         dec.carePlans = (dec.carePlans as Array<Record<string, unknown>>).map((cp) => ({
           ...cp,

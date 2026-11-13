@@ -2,8 +2,12 @@
 
 import React, { useMemo } from "react";
 import { format } from "date-fns";
-import { Building2, Calendar } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { Badge, Text } from "@repo/ui/components/ui";
+import {
+  useGetPropertiesQuery,
+  useGetRoomsQuery,
+} from "../../../../../lib/queries/facility";
 import type { Resident } from "../../../../../lib/types/resident";
 import type {
   TableColumn,
@@ -87,6 +91,9 @@ export function useResidentColumns({
   roleBase = "admin",
 }: UseResidentColumnsProps = {}): TableColumn<Resident>[] {
   void roleBase;
+  const { data: properties = [] } = useGetPropertiesQuery();
+  const { data: rooms = [] } = useGetRoomsQuery();
+
   return useMemo<TableColumn<Resident>[]>(
     () => [
       {
@@ -117,12 +124,44 @@ export function useResidentColumns({
         enableSorting: false,
         cell: ({ row }) => {
           const r = row.original;
+          const preAlloc = (
+            r.preAdmissions?.[0] as {
+              roomAllocation?: {
+                roomNumber?: string | null;
+                landlord?: string | null;
+              } | null;
+            }
+          )?.roomAllocation;
+
+          const rawRoom =
+            r.bed?.room?.roomNumber || preAlloc?.roomNumber || r.room || null;
+
+          const matchedRoom =
+            !r.bed?.room?.wing && rawRoom
+              ? rooms.find(
+                  (rm) =>
+                    rm.roomNumber.trim().toLowerCase() ===
+                    rawRoom.trim().toLowerCase(),
+                )
+              : undefined;
+
+          const matchedProp =
+            !r.bed?.room?.wing && matchedRoom
+              ? properties.find((p) => p.id === matchedRoom.wingId)
+              : undefined;
+
           const propName =
-            r.bed?.wingName || r.bed?.room?.wing?.name || "Unassigned";
-          const roomNum = r.bed?.room?.roomNumber
-            ? /^(flat|room)\b/i.test(r.bed.room.roomNumber.trim())
-              ? r.bed.room.roomNumber.trim()
-              : `Flat ${r.bed.room.roomNumber.trim()}`
+            r.bed?.wingName ||
+            r.bed?.room?.wing?.name ||
+            matchedProp?.name ||
+            preAlloc?.landlord ||
+            r.supportedLivingDetails?.property ||
+            "Unassigned";
+
+          const roomNum = rawRoom
+            ? /^(flat|room)\b/i.test(rawRoom.trim())
+              ? rawRoom.trim()
+              : `Flat ${rawRoom.trim()}`
             : "No Unit";
 
           return (
@@ -167,33 +206,6 @@ export function useResidentColumns({
         },
       },
       {
-        kind: "person",
-        id: "keyworker",
-        header: "Key Worker",
-        avatar: false,
-        getTitle: (r) => r.keyworker?.fullName || "Unassigned",
-      },
-      {
-        id: "supportHours",
-        header: "Support Hours",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const totalHrs = r.supportedLivingDetails?.supportHoursPerWeek ?? 28;
-          const oneToOne = r.supportedLivingDetails?.oneToOneHoursPerWeek ?? 6;
-          return (
-            <div className="flex flex-col">
-              <Text size="md" weight="medium" className="text-slate-900">
-                {totalHrs} hrs/wk
-              </Text>
-              <Text size="md" variant="muted">
-                {oneToOne}h 1:1
-              </Text>
-            </div>
-          );
-        },
-      },
-      {
         id: "riskLevel",
         header: "Risk",
         enableSorting: false,
@@ -224,53 +236,6 @@ export function useResidentColumns({
         },
       },
       {
-        id: "supportPlan",
-        header: "Support Plan",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const r = row.original;
-          const latestPlan = r.carePlans?.[0];
-          const planHeader = r.supportedLivingDetails?.supportPlanHeader;
-          const rawReviewDate =
-            planHeader?.nextReviewDate ||
-            latestPlan?.reviewDate ||
-            (latestPlan as { nextReviewDate?: string })?.nextReviewDate;
-          const parsedDate = rawReviewDate ? new Date(rawReviewDate) : null;
-          const dateLabel =
-            parsedDate && !isNaN(parsedDate.getTime())
-              ? format(parsedDate, "dd/MM/yyyy")
-              : "18/02/2027";
-          const planStatus = planHeader?.status || "In date";
-          const planState =
-            planStatus === "Overdue"
-              ? "danger"
-              : planStatus === "Due soon"
-                ? "warning"
-                : "success";
-
-          return (
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                state={planState}
-                className="border text-md"
-              >
-                {planStatus}
-              </Badge>
-              <Text
-                as="span"
-                size="md"
-                variant="muted"
-                className="inline-flex items-center gap-1"
-              >
-                <Calendar className="size-3 text-slate-400" />
-                {dateLabel}
-              </Text>
-            </div>
-          );
-        },
-      },
-      {
         kind: "badge",
         id: "status",
         accessorKey: "status",
@@ -282,7 +247,7 @@ export function useResidentColumns({
           ),
         getLabel: (r) => {
           const st = r.status || (r.isDraft ? "Draft" : "Active");
-          if (st === "Draft" || st === "Pending") return "In referral";
+          if (st === "Draft" || st === "Pending") return "Draft";
           if (st === "Hospitalized") return "In hospital";
           return st;
         },
@@ -300,6 +265,6 @@ export function useResidentColumns({
         getSubtitle: (r) => formatResidentDOB(r.dob),
       },
     ],
-    [],
+    [properties, rooms],
   );
 }

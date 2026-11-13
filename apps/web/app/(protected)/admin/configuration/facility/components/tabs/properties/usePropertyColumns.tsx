@@ -97,8 +97,8 @@ export function usePropertyColumns({
         },
       },
       {
-        id: "teamLeader",
-        header: "Team Leader",
+        id: "propertyManager",
+        header: "Property Manager",
         enableSorting: false,
         cell: ({ row }) => {
           const leader = getPropertyManagerLabel(row.original);

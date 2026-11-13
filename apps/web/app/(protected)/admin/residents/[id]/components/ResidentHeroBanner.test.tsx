@@ -121,13 +121,11 @@ describe("ResidentHeroBanner", () => {
     expect(screen.getByText("Single")).toBeInTheDocument();
     expect(screen.getByText("NHS-7894561230")).toBeInTheDocument();
 
-    expect(screen.getByText("Scheme")).toBeInTheDocument();
-    expect(screen.getByText("North Supported Living")).toBeInTheDocument();
     expect(screen.getByText("Property")).toBeInTheDocument();
-    expect(screen.getByText("Oak House (Room 103)")).toBeInTheDocument();
-    expect(screen.getByText("Keyworker")).toBeInTheDocument();
-    expect(screen.getByText("Joys jo")).toBeInTheDocument();
-
+    expect(screen.getByText("Oak House")).toBeInTheDocument();
+    expect(screen.getByText("Room")).toBeInTheDocument();
+    expect(screen.getByText("Room 103")).toBeInTheDocument();
+    expect(screen.queryByText("Keyworker")).not.toBeInTheDocument();
     expect(screen.queryByText("Bed Number")).not.toBeInTheDocument();
     expect(screen.getByText("Severity: High")).toBeInTheDocument();
     expect(screen.getByText("DNACPR")).toBeInTheDocument();
@@ -169,7 +167,7 @@ describe("ResidentHeroBanner", () => {
     expect(screen.getByText("Allergy: Shellfish")).toBeInTheDocument();
   });
 
-  it("falls back to Room & Wing and Bed Number when no Scheme or Property matches", () => {
+  it("renders Property and Room & Wing cleanly when no Property matches", () => {
     currentRooms = [];
     currentProperties = [];
     currentSchemes = [];
@@ -188,9 +186,11 @@ describe("ResidentHeroBanner", () => {
       />,
     );
 
-    expect(screen.getByText("Room & Wing")).toBeInTheDocument();
+    expect(screen.getByText("Property")).toBeInTheDocument();
+    expect(screen.getByText("Unassigned")).toBeInTheDocument();
+    expect(screen.getByText("Room")).toBeInTheDocument();
     expect(screen.getByText("Room 3")).toBeInTheDocument();
-    expect(screen.getByText("Bed Number")).toBeInTheDocument();
-    expect(screen.getByText("Bed 3")).toBeInTheDocument();
+    expect(screen.queryByText("Bed Number")).not.toBeInTheDocument();
+    expect(screen.queryByText("Keyworker")).not.toBeInTheDocument();
   });
 });
