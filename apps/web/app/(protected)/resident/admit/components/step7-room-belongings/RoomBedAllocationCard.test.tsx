@@ -162,7 +162,7 @@ describe("RoomBedAllocationCard", () => {
     expect(propertySelect).toHaveTextContent("Maple Cottage");
     expect(roomSelect).toHaveTextContent(/Flat 201/);
     expect(
-      screen.getByText(/Maple Cottage • Room 201 • Single Ensuite/),
+      screen.getByText(/Maple Cottage • Flat 201 • Single Ensuite/),
     ).toBeInTheDocument();
   });
 
@@ -182,6 +182,7 @@ describe("RoomBedAllocationCard", () => {
     expect(updateFormData).toHaveBeenCalledWith({
       roomNumber: "",
       assignedBedId: "",
+      roomType: "Single",
       landlord: "Northern Supported Housing",
     });
 

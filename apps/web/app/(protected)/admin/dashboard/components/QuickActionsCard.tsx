@@ -8,7 +8,7 @@ import { Card, Text } from "@repo/ui/components/ui";
 export function QuickActionsCard() {
   const actions = [
     {
-      title: "Admit Resident",
+      title: "Admit Tenant",
       url: "/admin/residents/admit",
       icon: UserPlus,
     },

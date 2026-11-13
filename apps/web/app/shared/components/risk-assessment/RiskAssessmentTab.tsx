@@ -289,7 +289,7 @@ export function RiskAssessmentTab({ residentId, residentStatus, isDraft = false 
                       e.stopPropagation();
                       handleOpenAssessment(item);
                     }}
-                    className="h-8 px-3.5 text-md rounded-xl gap-1.5 cursor-pointer font-medium bg-emerald-800 hover:bg-emerald-900 text-white"
+                    className="h-8 px-3.5 text-md rounded-xl gap-1.5 cursor-pointer font-medium"
                   >
                     <Plus className="size-3.5" />
                     <span>{item.buttonLabel}</span>

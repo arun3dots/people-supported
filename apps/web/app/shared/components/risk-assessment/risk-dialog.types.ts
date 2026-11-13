@@ -59,6 +59,13 @@ export function validateRiskForm(state: FormState): FormValidationErrors {
   }
   if (!state.nextReviewDate) {
     errs.nextReviewDate = "Please select the next review date";
+  } else {
+    const reviewDate = new Date(state.nextReviewDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (reviewDate < today) {
+      errs.nextReviewDate = "Next review date cannot be in the past";
+    }
   }
   if (state.likelihood === 0 || state.severity === 0) {
     errs.inherent = "Please select likelihood and severity from the matrix above";
