@@ -1,14 +1,5 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import {
-  MedicationPrescription,
-  Prisma,
-  PrismaTransactionClient,
-  prisma,
-} from '@repo/db';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { MedicationPrescription, prisma } from '@repo/db';
 import {
   ChangeMedicationPrescriptionDTO,
   CreateMedicationRoundBulkDTO,
@@ -16,8 +7,17 @@ import {
   StopMedicationPrescriptionDTO,
 } from '@repo/schema';
 import { toJsonValue } from '../../common/utils/json.util';
-import { getUkDateString, parseUkDateTime } from '../../common/utils/time.util';
+import { getUkDateString } from '../../common/utils/time.util';
 import { AuditService } from '../../audit/audit.service';
+import {
+  buildPrescriptionRounds,
+  cancelPrescriptionRounds,
+} from './medication-prescription-rounds.util';
+import {
+  getActiveMedicationPrescription,
+  getMedicationResidentOrThrow,
+  listMedicationPrescriptions,
+} from './medication-prescription-read.util';
 import { MedicationAction } from '../../audit/audit.types';
 import {
   assertBackdateReason,
@@ -33,25 +33,7 @@ export class ResidentMedicationPrescriptionsService {
   constructor(private readonly auditService: AuditService) {}
 
   async listPrescriptions(residentId: string, tenantId: string) {
-    await this.getResidentOrThrow(residentId, tenantId);
-    return prisma.medicationPrescription.findMany({
-      where: { residentId },
-      orderBy: { startDate: 'desc' },
-      include: {
-        pauses: { orderBy: { pauseFrom: 'asc' } },
-        rounds: {
-          where: { deletedAt: null },
-          orderBy: { scheduledTime: 'asc' },
-          include: {
-            administrations: {
-              orderBy: { administeredAt: 'desc' },
-              take: 1,
-              include: { observation: true },
-            },
-          },
-        },
-      },
-    });
+    return listMedicationPrescriptions(residentId, tenantId);
   }
 
   async createPrescription(
@@ -60,7 +42,7 @@ export class ResidentMedicationPrescriptionsService {
     creatorId: string,
     tenantId: string,
   ) {
-    const resident = await this.getResidentOrThrow(residentId, tenantId);
+    const resident = await getMedicationResidentOrThrow(residentId, tenantId);
     if (resident.status === 'Discharged') {
       throw new BadRequestException(
         'Medication cannot be prescribed for discharged residents',
@@ -96,7 +78,7 @@ export class ResidentMedicationPrescriptionsService {
         },
       });
       const { count } = await tx.medicationRound.createMany({
-        data: this.buildRounds(
+        data: buildPrescriptionRounds(
           prescription,
           days,
           times,
@@ -127,7 +109,10 @@ export class ResidentMedicationPrescriptionsService {
     userId: string,
     tenantId: string,
   ) {
-    const current = await this.getActivePrescription(prescriptionId, tenantId);
+    const current = await getActiveMedicationPrescription(
+      prescriptionId,
+      tenantId,
+    );
     const effectiveDay = ukDayOf(dto.effectiveDate);
     assertBackdateReason(effectiveDay, dto.backdateReason);
     const endDay = minDay(
@@ -145,12 +130,13 @@ export class ResidentMedicationPrescriptionsService {
           updatedById: userId,
         },
       });
-      await this.cancelRounds(
+      await cancelPrescriptionRounds(
         tx,
         current.id,
         cutoffFor(effectiveDay),
         null,
         userId,
+        tenantId,
       );
       return updated;
     });
@@ -175,7 +161,10 @@ export class ResidentMedicationPrescriptionsService {
     userId: string,
     tenantId: string,
   ) {
-    const current = await this.getActivePrescription(prescriptionId, tenantId);
+    const current = await getActiveMedicationPrescription(
+      prescriptionId,
+      tenantId,
+    );
     const effectiveDay = ukDayOf(dto.effectiveDate);
     const newEndDay = ukDayOf(dto.endDate);
     assertBackdateReason(effectiveDay, dto.backdateReason);
@@ -204,7 +193,14 @@ export class ResidentMedicationPrescriptionsService {
           updatedById: userId,
         },
       });
-      await this.cancelRounds(tx, current.id, cutoff, null, userId);
+      await cancelPrescriptionRounds(
+        tx,
+        current.id,
+        cutoff,
+        null,
+        userId,
+        tenantId,
+      );
 
       const prescription = await tx.medicationPrescription.create({
         data: {
@@ -226,7 +222,13 @@ export class ResidentMedicationPrescriptionsService {
         },
       });
       const { count } = await tx.medicationRound.createMany({
-        data: this.buildRounds(prescription, days, times, cutoff, userId),
+        data: buildPrescriptionRounds(
+          prescription,
+          days,
+          times,
+          cutoff,
+          userId,
+        ),
       });
       return { prescription, count };
     });
@@ -253,7 +255,10 @@ export class ResidentMedicationPrescriptionsService {
     userId: string,
     tenantId: string,
   ) {
-    const current = await this.getActivePrescription(prescriptionId, tenantId);
+    const current = await getActiveMedicationPrescription(
+      prescriptionId,
+      tenantId,
+    );
     const fromDay = ukDayOf(dto.pauseFrom);
     const resumeDay = ukDayOf(dto.resumeOn);
     if (resumeDay <= fromDay) {
@@ -273,12 +278,13 @@ export class ResidentMedicationPrescriptionsService {
           createdById: userId,
         },
       });
-      await this.cancelRounds(
+      await cancelPrescriptionRounds(
         tx,
         current.id,
         cutoffFor(fromDay),
         ukStartOf(resumeDay),
         userId,
+        tenantId,
       );
       return created;
     });
@@ -296,83 +302,6 @@ export class ResidentMedicationPrescriptionsService {
       },
     );
     return pause;
-  }
-
-  private buildRounds(
-    prescription: MedicationPrescription,
-    days: string[],
-    times: string[],
-    cutoff: Date,
-    userId: string,
-  ): Prisma.MedicationRoundCreateManyInput[] {
-    const rows: Prisma.MedicationRoundCreateManyInput[] = [];
-    for (const day of days) {
-      for (const time of times) {
-        const scheduledTime = parseUkDateTime(day, time);
-        if (scheduledTime < cutoff) continue;
-        rows.push({
-          residentId: prescription.residentId,
-          prescriptionId: prescription.id,
-          drugName: prescription.drugName,
-          dose: prescription.dose,
-          form: prescription.form,
-          instructions: prescription.instructions,
-          imageUrls: prescription.imageUrls,
-          allowLateAdministration: prescription.allowLateAdministration,
-          mandatoryObservations: prescription.mandatoryObservations,
-          scheduledTime,
-          createdById: userId,
-          updatedById: userId,
-        });
-      }
-    }
-    return rows;
-  }
-
-  private async cancelRounds(
-    tx: PrismaTransactionClient,
-    prescriptionId: string,
-    from: Date,
-    to: Date | null,
-    userId: string,
-  ): Promise<void> {
-    await tx.medicationRound.updateMany({
-      where: {
-        prescriptionId,
-        deletedAt: null,
-        administrations: { none: {} },
-        scheduledTime: { gte: from, ...(to ? { lt: to } : {}) },
-      },
-      data: { deletedAt: new Date(), deletedById: userId },
-    });
-  }
-
-  private async getResidentOrThrow(residentId: string, tenantId: string) {
-    const resident = await prisma.resident.findFirst({
-      where: { id: residentId, tenantId },
-    });
-    if (!resident) {
-      throw new NotFoundException('Resident not found');
-    }
-    return resident;
-  }
-
-  private async getActivePrescription(
-    prescriptionId: string,
-    tenantId: string,
-  ) {
-    const prescription = await prisma.medicationPrescription.findFirst({
-      where: { id: prescriptionId, resident: { tenantId } },
-    });
-    if (!prescription) {
-      throw new NotFoundException('Medication prescription not found');
-    }
-    if (prescription.status !== 'Active') {
-      throw new BadRequestException(
-        `Prescription is already ${prescription.status.toLowerCase()}`,
-      );
-    }
-    return prescription;
   }
 
   private emitAudit(

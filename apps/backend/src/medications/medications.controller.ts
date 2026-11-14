@@ -40,11 +40,16 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { ZodValidationPipe } from '../common/pipes/zod.pipe';
+import type { PreAdmissionPartCDTO } from '@repo/schema';
+import { ResidentMedicationRoundsService } from '../residents/services/resident-medication-rounds.service';
 
 @Controller('medications')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class MedicationsController {
-  constructor(private readonly residentsService: ResidentsService) {}
+  constructor(
+    private readonly residentsService: ResidentsService,
+    private readonly medicationRounds: ResidentMedicationRoundsService,
+  ) {}
 
   private getTenantId(req: AuthenticatedRequest): string {
     if (!req.user.tenantId) {
@@ -62,6 +67,18 @@ export class MedicationsController {
     @Req() req: AuthenticatedRequest,
   ) {
     return this.residentsService.getMedicationRounds(
+      residentId,
+      this.getTenantId(req),
+    );
+  }
+
+  @Get('residents/:residentId/onboarding-medicines')
+  @Roles('Admin', 'Manager', 'Carer', 'Nurse')
+  getOnboardingMedicines(
+    @Param('residentId') residentId: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<PreAdmissionPartCDTO['medicines']> {
+    return this.medicationRounds.getOnboardingMedicines(
       residentId,
       this.getTenantId(req),
     );

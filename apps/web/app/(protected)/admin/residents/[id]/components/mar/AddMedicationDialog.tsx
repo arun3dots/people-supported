@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { format } from "date-fns";
+import { addUkCalendarDays, getUkDateString } from "../../../../../../../lib/utils/uk-date-time";
 import { z } from "zod";
 import { Pill, AlertCircle } from "lucide-react";
 import { MEDICATION_FORMS } from "@repo/schema";
@@ -27,6 +27,7 @@ import {
   useCreateMedicationRoundMutation,
   useCreateMedicationRoundBulkMutation,
 } from "../../../../../../../lib/queries/residents";
+import { medicationDateToIso, medicationDateTimeToIso } from "./medicationScheduleDates";
 import { MedicationScheduleSection } from "./MedicationScheduleSection";
 import { MedicationImageUploader } from "./MedicationImageUploader";
 
@@ -61,13 +62,13 @@ export function AddMedicationDialog({
 
   // Single mode state
   const [scheduledDateTime, setScheduledDateTime] = useState(
-    format(new Date(), "yyyy-MM-dd'T'08:00")
+    `${getUkDateString(new Date())}T08:00`
   );
 
   // Recurring bulk mode state
-  const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [startDate, setStartDate] = useState(getUkDateString(new Date()));
   const [endDate, setEndDate] = useState(
-    format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), "yyyy-MM-dd")
+    getUkDateString(addUkCalendarDays(new Date(), 30))
   );
   const [selectedTimes, setSelectedTimes] = useState<string[]>(["08:00"]);
   const [customTime, setCustomTime] = useState("");
@@ -141,8 +142,8 @@ export function AddMedicationDialog({
             form,
             instructions: instructions.trim() || undefined,
             imageUrls,
-            startDate: new Date(startDate).toISOString(),
-            endDate: new Date(endDate).toISOString(),
+            startDate: medicationDateToIso(startDate),
+            endDate: medicationDateToIso(endDate),
             times: selectedTimes,
             allowLateAdministration,
             mandatoryObservations,
@@ -157,7 +158,7 @@ export function AddMedicationDialog({
             form,
             instructions: instructions.trim() || undefined,
             imageUrls,
-            scheduledTime: new Date(scheduledDateTime).toISOString(),
+            scheduledTime: medicationDateTimeToIso(scheduledDateTime),
             allowLateAdministration,
             mandatoryObservations,
           },

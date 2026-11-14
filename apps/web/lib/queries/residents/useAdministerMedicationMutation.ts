@@ -1,39 +1,31 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeAPICall } from "../../api";
 import { ADMINISTER_MEDICATION } from "@repo/endpoints";
-import { residentKeys } from "./keys";
+import type { AdministerMedicationDTO } from "@repo/schema";
+import { refreshMedicationQueries } from "./refreshMedicationQueries";
 import { toast } from "@repo/ui/components/ui";
 
-interface AdministerMedicationPayload {
-  roundId: string;
-  status: "Given" | "Refused" | "Not Available";
-  reason?: string;
-  residentId: string;
-  vitals?: any;
-}
+type AdministerMedicationPayload = Omit<AdministerMedicationDTO, "status"> & {
+  status: AdministerMedicationDTO["status"] | "Not Available";
+};
 
 export function useAdministerMedicationMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (payload: AdministerMedicationPayload) =>
-      makeAPICall(
-        ADMINISTER_MEDICATION,
-        payload as unknown as Record<string, unknown>,
-      ),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+      makeAPICall(ADMINISTER_MEDICATION, {
+        ...payload,
+        status: payload.status === "Not Available" ? "Omitted" : payload.status,
+      }),
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Medication administration recorded successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description:

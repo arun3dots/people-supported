@@ -10,7 +10,7 @@ import type {
   ChangeMedicationPrescriptionDTO,
   PauseMedicationPrescriptionDTO,
 } from "@repo/schema";
-import { residentKeys } from "./keys";
+import { refreshMedicationQueries } from "./refreshMedicationQueries";
 import { toast } from "@repo/ui/components/ui";
 
 type PrescriptionMutationVars<T> = {
@@ -22,20 +22,29 @@ type PrescriptionMutationVars<T> = {
 function useInvalidatePrescriptions() {
   const queryClient = useQueryClient();
   return (residentId: string) =>
-    queryClient.invalidateQueries({
-      queryKey: [...residentKeys.detail(residentId), "medication-rounds"],
-    });
+    refreshMedicationQueries(queryClient, residentId);
 }
 
 export function useStopMedicationPrescriptionMutation() {
   const invalidate = useInvalidatePrescriptions();
 
   return useMutation({
-    mutationFn: ({ prescriptionId, data }: PrescriptionMutationVars<StopMedicationPrescriptionDTO>) =>
-      makeAPICall(STOP_MEDICATION_PRESCRIPTION, data, {}, { id: prescriptionId }),
-    onSuccess: (_, variables) => {
-      invalidate(variables.residentId);
-      toast({ title: "Success", description: "Medication stopped from the chosen date" });
+    mutationFn: ({
+      prescriptionId,
+      data,
+    }: PrescriptionMutationVars<StopMedicationPrescriptionDTO>) =>
+      makeAPICall(
+        STOP_MEDICATION_PRESCRIPTION,
+        data,
+        {},
+        { id: prescriptionId },
+      ),
+    onSuccess: async (_, variables) => {
+      await invalidate(variables.residentId);
+      toast({
+        title: "Success",
+        description: "Medication stopped from the chosen date",
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -51,11 +60,22 @@ export function useChangeMedicationPrescriptionMutation() {
   const invalidate = useInvalidatePrescriptions();
 
   return useMutation({
-    mutationFn: ({ prescriptionId, data }: PrescriptionMutationVars<ChangeMedicationPrescriptionDTO>) =>
-      makeAPICall(CHANGE_MEDICATION_PRESCRIPTION, data, {}, { id: prescriptionId }),
-    onSuccess: (_, variables) => {
-      invalidate(variables.residentId);
-      toast({ title: "Success", description: "Medication changed from the chosen date" });
+    mutationFn: ({
+      prescriptionId,
+      data,
+    }: PrescriptionMutationVars<ChangeMedicationPrescriptionDTO>) =>
+      makeAPICall(
+        CHANGE_MEDICATION_PRESCRIPTION,
+        data,
+        {},
+        { id: prescriptionId },
+      ),
+    onSuccess: async (_, variables) => {
+      await invalidate(variables.residentId);
+      toast({
+        title: "Success",
+        description: "Medication changed from the chosen date",
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -71,11 +91,22 @@ export function usePauseMedicationPrescriptionMutation() {
   const invalidate = useInvalidatePrescriptions();
 
   return useMutation({
-    mutationFn: ({ prescriptionId, data }: PrescriptionMutationVars<PauseMedicationPrescriptionDTO>) =>
-      makeAPICall(PAUSE_MEDICATION_PRESCRIPTION, data, {}, { id: prescriptionId }),
-    onSuccess: (_, variables) => {
-      invalidate(variables.residentId);
-      toast({ title: "Success", description: "Medication paused for the chosen period" });
+    mutationFn: ({
+      prescriptionId,
+      data,
+    }: PrescriptionMutationVars<PauseMedicationPrescriptionDTO>) =>
+      makeAPICall(
+        PAUSE_MEDICATION_PRESCRIPTION,
+        data,
+        {},
+        { id: prescriptionId },
+      ),
+    onSuccess: async (_, variables) => {
+      await invalidate(variables.residentId);
+      toast({
+        title: "Success",
+        description: "Medication paused for the chosen period",
+      });
     },
     onError: (error: Error) => {
       toast({
