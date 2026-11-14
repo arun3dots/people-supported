@@ -128,6 +128,10 @@ describe("PRE_ADMISSION_STEPS", () => {
     expect(
       MandatoryPreAdmissionPartASchema.safeParse({ ...partA, nhsNumber: "" })
         .success,
+    ).toBe(true);
+    expect(
+      MandatoryPreAdmissionPartASchema.safeParse({ ...partA, firstName: "" })
+        .success,
     ).toBe(false);
   });
 

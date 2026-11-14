@@ -53,9 +53,9 @@ export function MetricStatsRow({ stats, isLoading }: MetricStatsRowProps) {
 
   const statCards = [
     {
-      title: "Total Residents",
+      title: "Total Tenants",
       value: residentCount.toString(),
-      trend: `${activeResidents} active residents`,
+      trend: `${activeResidents} active tenants`,
       trendType: "up" as const,
       icon: Users,
       bgColor: "bg-slate-50",

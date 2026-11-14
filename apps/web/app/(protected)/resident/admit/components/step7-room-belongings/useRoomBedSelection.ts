@@ -142,6 +142,11 @@ export function useRoomBedSelection(
       patch.roomNumber = "";
       patch.assignedBedId = "";
     }
+    const propType = prop?.parsedPropertyDetails?.propertyType || "";
+    const isPropFlat = propType.toLowerCase().includes("flat");
+    if (isPropFlat && (formData.roomType === "Shared" || !formData.roomType)) {
+      patch.roomType = "Single";
+    }
     const nextLandlord = resolvePropertyLandlord(prop);
     const currentLandlord = formData.landlord?.trim() ?? "";
     if ((!currentLandlord || currentLandlord === propertyLandlord) && nextLandlord !== currentLandlord) {
@@ -174,10 +179,13 @@ export function useRoomBedSelection(
       nextLandlord !== currentLandlord;
 
     const roomStatus = getRoomStatus(roomId);
+    const targetRoomType = isFlat
+      ? (room.type === "Shared" ? "Single" : (room.type || "Single"))
+      : (room.type || "Single");
 
     updateFormData({
       roomNumber: room.roomNumber,
-      roomType: room.type || (isFlat ? "Single" : "Shared"),
+      roomType: targetRoomType,
       assignedBedId: roomStatus.availableBedId || "",
       ...(isFlat ? { roommate: "" } : {}),
       ...(shouldUpdateLandlord ? { landlord: nextLandlord } : {}),

@@ -9,6 +9,7 @@ interface PartCardProps {
   description?: string;
   children: ReactNode;
   className?: string;
+  required?: boolean;
 }
 
 /** Grey surface card used by every pre-admission part, matching the admission wizard cards. */
@@ -17,6 +18,7 @@ export function PartCard({
   description,
   children,
   className,
+  required,
 }: PartCardProps) {
   return (
     <div
@@ -28,6 +30,7 @@ export function PartCard({
       <div className="pb-3 border-b border-slate-200/80">
         <Text as="h3" size="md" weight="bold" className="text-slate-900 tracking-wider">
           {title}
+          {required && <span className="text-red-500 ml-1 font-semibold">*</span>}
         </Text>
         {description && (
           <Text size="md" className="text-slate-600 mt-1">

@@ -87,6 +87,7 @@ export function RiskAssessmentDialog(props: Props) {
               Category
             </Label>
             <Select
+              disabled
               value={state.category}
               onValueChange={(v) => {
                 setState((s) => ({ ...s, category: v as RiskCategory }));
@@ -94,8 +95,9 @@ export function RiskAssessmentDialog(props: Props) {
               }}
             >
               <SelectTrigger
+                disabled
                 className={cn(
-                  "w-full text-md rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] bg-white",
+                  "w-full text-md rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] bg-slate-100/70 text-slate-600 cursor-not-allowed",
                   errors.category && "border-red-500 focus:ring-red-500"
                 )}
               >
@@ -122,6 +124,7 @@ export function RiskAssessmentDialog(props: Props) {
             </Label>
             <Input
               id="risk-title"
+              disabled
               value={state.title}
               onChange={(e) => {
                 setState((s) => ({ ...s, title: e.target.value }));
@@ -129,7 +132,7 @@ export function RiskAssessmentDialog(props: Props) {
                   setErrors((err) => ({ ...err, title: undefined }));
               }}
               placeholder="e.g. Falls risk — mobility decline"
-              className="rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] text-md"
+              className="rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A] text-md bg-slate-100/70 text-slate-600 cursor-not-allowed"
               errorMessage={errors.title}
             />
           </div>
@@ -192,6 +195,7 @@ export function RiskAssessmentDialog(props: Props) {
               <Input
                 id="risk-next-review-date"
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
                 value={state.nextReviewDate}
                 onChange={(e) => {
                   setState((s) => ({ ...s, nextReviewDate: e.target.value }));
