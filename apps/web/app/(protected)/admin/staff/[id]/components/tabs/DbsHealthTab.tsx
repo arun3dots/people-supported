@@ -90,9 +90,9 @@ export function DbsHealthTab() {
       </div>
 
       {/* ROW 2: Immunization Status & DBS Details (2 Cards Column Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         {/* Column 1: Immunization Card (~58% width) */}
-        <div className="lg:col-span-7 h-full flex flex-col">
+        <div className="xl:col-span-7 h-full flex flex-col">
           <ImmunisationCard
             className="h-full"
             immList={immList}
@@ -111,7 +111,7 @@ export function DbsHealthTab() {
         </div>
 
         {/* Column 2: DBS Details Card (~42% width) */}
-        <div className="lg:col-span-5 h-full flex flex-col">
+        <div className="xl:col-span-5 h-full flex flex-col">
           <DbsDetailsCard
             className="h-full"
             dbs={dbs}

@@ -14,6 +14,7 @@ import { X, FileText, Check } from 'lucide-react-native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CREATE_CARE_NOTE } from '@repo/endpoints';
 import { makeMobileApiCall } from '../../data/api/client';
+import { isNetworkError } from '../../data/api/errors';
 import { enqueueMutation } from '../../data/api/offlineQueue';
 import { Text, Button } from '../../presentation/components/common';
 import { useSheetBottomPadding } from '../../presentation/hooks/useSheetBottomPadding';
@@ -56,19 +57,23 @@ export function AddCareNoteModal({ visible, onClose, residentId }: Props) {
       if (!trimmed) throw new Error('Please enter note content.');
       const payload = { category, content: trimmed };
 
+      let queuedOffline = false;
       try {
         await makeMobileApiCall(CREATE_CARE_NOTE, payload, undefined, { id: residentId });
       } catch (err) {
+        if (!isNetworkError(err)) throw err;
         safeLogger.warn('Network error saving care note, queuing offline mutation', err);
         await enqueueMutation(CREATE_CARE_NOTE, payload, { id: residentId });
+        queuedOffline = true;
       }
+      return { queuedOffline };
     },
-    onSuccess: () => {
+    onSuccess: ({ queuedOffline }) => {
       void queryClient.invalidateQueries({ queryKey: ['residentTimeline', residentId] });
       void queryClient.invalidateQueries({ queryKey: ['resident-care-notes', residentId] });
       setContent('');
       onClose();
-      Alert.alert('Care Note Saved', 'Your note has been recorded on the timeline.');
+      Alert.alert(queuedOffline ? 'Saved Offline' : 'Care Note Saved', queuedOffline ? 'Your note is queued and has not yet been recorded on the server.' : 'Your note has been recorded on the timeline.');
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Failed to save care note';

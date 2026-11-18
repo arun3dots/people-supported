@@ -8,7 +8,7 @@ import {
 
 export interface ClockInEligibility {
   isEligible: boolean;
-  reason: 'eligible' | 'too_early' | 'shift_ended' | 'no_shift';
+  reason: 'eligible' | 'too_early' | 'shift_ended' | 'no_shift' | 'invalid_schedule';
   minutesUntilEligible: number;
   eligibleAtStr: string;
   scheduledStartTimeStr: string;
@@ -28,7 +28,7 @@ export interface ShiftTimeInput {
   status?: string;
 }
 
-function getUkCalendarParts(dateInput?: string | Date): { year: number; month: number; day: number } {
+function getUkCalendarParts(dateInput?: string | Date): { year: number; month: number; day: number } | null {
   if (typeof dateInput === 'string') {
     const dateOnlyMatch = dateInput.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (dateOnlyMatch) {
@@ -44,14 +44,14 @@ function getUkCalendarParts(dateInput?: string | Date): { year: number; month: n
     ? dateInput
     : typeof dateInput === 'string'
       ? new Date(dateInput)
-      : new Date();
-  const validDate = Number.isFinite(date.getTime()) ? date : new Date();
+      : null;
+  if (!date || !Number.isFinite(date.getTime())) return null;
   const parts = new Intl.DateTimeFormat('en-GB', {
     timeZone: UK_TIMEZONE,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).formatToParts(validDate);
+  }).formatToParts(date);
 
   return {
     year: Number(parts.find((part) => part.type === 'year')?.value),
@@ -101,7 +101,10 @@ export function parseShiftTimestamp(
     (rawTime && !(typeof rawTime === 'string' && /^\d{1,2}:\d{2}/.test(rawTime.trim()))
       ? rawTime
       : undefined);
-  const { year, month, day } = getUkCalendarParts(dateSource);
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
+  const calendar = getUkCalendarParts(dateSource);
+  if (!calendar) return null;
+  const { year, month, day } = calendar;
   const result = new Date(year, month, day, hours, minutes, 0, 0);
   return isNaN(result.getTime()) ? null : result.getTime();
 }
@@ -160,11 +163,11 @@ export function checkClockInEligibility(
     endMs += 24 * 60 * 60 * 1000;
   }
 
-  // Fallback: If start timestamp is unparseable, allow clock-in so carers aren't blocked
+  // A missing schedule must not be interpreted as an eligible clock-in window.
   if (!startMs) {
     return {
-      isEligible: true,
-      reason: 'eligible',
+      isEligible: false,
+      reason: 'invalid_schedule',
       minutesUntilEligible: 0,
       eligibleAtStr: '',
       scheduledStartTimeStr: shift.startTime || '',

@@ -19,6 +19,7 @@ export type StaffMember = {
   department?: string;
   dbsNumber?: string;
   dbsExpiryDate?: string;
+  dbsStatus?: string | null;
   startDate?: string;
   contractType?: string | null;
   contractedHoursPerWeek?: number | null;

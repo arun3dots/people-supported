@@ -188,7 +188,10 @@ export function parseTaskTiming(task: RawDailyTask): {
 
 export function mapRawTaskToMobile(item: RawDailyTask): MobileTaskItem {
   const timing = parseTaskTiming(item);
-  const rawStatus = item.status || 'Pending';
+  const rawStatus = item.status;
+  if (!['pending', 'completed', 'done', 'skipped', 'missed', 'refused', 'overdue'].includes(rawStatus?.toLowerCase())) {
+    throw new Error('Task status not recorded');
+  }
   const rawStatusLower = rawStatus.toLowerCase();
   const isCompleted = rawStatusLower === 'completed' || rawStatusLower === 'done';
   const isSkipped = rawStatusLower === 'skipped' || rawStatusLower === 'missed';
@@ -234,10 +237,10 @@ export function mapRawTaskToMobile(item: RawDailyTask): MobileTaskItem {
       ? 'continuous'
       : timeSlot
         ? `by ${timeSlot}`
-        : 'by 12:00';
+        : 'Time not recorded';
 
   const targetTime = item.targetTime ?? item.carePlanTask?.targetTime ?? timing.time;
-  const category = item.category || item.carePlanTask?.category || 'Plan v1';
+  const category = item.category || item.carePlanTask?.category || 'Uncategorized';
   const goalTitle = item.carePlanTask?.goal?.title || undefined;
   const instructions =
     item.carePlanTask?.instructions ||

@@ -43,6 +43,7 @@ export interface ShiftDetailsModalProps {
   wardName?: string;
   isShiftStarted: boolean;
   isCompleted?: boolean;
+  isContinuing?: boolean;
   scheduledStartTime?: string;
   actualStartedTime?: string | null;
   scheduledEndTime?: string;
@@ -71,6 +72,7 @@ export function ShiftDetailsModal({
   wardName = '',
   isShiftStarted,
   isCompleted = false,
+  isContinuing = false,
   scheduledStartTime = '',
   actualStartedTime = null,
   scheduledEndTime = '',
@@ -122,9 +124,34 @@ export function ShiftDetailsModal({
                   {activeTab === 'today' ? shiftName : 'Weekly Shift Rota'}
                 </Text>
                 {activeTab === 'today' && hasTodayShift && (
-                  <Badge variant={isCompleted ? 'clinicalSafe' : isShiftStarted ? 'clinicalSafe' : 'outline'} size="sm">
-                    <Text className={`text-xs font-semibold ${isCompleted || isShiftStarted ? 'text-clinical-safe' : 'text-muted-foreground'}`}>
-                      {isCompleted ? 'Completed' : isShiftStarted ? 'Active Shift' : 'Scheduled'}
+                  <Badge
+                    variant={
+                      isCompleted
+                        ? 'clinicalSafe'
+                        : isShiftStarted && isContinuing
+                          ? 'clinicalWarning'
+                          : isShiftStarted
+                            ? 'clinicalSafe'
+                            : 'outline'
+                    }
+                    size="sm"
+                  >
+                    <Text
+                      className={`text-xs font-semibold ${
+                        isCompleted || (isShiftStarted && !isContinuing)
+                          ? 'text-clinical-safe'
+                          : isShiftStarted && isContinuing
+                            ? 'text-clinical-warning'
+                            : 'text-muted-foreground'
+                      }`}
+                    >
+                      {isCompleted
+                        ? 'Completed'
+                        : isShiftStarted && isContinuing
+                          ? 'Continuing'
+                          : isShiftStarted
+                            ? 'Active Shift'
+                            : 'Scheduled'}
                     </Text>
                   </Badge>
                 )}
@@ -193,6 +220,7 @@ export function ShiftDetailsModal({
                   timeRemainingStr={timeRemainingStr}
                   isShiftStarted={isShiftStarted}
                   isCompleted={isCompleted}
+                  isContinuing={isContinuing}
                   nextShiftName={nextShiftName}
                   nextShiftStartTime={nextShiftStartTime}
                   nextShiftHandoverPerson={nextShiftHandoverPerson}

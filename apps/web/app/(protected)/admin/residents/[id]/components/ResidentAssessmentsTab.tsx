@@ -81,7 +81,7 @@ export function ResidentAssessmentsTab({
           completedDate: r.createdAt
             ? new Date(r.createdAt).toLocaleDateString("en-GB")
             : "12/08/2026",
-          assessor: r.reviewer?.fullName ?? r.approver?.fullName ?? "Care Team",
+          assessor: r.reviewer?.fullName ?? r.approver?.fullName ?? "Supported Worker",
           nextDueDate: reviewDateObj
             ? reviewDateObj.toLocaleDateString("en-GB")
             : "12/02/2027",

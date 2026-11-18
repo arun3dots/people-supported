@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
-import { FileText, ChevronRight } from 'lucide-react-native';
-import { Avatar } from '../common/Avatar';
-import { Text } from '../ui/text';
+import { View, TouchableOpacity, type StyleProp, type ViewStyle } from 'react-native';
+import { FileText, ChevronRight, LockKeyhole } from 'lucide-react-native';
+import { Avatar, Card, Text } from '../../presentation/components/common';
 import { theme } from '../../theme';
 
 export interface HandoverNoteData {
@@ -21,132 +20,74 @@ export interface RecentHandoverCardProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/**
- * Replaces any resident UUID occurrences in handover note text with the resident's actual full name (BUG-029).
- */
 export function resolveHandoverResidentNames(
   content: string,
-  residents?: Array<{ id: string; fullName: string }>
+  residents?: Array<{ id: string; fullName: string }>,
 ): string {
-  if (!content) return '';
-  if (!residents || residents.length === 0) return content;
-
   let resolved = content;
-  for (const r of residents) {
-    if (r.id && r.fullName) {
-      resolved = resolved.split(`[Resident: ${r.id}]`).join(`[Person Supported: ${r.fullName}]`);
-      resolved = resolved.split(`[Person Supported: ${r.id}]`).join(`[Person Supported: ${r.fullName}]`);
-      resolved = resolved.split(r.id).join(r.fullName);
+  for (const resident of residents ?? []) {
+    if (resident.id && resident.fullName) {
+      resolved = resolved.split(resident.id).join(resident.fullName);
     }
   }
   return resolved.split('[Resident: ').join('[Person Supported: ');
 }
 
-export function RecentHandoverCard({
-  note,
-  residents,
-  onPress,
-  style,
-}: RecentHandoverCardProps) {
-  const CardWrapper = onPress ? TouchableOpacity : View;
-  const displayContent = note ? resolveHandoverResidentNames(note.content, residents) : '';
-
+export function RecentHandoverCard({ note, residents, onPress, style }: RecentHandoverCardProps) {
   return (
-    <View style={[styles.sectionWrapper, style]}>
-      {/* Section Header */}
-      <View style={styles.sectionHeader}>
-        <Text className="text-lg font-bold text-[#141F1E]">Recent Handover Notes</Text>
-        <Text className="text-xs text-[#5D5D5D] mt-0.5">
-          Stay informed with the latest shift updates
-        </Text>
-      </View>
-
-      {/* Main Card */}
-      <CardWrapper
-        style={styles.cardContainer}
-        activeOpacity={onPress ? 0.85 : 1}
+    <View className="my-1 w-full" style={style}>
+      <Text className="text-lg font-bold text-foreground">Recent Handover Notes</Text>
+      <Text className="text-md text-muted-foreground mt-1 mb-3">
+        Updates from the previous care team
+      </Text>
+      <TouchableOpacity
         onPress={onPress}
+        disabled={!onPress}
+        activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel="View handover notes from previous carers"
       >
-        {note ? (
-          <>
-            {/* Top Header: Avatar + Staff Details */}
-            <View style={styles.authorRow}>
-              <Avatar
-                name={note.authorName}
-                imageUrl={note.authorAvatarUrl || undefined}
-                size="lg"
-                style={styles.avatar}
-              />
-              <View style={styles.authorTextCol}>
-                <Text className="text-md font-bold text-foreground">
-                  Handover by {note.authorName}
-                </Text>
-                {note.authorRole && (
-                  <Text className="text-xs text-muted-foreground mt-0.5">
-                    {note.authorRole}
+        <Card className="bg-card-subtle border-0 rounded-2xl p-4">
+          {note ? (
+            <>
+              <View className="flex-row items-center gap-3">
+                <Avatar
+                  name={note.authorName}
+                  imageUrl={note.authorAvatarUrl ?? undefined}
+                  size="lg"
+                />
+                <View className="flex-1">
+                  <Text className="text-base font-bold text-foreground">
+                    Handover by {note.authorName}
                   </Text>
-                )}
-                {note.authorShift && (
-                  <Text className="text-xs text-muted-foreground">
-                    {note.authorShift}
-                  </Text>
-                )}
+                  <Text className="text-md text-muted-foreground mt-1">{note.authorRole}</Text>
+                  <Text className="text-md text-muted-foreground">{note.authorShift}</Text>
+                </View>
               </View>
+              <Text className="text-base leading-6 text-foreground mt-4" numberOfLines={3}>
+                {resolveHandoverResidentNames(note.content, residents)}
+              </Text>
+            </>
+          ) : (
+            <View className="items-center py-3 gap-2">
+              <FileText size={24} color={theme.colors.primary.DEFAULT} />
+              <Text className="text-base font-bold text-foreground">
+                No Previous Handover Notes
+              </Text>
+              <Text className="text-md text-muted-foreground text-center">
+                Notes from completed shifts will appear here when the previous team signs off.
+              </Text>
             </View>
-
-            {/* Note Content Paragraph */}
-            <Text className="text-sm leading-5 text-foreground mt-3.5">
-              {displayContent}
+          )}
+          <View className="flex-row items-center gap-2 mt-4 pt-3 border-t border-border-light">
+            <LockKeyhole size={16} color={theme.colors.primary.DEFAULT} />
+            <Text className="text-md font-semibold text-primary flex-1">
+              View previous handovers
             </Text>
-          </>
-        ) : (
-          <View className="py-2 items-center text-center">
-            <View className="h-10 w-10 rounded-full bg-primary/10 items-center justify-center mb-2">
-              <FileText size={20} color={theme.colors.primary.DEFAULT} />
-            </View>
-            <Text className="text-sm font-bold text-foreground mb-1">
-              No Handover Notes Yet
-            </Text>
-            <Text className="text-xs text-muted-foreground text-center mb-2">
-              No handover notes recorded from the previous shift. Tap to record handover notes for your team.
-            </Text>
-            <View className="flex-row items-center gap-1 mt-1">
-              <Text className="text-xs font-bold text-primary">Record Handover</Text>
-              <ChevronRight size={14} color={theme.colors.primary.DEFAULT} />
-            </View>
+            <ChevronRight size={18} color={theme.colors.primary.DEFAULT} />
           </View>
-        )}
-      </CardWrapper>
+        </Card>
+      </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionWrapper: {
-    marginVertical: 4,
-    width: '100%',
-  },
-  sectionHeader: {
-    marginBottom: 6,
-  },
-  cardContainer: {
-    backgroundColor: '#FAF7EC',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    width: '100%',
-  },
-  authorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-  },
-  authorTextCol: {
-    flex: 1,
-  },
-});

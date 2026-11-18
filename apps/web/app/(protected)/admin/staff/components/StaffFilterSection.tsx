@@ -17,6 +17,7 @@ interface StaffFilterSectionProps {
   setSearchTerm: (val: string) => void;
   roleFilter: string;
   setRoleFilter: (val: string) => void;
+  roleOptions?: { key: string; label: string; count: number }[];
   schemeFilter?: string;
   setSchemeFilter?: (val: string) => void;
   propertyFilter?: string;
@@ -40,7 +41,7 @@ export function StaffFilterSection({
   setPropertyFilter,
   statusFilter,
   setStatusFilter,
-  roles = [],
+  roleOptions = [],
   schemes = [],
   properties = [],
   onReset,
@@ -63,18 +64,15 @@ export function StaffFilterSection({
       <div className="flex flex-wrap items-center gap-2 shrink-0">
         {/* Roles Filter */}
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-36 h-10 bg-white border-slate-200/80 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
-            <SelectValue placeholder="All Roles" />
+          <SelectTrigger className="w-48 h-10 bg-white border-slate-200/80 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
+            <SelectValue placeholder="All Staff" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="All Roles">All Roles</SelectItem>
-            {roles
-              .filter((r) => r.name.toLowerCase() !== "resident")
-              .map((r) => (
-                <SelectItem key={r.id} value={r.id}>
-                  {r.name}
-                </SelectItem>
-              ))}
+            {roleOptions.map((opt) => (
+              <SelectItem key={opt.key} value={opt.key}>
+                {opt.label} ({opt.count})
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 

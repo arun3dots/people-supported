@@ -25,6 +25,7 @@ export interface HoursSummaryMetrics {
   delivered: number;
   gap: number;
   overtime: number;
+  offDays: number;
   gapPercent: string;
   coveragePercent: string;
   overtimePercent: string;
@@ -74,16 +75,22 @@ export function buildHoursSummaryMetrics(
   filteredShifts: Shift[],
   staff: StaffMember[],
 ): HoursSummaryMetrics {
+  const offDays = filteredShifts.filter(
+    (s) => s.careType === "Off / Rest Day",
+  ).length;
+  const activeShifts = filteredShifts.filter(
+    (s) => s.careType !== "Off / Rest Day",
+  );
   const planned = roundHours(
-    filteredShifts.reduce((acc, s) => acc + getShiftPlannedHours(s), 0),
+    activeShifts.reduce((acc, s) => acc + getShiftPlannedHours(s), 0),
   );
   const delivered = roundHours(
-    filteredShifts.reduce((acc, s) => acc + getShiftDeliveredHours(s), 0),
+    activeShifts.reduce((acc, s) => acc + getShiftDeliveredHours(s), 0),
   );
   const gap = Math.max(0, roundHours(required - planned));
 
   const hoursByStaff = new Map<string, number>();
-  filteredShifts.forEach((s) => {
+  activeShifts.forEach((s) => {
     const hrs = getShiftPlannedHours(s);
     getShiftStaffIds(s).forEach((uid) => {
       hoursByStaff.set(uid, (hoursByStaff.get(uid) ?? 0) + hrs);
@@ -114,6 +121,7 @@ export function buildHoursSummaryMetrics(
     delivered,
     gap,
     overtime,
+    offDays,
     gapPercent,
     coveragePercent,
     overtimePercent:
@@ -133,15 +141,22 @@ export function buildDailyHoursPoints(
     const dayShifts = filteredShifts.filter(
       (s) => getShiftDateStr(s) === d.dateStr,
     );
+    const workingShifts = dayShifts.filter(
+      (s) => s.careType !== "Off / Rest Day",
+    );
+    const offCount = dayShifts.filter(
+      (s) => s.careType === "Off / Rest Day",
+    ).length;
     return {
       day: d.dayName,
       req: dailyReq,
       plan: roundHours(
-        dayShifts.reduce((sum, s) => sum + getShiftPlannedHours(s), 0),
+        workingShifts.reduce((sum, s) => sum + getShiftPlannedHours(s), 0),
       ),
       del: roundHours(
-        dayShifts.reduce((sum, s) => sum + getShiftDeliveredHours(s), 0),
+        workingShifts.reduce((sum, s) => sum + getShiftDeliveredHours(s), 0),
       ),
+      offCount,
     };
   });
 }

@@ -65,7 +65,7 @@ export function ShiftNotStartedCard({
           >
             {eligibility.isEligible
               ? `Start Shift (${shift.name || 'Shift'})`
-              : `Clock-in opens at ${eligibility.eligibleAtStr || 'scheduled time'}`}
+              : eligibility.reason === 'invalid_schedule' ? 'Schedule unavailable' : `Clock-in opens at ${eligibility.eligibleAtStr || 'scheduled time'}`}
           </Button>
         ) : null}
 

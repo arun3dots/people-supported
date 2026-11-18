@@ -15,6 +15,7 @@ import {
 import { cn } from "@repo/ui/lib/utils";
 import type { PropertyItem, SchemeItem } from "../../../../../../lib/types/facility";
 import type { StaffMember } from "../../../../../../lib/types/staff";
+import { WeekNavigator } from "./WeekNavigator";
 
 export interface RotaFilterState {
   schemeId: string;
@@ -24,15 +25,24 @@ export interface RotaFilterState {
   careType: string;
 }
 
+export interface WeekNavigationProps {
+  currentDate: Date;
+  onPreviousWeek: () => void;
+  onNextWeek: () => void;
+  onCurrentWeek: () => void;
+  onSelectDate: (date: Date) => void;
+}
+
 interface RotaUnifiedFilterBarProps {
-  activeView: "rota" | "hours";
-  onViewChange: (view: "rota" | "hours") => void;
+  activeView: "rota" | "hours" | "allocation";
+  onViewChange: (view: "rota" | "hours" | "allocation") => void;
   filters: RotaFilterState;
   onFilterChange: (updates: Partial<RotaFilterState>) => void;
   onResetFilters: () => void;
   schemes: SchemeItem[];
   properties: PropertyItem[];
   staff: StaffMember[];
+  weekNavigation?: WeekNavigationProps;
 }
 
 const CARE_TYPE_FILTERS = [
@@ -54,6 +64,7 @@ export function RotaUnifiedFilterBar({
   schemes,
   properties,
   staff,
+  weekNavigation,
 }: RotaUnifiedFilterBarProps): React.JSX.Element {
   const filteredProperties =
     filters.schemeId === "all"
@@ -67,7 +78,7 @@ export function RotaUnifiedFilterBar({
       className="p-4 space-y-3 border-none shadow-none font-sans"
     >
       {/* Row 1: View Toggle (Left) + Care Type Chips (Right) */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 ">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-1">
         <div className="flex items-center gap-2">
           <Text as="span" size="md" weight="medium" className="text-slate-600 mr-1">
             View:
@@ -97,7 +108,7 @@ export function RotaUnifiedFilterBar({
             >
               Hours Summary
             </button>
-            {/* <button
+            <button
               type="button"
               onClick={() => onViewChange("allocation")}
               className={cn(
@@ -108,7 +119,7 @@ export function RotaUnifiedFilterBar({
               )}
             >
               Staff Allocation
-            </button> */}
+            </button>
           </div>
         </div>
 
@@ -133,6 +144,22 @@ export function RotaUnifiedFilterBar({
           })}
         </div>
       </div>
+
+      {weekNavigation && (activeView === "hours" || activeView === "allocation") && (
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/70">
+          <Text as="span" size="md" weight="medium" className="text-slate-600">
+            Selected Week:
+          </Text>
+          <WeekNavigator
+            currentDate={weekNavigation.currentDate}
+            onPreviousWeek={weekNavigation.onPreviousWeek}
+            onNextWeek={weekNavigation.onNextWeek}
+            onCurrentWeek={weekNavigation.onCurrentWeek}
+            onSelectDate={weekNavigation.onSelectDate}
+            showWeekRange
+          />
+        </div>
+      )}
 
       {/* Row 2: Scheme, Property, Day of Week, Staff Member Dropdowns + Reset */}
       {/* <div className="flex flex-wrap items-center gap-2.5">

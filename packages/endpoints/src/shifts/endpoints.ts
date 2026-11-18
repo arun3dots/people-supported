@@ -23,6 +23,7 @@ export const UPDATE_HANDOVER_NOTES = "UPDATE_HANDOVER_NOTES";
 export const GET_LEAVE_REQUESTS = "GET_LEAVE_REQUESTS";
 export const CREATE_LEAVE_REQUEST = "CREATE_LEAVE_REQUEST";
 export const UPDATE_LEAVE_REQUEST_STATUS = "UPDATE_LEAVE_REQUEST_STATUS";
+export const GET_STAFF_ALLOCATION = "GET_STAFF_ALLOCATION";
 
 const shiftEndpoints: EndpointDetails = {
   [GET_SHIFT_TYPES]: {
@@ -116,6 +117,10 @@ const shiftEndpoints: EndpointDetails = {
   [UPDATE_LEAVE_REQUEST_STATUS]: {
     requestType: "PATCH",
     endpoint: "/leave-requests/[id]/status",
+  },
+  [GET_STAFF_ALLOCATION]: {
+    requestType: "GET",
+    endpoint: "/shifts/staff-allocation",
   },
 };
 

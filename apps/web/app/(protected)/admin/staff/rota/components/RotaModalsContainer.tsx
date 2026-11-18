@@ -19,7 +19,7 @@ interface RotaModalsContainerProps {
   onEditFromDetails: (shift: Shift) => void;
   onAddAnotherShift?: (shift: Shift) => void;
   editingShift: Shift | null;
-  slotToAdd: { staff: StaffMember; day: DayColumnInfo } | null;
+  slotToAdd: { staff?: StaffMember; day?: DayColumnInfo } | null;
   onCloseModify: () => void;
   onSaveShiftBlock: (formData: ShiftBlockFormData) => Promise<void>;
   isSavingShift: boolean;
@@ -55,17 +55,17 @@ export function RotaModalsContainer({
 
   const modifyDayLabel = editingShift
     ? format(new Date(editingShift.startTime), "EEE dd MMM")
-    : slotToAdd
+    : slotToAdd?.day
       ? `${slotToAdd.day.dayName} ${slotToAdd.day.dayNumber}`
       : "";
 
   const modifyStaffName = editingShift
     ? staffList.find((s) => editingShift.userIds?.includes(s.id))?.fullName || "Staff"
-    : slotToAdd?.staff.fullName || "Staff";
+    : slotToAdd?.staff?.fullName || "Staff";
 
   const modifyStaffRole = editingShift
     ? staffList.find((s) => editingShift.userIds?.includes(s.id))?.role?.name
-    : slotToAdd?.staff.role?.name;
+    : slotToAdd?.staff?.role?.name;
 
   const reassignStaffData = reassignStaff
     ? (() => {
@@ -103,8 +103,8 @@ export function RotaModalsContainer({
         open={isModifyOpen}
         onOpenChange={(open) => !open && onCloseModify()}
         initialShift={editingShift}
-        initialStaffId={slotToAdd?.staff.id}
-        initialDateStr={slotToAdd?.day.dateStr}
+        initialStaffId={slotToAdd?.staff?.id}
+        initialDateStr={slotToAdd?.day?.dateStr}
         dayLabel={modifyDayLabel}
         staffName={modifyStaffName}
         staffRole={modifyStaffRole}

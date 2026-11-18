@@ -7,13 +7,14 @@ import { ResidentAllergy } from '../../domain/entities/Resident';
 export interface ResidentAllergyBadgeProps {
   allergies?: ResidentAllergy[];
   className?: string;
+  noKnownAllergies?: boolean;
 }
 
-export function ResidentAllergyBadge({ allergies = [], className }: ResidentAllergyBadgeProps) {
+export function ResidentAllergyBadge({ allergies = [], className, noKnownAllergies }: ResidentAllergyBadgeProps) {
   if (!allergies || allergies.length === 0) {
     return (
       <View className={`flex-row items-center rounded-md bg-[#F1FCF3] px-2.5 py-1 border border-[#1D5E2E]/20 ${className || ''}`}>
-        <Text className="text-xs font-medium text-[#1D5E2E]">No Known Drug Allergies (NKDA)</Text>
+        <Text className="text-sm font-medium text-muted-foreground">{noKnownAllergies ? 'No known allergies recorded' : 'Allergies not recorded'}</Text>
       </View>
     );
   }

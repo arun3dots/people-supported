@@ -3,10 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import {
-  Bed,
   Building2,
-  Layers,
-  User,
+  DoorOpen,
 } from "lucide-react";
 import {
   Avatar,
@@ -121,11 +119,7 @@ export function ResidentHeroBanner({
     rooms,
   });
 
-  const propertyDisplayValue = location.propertyName
-    ? location.roomLabel
-      ? `${location.propertyName} (${location.roomLabel})`
-      : location.propertyName
-    : location.roomLabel || "Unassigned";
+  const roomValue = location.roomLabel || "Unassigned";
 
   return (
     <>
@@ -169,8 +163,8 @@ export function ResidentHeroBanner({
                 }
                 className="px-3 py-0.5 shadow-none font-semibold"
               >
-                {resident.status === "Draft"
-                  ? "In referral"
+                {resident.status === "Draft" || resident.isDraft
+                  ? "Draft"
                   : resident.status || "Active"}
               </Badge>
             </div>
@@ -193,50 +187,26 @@ export function ResidentHeroBanner({
               </div>
             )}
 
-            {/* Scheme / Property (or Room & Bed fallback) & Keyworker Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 pt-1">
-              {location.hasSchemeOrProperty ? (
-                <>
-                  <HeroMetaItem
-                    icon={<Layers className="size-4" />}
-                    label="Scheme"
-                    value={location.schemeName || "Unassigned"}
-                    className="sm:pr-5"
-                  />
-                  <HeroMetaItem
-                    icon={<Building2 className="size-4" />}
-                    label="Property"
-                    value={propertyDisplayValue}
-                    href={
-                      location.propertyId
-                        ? `/admin/configuration/facility/properties?propertyId=${location.propertyId}`
-                        : undefined
-                    }
-                    className="sm:px-5"
-                  />
-                </>
-              ) : (
-                <>
-                  <HeroMetaItem
-                    icon={<Building2 className="size-4" />}
-                    label="Room & Wing"
-                    value={location.roomLabel || "Unassigned"}
-                    className="sm:pr-5"
-                  />
-                  <HeroMetaItem
-                    icon={<Bed className="size-4" />}
-                    label="Bed Number"
-                    value={location.bedLabel || "Unassigned"}
-                    className="sm:px-5"
-                  />
-                </>
-              )}
-
+            {/* Property and Room Strip */}
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-6 sm:gap-8 pt-1">
               <HeroMetaItem
-                icon={<User className="size-4" />}
-                label="Keyworker"
-                value={keyworkerName}
-                className="sm:pl-5"
+                icon={<Building2 className="size-4" />}
+                label="Property"
+                value={location.propertyName || "Unassigned"}
+                href={
+                  location.propertyId
+                    ? `/admin/configuration/facility/properties?propertyId=${location.propertyId}`
+                    : undefined
+                }
+              />
+              <div
+                className="hidden sm:block h-8 w-px bg-slate-200"
+                aria-hidden="true"
+              />
+              <HeroMetaItem
+                icon={<DoorOpen className="size-4" />}
+                label="Room"
+                value={roomValue}
               />
             </div>
 

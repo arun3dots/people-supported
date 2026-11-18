@@ -17,12 +17,12 @@ export interface FluidBalanceGaugeProps {
 
 export function FluidBalanceGauge({
   currentIntakeMl,
-  targetMl = 2000,
+  targetMl,
   onAddBeverage,
   className,
 }: FluidBalanceGaugeProps) {
-  const percentage = Math.min(Math.round((currentIntakeMl / targetMl) * 100), 100);
-  const isLow = percentage < 40;
+  const percentage = targetMl && targetMl > 0 ? Math.min(Math.round((currentIntakeMl / targetMl) * 100), 100) : null;
+  const isLow = percentage !== null && percentage < 40;
 
   return (
     <Card className={`${className || ''} mb-4`} >
@@ -33,16 +33,16 @@ export function FluidBalanceGauge({
             <CardTitle className="text-base font-bold text-foreground">24h Fluid Balance</CardTitle>
           </View>
           <Badge variant={isLow ? 'warning' : 'info'} size="sm">
-            {percentage}% Target Met
+            {percentage === null ? 'Target not recorded' : `${percentage}% Target Met`}
           </Badge>
         </View>
         <Text className="text-xs text-muted-foreground">
-          {currentIntakeMl} ml logged of {targetMl} ml clinical target
+          {currentIntakeMl} ml logged{percentage === null ? ' ? Clinical target not recorded' : ` of ${targetMl} ml clinical target`}
         </Text>
       </CardHeader>
 
       <CardContent className="space-y-3">
-        <Progress value={percentage} indicatorClassName="bg-[#3294FF]" className="h-3" />
+        {percentage !== null && <Progress value={percentage} indicatorClassName="bg-[#3294FF]" className="h-3" />}
 
         {isLow && (
           <View className="rounded-md bg-[#FDFBE9] px-2.5 py-1 border border-[#C38C0B]/30">

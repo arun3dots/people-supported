@@ -1,5 +1,6 @@
 
-import type { SupportedLivingDetailsDTO } from '@repo/schema';
+import type { SupportedLivingDetailsDTO, PreAdmissionRecordDTO } from '@repo/schema';
+import { residentDetailFromRecord } from './residentRecordedData';
 
 export interface ResidentTimelineItem {
   id: string;
@@ -22,7 +23,18 @@ interface AuditLogsResponse {
   data?: ResidentAccessAudit[];
 }
 
+export interface ResidentContact {
+  name?: string;
+  relationship?: string;
+  phone?: string;
+  email?: string;
+  isPrimary?: boolean;
+}
+
 export interface ResidentDetailData {
+  preAdmissions?: Partial<PreAdmissionRecordDTO>[];
+  allergySummary?: string | null;
+  fallsRiskLevel?: string | null;
   id: string;
   fullName: string;
   dob?: string | null;
@@ -38,13 +50,7 @@ export interface ResidentDetailData {
     phone?: string;
     email?: string;
   } | null;
-  nextOfKin?: {
-    name?: string;
-    relationship?: string;
-    phone?: string;
-    email?: string;
-    isPrimary?: boolean;
-  } | null;
+  nextOfKin?: ResidentContact | ResidentContact[] | null;
   profile?: {
     preferredName?: string | null;
     gender?: string | null;
@@ -138,34 +144,30 @@ export function useResidentDetail(initialId?: string, enabled: boolean = true) {
   const residentQuery = useQuery<ResidentDetailData | null>({
     queryKey: ['resident-detail', initialId || 'primary'],
     queryFn: async () => {
-      let targetId = initialId;
-
-      // If no ID passed in route params, resolve the first active resident from API
-      if (!targetId) {
-        const listRes = await makeMobileApiCall<{ data?: Array<{ id: string }> }>(
-          GET_RESIDENTS,
-          undefined,
-          { limit: 1 }
-        ).catch(() => null);
-
-        if (listRes?.data && listRes.data.length > 0) {
-          targetId = listRes.data[0]?.id;
-        }
-      }
+      const targetId = initialId;
 
       if (!targetId) {
         throw new Error('No resident identifier available');
       }
 
-      return makeMobileApiCall<ResidentDetailData>(
+      const record = await makeMobileApiCall<ResidentDetailData>(
         GET_RESIDENT,
         undefined,
         undefined,
         { id: targetId }
       );
+      if (!record.preAdmissions) {
+        const response = await makeMobileApiCall<ResidentDetailData[] | { data: ResidentDetailData[] }>(
+          GET_RESIDENTS, undefined, { all: true, assignedOnly: true },
+        );
+        const directory = Array.isArray(response) ? response : response.data;
+        const samePerson = directory.find((person) => person.id === targetId);
+        record.preAdmissions = samePerson?.preAdmissions;
+      }
+      return residentDetailFromRecord(record);
     },
     staleTime: 1000 * 60 * 5,
-    enabled,
+    enabled: enabled && Boolean(initialId),
   });
 
   const residentId = enabled ? (residentQuery.data?.id ?? initialId) : undefined;

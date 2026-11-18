@@ -5,6 +5,7 @@ import { Text } from '../ui/text';
 import { AuthenticatedImage } from '../common/AuthenticatedImage';
 import { openAuthenticatedDocument } from '../../lib/fileUpload';
 import type { ResidentDocumentItem } from './residentDocuments.types';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 interface Props {
   document: ResidentDocumentItem | null;
@@ -44,7 +45,7 @@ export function ResidentDocumentViewModal({ document, onClose }: Props) {
               <Text className="text-lg font-bold text-foreground" numberOfLines={1}>
                 {document.title}
               </Text>
-              <Text className="text-xs text-muted-foreground mt-0.5">{document.subtitle}</Text>
+              <Text className="text-xs text-muted-foreground mt-0.5">{supportPlanLabel(document.subtitle)}</Text>
             </View>
             <TouchableOpacity
               onPress={onClose}

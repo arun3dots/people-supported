@@ -19,6 +19,7 @@ import { Text } from '../ui/text';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { theme } from '../../theme';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 export interface FormattedActivity {
   id: string;
@@ -126,7 +127,7 @@ export function ActivityDetailModal({
               </View>
               <View className="flex-1">
                 <Text className="text-base font-bold text-foreground" numberOfLines={1}>
-                  {activity.title}
+                  {supportPlanLabel(activity.title)}
                 </Text>
                 <Text className="text-xs text-muted-foreground" numberOfLines={1}>
                   {residentName}

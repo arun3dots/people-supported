@@ -42,7 +42,7 @@ export function ReviewAndSubmitStep({
       <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-3">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-md">
           <div>
-            <Text size="md" weight="regular" className="text-slate-500 block">Resident</Text>
+            <Text size="md" weight="regular" className="text-slate-500 block">Tenant</Text>
             <Text size="md" weight="bold" className="text-slate-900 block">{residentName}</Text>
           </div>
           <div>

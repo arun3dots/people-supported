@@ -74,16 +74,16 @@ export default function MoreScreen() {
       iconColor: theme.colors.primary.DEFAULT,
       onPress: () => setIsShiftDetailsOpen(true),
     },
-    {
-      id: 'news2',
-      title: 'NEWS2 Vitals',
-      subtitle: 'Vital signs & escalation',
-      icon: HeartPulse,
-      iconBg: '#FEE4E2',
-      iconColor: '#D92D20',
-      badge: 'URGENT',
-      onPress: () => navigateTo('/news2'),
-    },
+    // {
+    //   id: 'news2',
+    //   title: 'NEWS2 Vitals',
+    //   subtitle: 'Vital signs & escalation',
+    //   icon: HeartPulse,
+    //   iconBg: '#FEE4E2',
+    //   iconColor: '#D92D20',
+    //   badge: 'URGENT',
+    //   onPress: () => navigateTo('/news2'),
+    // },
     {
       id: 'mar',
       title: 'eMAR Medication',
@@ -96,11 +96,11 @@ export default function MoreScreen() {
     {
       id: 'handover',
       title: 'Handover',
-      subtitle: 'Clinical handover notes',
+      subtitle: 'Previous carers’ handover notes',
       icon: ClipboardCheck,
       iconBg: '#FAF8EE',
       iconColor: '#8A6E24',
-      onPress: () => navigateTo('/handover'),
+      onPress: () => navigateTo('/previous-handover'),
     },
     {
       id: 'alerts',
@@ -192,11 +192,11 @@ export default function MoreScreen() {
                 <View className="flex-1 pr-2">
                   <View className="flex-row items-center gap-2">
                     <Text className="text-base font-bold text-text-primary">{item.title}</Text>
-                    {item.badge && (
+                    {/* {item.badge && (
                       <Badge variant="clinicalCritical" size="sm">
                         {item.badge}
                       </Badge>
-                    )}
+                    )} */}
                   </View>
                   <Text className="text-xs text-text-secondary mt-0.5" numberOfLines={1}>
                     {item.subtitle}

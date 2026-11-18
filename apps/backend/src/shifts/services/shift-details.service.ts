@@ -2,6 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { prisma } from '@repo/db';
 import { resolveShiftTimings } from './shift-timing.util';
 import { getUkDayBoundaries } from '../../common/utils/time.util';
+import { loadPreviousShiftHandovers } from './shift-handover.util';
+import {
+  formatShiftTimeRemaining,
+  hasContinuousFollowingShiftForUser,
+} from './shift-continuity.util';
 
 @Injectable()
 export class ShiftDetailsService {
@@ -40,9 +45,22 @@ export class ShiftDetailsService {
       throw new NotFoundException('Shift not found');
     }
 
+    const now = new Date();
     const timings = resolveShiftTimings(shift.startTime, shift.endTime);
     const latestLog = shift.staffLogs?.[0] || null;
-    const isStarted = latestLog?.status === 'Started';
+    const isCompleted = latestLog?.status === 'Completed';
+    const isPast = shift.endTime.getTime() < now.getTime();
+    const hasStartedLog = !isCompleted && latestLog?.status === 'Started';
+    const hasContinuousNextShift = hasStartedLog
+      ? await hasContinuousFollowingShiftForUser(tenantId, userId, shift)
+      : false;
+    const isStarted = hasStartedLog && !(isPast && hasContinuousNextShift);
+    const isContinuing = isStarted && isPast;
+    const timeRemainingStr = formatShiftTimeRemaining(timings.rawEndTime, now, {
+      isStarted,
+      isCompleted,
+      hasContinuousNextShift,
+    });
 
     // Resolve assigned residents
     const assignedResidentIds: string[] = [];
@@ -123,15 +141,11 @@ export class ShiftDetailsService {
       },
     });
 
-    const prevHandover = await prisma.handover.findFirst({
-      where: {
-        shift: { tenantId, deletedAt: null },
-      },
-      include: {
-        shift: { include: { type: true } },
-      },
-      orderBy: { lockedAt: 'desc' },
-    });
+    const previousShiftHandovers = await loadPreviousShiftHandovers(
+      shift,
+      assignedResidentIds,
+      shift.assignments.flatMap((assignment) => assignment.assignedRoomIds),
+    );
 
     return {
       id: shift.id,
@@ -145,8 +159,14 @@ export class ShiftDetailsService {
       rawEndTime: timings.rawEndTime,
       timingFormatted: `${timings.startTime} - ${timings.endTime}`,
       durationFormatted: `${Math.max(1, Math.round((timings.rawEndTime.getTime() - timings.rawStartTime.getTime()) / 3600000))} hrs`,
-      status: latestLog?.status || shift.status || 'Scheduled',
+      timeRemainingStr,
+      status: isContinuing
+        ? 'Continuing'
+        : latestLog?.status || shift.status || 'Scheduled',
       isStarted,
+      isCompleted,
+      isContinuing,
+      hasContinuousNextShift,
       actualStartTime: latestLog?.actualStartTime || null,
       actualEndTime: latestLog?.actualEndTime || null,
       tasksCompleted: mappedTasks.filter(
@@ -159,13 +179,8 @@ export class ShiftDetailsService {
       incidentCount,
       shiftNotes: shift.notes || null,
       handoverNotes: latestLog?.handoverNotes || null,
-      previousShiftHandover: prevHandover
-        ? {
-            shiftName: prevHandover.shift?.type?.name || 'Previous Shift',
-            endTime: prevHandover.lockedAt,
-            handoverNotes: prevHandover.comment,
-          }
-        : null,
+      previousShiftHandover: previousShiftHandovers[0] ?? null,
+      previousShiftHandovers,
       assignedResidents: residents.map((r) => {
         const cp = r.careProfile as Record<string, unknown> | null;
         const bed = r.bed as

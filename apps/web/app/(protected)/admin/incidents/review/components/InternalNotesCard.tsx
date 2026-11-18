@@ -182,7 +182,7 @@ export function InternalNotesCard({
           <Text size={'md'} weight={'regular'} className="text-slate-500 max-w-sm mx-auto">
             {searchTerm || selectedCategory !== "All"
               ? "Try clearing your search query or selecting a different category."
-              : "Document internal care team observations, direct quotes, or managerial reviews."}
+              : "Document internal supported worker observations, direct quotes, or managerial reviews."}
           </Text>
           {!searchTerm && selectedCategory === "All" && (
             <Button

@@ -7,6 +7,7 @@ import {
 import { prisma } from '@repo/db';
 import { AuditService } from '../../audit/audit.service';
 import { toJsonValue } from '../../common/utils/json.util';
+import { isContinuousFollowUpShift } from './shift-continuity.util';
 
 @Injectable()
 export class ShiftExecutionService {
@@ -51,7 +52,8 @@ export class ShiftExecutionService {
     // Allow clock-in up to 10 minutes prior to scheduled start.
     // Accommodate timezone variations (e.g. BST vs IST in mobile testing) for shifts scheduled on today's date.
     const isSameCalendarDay =
-      Math.abs(shift.startTime.getTime() - now.getTime()) < 24 * 60 * 60 * 1000 &&
+      Math.abs(shift.startTime.getTime() - now.getTime()) <
+        24 * 60 * 60 * 1000 &&
       (shift.startTime.getUTCDate() === now.getUTCDate() ||
         shift.startTime.getDate() === now.getDate());
 
@@ -82,20 +84,62 @@ export class ShiftExecutionService {
       return existingLog;
     }
 
-    const log = await prisma.staffShiftLog.create({
-      data: {
+    const openPriorLogs = await prisma.staffShiftLog.findMany({
+      where: {
         tenantId,
-        branchId: shift.branchId,
-        shiftId: shift.id,
         userId,
-        actualStartTime: new Date(),
         status: 'Started',
-        handoverNotes: notes,
+        actualEndTime: null,
+        shiftId: { not: shift.id },
       },
       include: {
-        shift: { include: { type: true } },
-        user: true,
+        shift: {
+          select: {
+            id: true,
+            startTime: true,
+            endTime: true,
+            status: true,
+            deletedAt: true,
+          },
+        },
       },
+    });
+    const continuousPredecessors = openPriorLogs.filter(
+      (prior) => prior.shift && isContinuousFollowUpShift(prior.shift, shift),
+    );
+
+    const log = await prisma.$transaction(async (tx) => {
+      for (const prior of continuousPredecessors) {
+        const closedAt =
+          prior.shift.endTime.getTime() < now.getTime()
+            ? prior.shift.endTime
+            : now;
+        await tx.staffShiftLog.update({
+          where: { id: prior.id },
+          data: {
+            status: 'Completed',
+            actualEndTime: closedAt,
+            handoverNotes:
+              prior.handoverNotes || 'Auto-transitioned to continuous shift',
+          },
+        });
+      }
+
+      return tx.staffShiftLog.create({
+        data: {
+          tenantId,
+          branchId: shift.branchId,
+          shiftId: shift.id,
+          userId,
+          actualStartTime: now,
+          status: 'Started',
+          handoverNotes: notes,
+        },
+        include: {
+          shift: { include: { type: true } },
+          user: true,
+        },
+      });
     });
 
     void this.auditService.emit({

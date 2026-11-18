@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Download, Edit2, LogOut, Printer } from "lucide-react";
+import { ArrowLeft, Download, Edit2, LogOut } from "lucide-react";
 import { Button, Text } from "@repo/ui/components/ui";
 
 interface ResidentSummary {
@@ -54,18 +54,8 @@ export function ResidentPageHeader({
         </Text>
       </div>
 
-      {/* Right: Action Buttons (Print summary, SAR Export, Edit Profile & Discharge) */}
+      {/* Right: Action Buttons (SAR Export, Edit Profile & Discharge) */}
       <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => typeof window !== "undefined" && window.print()}
-          className="h-10 rounded-xl px-3.5 text-md inline-flex items-center gap-1.5"
-        >
-          <Printer className="size-3.5" />
-          <span>Print summary</span>
-        </Button>
-
         {onExportSarClick && (
           <Button
             type="button"

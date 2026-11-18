@@ -33,7 +33,7 @@ export function CarerWelcomeCard({
             </span>
             <span className="inline-flex items-center gap-1 text-md text-white/70 font-medium">
               <ShieldCheck className="size-3.5 text-emerald-300" />
-              Care Team
+              Supported Worker
             </span>
           </div>
 

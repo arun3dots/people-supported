@@ -34,8 +34,9 @@ export function useResidentPrescriptions(residentId?: string) {
         undefined,
         undefined,
         { id: residentId }
-      ).catch(() => []);
-      return Array.isArray(res) ? res : [];
+      );
+      if (!Array.isArray(res)) throw new Error('Invalid prescriptions response');
+      return res;
     },
     enabled: Boolean(residentId),
     staleTime: 1000 * 60 * 3,
@@ -53,7 +54,7 @@ const STATUS_CLASS: Record<MobileMedicationPrescription['status'], string> = {
 };
 
 export function ResidentPrescriptionsCard({ residentId }: Props) {
-  const { data: prescriptions = [], isLoading } = useResidentPrescriptions(residentId);
+  const { data: prescriptions = [], isLoading, error } = useResidentPrescriptions(residentId);
 
   return (
     <Card className="p-4 mb-4">
@@ -66,6 +67,8 @@ export function ResidentPrescriptionsCard({ residentId }: Props) {
 
       {isLoading ? (
         <ActivityIndicator size="small" color="#4A706A" />
+      ) : error ? (
+        <Text className="text-base text-clinical-critical">Unable to load prescriptions. Please retry.</Text>
       ) : prescriptions.length === 0 ? (
         <Text className="text-xs text-text-muted py-3 text-center">No prescriptions recorded</Text>
       ) : (

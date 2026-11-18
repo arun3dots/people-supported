@@ -23,6 +23,7 @@ import {
   formatBytes,
 } from '../../lib/fileUpload';
 import { RESIDENT_DOCUMENT_CATEGORIES } from './residentDocuments.types';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 interface UploadResidentDocumentModalProps {
   visible: boolean;
@@ -174,7 +175,7 @@ export function UploadResidentDocumentModal({
                         active ? 'text-white' : 'text-muted-foreground'
                       }`}
                     >
-                      {cat}
+                      {supportPlanLabel(cat)}
                     </Text>
                   </TouchableOpacity>
                 );

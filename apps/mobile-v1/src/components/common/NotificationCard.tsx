@@ -13,6 +13,7 @@ import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import { theme } from '../../theme';
 import type { MobileNotificationItem } from '../../presentation/hooks/useNotifications';
+import { supportPlanLabel } from '../../lib/supportPlanLabel';
 
 export interface NotificationCardProps {
   item: MobileNotificationItem;
@@ -55,7 +56,7 @@ export function NotificationCard({
               {/* Category Pill */}
               <View className="bg-white px-2.5 py-0.5 rounded-full">
                 <Text className="text-xs font-bold text-text-secondary tracking-wider">
-                  {categoryUpper}
+                  {supportPlanLabel(categoryUpper)}
                 </Text>
               </View>
 
@@ -109,7 +110,7 @@ export function NotificationCard({
 
       {/* Notification Title & Body */}
       <Text className="text-base font-bold text-text-primary leading-snug">
-        {item.title}
+        {supportPlanLabel(item.title)}
       </Text>
       <Text className="text-sm text-text-secondary mt-1 leading-relaxed">
         {item.message}

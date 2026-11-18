@@ -3,6 +3,7 @@ import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ChevronLeft, ShieldAlert } from 'lucide-react-native';
 import { ScreenWrapper, Text, Button } from '../../src/presentation/components/common';
+import { ResidentLoadError } from '../../src/components/clinical/ResidentLoadError';
 import { useResidentDetail } from '../../src/presentation/hooks/useResidentDetail';
 import { ResidentProfileHeaderCard } from '../../src/components/clinical/ResidentProfileHeaderCard';
 import { ResidentRiskAssessmentSections } from '../../src/components/clinical/ResidentRiskAssessmentSections';
@@ -10,7 +11,7 @@ import { ResidentRiskAssessmentSections } from '../../src/components/clinical/Re
 export default function RiskAssessmentScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const router = useRouter();
-  const { resident, loading } = useResidentDetail(id);
+  const { resident, loading, error, refetch } = useResidentDetail(id);
 
   if (loading && !resident) {
     return (
@@ -33,6 +34,8 @@ export default function RiskAssessmentScreen() {
       </ScreenWrapper>
     );
   }
+
+  if (error) return <ResidentLoadError message={error} onRetry={() => { void refetch(); }} />;
 
   if (!resident) {
     return (

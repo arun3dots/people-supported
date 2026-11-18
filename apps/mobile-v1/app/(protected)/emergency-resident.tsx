@@ -129,14 +129,14 @@ export default function EmergencyResidentScreen() {
 
         {/* Row 1 */}
         <View className="flex-row gap-2.5 mb-2.5">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.navigate({ pathname: '/news2', params: { id: resident.id } } as Href)}
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <Activity size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Observation</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity
             activeOpacity={0.7}
@@ -155,20 +155,8 @@ export default function EmergencyResidentScreen() {
             <Pill size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">MAR</Text>
           </TouchableOpacity>
-        </View>
 
-        {/* Row 2 */}
-        <View className="flex-row gap-2.5 mb-2.5">
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.push({ pathname: '/body-map', params: { id: resident.id } } as Href)}
-            className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
-          >
-            <Accessibility size={22} color="#4A706A" strokeWidth={2} />
-            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Body Map</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
+            <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.navigate({ pathname: '/task-history', params: { id: resident.id } } as Href)}
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
@@ -176,15 +164,29 @@ export default function EmergencyResidentScreen() {
             <History size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Task History</Text>
           </TouchableOpacity>
+        </View>
 
-          <TouchableOpacity
+        {/* Row 2 */}
+        <View className="flex-row gap-2.5 mb-2.5">
+          {/* <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push({ pathname: '/body-map', params: { id: resident.id } } as Href)}
+            className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
+          >
+            <Accessibility size={22} color="#4A706A" strokeWidth={2} />
+            <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Body Map</Text>
+          </TouchableOpacity> */}
+
+
+
+          {/* <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.navigate({ pathname: '/documents', params: { id: resident.id } } as Href)}
             className="flex-1 h-20 bg-surface rounded-2xl items-center justify-center p-2"
           >
             <Upload size={22} color="#4A706A" strokeWidth={2} />
             <Text className="text-xs font-semibold text-foreground mt-1.5 text-center">Documents</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Row 3 */}

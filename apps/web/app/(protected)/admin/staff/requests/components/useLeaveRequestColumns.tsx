@@ -94,33 +94,33 @@ export function useLeaveRequestColumns({
       {
         id: "rotaCover",
         header: "Rota Cover",
+        align: "center",
+        meta: { align: "center" },
         cell: ({ row }) => {
           const req = row.original;
           const overlapping = getOverlappingShiftsForLeave(req, shifts);
-          if (overlapping.length > 0 && req.status === "Pending") {
-            return (
-              <Badge
-                variant="secondary"
-                state="warning"
-                className="px-2.5 py-0.5 shadow-none font-medium"
-              >
-                {overlapping.length} shift
-                {overlapping.length === 1 ? "" : "s"} affected
-              </Badge>
-            );
-          }
-          if (overlapping.length > 0) {
-            return (
-              <Text size="md" className="text-slate-600 whitespace-nowrap">
-                {overlapping.length} shift
-                {overlapping.length === 1 ? "" : "s"} in period
-              </Text>
-            );
-          }
           return (
-            <Text size="md" variant="muted" className="whitespace-nowrap">
-              No clashes
-            </Text>
+            <div className="flex items-center justify-center">
+              {overlapping.length > 0 && req.status === "Pending" ? (
+                <Badge
+                  variant="secondary"
+                  state="warning"
+                  className="px-2.5 py-0.5 shadow-none font-medium whitespace-nowrap"
+                >
+                  {overlapping.length} shift
+                  {overlapping.length === 1 ? "" : "s"} affected
+                </Badge>
+              ) : overlapping.length > 0 ? (
+                <Text size="md" className="text-slate-600 whitespace-nowrap">
+                  {overlapping.length} shift
+                  {overlapping.length === 1 ? "" : "s"} in period
+                </Text>
+              ) : (
+                <Text size="md" variant="muted" className="whitespace-nowrap">
+                  No clashes
+                </Text>
+              )}
+            </div>
           );
         },
       },
@@ -143,8 +143,8 @@ export function useLeaveRequestColumns({
       {
         id: "actions",
         header: "Actions",
-        align: "right",
-        meta: { align: "right" },
+        align: "center",
+        meta: { align: "center" },
         enableSorting: false,
         cell: ({ row }) => {
           const req = row.original;

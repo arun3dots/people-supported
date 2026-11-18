@@ -8,8 +8,10 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./setupTests.ts"],
     globals: true,
+    server: { deps: { inline: ["@tanstack/react-query"] } },
   },
   resolve: {
+    dedupe: ["react", "react-dom"],
     alias: {
       "@": path.resolve(__dirname, "./"),
     },

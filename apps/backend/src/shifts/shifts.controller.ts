@@ -40,7 +40,7 @@ import {
 @UseGuards(JwtAuthGuard)
 @Controller('shifts')
 export class ShiftsController {
-  constructor(private readonly shiftsService: ShiftsService) {}
+  constructor(private readonly shiftsService: ShiftsService) { }
 
   // --- Shift Types ---
 
@@ -254,6 +254,26 @@ export class ShiftsController {
       tenantId,
       userId,
       body.handoverNotes,
+    );
+  }
+
+  @Get('staff-allocation')
+  @ApiOperation({
+    summary: 'Get staff allocation overview, scheduled workload, and property coverage',
+  })
+  async getStaffAllocation(
+    @Req() req: AuthenticatedRequest,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('wingId') wingId?: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.shiftsService.getStaffAllocation(
+      req.user.tenantId!,
+      requireBranchId(req, branchId),
+      from ? new Date(from) : undefined,
+      to ? new Date(to) : undefined,
+      wingId,
     );
   }
 

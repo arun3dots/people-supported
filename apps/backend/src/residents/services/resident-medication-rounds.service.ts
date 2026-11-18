@@ -6,24 +6,57 @@ import {
 import { prisma, Prisma } from '@repo/db';
 import { toJsonValue } from '../../common/utils/json.util';
 import { AuditService } from '../../audit/audit.service';
+import {
+  PreAdmissionPartCSchema,
+  type PreAdmissionPartCDTO,
+} from '@repo/schema';
+import { getMedicationResidentOrThrow } from './medication-prescription-read.util';
 
 @Injectable()
 export class ResidentMedicationRoundsService {
   constructor(private readonly auditService: AuditService) {}
 
+  async getOnboardingMedicines(
+    residentId: string,
+    tenantId: string,
+  ): Promise<PreAdmissionPartCDTO['medicines']> {
+    await getMedicationResidentOrThrow(residentId, tenantId);
+    const admission = await prisma.residentPreAdmission.findFirst({
+      where: { residentId, tenantId, isCurrent: true },
+      select: { partC: true },
+    });
+    if (!admission || admission.partC === null) return [];
+    const stored = admission.partC;
+    if (typeof stored !== 'object' || Array.isArray(stored)) {
+      throw new BadRequestException(
+        'Saved onboarding medicines could not be read. Please review the health and medicines record.',
+      );
+    }
+    const parsed = PreAdmissionPartCSchema.shape.medicines.safeParse(
+      stored.medicines,
+    );
+    if (!parsed.success) {
+      throw new BadRequestException(
+        'Saved onboarding medicines could not be read. Please review the health and medicines record.',
+      );
+    }
+    return parsed.data;
+  }
+
   async getMedicationRounds(residentId: string, tenantId: string) {
     const resident = await prisma.resident.findFirst({
-      where: { id: residentId, tenantId },
+      where: { id: residentId, tenantId, deletedAt: null },
     });
 
     if (!resident) {
       throw new NotFoundException('Resident not found');
     }
     return prisma.medicationRound.findMany({
-      where: { residentId, deletedAt: null },
+      where: { residentId, deletedAt: null, resident: { tenantId } },
       orderBy: { scheduledTime: 'asc' },
       include: {
         administrations: {
+          where: { deletedAt: null, isSuperseded: false },
           orderBy: { administeredAt: 'desc' },
           take: 1,
           include: { observation: true },

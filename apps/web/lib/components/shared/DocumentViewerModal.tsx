@@ -105,12 +105,16 @@ export function DocumentViewerModal({
 
     const resolveUrl = async () => {
       try {
-        if (
-          documentPath.startsWith("http://") ||
-          documentPath.startsWith("https://") ||
+        const isInlineOrStream =
           documentPath.startsWith("data:") ||
-          documentPath.startsWith("blob:")
-        ) {
+          documentPath.startsWith("blob:") ||
+          documentPath.includes("/compliance/document-stream") ||
+          documentPath.includes("/documents/stream");
+        const isExternalUrl =
+          documentPath.startsWith("http://") ||
+          documentPath.startsWith("https://");
+
+        if (isInlineOrStream || (isExternalUrl && !resolveSignedUrl && !staffId)) {
           if (isMounted) {
             setResolvedUrl(documentPath);
             setIsLoading(false);
@@ -216,6 +220,9 @@ export function DocumentViewerModal({
       canvas.height = img.naturalHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
+    };
+    img.onerror = () => {
+      setError("Unable to render image preview.");
     };
     img.src = resolvedUrl;
   }, [resolvedUrl, isImgType]);

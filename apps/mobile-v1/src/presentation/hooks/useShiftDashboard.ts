@@ -1,74 +1,31 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  GET_ACTIVE_SHIFT,
-  GET_MY_SHIFTS,
-  GET_SHIFT_DETAILS,
-  GET_RESIDENTS,
-  START_SHIFT,
-  END_SHIFT,
-  UPDATE_HANDOVER_NOTES,
-  GET_NOTIFICATIONS,
-} from '@repo/endpoints';
+import { START_SHIFT, END_SHIFT, UPDATE_HANDOVER_NOTES } from '@repo/endpoints';
 import { makeMobileApiCall } from '../../data/api/client';
-import { Resident } from '../../domain/entities/Resident';
-import { safeLogger } from '../../data/security/safeLogger';
 import { useAuth } from '../context/AuthContext';
 import {
-  type HandoverPersonInfo,
-  type PreviousShiftHandoverInfo,
-  type ShiftInfo,
-  type ShiftDetailsApiResponse,
+  formatContinuingTimeRemaining,
+  isContinuousNextShift,
   isShiftPast,
-  mapApiShift,
-  mapAssignedResidents,
-  resolveAssignedResidents,
-  normalizeShiftTimeRemaining,
+  resolveShiftStartEndMs,
 } from './shiftDashboard.utils';
 import { formatUkTime, getUkDateString } from '../../lib/date';
 
-export type { HandoverPersonInfo, PreviousShiftHandoverInfo, ShiftInfo };
+import { loadShiftDashboard, type ShiftDashboardData } from './shiftDashboard.query';
+import { useAssignedShiftTasks } from './useAssignedShiftTasks';
 
-/** Unread notification surfaced on the dashboard as a critical alert. */
-export interface DashboardAlert {
-  id: string;
-  title: string;
-  message: string;
-  priority: string;
-  category: string;
-  createdAt: string | null;
-  actionUrl: string | null;
-}
-
-interface ShiftDashboardData {
-  shift: ShiftInfo | null;
-  upcomingShift: ShiftInfo | null;
-  shiftList: ShiftInfo[];
-  assignedResidents: Resident[];
-  urgentAlerts: DashboardAlert[];
-}
-
-interface RawNotificationAlert {
-  id?: string;
-  title?: string;
-  message?: string;
-  priority?: string;
-  category?: string;
-  isRead?: boolean;
-  actionUrl?: string | null;
-  createdAt?: string | Date;
-}
-
-function toIsoOrNull(value?: string | Date): string | null {
-  if (!value) return null;
-  const date = value instanceof Date ? value : new Date(value);
-  return isNaN(date.getTime()) ? null : date.toISOString();
-}
+export type { DashboardAlert } from './dashboardAlerts.query';
+export type {
+  HandoverPersonInfo,
+  PreviousShiftHandoverInfo,
+  ShiftInfo,
+} from './shiftDashboard.utils';
 
 export function useShiftDashboard() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const [dismissedAlertIds, setDismissedAlertIds] = useState<string[]>([]);
+  const [nowMs, setNowMs] = useState<number>(() => Date.now());
 
   // 1. TanStack Query for Active Shift, Shift Details, and Shift List
   const {
@@ -78,169 +35,85 @@ export function useShiftDashboard() {
     refetch,
   } = useQuery<ShiftDashboardData>({
     queryKey: ['active-shift'],
-    queryFn: async () => {
-      // 1.1 Fetch active & next shift
-      const activeRes = await makeMobileApiCall<{
-        active: Record<string, unknown> | null;
-        next: Record<string, unknown> | null;
-        lastCompleted?: Record<string, unknown> | null;
-      }>(GET_ACTIVE_SHIFT).catch(() => null);
-
-      // 1.2 Fetch shift list for staff member
-      const listRes = await makeMobileApiCall<Record<string, unknown>[]>(GET_MY_SHIFTS).catch(
-        () => []
-      );
-
-      const mappedList: ShiftInfo[] = Array.isArray(listRes)
-        ? (listRes.map(mapApiShift).filter(Boolean) as ShiftInfo[])
-        : [];
-
-      let currentShift: ShiftInfo | null = null;
-      let nextShift: ShiftInfo | null = null;
-
-      if (activeRes?.active) {
-        const mappedActive = mapApiShift(activeRes.active);
-        if (mappedActive && !isShiftPast(mappedActive)) {
-          currentShift = mappedActive;
-        }
-      }
-      if (activeRes?.next) {
-        const mappedNext = mapApiShift(activeRes.next);
-        if (mappedNext && !isShiftPast(mappedNext)) {
-          nextShift = mappedNext;
-        }
-      }
-
-      if (!currentShift) {
-        const todayStr = getUkDateString(new Date());
-        const lastCompletedShift = activeRes?.lastCompleted
-          ? mapApiShift(activeRes.lastCompleted)
-          : null;
-        const isLastCompletedToday = lastCompletedShift?.rawStartTime
-          ? getUkDateString(lastCompletedShift.rawStartTime) === todayStr
-          : false;
-
-        if (isLastCompletedToday && lastCompletedShift) {
-          currentShift = lastCompletedShift;
-        } else {
-          const completedToday = mappedList.find((s) => {
-            if (!s.isCompleted && s.status !== 'Completed') return false;
-            return s.rawStartTime ? getUkDateString(s.rawStartTime) === todayStr : false;
-          });
-
-          if (completedToday) {
-            currentShift = completedToday;
-          } else if (nextShift && !isShiftPast(nextShift)) {
-            currentShift = nextShift;
-          } else {
-            const upcomingInList = mappedList.find((s) => {
-              if (s.isCompleted || s.status === 'Completed') return false;
-              return !isShiftPast(s);
-            });
-            currentShift = upcomingInList || null;
-          }
-        }
-      }
-
-      let assignedResidents: Resident[] = [];
-
-      // 1.3 Fetch comprehensive details for current shift from API
-      if (currentShift?.id) {
-        try {
-          const details = await makeMobileApiCall<ShiftDetailsApiResponse>(
-            GET_SHIFT_DETAILS,
-            undefined,
-            undefined,
-            { id: currentShift.id }
-          );
-
-          if (details) {
-            assignedResidents = mapAssignedResidents(details.assignedResidents);
-            currentShift = {
-              ...currentShift,
-              wardName: details.wardName || currentShift.wardName,
-              tasksCompleted: details.tasksCompleted ?? currentShift.tasksCompleted,
-              tasksTotal: details.tasksTotal ?? currentShift.tasksTotal,
-              incidentCount: details.incidentCount ?? currentShift.incidentCount,
-              shiftNotes: details.shiftNotes ?? details.notes ?? currentShift.shiftNotes ?? null,
-              timeRemainingStr: normalizeShiftTimeRemaining(
-                details.timeRemainingStr ?? currentShift.timeRemainingStr,
-                Boolean(currentShift.isStarted),
-                Boolean(currentShift.isCompleted)
-              ),
-              previousShiftHandover:
-                details.previousShiftHandover ?? currentShift.previousShiftHandover,
-              nextShiftName: details.nextShift?.name ?? currentShift.nextShiftName,
-              nextShiftStartTime: details.nextShift?.startTime ?? currentShift.nextShiftStartTime,
-              nextShiftHandoverPerson:
-                details.nextShift?.handoverPerson ?? currentShift.nextShiftHandoverPerson,
-            };
-
-            // Enrich assigned residents with room & bed numbers from resident directory
-            if (assignedResidents.length > 0) {
-              const residentParams =
-                user?.roleName.toLowerCase() === 'carer'
-                  ? { limit: 50, shiftId: currentShift.id }
-                  : { limit: 50 };
-              const resList = await makeMobileApiCall<
-                { data?: Array<Record<string, unknown>> } | Array<Record<string, unknown>>
-              >(GET_RESIDENTS, undefined, residentParams).catch((err) => {
-                safeLogger.warn('Failed to load assigned residents for the shift', err);
-                return null;
-              });
-              assignedResidents = resolveAssignedResidents(
-                assignedResidents,
-                resList,
-                user?.roleName.toLowerCase() === 'carer',
-              );
-            }
-          }
-        } catch (err) {
-          safeLogger.warn(`Failed to fetch shift details for ${currentShift.id}`, err);
-        }
-      }
-
-      // 1.4 Fetch real unread notifications/alerts
-      let urgentAlerts: DashboardAlert[] = [];
-      try {
-        const alertsRes = await makeMobileApiCall<
-          { data?: RawNotificationAlert[] } | RawNotificationAlert[]
-        >(GET_NOTIFICATIONS, undefined, { limit: 20, isRead: false }).catch(() => null);
-
-        const list: RawNotificationAlert[] = Array.isArray(alertsRes)
-          ? alertsRes
-          : Array.isArray(alertsRes?.data)
-            ? alertsRes.data
-            : [];
-
-        urgentAlerts = list.map((a, idx) => ({
-          id: a.id || `alert-${idx}`,
-          title: a.title?.trim() || a.message?.trim() || a.category?.trim() || 'Notification',
-          message: a.message?.trim() || '',
-          priority: a.priority?.trim() || 'Medium',
-          category: a.category?.trim() || 'SYSTEM',
-          createdAt: toIsoOrNull(a.createdAt),
-          actionUrl: a.actionUrl ?? null,
-        }));
-      } catch {
-        urgentAlerts = [];
-      }
-
-      return {
-        shift: currentShift,
-        upcomingShift:
-          nextShift && !isShiftPast(nextShift)
-            ? nextShift
-            : currentShift && !currentShift.isStarted && !currentShift.isCompleted && !isShiftPast(currentShift)
-              ? currentShift
-              : null,
-        shiftList: mappedList,
-        assignedResidents,
-        urgentAlerts,
-      };
-    },
+    queryFn: () => loadShiftDashboard(),
     staleTime: 1000 * 30, // 30 seconds
   });
+
+  const activeShift = dashboardData?.shift ?? null;
+  const upcomingShift = dashboardData?.upcomingShift ?? null;
+  const shiftList = dashboardData?.shiftList ?? [];
+  const hasContinuousNext = Boolean(
+    activeShift?.hasContinuousNextShift ||
+      (activeShift && upcomingShift && isContinuousNextShift(activeShift, upcomingShift)) ||
+      (activeShift && shiftList.some((candidate) => isContinuousNextShift(activeShift, candidate))),
+  );
+  const isActivePast = isShiftPast(activeShift, nowMs);
+  const isShiftStarted = Boolean(
+    activeShift?.isStarted &&
+      !activeShift.isCompleted &&
+      (!isActivePast || !hasContinuousNext),
+  );
+  const isShiftContinuing = Boolean(isShiftStarted && isActivePast);
+
+  useEffect(() => {
+    setNowMs(Date.now());
+    if (!activeShift?.isStarted || activeShift.isCompleted) return;
+
+    const intervalId = setInterval(() => {
+      setNowMs(Date.now());
+    }, 60_000);
+
+    const { endMs } = resolveShiftStartEndMs(activeShift);
+    let boundaryTimeoutId: ReturnType<typeof setTimeout> | undefined;
+    if (endMs) {
+      const msUntilEnd = endMs - Date.now();
+      if (msUntilEnd > 0 && msUntilEnd <= 60 * 60 * 1000) {
+        boundaryTimeoutId = setTimeout(() => {
+          setNowMs(Date.now());
+          queryClient.invalidateQueries({ queryKey: ['active-shift'] });
+        }, msUntilEnd + 1500);
+      }
+    }
+
+    return () => {
+      clearInterval(intervalId);
+      if (boundaryTimeoutId) clearTimeout(boundaryTimeoutId);
+    };
+  }, [
+    activeShift?.id,
+    activeShift?.isStarted,
+    activeShift?.isCompleted,
+    activeShift?.rawEndTime,
+    activeShift?.endTime,
+    queryClient,
+  ]);
+
+  const taskQuery = useAssignedShiftTasks(
+    activeShift,
+    dashboardData?.assignedResidents ?? [],
+    user?.roleName,
+    getUkDateString(new Date()),
+  );
+  const shift =
+    activeShift && isShiftStarted
+      ? {
+          ...activeShift,
+          isContinuing: isShiftContinuing,
+          hasContinuousNextShift: hasContinuousNext,
+          ...(isShiftContinuing
+            ? {
+                status: 'Continuing',
+                timeRemainingStr: formatContinuingTimeRemaining(activeShift, nowMs),
+              }
+            : {}),
+          tasksCompleted:
+            taskQuery.data?.filter((task) => task.status === 'Completed').length ??
+            activeShift.tasksCompleted,
+          tasksTotal: taskQuery.data?.length ?? activeShift.tasksTotal,
+          taskProgressLoading: taskQuery.isPending,
+          taskProgressError: taskQuery.isError,
+        }
+      : activeShift;
 
   // 2. Start Shift Mutation
   const startShiftMutation = useMutation({
@@ -285,7 +158,7 @@ export function useShiftDashboard() {
   // 3. End Shift Mutation
   const endShiftMutation = useMutation({
     mutationFn: async (handoverNotes: string) => {
-      const currentShift = dashboardData?.shift;
+      const currentShift = shift;
       if (!currentShift?.id) return;
       await makeMobileApiCall(
         END_SHIFT,
@@ -295,7 +168,7 @@ export function useShiftDashboard() {
           tasksTotal: currentShift.tasksTotal,
         },
         undefined,
-        { id: currentShift.id }
+        { id: currentShift.id },
       );
     },
     onMutate: async () => {
@@ -307,6 +180,8 @@ export function useShiftDashboard() {
           ...prevData,
           shift: {
             ...prevData.shift,
+            tasksCompleted: shift?.tasksCompleted ?? prevData.shift.tasksCompleted,
+            tasksTotal: shift?.tasksTotal ?? prevData.shift.tasksTotal,
             status: 'Completed',
             isStarted: false,
             isCompleted: true,
@@ -335,12 +210,9 @@ export function useShiftDashboard() {
     mutationFn: async (handoverNotes: string) => {
       const currentShift = dashboardData?.shift;
       if (!currentShift?.id) return;
-      await makeMobileApiCall(
-        UPDATE_HANDOVER_NOTES,
-        { handoverNotes },
-        undefined,
-        { id: currentShift.id }
-      );
+      await makeMobileApiCall(UPDATE_HANDOVER_NOTES, { handoverNotes }, undefined, {
+        id: currentShift.id,
+      });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['active-shift'] });
@@ -356,25 +228,31 @@ export function useShiftDashboard() {
     return rawAlerts.filter((alert) => !dismissedAlertIds.includes(alert.id));
   }, [dashboardData?.urgentAlerts, dismissedAlertIds]);
 
+  const refetchTasks = taskQuery.refetch;
+  const refreshShifts = useCallback(async () => {
+    const result = await refetch();
+    if (isShiftStarted) await refetchTasks();
+    return result;
+  }, [refetch, refetchTasks, isShiftStarted]);
+
   const error = queryError instanceof Error ? queryError.message : null;
 
   return {
-    shift: dashboardData?.shift ?? null,
+    shift,
     upcomingShift: dashboardData?.upcomingShift ?? null,
     shiftList: dashboardData?.shiftList ?? [],
     assignedResidents: dashboardData?.assignedResidents ?? [],
-    isShiftStarted: Boolean(
-      dashboardData?.shift?.isStarted &&
-      !dashboardData?.shift?.isCompleted &&
-      !isShiftPast(dashboardData?.shift)
+    isShiftStarted,
+    isShiftContinuing,
+    isShiftCompleted: Boolean(
+      dashboardData?.shift?.isCompleted || dashboardData?.shift?.status === 'Completed',
     ),
-    isShiftCompleted: Boolean(dashboardData?.shift?.isCompleted || dashboardData?.shift?.status === 'Completed'),
     urgentAlerts: activeAlerts,
     dismissAlert,
     startShift: (notes?: string) => startShiftMutation.mutateAsync(notes),
     endShift: (handoverNotes: string) => endShiftMutation.mutateAsync(handoverNotes),
     saveHandoverNotes: (notes: string) => updateNotesMutation.mutateAsync(notes),
-    refreshShifts: () => refetch(),
+    refreshShifts,
     loading,
     error,
   };

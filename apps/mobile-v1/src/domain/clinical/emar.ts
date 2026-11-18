@@ -19,7 +19,7 @@ export interface MedicationItem {
 
 export interface ResidentAllergyInfo {
   allergen: string;
-  severity: 'Mild' | 'Moderate' | 'Severe' | 'Life-Threatening';
+  severity?: 'Mild' | 'Moderate' | 'Severe' | 'Life-Threatening';
 }
 
 export type MedicationAdministrationStatus = 'Given' | 'Refused' | 'Omitted' | 'NPO';
@@ -51,7 +51,7 @@ export function validateMedicationAdministration(
     if (drugLower.includes(allergyLower) || allergyLower.includes(drugLower)) {
       return {
         isValid: false,
-        error: `ALLERGY CONTRAINDICATION: Person supported has a documented ${allergy.allergen} allergy (${allergy.severity}). Medication administration blocked under CQC Regulation 12.`,
+        error: `ALLERGY CONTRAINDICATION: Person supported has a documented ${allergy.allergen} allergy${allergy.severity ? ` (${allergy.severity})` : ''}. Medication administration blocked under CQC Regulation 12.`,
         requiresWitness: false,
         allergyConflict: allergy.allergen,
       };

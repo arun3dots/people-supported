@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CREATE_OBSERVATION } from '@repo/endpoints';
 import { calculateNews2, News2Input, News2Result } from '../../domain/clinical/news2';
 import { makeMobileApiCall } from '../../data/api/client';
+import { isNetworkError } from '../../data/api/errors';
 import { enqueueMutation } from '../../data/api/offlineQueue';
 import { safeLogger } from '../../data/security/safeLogger';
 
@@ -89,14 +90,7 @@ export function useNews2Tracker(residentId: string) {
       await queryClient.invalidateQueries({ queryKey: ['facility-residents-list'] });
       await queryClient.invalidateQueries({ queryKey: ['active-shift'] });
     } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : String(err);
-      const isNetworkError =
-        errMsg.toLowerCase().includes('network') ||
-        errMsg.toLowerCase().includes('failed to fetch') ||
-        errMsg.toLowerCase().includes('internet') ||
-        errMsg.toLowerCase().includes('timeout');
-
-      if (isNetworkError) {
+      if (isNetworkError(err)) {
         safeLogger.warn('Network error recording observation, enqueuing offline', err);
         await enqueueMutation(CREATE_OBSERVATION, payload);
         queuedOffline = true;

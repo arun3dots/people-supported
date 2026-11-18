@@ -1,189 +1,168 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { addDays, format, isSameDay, subDays } from "date-fns";
+import React, { useEffect, useMemo, useState } from "react";
 import { Activity, Package, Pill, Plus } from "lucide-react";
-import {
-  Badge,
-  Button,
-  Card,
-  SummaryCardsGrid,
-  Text,
-} from "@repo/ui/components/ui";
+import { Button, Card, SummaryCardsGrid, Text } from "@repo/ui/components/ui";
+import type {
+  CreateMedicationStockTransactionDTO,
+  PreAdmissionPartCDTO,
+} from "@repo/schema";
 import type {
   MedicationPrescriptionRow,
   MedicationRoundRow,
 } from "../../../../../../../lib/queries/residents/useGetMedicationPrescriptionsQuery";
-import { MarMatrixSection, type MarMatrixRow } from "./MarMatrixSection";
+import {
+  addUkCalendarDays,
+  formatUkDate,
+  getUkDateString,
+  getUkDayStart,
+} from "../../../../../../../lib/utils/uk-date-time";
+import { SavedMarMedicineCard } from "./SavedMarMedicineCard";
+import { OnboardingMedicinesSection } from "./OnboardingMedicinesSection";
+import { MarMatrixSection } from "./MarMatrixSection";
+import {
+  buildMarMatrixRows,
+  currentRegularMedicines,
+  marAdherence,
+  prescriptionStockBalances,
+} from "./supportedLivingMarData";
 
 interface SupportedLivingMarOverviewProps {
   prescriptions: MedicationPrescriptionRow[];
+  onboardingMedicines?: PreAdmissionPartCDTO["medicines"];
+  onboardingLoading?: boolean;
+  onboardingError?: boolean;
+  onRetryOnboarding?: () => void;
+  rounds?: MedicationRoundRow[];
   prnCount: number;
-  gpName?: string | null;
+  stockLedger?: CreateMedicationStockTransactionDTO[];
+  stockLoading?: boolean;
+  stockError?: boolean;
+  canReadStock?: boolean;
+  onRetryStock?: () => void;
   isEditable?: boolean;
+  canAdminister?: boolean;
   onAddMedication: () => void;
   onAdministerRound: (round: MedicationRoundRow) => void;
 }
 
 export function SupportedLivingMarOverview({
   prescriptions,
+  onboardingMedicines = [],
+  onboardingLoading = false,
+  onboardingError = false,
+  onRetryOnboarding = () => {},
+  rounds = [],
   prnCount,
-  gpName,
+  stockLedger = [],
+  stockLoading = false,
+  stockError = false,
+  canReadStock = true,
+  onRetryStock,
   isEditable = true,
+  canAdminister = true,
   onAddMedication,
   onAdministerRound,
 }: SupportedLivingMarOverviewProps): React.JSX.Element {
-  const activePrescriptions = useMemo(
-    () => prescriptions.filter((rx) => rx.status === "Active"),
-    [prescriptions],
-  );
-
-  // Build 7-day window ending today
-  const sevenDays = useMemo(() => {
-    const today = new Date();
-    const start = subDays(today, 6);
-    return Array.from({ length: 7 }, (_, idx) => addDays(start, idx));
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(timer);
   }, []);
-
-  // Flatten active rounds for 7-day MAR matrix
-  const matrixRows: MarMatrixRow[] = useMemo(() => {
-    const rows: MarMatrixRow[] = [];
-
-    activePrescriptions.forEach((rx) => {
-      if (rx.rounds && rx.rounds.length > 0) {
-        rx.rounds.forEach((r) => {
-          rows.push({
-            id: r.id,
-            drugName: rx.drugName,
-            doseAndForm: `${rx.dose} ${rx.form || "tablet"}`.trim(),
-            timeLabel: r.scheduledTime || rx.times?.[0] || "08:00",
-            round: r,
-            administrations: r.administrations || [],
-          });
-        });
-      } else {
-        (rx.times.length > 0 ? rx.times : ["08:00"]).forEach((time, idx) => {
-          rows.push({
-            id: `${rx.id}-${idx}`,
-            drugName: rx.drugName,
-            doseAndForm: `${rx.dose} ${rx.form || "tablet"}`.trim(),
-            timeLabel: time,
-            round: null,
-            administrations: [],
-          });
-        });
-      }
-    });
-
-    if (rows.length === 0) {
-      rows.push({
-        id: "demo-levothyroxine",
-        drugName: "Levothyroxine",
-        doseAndForm: "50 mcg tablet",
-        timeLabel: "07:00",
-        round: null,
-        administrations: [],
-      });
-    }
-
-    return rows;
-  }, [activePrescriptions]);
-
-  // Calculate 7-day adherence
-  const adherenceStats = useMemo(() => {
-    let totalDue = 0;
-    let totalGiven = 0;
-
-    matrixRows.forEach((row) => {
-      sevenDays.forEach((day, idx) => {
-        totalDue += 1;
-        const match = row.administrations.find((a) => {
-          const dt = new Date(a.administeredAt || a.createdAt);
-          return isSameDay(dt, day);
-        });
-        if (match) {
-          if (match.status === "Given") totalGiven += 1;
-        } else if (row.id === "demo-levothyroxine") {
-          if (idx !== 4) totalGiven += 1;
-        }
-      });
-    });
-
-    const pct = totalDue > 0 ? Math.round((totalGiven / totalDue) * 100) : 100;
-    return { pct, totalGiven, totalDue };
-  }, [matrixRows, sevenDays]);
-
-  const regularCount = activePrescriptions.length > 0 ? activePrescriptions.length : 1;
-  const totalMedicines = regularCount + prnCount;
-
-  const displayPrescriptions =
-    activePrescriptions.length > 0
-      ? activePrescriptions.map((rx) => ({
-          id: rx.id,
-          drugName: rx.drugName,
-          subtitle: `${rx.dose} ${rx.form || "tablet"} · Oral`,
-          indication: rx.instructions || "Prescribed clinical management",
-          times: rx.times.length > 0 ? rx.times : ["08:00"],
-          prescriber: gpName || "Dr A. Malik (GP)",
-          stockLabel: "21 days stock",
-        }))
-      : [
-          {
-            id: "default-rx-1",
-            drugName: "Levothyroxine",
-            subtitle: "50 mcg tablet · Oral",
-            indication: "Underactive thyroid",
-            times: ["07:00"],
-            prescriber: gpName || "Dr A. Malik (GP)",
-            stockLabel: "21 days stock",
-          },
-        ];
-
-  const summaryCards = useMemo(
-    () => [
-      {
-        title: "Current medicines",
-        value: totalMedicines,
-        subtitle: `${regularCount} regular · ${prnCount} PRN`,
-        icon: <Pill className="size-5 text-primary" />,
-        iconClassName: "bg-slate-100",
-      },
-      {
-        title: "7-day MAR adherence",
-        value: `${adherenceStats.pct}%`,
-        subtitle: `${adherenceStats.totalGiven} of ${adherenceStats.totalDue} due doses given`,
-        subtitleColor: "text-emerald-700",
-        icon: <Activity className="size-5 text-emerald-700" />,
-        iconClassName: "bg-emerald-50",
-      },
-      {
-        title: "Stock alerts",
-        value: 0,
-        subtitle: "All stock above 7 days",
-        icon: <Package className="size-5 text-slate-600" />,
-        iconClassName: "bg-slate-100",
-      },
-    ],
-    [totalMedicines, regularCount, prnCount, adherenceStats],
+  const today = getUkDateString(now);
+  const medicines = currentRegularMedicines(prescriptions, rounds, today);
+  const savedMedicines = currentRegularMedicines(
+    prescriptions,
+    rounds,
+    today,
+    true,
   );
-
-  const rangeStartLabel = format(sevenDays[0] ?? new Date(), "dd MMM");
-  const rangeEndLabel = format(sevenDays[6] ?? new Date(), "dd MMM yyyy");
+  const sevenDays = useMemo(() => {
+    const end = getUkDayStart(now);
+    return Array.from({ length: 7 }, (_, index) =>
+      addUkCalendarDays(end, index - 6),
+    );
+  }, [now]);
+  const matrixRows = useMemo(
+    () =>
+      buildMarMatrixRows(prescriptions, rounds, sevenDays.map(getUkDateString)),
+    [prescriptions, rounds, sevenDays],
+  );
+  const adherenceStats = marAdherence(matrixRows, now);
+  const balances = prescriptionStockBalances(stockLedger);
+  const knownBalances = medicines.flatMap((rx) =>
+    rx.stockId && balances.has(rx.stockId) ? [balances.get(rx.stockId)!] : [],
+  );
+  const stockAvailable = canReadStock && !stockLoading && !stockError;
+  const outOfStock = knownBalances.filter((balance) => balance === 0).length;
+  const unknownStock = medicines.length - knownBalances.length;
+  const summaryCards = [
+    {
+      title: "Current medicines",
+      value: medicines.length + prnCount,
+      subtitle: `${medicines.length} regular · ${prnCount} PRN`,
+      icon: <Pill className="size-5 text-primary" />,
+      iconClassName: "bg-slate-100",
+    },
+    {
+      title: "7-day MAR adherence",
+      value:
+        adherenceStats.pct === null ? "No doses due" : `${adherenceStats.pct}%`,
+      subtitle: `${adherenceStats.totalGiven} of ${adherenceStats.totalDue} due scheduled doses given`,
+      icon: <Activity className="size-5 text-emerald-700" />,
+      iconClassName: "bg-emerald-50",
+    },
+    {
+      title: "Stock alerts",
+      value: stockLoading
+        ? "Loading..."
+        : !canReadStock || stockError
+          ? "Unavailable"
+          : knownBalances.length
+            ? outOfStock
+            : "Not recorded",
+      subtitle: !canReadStock
+        ? "Stock access requires a clinical management role"
+        : stockError
+          ? "Could not load stock balances"
+          : knownBalances.length
+            ? `Out of stock · ${unknownStock} medicines without a balance`
+            : "No linked prescription balances recorded",
+      icon: <Package className="size-5 text-slate-600" />,
+      iconClassName: "bg-slate-100",
+    },
+  ];
+  const rangeStartLabel = formatUkDate(sevenDays[0]!, {
+    day: "2-digit",
+    month: "short",
+  });
+  const rangeEndLabel = formatUkDate(sevenDays[6]!, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
   return (
     <div className="space-y-6 font-sans">
-      {/* 1. Top 3 Supported Living Medication KPI Cards */}
       <SummaryCardsGrid
         cards={summaryCards}
         className="grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3"
       />
-
-      {/* 2. Prescribed Medicines Card */}
+      {stockError && (
+        <Button variant="outline" onClick={onRetryStock}>
+          Retry stock balances
+        </Button>
+      )}
       <Card variant="surface" className="p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Pill className="size-4 text-primary" />
-            <Text as="h3" size="md" weight="semibold" className="text-slate-900">
+            <Text
+              as="h3"
+              size="md"
+              weight="semibold"
+              className="text-slate-900"
+            >
               Prescribed medicines
             </Text>
           </div>
@@ -199,60 +178,39 @@ export function SupportedLivingMarOverview({
             </Button>
           )}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {displayPrescriptions.map((med) => (
-            <Card
-              key={med.id}
-              variant="white"
-              border="secondary"
-              className="p-4 space-y-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <Text as="h4" size="md" weight="semibold" className="text-slate-900">
-                    {med.drugName}
-                  </Text>
-                  <Text size="md" variant="muted">
-                    {med.subtitle}
-                  </Text>
-                </div>
-                <Badge variant="secondary" state="success" className="border">
-                  Regular
-                </Badge>
-              </div>
-
-              <Text size="md" weight="normal" className="text-slate-700">
-                For: {med.indication}
-              </Text>
-
-              <div className="flex flex-wrap items-center gap-1.5">
-                {med.times.map((t) => (
-                  <Badge key={t} variant="outline" className="rounded-lg border font-medium">
-                    {t}
-                  </Badge>
-                ))}
-              </div>
-
-              <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between">
-                <Text size="md" variant="muted">
-                  {med.prescriber}
-                </Text>
-                <Text size="md" weight="medium" className="text-slate-800">
-                  {med.stockLabel}
-                </Text>
-              </div>
-            </Card>
-          ))}
-        </div>
+        {savedMedicines.length === 0 ? (
+          <Text size="md" variant="muted">
+            No MAR prescriptions or scheduled doses recorded.
+          </Text>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {savedMedicines.map((med) => (
+              <SavedMarMedicineCard
+                key={med.id}
+                medicine={med}
+                stockBalance={
+                  stockAvailable && med.stockId
+                    ? balances.get(med.stockId)
+                    : undefined
+                }
+              />
+            ))}
+          </div>
+        )}
+        <OnboardingMedicinesSection
+          medicines={onboardingMedicines}
+          loading={onboardingLoading}
+          error={onboardingError}
+          onRetry={onRetryOnboarding}
+        />
       </Card>
-
-      {/* 3. 7-Day Medication Administration Record (MAR) Matrix */}
       <MarMatrixSection
         rangeStartLabel={rangeStartLabel}
         rangeEndLabel={rangeEndLabel}
         sevenDays={sevenDays}
         matrixRows={matrixRows}
+        now={now}
+        canAdminister={canAdminister}
         onAdministerRound={onAdministerRound}
       />
     </div>

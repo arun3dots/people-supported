@@ -64,7 +64,7 @@ export function CarePlanDirectoryClient() {
   return (
     <EntityListView<PlanItem>
       title="Care planning"
-      description="Every plan links to its resident's record (single resident ID). Lifecycle: Draft → Under review → Approved / Active, with Returned and Archived states."
+      description="Every plan links to its tenant's record. Lifecycle: Draft → Under review → Approved / Active, with Returned and Archived states."
       overviewTitle="Care Plan Directory"
       stats={
         <div className="space-y-4">
@@ -75,7 +75,7 @@ export function CarePlanDirectoryClient() {
               className="bg-rose-50/90 border-rose-200 text-rose-800 rounded-2xl p-4 py-3"
             >
               <AlertDescription>
-                {stats.reviewOverdueCount} care plan review(s) overdue · {stats.missingPlanCount} resident(s) without a care plan.
+                {stats.reviewOverdueCount} care plan review(s) overdue · {stats.missingPlanCount} tenant(s) without a care plan.
               </AlertDescription>
             </Alert>
           )}

@@ -24,20 +24,18 @@ const ACTION_ITEMS: ActionItemConfig[] = [
     id: 'incident',
     titleTop: 'Report',
     titleBottom: 'Incident',
-    // BUG-024: Matches web carer sidebar AlertTriangle icon
     renderIcon: (color) => <AlertTriangle size={24} color={color} strokeWidth={2.2} />,
   },
-  {
-    id: 'observation',
-    titleTop: 'Record',
-    titleBottom: 'Observation',
-    renderIcon: (color) => <Activity size={24} color={color} strokeWidth={2.2} />,
-  },
+  // {
+  //   id: 'observation',
+  //   titleTop: 'Record',
+  //   titleBottom: 'Observation',
+  //   renderIcon: (color) => <Activity size={24} color={color} strokeWidth={2.2} />,
+  // },
   {
     id: 'handover',
-    // BUG-026: Matches web carer sidebar label "Handover"
     titleTop: 'Handover',
-    // BUG-025: Matches web carer sidebar ClipboardCheck icon
+    titleBottom: 'Notes',
     renderIcon: (color) => <ClipboardCheck size={24} color={color} strokeWidth={2.2} />,
   },
   {

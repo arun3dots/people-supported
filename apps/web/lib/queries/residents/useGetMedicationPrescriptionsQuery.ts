@@ -15,12 +15,17 @@ export interface MedicationRoundRow {
   imageUrls: string[];
   scheduledTime: string | null;
   status: string;
+  isPRN?: boolean;
+  isAdhoc?: boolean;
   administrations: {
     id: string;
     status: string;
     administeredAt: string | null;
     createdAt: string;
     performedBy: string | null;
+    isSuperseded?: boolean;
+    deletedAt?: string | null;
+    carer?: { fullName?: string } | null;
   }[];
 }
 
@@ -45,7 +50,11 @@ export interface MedicationPrescriptionRow {
 
 export function useGetMedicationPrescriptionsQuery(residentId: string) {
   return useQuery({
-    queryKey: [...residentKeys.detail(residentId), "medication-rounds", "prescriptions"],
+    queryKey: [
+      ...residentKeys.detail(residentId),
+      "medication-rounds",
+      "prescriptions",
+    ],
     queryFn: () =>
       makeAPICall<MedicationPrescriptionRow[]>(
         GET_MEDICATION_PRESCRIPTIONS,
@@ -54,5 +63,6 @@ export function useGetMedicationPrescriptionsQuery(residentId: string) {
         { id: residentId },
       ),
     enabled: !!residentId,
+    refetchInterval: 30_000,
   });
 }

@@ -22,8 +22,16 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={outfit.variable} data-scroll-behavior="smooth">
-      <body className="font-sans antialiased text-gray-900 bg-gray-50">
+    <html
+      lang="en"
+      className={outfit.variable}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
+      <body
+        className="font-sans antialiased text-gray-900 bg-gray-50"
+        suppressHydrationWarning
+      >
         <Providers>{children}</Providers>
         <Toaster />
       </body>

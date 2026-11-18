@@ -84,16 +84,16 @@ export function MoreMenuModal({ visible, onClose }: MoreMenuModalProps) {
         }, 120);
       },
     },
-    {
-      id: 'news2',
-      title: 'NEWS2 Vitals',
-      subtitle: 'Vital signs & escalation',
-      icon: HeartPulse,
-      iconBg: '#FEE4E2',
-      iconColor: '#D92D20',
-      badge: 'URGENT',
-      onPress: () => navigateTo('/news2'),
-    },
+    // {
+    //   id: 'news2',
+    //   title: 'NEWS2 Vitals',
+    //   subtitle: 'Vital signs & escalation',
+    //   icon: HeartPulse,
+    //   iconBg: '#FEE4E2',
+    //   iconColor: '#D92D20',
+    //   badge: 'URGENT',
+    //   onPress: () => navigateTo('/news2'),
+    // },
     {
       id: 'mar',
       title: 'eMAR Medication',
@@ -106,11 +106,11 @@ export function MoreMenuModal({ visible, onClose }: MoreMenuModalProps) {
     {
       id: 'handover',
       title: 'Handover',
-      subtitle: 'Clinical handover notes',
+      subtitle: 'Previous carers’ handover notes',
       icon: ClipboardCheck,
       iconBg: '#FAF8EE',
       iconColor: '#8A6E24',
-      onPress: () => navigateTo('/handover'),
+      onPress: () => navigateTo('/previous-handover'),
     },
     {
       id: 'alerts',

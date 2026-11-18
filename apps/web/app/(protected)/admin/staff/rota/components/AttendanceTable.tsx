@@ -22,7 +22,10 @@ export interface AttendanceRecord {
   staffId: string;
   staffName: string;
   staffRole: string;
+  staffPhone?: string | null;
   property: string;
+  dateLabel: string;
+  shiftDateStr?: string;
   scheduledTime: string;
   careType: string;
   careTypeColor: string;
@@ -70,6 +73,7 @@ export function AttendanceTable({
           <TableHeader>
             <TableRow className="border-b border-border-secondary/50 hover:bg-transparent">
               <TableHead className="py-2.5 px-3 text-md font-medium text-slate-500">Staff Member</TableHead>
+              <TableHead className="py-2.5 px-3 text-md font-medium text-slate-500">Date</TableHead>
               <TableHead className="py-2.5 px-3 text-md font-medium text-slate-500">Scheduled</TableHead>
               <TableHead className="py-2.5 px-3 text-md font-medium text-slate-500">Clock In</TableHead>
               <TableHead className="py-2.5 px-3 text-md font-medium text-slate-500">Clock Out</TableHead>
@@ -81,7 +85,7 @@ export function AttendanceTable({
           <TableBody>
             {records.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-10 text-slate-400">
+                <TableCell colSpan={8} className="text-center py-10 text-slate-400">
                   No attendance records found for the selected filters.
                 </TableCell>
               </TableRow>
@@ -108,12 +112,20 @@ export function AttendanceTable({
                       </div>
                     </TableCell>
 
+                    <TableCell className="py-3 px-3 whitespace-nowrap">
+                      <span className="text-sm font-medium text-slate-700">{r.dateLabel}</span>
+                    </TableCell>
+
                     <TableCell className="py-3 px-3">
                       <div className="text-sm font-medium text-slate-800">{r.scheduledTime}</div>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className={cn("size-2 rounded-full", r.careTypeColor)} />
                         <span className="text-xs text-slate-500">{r.careType}</span>
                       </div>
+                    </TableCell>
+
+                    <TableCell className="py-3 px-3 whitespace-nowrap">
+                      <span className="text-sm font-medium text-slate-700">{r.dateLabel}</span>
                     </TableCell>
 
                     <TableCell className="py-3 px-3">

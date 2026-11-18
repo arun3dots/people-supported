@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  TextInput,
   ActivityIndicator,
   ScrollView,
   KeyboardAvoidingView,
@@ -14,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { loginSchema, mfaVerifySchema } from '@repo/schema';
-import { Text } from '@/components/ui/text';
+import { Input, Text } from '@/presentation/components/common';
 import { useAuth } from '@/presentation/context/AuthContext';
 import { useBiometricLock } from '@/presentation/context/BiometricLockContext';
 import { AdminRedirectionModal } from '@/components/auth/AdminRedirectionModal';
@@ -127,10 +126,10 @@ export default function LoginScreen() {
           <View className="w-full max-w-[420px] self-center">
             {/* Header Title & Subtitle */}
             <View className="items-center mb-2">
-              <Text className="text-2xl font-bold text-text-primary text-center">
+              <Text className="text-2xl font-bold text-foreground text-center">
                 Welcome Back!
               </Text>
-              <Text className="text-base font-normal text-text-secondary text-center mt-1">
+              <Text className="text-base font-normal text-muted-foreground text-center mt-1">
                 Sign in to continue
               </Text>
             </View>
@@ -170,7 +169,7 @@ export default function LoginScreen() {
 
             {!requiresMfa ? (
               <View className="w-full mt-1">
-                <Text className="text-xs font-semibold text-text-primary mb-2">
+                <Text className="text-xs font-semibold text-foreground mb-2">
                   Email Address
                 </Text>
                 <View
@@ -178,7 +177,7 @@ export default function LoginScreen() {
                     emailFocused ? 'border-primary' : 'border-transparent'
                   }`}
                 >
-                  <TextInput
+                  <Input
                     value={email}
                     onChangeText={(val) => {
                       setEmail(val);
@@ -189,17 +188,21 @@ export default function LoginScreen() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
+                    autoComplete="username"
+                    textContentType="username"
+                    importantForAutofill="yes"
+                    keyboardAppearance="light"
                     onFocus={() => {
                       setEmailFocused(true);
                       scrollToInput(100);
                     }}
                     onBlur={() => setEmailFocused(false)}
-                    style={{ fontFamily: theme.fonts.regular }}
-                    className="text-base text-text-primary p-0"
+                    style={{ color: theme.colors.foreground }}
+                    className="h-full border-0 bg-transparent p-0 text-base text-foreground"
                   />
                 </View>
 
-                <Text className="text-xs font-semibold text-text-primary mt-4 mb-2">
+                <Text className="text-xs font-semibold text-foreground mt-4 mb-2">
                   Password
                 </Text>
                 <View
@@ -207,7 +210,7 @@ export default function LoginScreen() {
                     passwordFocused ? 'border-primary' : 'border-transparent'
                   }`}
                 >
-                  <TextInput
+                  <Input
                     value={password}
                     onChangeText={(val) => {
                       setPassword(val);
@@ -217,13 +220,18 @@ export default function LoginScreen() {
                     placeholderTextColor="#94A3B8"
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="current-password"
+                    textContentType="password"
+                    importantForAutofill="yes"
+                    keyboardAppearance="light"
                     onFocus={() => {
                       setPasswordFocused(true);
                       scrollToInput(170);
                     }}
                     onBlur={() => setPasswordFocused(false)}
-                    style={{ fontFamily: theme.fonts.regular }}
-                    className="text-base text-text-primary p-0"
+                    style={{ color: theme.colors.foreground }}
+                    className="h-full border-0 bg-transparent p-0 text-base text-foreground"
                   />
                   <TouchableOpacity
                     onPress={() => setShowPassword(!showPassword)}
@@ -266,18 +274,18 @@ export default function LoginScreen() {
               </View>
             ) : (
               <View className="w-full mt-4">
-                <Text className="text-xl font-bold text-text-primary mb-1">
+                <Text className="text-xl font-bold text-foreground mb-1">
                   Two-Factor Authentication
                 </Text>
-                <Text className="text-xs text-text-secondary mb-4">
+                <Text className="text-xs text-muted-foreground mb-4">
                   Enter the 6-digit verification code from your authenticator app.
                 </Text>
 
-                <Text className="text-xs font-semibold text-text-primary mb-2">
+                <Text className="text-xs font-semibold text-foreground mb-2">
                   MFA Security Code
                 </Text>
                 <View className="h-[52px] w-full rounded-xl border border-primary bg-surface px-4 justify-center mb-4">
-                  <TextInput
+                  <Input
                     value={mfaCode}
                     onChangeText={(val) => {
                       setMfaCode(val);
@@ -288,8 +296,8 @@ export default function LoginScreen() {
                     keyboardType="number-pad"
                     maxLength={6}
                     onFocus={() => scrollToInput(100)}
-                    style={{ fontFamily: theme.fonts.bold }}
-                    className="text-lg text-center tracking-[6px] text-text-primary p-0"
+                    style={{ color: theme.colors.foreground }}
+                    className="h-full border-0 bg-transparent p-0 text-lg font-bold text-center tracking-[6px] text-foreground"
                   />
                 </View>
 

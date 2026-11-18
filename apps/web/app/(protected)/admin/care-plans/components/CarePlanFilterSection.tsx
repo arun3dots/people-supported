@@ -68,7 +68,7 @@ export function CarePlanFilterSection({
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 size-4 pointer-events-none z-10" />
           <Input
             type="text"
-            placeholder="Search care plans by resident name, ID, or room..."
+            placeholder="Search care plans by tenant name, ID, or room..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full h-11 pl-10 pr-4 placeholder:text-slate-400 focus:ring-1"

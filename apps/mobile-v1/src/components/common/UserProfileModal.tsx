@@ -54,8 +54,8 @@ export function UserProfileModal({ visible, onClose }: UserProfileModalProps) {
     user?.photoUrl ||
     null;
 
-  const displayName = profile?.fullName || user?.fullName || 'Care Staff';
-  const roleName = profile?.role?.name || user?.roleName || 'Carer';
+  const displayName = profile?.fullName || user?.fullName || 'Support Staff';
+  const roleName = 'Support Staff' //||profile?.role?.name || user?.roleName || ;
 
   const handleProfileUpdated = () => {
     queryClient.invalidateQueries({ queryKey: [GET_MY_PROFILE] });

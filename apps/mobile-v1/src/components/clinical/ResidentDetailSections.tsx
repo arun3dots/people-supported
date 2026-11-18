@@ -57,16 +57,16 @@ export function ResidentDetailSections({
   const gpPhone = resident.gpDetails?.phone || resident.careProfile?.communityNursePhone || 'Not recorded';
 
   // Insurance details from API
-  const insuranceName = resident.profile?.insuranceProvider || resident.admission?.payer || 'Not recorded';
-  const coverage = resident.admission?.secondaryCoverage || resident.admission?.stayType || 'Not recorded';
-  const policyNo = resident.admission?.insurancePolicyNumber || resident.nhsNumber || 'Not recorded';
-  const expiryDate = resident.admission?.expectedDischargeDate ? formatDate(resident.admission.expectedDischargeDate) : 'Not recorded';
+  const insuranceName = resident.profile?.insuranceProvider || 'Not recorded';
+  const coverage = resident.admission?.secondaryCoverage || 'Not recorded';
+  const policyNo = resident.admission?.insurancePolicyNumber || 'Not recorded';
+  const expiryDate = 'Not recorded';
 
   // Clinical Summary values from API
   const allergy = resident.careProfile?.allergies?.[0] || resident.careProfile?.medicationAllergies?.[0] || 'None recorded';
   const diagnosis = resident.careProfile?.primaryDiagnosis || 'None recorded';
   const mobility = resident.careProfile?.mobility || resident.careProfile?.mobilityAidsUsed?.[0] || 'Not recorded';
-  const diet = resident.careProfile?.dietType || resident.careProfile?.dietaryRequirements?.[0] || 'Standard';
+  const diet = resident.careProfile?.dietType || resident.careProfile?.dietaryRequirements?.[0] || 'Not recorded';
 
   // Resident Direct Contact & DOB
   const residentAny = resident as unknown as { phoneNumber?: string; email?: string; profile?: { phoneNumber?: string } };
@@ -202,14 +202,12 @@ export function ResidentDetailSections({
       </View>
 
       {/* 4. Clinical Summary Section */}
-      <View className="mb-5">
+      {/* <View className="mb-5">
         <View className="flex-row items-center justify-between mb-3">
           <Text className="text-lg font-bold text-foreground">Clinical Summary</Text>
         </View>
 
-        {/* Row 1: Allergies & Diagnoses */}
         <View className="flex-row gap-2.5 mb-2.5">
-          {/* Allergies Card */}
           <View className="flex-1 p-3.5 rounded-2xl bg-clinical-criticalBg items-start">
             <View className="w-7 h-7 rounded-full bg-clinical-critical items-center justify-center mb-1.5">
               <Flame size={14} color="#FFFFFF" />
@@ -221,7 +219,6 @@ export function ResidentDetailSections({
             </View>
           </View>
 
-          {/* Diagnoses Card */}
           <View className="flex-1 p-3.5 rounded-2xl bg-clinical-infoBg items-start">
             <View className="w-7 h-7 rounded-full bg-clinical-info items-center justify-center mb-1.5">
               <Activity size={14} color="#FFFFFF" />
@@ -234,9 +231,7 @@ export function ResidentDetailSections({
           </View>
         </View>
 
-        {/* Row 2: Mobility & Diet */}
         <View className="flex-row gap-2.5">
-          {/* Mobility Card */}
           <View className="flex-1 p-3.5 rounded-2xl bg-clinical-warningBg items-start">
             <View className="w-7 h-7 rounded-full bg-clinical-warning items-center justify-center mb-1.5">
               <Accessibility size={14} color="#FFFFFF" />
@@ -248,7 +243,6 @@ export function ResidentDetailSections({
             </View>
           </View>
 
-          {/* Diet Card */}
           <View className="flex-1 p-3.5 rounded-2xl bg-clinical-safeBg items-start">
             <View className="w-7 h-7 rounded-full bg-clinical-safe items-center justify-center mb-1.5">
               <Utensils size={14} color="#FFFFFF" />
@@ -260,17 +254,17 @@ export function ResidentDetailSections({
             </View>
           </View>
         </View>
-      </View>
+      </View> */}
 
       {/* 5. Clinical Observations (NEWS2 Standard) */}
-      <View className="mb-5">
+      {/* <View className="mb-5">
         <ResidentObservationsSection resident={resident} />
-      </View>
+      </View> */}
 
       {/* 6. Fluid & Nutrition Monitoring (CQC Reg 14 & NICE CG32) */}
-      <View className="mb-5">
+      {/* <View className="mb-5">
         <ResidentFluidIntakeSection resident={resident} />
-      </View>
+      </View> */}
 
       {/* 7. Activities Timeline */}
       <ResidentActivitiesTimeline

@@ -68,12 +68,43 @@ export function useRoomBedSelection(
     [selectedProperty],
   );
 
+  const propertyType = useMemo(
+    () => selectedProperty?.parsedPropertyDetails?.propertyType || "",
+    [selectedProperty],
+  );
+
+  const isFlat = useMemo(() => {
+    const pt = propertyType.toLowerCase();
+    return pt.includes("flat");
+  }, [propertyType]);
+
+  const propertyFacilities = useMemo(
+    () => selectedProperty?.parsedPropertyDetails?.facilities || [],
+    [selectedProperty],
+  );
+
+  const getRoomStatus = (roomId: string) => {
+    const tenancy = selectedProperty?.roomTenancies?.find((rt) => rt.id === roomId);
+    if (!tenancy) {
+      const roomObj = allRooms.find((r: Room) => r.id === roomId);
+      const isOccupied = (roomObj?.occupiedBeds ?? 0) >= (roomObj?.totalBeds ?? 1);
+      return { isOccupied, occupantName: null, availableBedId: roomObj?.beds?.[0]?.id || "" };
+    }
+    const occupiedBed = tenancy.beds?.find((b) => b.status === "Occupied" || Boolean(b.resident?.fullName));
+    const availableBed = tenancy.beds?.find((b) => b.status === "Available" && !b.resident?.fullName);
+    return {
+      isOccupied: Boolean(occupiedBed && !availableBed),
+      occupantName: occupiedBed?.resident?.fullName || null,
+      availableBedId: availableBed?.id || tenancy.beds?.[0]?.id || "",
+    };
+  };
+
   const potentialRoommate = useMemo(() => {
-    if (!selectedRoomId || !selectedProperty?.roomTenancies) return null;
+    if (isFlat || !selectedRoomId || !selectedProperty?.roomTenancies) return null;
     const tenancy = selectedProperty.roomTenancies.find((rt) => rt.id === selectedRoomId);
     const occupant = tenancy?.beds.find((b) => b.resident?.fullName)?.resident;
     return occupant?.fullName || null;
-  }, [selectedProperty, selectedRoomId]);
+  }, [isFlat, selectedProperty, selectedRoomId]);
 
   const handleSchemeChange = (schemeId: string) => {
     setSelectedSchemeId(schemeId);
@@ -142,10 +173,13 @@ export function useRoomBedSelection(
       (!currentLandlord || currentLandlord === propertyLandlord) &&
       nextLandlord !== currentLandlord;
 
+    const roomStatus = getRoomStatus(roomId);
+
     updateFormData({
       roomNumber: room.roomNumber,
-      roomType: room.type || "Single",
-      assignedBedId: "",
+      roomType: room.type || (isFlat ? "Single" : "Shared"),
+      assignedBedId: roomStatus.availableBedId || "",
+      ...(isFlat ? { roommate: "" } : {}),
       ...(shouldUpdateLandlord ? { landlord: nextLandlord } : {}),
     });
   };
@@ -158,6 +192,10 @@ export function useRoomBedSelection(
     selectedPropertyId,
     selectedRoomId,
     selectedProperty,
+    propertyType,
+    isFlat,
+    propertyFacilities,
+    getRoomStatus,
     propertyLandlord,
     potentialRoommate,
     isLoadingSchemes,

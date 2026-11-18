@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { format } from "date-fns";
 import { Search, RotateCcw } from "lucide-react";
 import {
   Button,
@@ -11,7 +10,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  DatePicker,
 } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
 import {
@@ -71,7 +69,7 @@ export function FilterSection({
 
   const wingOptions = useMemo(() => {
     if (wingsData && wingsData.length > 0) {
-      return wingsData.map((w) => w.name).filter(Boolean);
+      return Array.from(new Set(wingsData.map((w) => w.name).filter(Boolean)));
     }
     return [];
   }, [wingsData]);
@@ -84,11 +82,14 @@ export function FilterSection({
           (r) => r.wingName === normalizedDept || r.wing?.name === normalizedDept,
         );
       }
-      return filtered.map((r) =>
-        r.roomNumber
-          ? `Room ${r.roomNumber}`
-          : r.name || `Room ${r.id.slice(-3)}`,
-      );
+      const mapped = filtered
+        .map((r) =>
+          r.roomNumber
+            ? `Room ${r.roomNumber}`
+            : r.name || (r.id ? `Room ${r.id.slice(-3)}` : ""),
+        )
+        .filter(Boolean);
+      return Array.from(new Set(mapped));
     }
     return [];
   }, [roomsData, normalizedDept]);
@@ -97,7 +98,6 @@ export function FilterSection({
     normalizedStatus !== "All" ||
     normalizedCareType !== "All" ||
     normalizedDept !== "All" ||
-    Boolean(selectedDob) ||
     normalizedRoom !== "All" ||
     search.trim() !== "";
 
@@ -109,7 +109,6 @@ export function FilterSection({
     setSelectedStatus("All");
     setSelectedCareType("All");
     setSelectedDept("All");
-    setSelectedDob("");
     setSelectedRoom("All");
     setSearch("");
   };
@@ -123,7 +122,7 @@ export function FilterSection({
             { value: "All", label: "All People" },
             { value: "Active", label: "Active" },
             ...(!hideDraftStatusOption
-              ? [{ value: "Draft", label: "In referral" }]
+              ? [{ value: "Draft", label: "Draft" }]
               : []),
             { value: "Hospitalized", label: "In hospital" },
           ] as const
@@ -208,21 +207,6 @@ export function FilterSection({
                 ))}
               </SelectContent>
             </Select>
-
-            {/* DOB DatePicker Filter */}
-            <div className="w-36 sm:w-44 h-10">
-              <DatePicker
-                variant="dob"
-                placeholder="Filter by DOB"
-                value={selectedDob || undefined}
-                onChange={(date) => {
-                  setSelectedDob(date ? format(date, "yyyy-MM-dd") : "");
-                }}
-                showAgeBadge={false}
-                minYear={1930}
-                triggerClassName="h-10 bg-white border-slate-200 rounded-xl text-md font-medium text-slate-700 cursor-pointer"
-              />
-            </div>
           </div>
 
           <Button

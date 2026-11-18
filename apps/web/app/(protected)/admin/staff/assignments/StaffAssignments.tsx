@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar as CalendarIcon, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "@repo/ui/components/ui/Button";
@@ -44,7 +44,11 @@ export function StaffAssignments({ onBackToPlanner }: StaffAssignmentsProps) {
   const units = [] as never[];
   const { data: wings = [] } = useGetWingsQuery();
   const { data: staffList = [] } = useGetStaffQuery();
-  const { data: residents = [] } = useGetResidentsQuery();
+  const { data: rawResidents = [] } = useGetResidentsQuery();
+  const residents = useMemo(
+    () => rawResidents.filter((r) => r.status === "Active"),
+    [rawResidents],
+  );
   const { data: shifts = [] } = useGetShiftsQuery();
   const assignCarerMutation = useAssignCarerMutation();
   const updateShiftMutation = useUpdateShiftMutation();

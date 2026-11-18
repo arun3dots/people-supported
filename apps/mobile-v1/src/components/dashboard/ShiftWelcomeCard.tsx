@@ -51,7 +51,7 @@ export function ShiftWelcomeCard({
 
   const isCompleted = shift?.status === 'Completed' || Boolean(shift?.isCompleted);
   const isPast = isShiftPast(shift);
-  const hasShift = Boolean(shift && shift.id && (isCompleted || !isPast));
+  const hasShift = Boolean(shift && shift.id && (isCompleted || isShiftStarted || !isPast));
 
   const completedTasks = shift?.tasksCompleted ?? 0;
   const totalTasks = shift?.tasksTotal ?? 0;
@@ -124,9 +124,11 @@ export function ShiftWelcomeCard({
             ) : isCompleted ? (
               'Shift completed for today. Thank you for your dedicated care!'
             ) : isShiftStarted ? (
-              hasTimes
-                ? `Shift active (${startTimeStr} - ${endTimeStr}). Tap to view details.`
-                : 'Shift active. Tap to view details.'
+              isPast
+                ? `Shift continuing past scheduled end (${startTimeStr} - ${endTimeStr}). Tap End Shift when finished.`
+                : hasTimes
+                  ? `Shift active (${startTimeStr} - ${endTimeStr}). Tap to view details.`
+                  : 'Shift active. Tap to view details.'
             ) : !eligibility.isEligible ? (
               `Upcoming shift (${startTimeStr} - ${endTimeStr}). Clock-in opens at ${eligibility.eligibleAtStr} (10m prior).`
             ) : (
@@ -166,7 +168,7 @@ export function ShiftWelcomeCard({
                 <Text className="text-xs text-muted-foreground font-medium mt-1 text-right">
                   {eligibility.minutesUntilEligible > 0 && eligibility.minutesUntilEligible <= 60
                     ? `Opens in ${eligibility.minutesUntilEligible}m`
-                    : `Opens at ${eligibility.eligibleAtStr}`}
+                    : eligibility.reason === 'invalid_schedule' ? 'Schedule unavailable' : `Opens at ${eligibility.eligibleAtStr}`}
                 </Text>
               </View>
             ) : (

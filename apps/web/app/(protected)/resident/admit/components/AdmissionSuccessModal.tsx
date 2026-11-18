@@ -30,14 +30,14 @@ export function AdmissionSuccessScreen({
   const roleBase = roleLower === "carer" ? "carer" : "admin";
 
   const automatedActions = [
-    "Resident profile created and made visible across all modules",
-    "Initial Master Care Plan (v0001) drafted from Medical History & ADL Assessment — pending clinical review",
+    "Tenant profile created and made visible across all modules",
+    "Initial Master Support Plan (v0001) drafted from Medical History & ADL Assessment — pending clinical review",
     "Daily task suggestions pre-populated from ADL scores (e.g. bathing assistance, mobility support)",
     "MAR seeded with current medication list",
-    "Care team notified: assigned nurse, primary doctor, key carer group",
-    "21-day comprehensive care plan review reminder scheduled",
+    "Supported workers notified: assigned team and key worker group",
+    "21-day comprehensive support plan review reminder scheduled",
     "Billing record created and linked to Responsible Party",
-    "Belongings inventory and document files archived to resident record",
+    "Belongings inventory and document files archived to tenant record",
   ];
 
   return (
@@ -49,11 +49,11 @@ export function AdmissionSuccessScreen({
             Admission Confirmed
           </Text>
           <Text size="md" weight="regular" className="text-slate-500 mt-0.5">
-            Resident record activated and downstream tasks scheduled.
+            Tenant record activated and downstream tasks scheduled.
           </Text>
         </div>
         <Badge state="success" className="px-3 py-1 rounded-full">
-          Resident Active
+          Tenant Active
         </Badge>
       </div>
 
@@ -66,7 +66,7 @@ export function AdmissionSuccessScreen({
           ✓ {residentName} has been admitted
         </Text>
         <Text size="md" weight="semibold" className="text-emerald-800">
-          Resident ID: {residentId} &nbsp;•&nbsp; Room {roomNumber} &nbsp;•&nbsp; Admitted {admissionDate}
+          Tenant ID: {residentId} &nbsp;•&nbsp; Room {roomNumber} &nbsp;•&nbsp; Admitted {admissionDate}
         </Text>
       </div>
 
@@ -101,7 +101,7 @@ export function AdmissionSuccessScreen({
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
         <Link href={`/${roleBase}/residents`} className="w-full sm:w-auto">
           <Button variant="outline" className="w-full gap-2">
-            <User className="size-4" /> View Residents Directory
+            <User className="size-4" /> View Tenants Directory
           </Button>
         </Link>
 

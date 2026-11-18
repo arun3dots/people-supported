@@ -2,11 +2,12 @@
 
 import React from "react";
 import { format } from "date-fns";
-import { ArrowLeftRight, Bed, ChevronLeft, ChevronRight, Moon } from "lucide-react";
+import { ArrowLeftRight, Bed, Moon } from "lucide-react";
 import {
-  Button, Card, DatePicker, EmptyState, Table, TableBody, TableCell,
+  Button, Card, EmptyState, Table, TableBody, TableCell,
   TableHead, TableHeader, TableRow, Text,
 } from "@repo/ui/components/ui";
+import { WeekNavigator } from "./WeekNavigator";
 import { cn } from "@repo/ui/lib/utils";
 import type { PropertyItem, SchemeItem } from "../../../../../../lib/types/facility";
 import type { Shift } from "../../../../../../lib/types/shifts";
@@ -103,55 +104,14 @@ export function WeeklyRotaScheduleTable({
           </Text>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 min-w-0">
-          {/* Week Stepper (< This Week >) */}
           {onPreviousWeek && onNextWeek && (
-            <div className="flex items-center gap-0.5 bg-surface-card-grey p-1 rounded-xl border border-slate-200/80">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={onPreviousWeek}
-                title="Previous Week"
-                className="size-8 p-0 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white cursor-pointer"
-              >
-                <ChevronLeft className="size-4" />
-              </Button>
-              {onCurrentWeek && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={onCurrentWeek}
-                  className="h-8 px-2.5 rounded-lg text-xs font-semibold text-slate-800 hover:bg-white cursor-pointer"
-                >
-                  This Week
-                </Button>
-              )}
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={onNextWeek}
-                title="Next Week"
-                className="size-8 p-0 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white cursor-pointer"
-              >
-                <ChevronRight className="size-4" />
-              </Button>
-            </div>
-          )}
-
-          {/* Date Picker Jump Popover */}
-          {onSelectDate && (
-            <div className="w-40 sm:w-44">
-              <DatePicker
-                value={currentDate}
-                onChange={(d) => d && onSelectDate(d)}
-                maxYear={new Date().getFullYear() + 5}
-                formatString="dd MMM yyyy"
-                placeholder="Pick date/week..."
-                className="w-full"
-              />
-            </div>
+            <WeekNavigator
+              currentDate={currentDate ?? new Date()}
+              onPreviousWeek={onPreviousWeek}
+              onNextWeek={onNextWeek}
+              onCurrentWeek={onCurrentWeek}
+              onSelectDate={onSelectDate}
+            />
           )}
 
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 sm:pl-3 sm:border-l sm:border-slate-200">

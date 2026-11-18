@@ -19,6 +19,7 @@ import {
   getPropertyPartnerLabel,
   getPropertySchemeLabel,
 } from "../tabs/properties/propertyDisplay";
+import { PropertyOverviewTab } from "./PropertyOverviewTab";
 
 interface PropertyDetailDrawerProps {
   property: PropertyItem | null;
@@ -27,7 +28,7 @@ interface PropertyDetailDrawerProps {
   onViewRooms?: (property: PropertyItem) => void;
 }
 
-type DrawerTab = "tenancies" | "safety" | "shifts" | "maintenance";
+type DrawerTab = "overview" | "tenancies" | "shifts";
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -43,14 +44,14 @@ export function PropertyDetailDrawer({
   onEditProperty,
   onViewRooms,
 }: PropertyDetailDrawerProps) {
-  const [activeTab, setActiveTab] = useState<DrawerTab>("tenancies");
+  const [activeTab, setActiveTab] = useState<DrawerTab>("overview");
 
   if (!property) return null;
 
   const pd = property.parsedPropertyDetails ?? {};
   const certs = pd.safetyCertificates ?? [];
   const housingPartner = getPropertyPartnerLabel(property);
-  const teamLeader = getPropertyManagerLabel(property);
+  const propertyManager = getPropertyManagerLabel(property);
   const coreCharge = pd.landlordDetails?.coreChargePerWeek ?? 198;
   const addressLabel = [pd.streetAddress, pd.postcode]
     .filter(Boolean)
@@ -159,8 +160,8 @@ export function PropertyDetailDrawer({
               </Card>
               <Card variant="surface" border="secondary" className="p-3 gap-0">
                 <InfoField
-                  label="Team Leader"
-                  value={teamLeader}
+                  label="Property Manager"
+                  value={propertyManager}
                   valueClassName="font-medium text-slate-900"
                 />
               </Card>
@@ -169,27 +170,27 @@ export function PropertyDetailDrawer({
             {/* Navigation Tabs */}
             <div className="-mb-px pt-1">
               <TabsList className="w-full justify-start bg-transparent p-0 h-auto rounded-none gap-5 flex-wrap">
+                <TabsTrigger value="overview" className="px-0 pb-3 pt-1">
+                  Property Details
+                </TabsTrigger>
                 <TabsTrigger value="tenancies" className="px-0 pb-3 pt-1">
                   Rooms &amp; Tenancies ({property.roomTenancies.length})
                 </TabsTrigger>
-                <TabsTrigger value="safety" className="px-0 pb-3 pt-1">
-                  Safety Evidence ({certs.length})
-                </TabsTrigger>
                 <TabsTrigger value="shifts" className="px-0 pb-3 pt-1">
                   Shift Cover
-                </TabsTrigger>
-                <TabsTrigger value="maintenance" className="px-0 pb-3 pt-1">
-                  Maintenance ({property.maintenanceBeds})
                 </TabsTrigger>
               </TabsList>
             </div>
           </div>
 
-          <PropertyDrawerSections
-            property={property}
-            coreCharge={coreCharge}
-            onViewRooms={onViewRooms}
-          />
+          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+            <PropertyOverviewTab property={property} />
+            <PropertyDrawerSections
+              property={property}
+              coreCharge={coreCharge}
+              onViewRooms={onViewRooms}
+            />
+          </div>
         </Tabs>
       </div>
     </div>

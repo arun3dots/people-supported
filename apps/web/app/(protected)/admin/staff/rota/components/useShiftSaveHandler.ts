@@ -12,7 +12,7 @@ import type { ShiftBlockFormData } from "./ModifyShiftBlockModal";
 interface SaveShiftParams {
   formData: ShiftBlockFormData;
   editingShift: Shift | null;
-  slotToAdd: { staff: StaffMember; day: DayColumnInfo } | null;
+  slotToAdd: { staff?: StaffMember; day?: DayColumnInfo } | null;
   createShiftMutation: ReturnType<typeof useCreateShiftMutation>;
   updateShiftMutation: ReturnType<typeof useUpdateShiftMutation>;
 }
@@ -48,7 +48,9 @@ export async function executeSaveShiftBlock({
     const targetUserIds =
       formData.userIds && formData.userIds.length > 0
         ? formData.userIds
-        : [slotToAdd.staff.id];
+        : slotToAdd.staff?.id
+          ? [slotToAdd.staff.id]
+          : [];
 
     await createShiftMutation.mutateAsync({
       status: "Published",

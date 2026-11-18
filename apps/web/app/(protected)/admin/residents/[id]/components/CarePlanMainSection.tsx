@@ -54,17 +54,17 @@ export function CarePlanMainSection({
   const [participationOption, setParticipationOption] = useState<string>("fully");
 
   const sectionMeta: Record<string, { title: string; desc: string }> = {
-    history: { title: "Personal history", desc: "Who the resident is: life story, relationships, identity and what matters to them." },
-    preferences: { title: "Preferences", desc: "How the resident wants to receive care and live day to day." },
-    needs: { title: "Needs", desc: "Assessed care and support needs across daily living, nutrition, and clinical wellbeing." },
-    goals: { title: "Goals", desc: "Resident-centred outcomes, agreed actions and who is responsible." },
-    tasks: { title: "Tasks & Routines", desc: "All scheduled routine care tasks, nursing interventions, and assigned care teams for this resident." },
+    history: { title: "Personal history", desc: "Who the tenant is: life story, relationships, identity and what matters to them." },
+    preferences: { title: "Preferences", desc: "How the tenant wants to receive support and live day to day." },
+    needs: { title: "Needs", desc: "Assessed care and support needs across daily living, nutrition, and wellbeing." },
+    goals: { title: "Goals", desc: "Tenant-centred outcomes, agreed actions and who is responsible." },
+    tasks: { title: "Tasks & Routines", desc: "All scheduled routine support tasks, interventions, and assigned supported workers for this tenant." },
     risk: { title: "Risk summary", desc: "Identified clinical and environmental risks and active mitigation plans." },
-    consent: { title: "Involvement & consent", desc: "Mental capacity, consent records, and resident/representative involvement in planning." },
-    version_history: { title: "Care Plan Version History", desc: "Full audit trail of all revisions, renewal reasons, and version comparisons for this resident." },
+    consent: { title: "Involvement & consent", desc: "Mental capacity, consent records, and tenant/representative involvement in planning." },
+    version_history: { title: "Support Plan Version History", desc: "Full audit trail of all revisions, renewal reasons, and version comparisons for this tenant." },
   };
 
-  const defaultMeta = { title: "Goals", desc: "Resident-centred outcomes, agreed actions and who is responsible." };
+  const defaultMeta = { title: "Goals", desc: "Tenant-centred outcomes, agreed actions and who is responsible." };
   const currentMeta = sectionMeta[activeSection] ?? defaultMeta;
 
   return (

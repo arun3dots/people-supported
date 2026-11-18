@@ -64,12 +64,69 @@ export class ShiftCrudService {
         endTime: { gt: startTime },
         assignments: { some: { userId: { in: userIds }, deletedAt: null } },
       },
-      select: { id: true },
+      select: {
+        id: true,
+        startTime: true,
+        endTime: true,
+        careType: true,
+        wing: { select: { name: true } },
+        assignments: {
+          where: { userId: { in: userIds }, deletedAt: null },
+          select: {
+            assignedResidentIds: true,
+            user: { select: { fullName: true } },
+          },
+        },
+      },
     });
 
     if (overlap) {
+      const staffNames = Array.from(
+        new Set(
+          overlap.assignments
+            .map((a) => a.user?.fullName)
+            .filter((name): name is string => Boolean(name)),
+        ),
+      );
+      const residentIds = Array.from(
+        new Set(overlap.assignments.flatMap((a) => a.assignedResidentIds ?? [])),
+      );
+      const residents =
+        residentIds.length > 0
+          ? await prisma.resident.findMany({
+              where: { id: { in: residentIds }, tenantId, deletedAt: null },
+              select: { fullName: true },
+            })
+          : [];
+      const residentNames = residents.map((r) => r.fullName).filter(Boolean);
+
+      const fmtTime = (d: Date): string =>
+        d.toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'Europe/London',
+        });
+      const fmtDate = (d: Date): string =>
+        d.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          timeZone: 'Europe/London',
+        });
+
+      const who = staffNames.length > 0 ? staffNames.join(', ') : 'A staff member';
+      const when = `${fmtTime(overlap.startTime)} - ${fmtTime(overlap.endTime)}, ${fmtDate(overlap.startTime)}`;
+      const careLabel = overlap.careType || 'shift';
+      const supporting =
+        residentNames.length > 0
+          ? ` supporting ${residentNames.join(', ')}`
+          : overlap.wing?.name
+            ? ` at ${overlap.wing.name}`
+            : '';
+
       throw new BadRequestException(
-        'A staff member is already assigned to an overlapping shift.',
+        `${who} is already assigned to ${careLabel} (${when})${supporting}.`,
       );
     }
   }

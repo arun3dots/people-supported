@@ -63,7 +63,7 @@ export function DbsDetailsCard({
       />
 
       {/* Header Section */}
-      <div className="w-full flex items-center justify-between h-[44px]">
+      <div className="w-full flex flex-wrap items-center justify-between gap-3 min-h-[44px]">
         <h3 className="text-h7 font-medium text-[#141F1E]">
           DBS Check Details
         </h3>
@@ -158,11 +158,11 @@ export function DbsDetailsCard({
                 subValue={
                   dbs.expiryDate ? (
                     isDbsExpired(dbs.expiryDate) ? (
-                      <Text size="md" weight="regular" className="text-red-600 text-md font-medium">
+                      <Text as="span" size="md" weight="regular" className="text-red-600 text-md font-medium">
                         Expired
                       </Text>
                     ) : isDbsExpiring(dbs.expiryDate) ? (
-                      <Text size="md" weight="regular" className="text-[#C38C0B] text-md font-medium">
+                      <Text as="span" size="md" weight="regular" className="text-[#C38C0B] text-md font-medium">
                         Expiring Soon
                       </Text>
                     ) : null

@@ -51,6 +51,7 @@ export function ResidentScheduledMedCard({
 
         <TouchableOpacity
           activeOpacity={0.7}
+          disabled={item.status !== 'Due' || !item.rawScheduledDate || item.dose === 'Not recorded' || item.drugName === 'Not recorded'}
           onPress={() => onAction(item)}
           className="bg-surface rounded-full px-3 py-1.5 flex-row items-center gap-1.5"
         >
@@ -147,7 +148,7 @@ export function ResidentRecentMedCard({ item }: { item: RecentMedicationAdmin })
         <View className="flex-row items-center gap-2 flex-1 mr-2">
           <Text className="text-sm font-bold text-text-primary">{item.drugName}</Text>
           <View className="bg-clinical-safeBg px-2.5 py-0.5 rounded-full">
-            <Text className="text-xs font-semibold text-clinical-safe">Administered</Text>
+            <Text className="text-xs font-semibold text-clinical-safe">{item.status}</Text>
           </View>
         </View>
         <View className="bg-surface rounded-full px-2.5 py-1 flex-row items-center gap-1.5">
@@ -162,7 +163,7 @@ export function ResidentRecentMedCard({ item }: { item: RecentMedicationAdmin })
 
       <View className="flex-row border-t border-slate-100 pt-2">
         <View className="flex-1">
-          <Text className="text-xs text-text-muted">Administered by</Text>
+          <Text className="text-xs text-text-muted">Recorded by</Text>
           <Text className="text-xs font-medium text-text-primary mt-0.5">{item.administeredBy}</Text>
         </View>
       </View>

@@ -57,6 +57,10 @@ export function RoomBedAllocationCard({
     selectedPropertyId,
     selectedRoomId,
     selectedProperty,
+    propertyType,
+    isFlat,
+    propertyFacilities,
+    getRoomStatus,
     propertyLandlord,
     potentialRoommate,
     isLoadingSchemes,
@@ -153,6 +157,20 @@ export function RoomBedAllocationCard({
           </div>
         </div>
 
+        {/* 1b. Accommodation Context Badge */}
+        {selectedProperty && (
+          <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+            <Badge state={isFlat ? "info" : "inactive"} className="font-semibold px-2 py-0.5">
+              {isFlat ? "Self-contained Flat (1 Tenant per unit)" : (propertyType || "Community / Shared Living")}
+            </Badge>
+            {propertyFacilities.length > 0 && (
+              <span className="text-slate-600">
+                Common Facilities: <strong className="text-slate-700">{propertyFacilities.join(", ")}</strong>
+              </span>
+            )}
+          </div>
+        )}
+
         {/* 2. Room Number & Room Type Dropdowns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div
@@ -179,11 +197,18 @@ export function RoomBedAllocationCard({
                 />
               </SelectTrigger>
               <SelectContent>
-                {filteredRooms.map((r: Room) => (
-                  <SelectItem key={r.id} value={r.id}>
-                    Room {r.roomNumber} ({r.type || "Single"})
-                  </SelectItem>
-                ))}
+                {filteredRooms.map((r: Room) => {
+                  const status = getRoomStatus(r.id);
+                  const isBlocked = isFlat && status.isOccupied;
+                  return (
+                    <SelectItem key={r.id} value={r.id} disabled={isBlocked}>
+                      {isFlat ? "Flat" : "Room"} {r.roomNumber} ({r.type || "Single"})
+                      {status.isOccupied
+                        ? ` - Occupied${status.occupantName ? ` (${status.occupantName})` : ""}`
+                        : " - Available"}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
             {errors?.roomNumber && (
@@ -259,27 +284,41 @@ export function RoomBedAllocationCard({
             />
           </div>
 
-          <div className="space-y-1.5 [&_[data-slot=input-error]]:hidden">
-            <div className="flex items-center justify-between min-h-[26px]">
-              <Label>Roommate (If Shared)</Label>
-              {potentialRoommate && (
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={() => updateFormData({ roommate: potentialRoommate })}
-                  className="h-auto p-0 text-md font-semibold text-emerald-800 hover:text-emerald-900 hover:underline"
-                >
-                  Autofill: {potentialRoommate}
-                </Button>
-              )}
+          {isFlat ? (
+            <div className="space-y-1.5 [&_[data-slot=input-error]]:hidden">
+              <div className="flex items-center min-h-[26px]">
+                <Label>Roommate</Label>
+              </div>
+              <Input
+                type="text"
+                disabled
+                value="N/A (Self-contained flat - 1 tenant only)"
+                className="bg-slate-50 text-slate-500 cursor-not-allowed"
+              />
             </div>
-            <Input
-              type="text"
-              placeholder='Tenant / roommate name or "N/A"'
-              value={formData.roommate || ""}
-              onChange={(e) => updateFormData({ roommate: e.target.value })}
-            />
-          </div>
+          ) : (
+            <div className="space-y-1.5 [&_[data-slot=input-error]]:hidden">
+              <div className="flex items-center justify-between min-h-[26px]">
+                <Label>Roommate (If Shared)</Label>
+                {potentialRoommate && (
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => updateFormData({ roommate: potentialRoommate })}
+                    className="h-auto p-0 text-md font-semibold text-emerald-800 hover:text-emerald-900 hover:underline"
+                  >
+                    Autofill: {potentialRoommate}
+                  </Button>
+                )}
+              </div>
+              <Input
+                type="text"
+                placeholder='Tenant / roommate name or "N/A"'
+                value={formData.roommate || ""}
+                onChange={(e) => updateFormData({ roommate: e.target.value })}
+              />
+            </div>
+          )}
         </div>
 
         {formData.roomNumber && (

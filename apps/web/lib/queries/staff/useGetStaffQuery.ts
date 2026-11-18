@@ -26,6 +26,8 @@ export function useGetStaffQuery(
       // Tolerate a bare array in case an older backend is deployed.
       return Array.isArray(res) ? res : res?.data ?? [];
     },
+    refetchOnMount: "always",
+    refetchInterval: 60_000,
     ...options,
   });
 }
@@ -45,6 +47,8 @@ export function useGetPaginatedStaffQuery(
       ),
     // Keep the previous page visible while the next one loads.
     placeholderData: keepPreviousData,
+    refetchOnMount: "always",
+    refetchInterval: 60_000,
     ...options,
   });
 }

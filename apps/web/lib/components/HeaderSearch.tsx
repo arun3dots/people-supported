@@ -192,6 +192,7 @@ export function HeaderSearch() {
           autoCorrect="off"
           autoCapitalize="none"
           spellCheck={false}
+          suppressHydrationWarning
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -208,6 +209,7 @@ export function HeaderSearch() {
         {query && (
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => {
               setQuery("");
               setIsOpen(false);

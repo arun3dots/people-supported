@@ -10,6 +10,8 @@ import { ShiftCrudService } from './services/shift-crud.service';
 import { ShiftExecutionService } from './services/shift-execution.service';
 import { ShiftQueryService } from './services/shift-query.service';
 import { ShiftNotificationService } from './services/shift-notification.service';
+import { StaffAllocationService } from './services/staff-allocation.service';
+import type { StaffAllocationResponseDTO } from '@repo/schema';
 import { Optional } from '@nestjs/common';
 
 @Injectable()
@@ -17,6 +19,7 @@ export class ShiftsService {
   private readonly crud: ShiftCrudService;
   private readonly execution: ShiftExecutionService;
   private readonly query: ShiftQueryService;
+  private readonly allocation: StaffAllocationService;
 
   constructor(
     private readonly auditService: AuditService,
@@ -25,6 +28,7 @@ export class ShiftsService {
     this.crud = new ShiftCrudService(auditService, notificationService);
     this.execution = new ShiftExecutionService(auditService);
     this.query = new ShiftQueryService();
+    this.allocation = new StaffAllocationService();
   }
 
   // --- Shift Types ---
@@ -182,5 +186,21 @@ export class ShiftsService {
     userId: string,
   ): Promise<unknown> {
     return this.query.getShiftDetails(shiftId, tenantId, userId);
+  }
+
+  async getStaffAllocation(
+    tenantId: string,
+    branchId: string,
+    from?: Date,
+    to?: Date,
+    wingId?: string,
+  ): Promise<StaffAllocationResponseDTO> {
+    return this.allocation.getAllocationOverview(
+      tenantId,
+      branchId,
+      from,
+      to,
+      wingId,
+    );
   }
 }

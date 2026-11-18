@@ -1,12 +1,12 @@
 export interface ResidentAllergy {
   allergen: string;
-  severity: 'Mild' | 'Moderate' | 'Severe' | 'Life-Threatening';
+  severity?: 'Mild' | 'Moderate' | 'Severe' | 'Life-Threatening';
 }
 
 export interface ResidentRiskRatings {
-  fallRisk: 'Low' | 'Medium' | 'High';
-  pressureUlcerRisk: 'Low' | 'Medium' | 'High';
-  chokingRisk: 'Low' | 'Medium' | 'High';
+  fallRisk?: 'Low' | 'Medium' | 'High';
+  pressureUlcerRisk?: 'Low' | 'Medium' | 'High';
+  chokingRisk?: 'Low' | 'Medium' | 'High';
 }
 
 export interface Resident {
@@ -17,14 +17,16 @@ export interface Resident {
   bedNumber?: string;
   wingName?: string;
   dateOfBirth: string;
-  age: number;
+  age?: number;
   gender: string;
-  status: 'Active' | 'Discharged' | 'Hospitalized' | 'Deceased';
-  allergies: ResidentAllergy[];
-  dnacpr: boolean; // ReSPECT / DNACPR in place
+  status?: 'Active' | 'Discharged' | 'Hospitalized' | 'Deceased' | 'Transferred';
+  allergies?: ResidentAllergy[];
+  noKnownAllergies?: boolean;
+  allergySummary?: string;
+  dnacpr?: boolean; // ReSPECT / DNACPR in place
   riskRatings: ResidentRiskRatings;
-  mustScore: number;
-  fluidTargetMl: number;
+  mustScore?: number;
+  fluidTargetMl?: number;
   communicationNeeds?: string;
   dietaryRequirements?: string;
   photoUrl?: string | null;

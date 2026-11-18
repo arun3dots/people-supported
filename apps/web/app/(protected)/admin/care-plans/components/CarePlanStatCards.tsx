@@ -53,7 +53,7 @@ export function CarePlanStatCards({
   }> = [
     {
       id: "ALL",
-      title: "All residents",
+      title: "All tenants",
       value: stats.totalResidents,
       subtitle: "in residence or pre-admission",
       icon: <Users className="size-4" />,

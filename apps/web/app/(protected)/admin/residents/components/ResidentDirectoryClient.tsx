@@ -6,14 +6,12 @@ import { Download, Plus } from "lucide-react";
 import { Button, toast } from "@repo/ui/components/ui";
 import {
   useGetPaginatedResidentsQuery,
-  useGetResidentMetricsQuery,
 } from "../../../../../lib/queries/residents";
 import { useExportResidentsReportMutation } from "../../../../../lib/queries/reports";
 import { useAuth } from "../../../../../lib/context/AuthContext";
 import { EntityListView } from "../../../../../lib/components/shared";
 import { useListQueryState } from "../../../../../lib/hooks";
 import type { Resident } from "../../../../../lib/types/resident";
-import { MetricsCards } from "./MetricsCards";
 import { FilterSection } from "./FilterSection";
 import { useResidentColumns } from "./useResidentColumns";
 import { ResidentCard } from "./ResidentCard";
@@ -59,29 +57,6 @@ export function ResidentDirectoryClient({
     storageKey: "resident_page_size",
   });
 
-  const { data: metricsData } = useGetResidentMetricsQuery();
-
-  const metrics = useMemo(() => {
-    if (metricsData) {
-      return {
-        total: metricsData.total,
-        active: metricsData.active,
-        newAdmissions: metricsData.newAdmissions,
-        discharges: metricsData.discharges,
-        avgAge: metricsData.avgAge,
-        branchCount: metricsData.branchCount,
-      };
-    }
-    return {
-      total: 0,
-      active: 0,
-      newAdmissions: 0,
-      discharges: 0,
-      avgAge: 0,
-      branchCount: 0,
-    };
-  }, [metricsData]);
-
   const {
     data: paginatedResponse,
     isLoading,
@@ -100,29 +75,6 @@ export function ResidentDirectoryClient({
 
   const residents = paginatedResponse?.data ?? [];
   const totalRecords = paginatedResponse?.total ?? 0;
-
-  const enrichedMetrics = useMemo(() => {
-    const highRiskCount = residents.filter(
-      (r) =>
-        r.supportedLivingDetails?.riskLevel === "High" ||
-        r.careProfile?.careComplexity === "High",
-    ).length;
-    const inHospitalCount = residents.filter(
-      (r) => r.status === "Hospitalized",
-    ).length;
-    const reviewsDue = residents.filter(
-      (r) =>
-        r.supportedLivingDetails?.supportPlanHeader?.status === "Due soon" ||
-        r.supportedLivingDetails?.supportPlanHeader?.status === "Overdue",
-    ).length;
-
-    return {
-      ...metrics,
-      reviewsDue: reviewsDue || Math.min(3, metrics.active),
-      highRiskCount,
-      inHospitalCount,
-    };
-  }, [metrics, residents]);
 
   const columns = useResidentColumns({
     roleBase,
@@ -176,20 +128,15 @@ export function ResidentDirectoryClient({
       onAdd={
         isAdmin
           ? () => {
-              if (typeof window !== "undefined") {
-                window.sessionStorage.removeItem("lcm_admission_draft_new");
-              }
-              router.push("/admin/residents/admit");
+            if (typeof window !== "undefined") {
+              window.sessionStorage.removeItem("lcm_admission_draft_new");
             }
+            router.push("/admin/residents/admit");
+          }
           : undefined
       }
       addLabel="Add Person"
       addIcon={<Plus className="size-4" />}
-      stats={
-        !effectiveAssignedOnly ? (
-          <MetricsCards metrics={enrichedMetrics} />
-        ) : undefined
-      }
       filters={
         <FilterSection
           search={searchInput}
@@ -226,12 +173,12 @@ export function ResidentDirectoryClient({
       onRowClick={(r) => router.push(`/${roleBase}/residents/${r.id}`)}
       isLoading={isLoading}
       isError={isError}
-      errorMessage="Error loading resident directory. Please try again."
-      emptyTitle={effectiveAssignedOnly ? "No residents allotted for your shift" : "No residents found"}
+      errorMessage="Error loading tenant directory. Please try again."
+      emptyTitle={effectiveAssignedOnly ? "No tenants allotted for your shift" : "No tenants found"}
       emptyDescription={
         effectiveAssignedOnly
-          ? "You do not have any residents assigned to your shift yet. Check with your manager or rota planner."
-          : "No resident records match your active search or filter criteria."
+          ? "You do not have any tenants assigned to your shift yet. Check with your manager or rota planner."
+          : "No tenant records match your active search or filter criteria."
       }
       pagination={{
         currentPage: page,
@@ -239,7 +186,7 @@ export function ResidentDirectoryClient({
         totalRecords,
         onPageChange: handlePageChange,
         onLimitChange: handleLimitChange,
-        entityName: "residents",
+        entityName: "tenants",
       }}
     />
   );

@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import { ChevronLeft, Pill } from 'lucide-react-native';
 import { ScreenWrapper } from '../../src/components/common/ScreenWrapper';
 import { Text } from '../../src/components/ui/text';
+import { ResidentLoadError } from '../../src/components/clinical/ResidentLoadError';
 import { useResidentDetail } from '../../src/presentation/hooks/useResidentDetail';
 import { useShiftDashboard } from '../../src/presentation/hooks/useShiftDashboard';
 import { useAuth } from '../../src/presentation/context/AuthContext';
@@ -22,7 +23,7 @@ export default function MarScreen() {
   const isPrivileged = userRole === 'admin' || userRole === 'manager' || userRole === 'superadmin';
   const isAccessAllowed = isPrivileged || isShiftStarted;
 
-  const { resident, loading } = useResidentDetail(id, isAccessAllowed);
+  const { resident, loading, error, refetch } = useResidentDetail(id, isAccessAllowed);
 
   if (!isAccessAllowed) {
     return (
@@ -72,6 +73,8 @@ export default function MarScreen() {
       </ScreenWrapper>
     );
   }
+
+  if (error) return <ResidentLoadError message={error} onRetry={() => { void refetch(); }} />;
 
   if (!resident) {
     return (
@@ -134,7 +137,8 @@ export default function MarScreen() {
       <ResidentProfileHeaderCard resident={resident} />
 
       {/* 3. Medication Administration Record Sections */}
-      <ResidentMarSections residentId={resident.id} allergies={allergies} />
+      <ResidentMarSections residentId={resident.id} allergies={allergies}
+        onboardingMedicineCount={resident.preAdmissions?.find((record) => record.isCurrent)?.partC?.medicines?.length} />
     </ScreenWrapper>
   );
 }

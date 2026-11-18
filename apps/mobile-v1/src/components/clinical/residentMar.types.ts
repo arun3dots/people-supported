@@ -8,7 +8,7 @@ export interface ScheduledMedication {
   prescribedBy: string;
   startDate: string;
   notes: string;
-  status: 'Due' | 'Administered' | 'Missed' | 'On Hold';
+  status: 'Due' | 'Administered' | 'Missed' | 'On Hold' | 'Refused' | 'Omitted' | 'NPO' | 'Not recorded';
   isControlledDrug?: boolean;
   rawScheduledDate?: string | Date | null;
 }
@@ -25,6 +25,8 @@ export interface PrnMedication {
 }
 
 export interface RecentMedicationAdmin {
+  status: string;
+  recordedAt: string;
   id: string;
   drugName: string;
   dose: string;

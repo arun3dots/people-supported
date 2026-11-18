@@ -68,7 +68,7 @@ export function TaskShiftBanner({
     ? "No active or scheduled shift for today on your rota"
     : onDutyColleagues
       ? `On with you: ${onDutyColleagues}`
-      : "On duty with your care team on this shift";
+      : "On duty with your supported workers on this shift";
 
   const clockInButtonText = isClockActionPending
     ? "Starting..."

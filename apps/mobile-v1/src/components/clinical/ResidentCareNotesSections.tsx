@@ -7,6 +7,8 @@ import { makeMobileApiCall } from '../../data/api/client';
 import { Text, Card } from '../../presentation/components/common';
 import { formatUkRelativeDayAndTime } from '../../lib/date';
 import { AddCareNoteModal } from './AddCareNoteModal';
+import { useAuth } from '../../presentation/context/AuthContext';
+import { isCareNoteEvent } from './residentTimelineRecords';
 import { theme } from '../../theme/tokens';
 
 export interface MobileCareNote {
@@ -27,6 +29,7 @@ interface Props {
 const CATEGORY_FILTERS = ['All', 'General', 'Medical', 'Nutrition', 'Behavioral'] as const;
 
 export function ResidentCareNotesSections({ residentId }: Props) {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -40,7 +43,8 @@ export function ResidentCareNotesSections({ residentId }: Props) {
           eventType?: string;
           summary?: string;
           timestamp: string;
-          carer?: { fullName?: string; role?: { name?: string } };
+          carerId?: string;
+          carer?: { id?: string; fullName?: string; role?: { name?: string } };
         }>
       >(GET_RESIDENT_TIMELINE, undefined, undefined, { id: residentId });
       return Array.isArray(res) ? res : [];
@@ -50,7 +54,7 @@ export function ResidentCareNotesSections({ residentId }: Props) {
   });
 
   const notes: MobileCareNote[] = useMemo(() => {
-    return timelineData.map((item) => {
+    return timelineData.filter((item) => isCareNoteEvent(item.eventType) && Boolean(user?.id) && (item.carer?.id ?? item.carerId) === user?.id).map((item) => {
       let category: MobileCareNote['category'] = 'General';
       const evt = (item.eventType || '').toLowerCase();
       if (/nutrition|fluid|diet|hydration/i.test(evt)) category = 'Nutrition';
@@ -61,16 +65,16 @@ export function ResidentCareNotesSections({ residentId }: Props) {
 
       return {
         id: item.id,
-        author: item.carer?.fullName || 'Care Staff',
-        role: item.carer?.role?.name || 'Carer',
+        author: item.carer?.fullName || 'Author not recorded',
+        role: item.carer?.role?.name || 'Role not recorded',
         category,
-        content: item.summary || 'Care note recorded without description.',
+        content: item.summary || 'Content not recorded',
         timestamp: item.timestamp,
         dateLabel,
         timeLabel,
       };
     });
-  }, [timelineData]);
+  }, [timelineData, user?.id]);
 
   const filteredNotes = useMemo(() => {
     return notes.filter((n) => {

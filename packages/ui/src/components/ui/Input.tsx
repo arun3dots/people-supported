@@ -20,6 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           data-slot="input"
           placeholder={placeholder}
+          suppressHydrationWarning
           className={cn(
             "flex h-[44px] w-full rounded-md border border-border-secondary bg-surface-neutral px-3 text-md text-text-body placeholder:text-text-description/50 outline-none focus-visible:outline-none focus-visible:border-border-primary focus-visible:ring-1 focus-visible:ring-surface-primary/20 disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
             Boolean(errorMessage) && "border-border-error focus-visible:border-border-error focus-visible:ring-border-error/20",

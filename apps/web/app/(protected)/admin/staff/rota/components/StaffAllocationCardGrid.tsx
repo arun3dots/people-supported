@@ -1,106 +1,115 @@
 "use client";
 
 import React from "react";
-import { ArrowRightLeft, Building2, Home, ShieldCheck } from "lucide-react";
+import { CalendarPlus, Clock, Home, ShieldCheck, Users } from "lucide-react";
 import { Badge, Button } from "@repo/ui/components/ui";
 import { EntityCard } from "../../../../../../lib/components/shared";
-import type {
-  PropertyItem,
-  SchemeItem,
-} from "../../../../../../lib/types/facility";
 import type { StaffMember } from "../../../../../../lib/types/staff";
-import { resolveStaffLocation } from "./rotaDataUtils";
+import type { StaffAllocationRow } from "./StaffAllocationTable";
 
 interface StaffAllocationCardGridProps {
-  staffList: StaffMember[];
-  schemes: SchemeItem[];
-  properties: PropertyItem[];
+  rows: StaffAllocationRow[];
   onReassignStaff: (staff: StaffMember) => void;
 }
 
 export function StaffAllocationCardGrid({
-  staffList,
-  schemes,
-  properties,
+  rows,
   onReassignStaff,
 }: StaffAllocationCardGridProps): React.JSX.Element {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-      {staffList.map((member, idx) => {
-        const initials = member.fullName
+      {rows.map((row, idx) => {
+        const initials = row.fullName
           .split(" ")
           .map((n) => n[0])
           .slice(0, 2)
           .join("")
           .toUpperCase();
-        const { schemeName, propertyName } = resolveStaffLocation(
-          member,
-          schemes,
-          properties,
+
+        const remainingHours = Math.max(
+          0,
+          Math.round((row.contractedHoursPerWeek - row.scheduledHours) * 10) / 10,
         );
-        const isNight = member.role?.name?.toLowerCase().includes("night");
-        const assignmentLabel = isNight
-          ? "Night Cover"
-          : member.contractType ||
-            (schemeName || propertyName ? "Assigned" : "Unassigned");
-        const availabilityLabel = !member.isActive
-          ? "Inactive"
-          : member.isOnLeave
+        const overtimeHours = Math.max(
+          0,
+          Math.round((row.scheduledHours - row.contractedHoursPerWeek) * 10) / 10,
+        );
+        const capacityLabel =
+          row.availability === "On Leave"
             ? "On Leave"
-            : "Available";
+            : row.availability === "Inactive"
+              ? "Inactive"
+              : overtimeHours > 0
+                ? `Overbooked (+${overtimeHours}h)`
+                : remainingHours === 0
+                  ? "Fully Booked"
+                  : `${remainingHours}h left`;
+
+        const statusState =
+          row.availability === "On Leave" || overtimeHours > 0
+            ? "warning"
+            : row.availability === "Inactive"
+              ? "inactive"
+              : "success";
 
         return (
           <EntityCard
-            key={member.id}
-            showRightDivider={idx % 3 !== 2 && idx !== staffList.length - 1}
+            key={row.id}
+            showRightDivider={idx % 3 !== 2 && idx !== rows.length - 1}
             avatar={
               <div className="size-11 rounded-full bg-surface-primary-light text-primary flex items-center justify-center font-medium text-md shrink-0">
                 {initials}
               </div>
             }
-            title={member.fullName}
-            subtitle={`${member.role?.name || "Staff"} · ${member.email}`}
+            title={row.fullName}
+            subtitle={row.roleName}
             headerBadge={
-              <Badge
-                variant="secondary"
-                state={isNight ? "warning" : "info"}
-              >
-                {assignmentLabel}
+              <Badge variant="secondary" state="info">
+                {row.scheduledShiftsCount} shifts · {row.scheduledHours}h
               </Badge>
             }
             meta={[
               {
-                icon: <Building2 className="size-4 text-primary" />,
-                label: "Scheme",
-                value: schemeName || "Unassigned",
+                icon: <Home className="size-4 text-primary" />,
+                label: "Allocated Properties",
+                value:
+                  row.allocatedPropertyNames.length > 0
+                    ? row.allocatedPropertyNames.join(", ")
+                    : "Unassigned",
               },
               {
-                icon: <Home className="size-4 text-primary" />,
-                label: "Property",
-                value: propertyName || "Unassigned",
+                icon: <Clock className="size-4 text-primary" />,
+                label: "Weekly Utilization",
+                value: `${row.scheduledHours}h / ${row.contractedHoursPerWeek}h (${row.utilizationPercent}%)`,
+              },
+              {
+                icon: <Users className="size-4 text-primary" />,
+                label: "People Supported",
+                value: `${row.assignedResidentsCount} assigned`,
               },
               {
                 icon: <ShieldCheck className="size-4 text-primary" />,
-                label: "Availability",
-                value: availabilityLabel,
+                label: "Capacity",
+                value: capacityLabel,
               },
             ]}
-            statusText={member.isActive ? "Active" : "Inactive"}
-            statusState={member.isActive ? "success" : "inactive"}
+            statusText={capacityLabel}
+            statusState={statusState}
             actions={
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onReassignStaff(member);
-                }}
-                className="h-8 rounded-lg bg-surface-primary-light hover:bg-emerald-100/70 text-primary gap-1.5 text-md font-medium"
-              >
-                <ArrowRightLeft className="size-3.5" />
-                Reassign
-              </Button>
+              row.staffMember ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReassignStaff(row.staffMember!);
+                  }}
+                  className="h-8 rounded-lg bg-surface-primary-light hover:bg-emerald-100/70 text-primary gap-1.5 text-md font-medium"
+                >
+                  <CalendarPlus className="size-3.5" /> Assign
+                </Button>
+              ) : null
             }
           />
         );

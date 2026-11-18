@@ -44,15 +44,15 @@ export function PlanDetailsStep({
           Plan Details &amp; Scope
         </Text>
         <Text size="md" weight="regular" className="text-slate-500 mt-1">
-          Specify the resident and validity period for this master clinical care plan.
+          Specify the tenant and validity period for this master care plan.
         </Text>
       </div>
 
       <div className="space-y-4">
-        {/* Resident Selection */}
+        {/* Tenant Selection */}
         <div className="space-y-1.5 [&_[data-slot=input-error]]:hidden">
           <Label required >
-            Resident
+            Tenant
           </Label>
           <Select value={residentId} onValueChange={setResidentId}>
             <SelectTrigger className="w-full h-11 bg-white border-slate-200 rounded-xl text-md font-semibold text-slate-900 shadow-none">
