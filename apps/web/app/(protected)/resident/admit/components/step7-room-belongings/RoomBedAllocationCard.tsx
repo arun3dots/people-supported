@@ -2,33 +2,13 @@
 
 import React from "react";
 import {
-  Button,
-  Card,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Badge,
-  Text,
-  DatePicker,
+  Button, Card, Input, Label, Select, SelectContent,
+  SelectItem, SelectTrigger, SelectValue, Badge, Text, DatePicker,
 } from "@repo/ui/components/ui";
 import { format } from "date-fns";
-import {
-  Loader2,
-  DoorOpen,
-  Building2,
-  Bed as BedIcon,
-  Layers,
-} from "lucide-react";
+import { Loader2, DoorOpen, Building2, Bed as BedIcon, Layers } from "lucide-react";
 import { AdmissionFormData } from "../../types";
-import type {
-  SchemeItem,
-  PropertyItem,
-  Room,
-} from "../../../../../../lib/types/facility";
+import type { SchemeItem, PropertyItem, Room } from "../../../../../../lib/types/facility";
 import { useRoomBedSelection } from "./useRoomBedSelection";
 
 interface RoomBedAllocationCardProps {
@@ -43,6 +23,11 @@ const ROOM_TYPES = [
   { value: "Shared", label: "Shared Room" },
   { value: "Specialist / High Dependency", label: "Specialist / High Dependency" },
 ] as const;
+
+const formatUnitLabel = (num: string, flat: boolean) => {
+  const t = num.trim();
+  return /^(flat|room|unit)\b/i.test(t) ? t : `${flat ? "Flat" : "Room"} ${t}`;
+};
 
 export function RoomBedAllocationCard({
   formData,
@@ -72,9 +57,13 @@ export function RoomBedAllocationCard({
     handleRoomChange,
   } = useRoomBedSelection(formData, updateFormData);
 
+  const availableRoomTypes = isFlat
+    ? ROOM_TYPES.filter((rt) => rt.value !== "Shared")
+    : ROOM_TYPES;
+
   const hasCustomRoomType =
     Boolean(formData.roomType) &&
-    !ROOM_TYPES.some((rt) => rt.value === formData.roomType);
+    !availableRoomTypes.some((rt) => rt.value === formData.roomType);
 
   return (
     <Card variant="surface" className="p-6 lg:p-8">
@@ -178,7 +167,7 @@ export function RoomBedAllocationCard({
             className="space-y-1.5 [&_[data-slot=input-error]]:hidden"
           >
             <Label required className="flex items-center gap-1">
-              <DoorOpen className="size-3.5 text-slate-400" /> Room Number
+              <DoorOpen className="size-3.5 text-slate-400" /> {isFlat ? "Flat / Unit Number" : "Room Number"}
             </Label>
             <Select
               value={selectedRoomId}
@@ -189,9 +178,9 @@ export function RoomBedAllocationCard({
                 <SelectValue
                   placeholder={
                     isLoadingRooms
-                      ? "Loading rooms..."
+                      ? "Loading..."
                       : filteredRooms.length === 0
-                        ? "No rooms found"
+                        ? (isFlat ? "No flats found" : "No rooms found")
                         : "Select"
                   }
                 />
@@ -202,7 +191,7 @@ export function RoomBedAllocationCard({
                   const isBlocked = isFlat && status.isOccupied;
                   return (
                     <SelectItem key={r.id} value={r.id} disabled={isBlocked}>
-                      {isFlat ? "Flat" : "Room"} {r.roomNumber} ({r.type || "Single"})
+                      {formatUnitLabel(r.roomNumber, isFlat)} ({r.type || "Single"})
                       {status.isOccupied
                         ? ` - Occupied${status.occupantName ? ` (${status.occupantName})` : ""}`
                         : " - Available"}
@@ -233,7 +222,7 @@ export function RoomBedAllocationCard({
                 {hasCustomRoomType && formData.roomType && (
                   <SelectItem value={formData.roomType}>{formData.roomType}</SelectItem>
                 )}
-                {ROOM_TYPES.map((rt) => (
+                {availableRoomTypes.map((rt) => (
                   <SelectItem key={rt.value} value={rt.value}>
                     {rt.label}
                   </SelectItem>
@@ -328,11 +317,11 @@ export function RoomBedAllocationCard({
           >
             <div className="flex items-center gap-2">
               <Badge state="success" className="font-semibold px-2.5 py-0.5 rounded-full">
-                Room Selected
+                {isFlat ? "Flat Selected" : "Room Selected"}
               </Badge>
               <Text size="md" weight="bold" className="text-slate-900">
                 {selectedProperty ? `${selectedProperty.name} • ` : ""}
-                Room {formData.roomNumber}
+                {formatUnitLabel(formData.roomNumber, isFlat)}
                 {formData.roomType ? ` • ${formData.roomType}` : ""}
                 {formData.landlord ? ` • Landlord: ${formData.landlord}` : ""}
               </Text>

@@ -68,13 +68,8 @@ export const MandatoryPreAdmissionPartASchema = PreAdmissionPartASchema.extend({
   stayType: z.enum(["Permanent", "Respite", "Short-term"], {
     errorMap: () => ({ message: "Type of stay is required" }),
   }),
-  typeOfCare: z
-    .string({ required_error: "Type of care is required" })
-    .trim()
-    .min(1, "Type of care is required"),
-  careLevel: z.enum(PRE_ADMISSION_CARE_LEVELS, {
-    errorMap: () => ({ message: "Level of care is required" }),
-  }),
+  typeOfCare: z.string().trim().nullable().optional(),
+  careLevel: z.enum(PRE_ADMISSION_CARE_LEVELS).nullable().optional(),
   admittedFrom: z
     .string({ required_error: "Admitted from is required" })
     .trim()
@@ -96,13 +91,11 @@ export const MandatoryPreAdmissionPartBSchema = PreAdmissionPartBSchema.extend({
           .string({ required_error: "Next of kin name is required" })
           .trim()
           .min(1, "Next of kin name is required"),
-      }).refine(
-        (c) => Boolean(c.phone?.trim() || c.email?.trim()),
-        {
-          message: "At least one contact method (phone or email) is required",
-          path: ["phone"],
-        },
-      ),
+        phone: z
+          .string({ required_error: "Phone is required" })
+          .trim()
+          .min(1, "Phone is required"),
+      }),
     )
     .min(1, "At least one next of kin is required"),
 });
@@ -370,8 +363,6 @@ export function getPreAdmissionSubmitIssues(
   need("partA", "previousAddress", a?.previousAddress?.trim(), "Previous address is required");
   need("partA", "language", a?.language?.trim(), "Preferred language is required");
   need("partA", "stayType", a?.stayType, "Type of stay is required");
-  need("partA", "typeOfCare", a?.typeOfCare?.trim(), "Type of care is required");
-  need("partA", "careLevel", a?.careLevel, "Level of care is required");
   need("partA", "admittedFrom", a?.admittedFrom?.trim(), "Admitted from is required");
   need("partA", "admissionReason", a?.admissionReason?.trim(), "Reason for admission is required");
   need("partB", "nextOfKin", parts.partB?.nextOfKin?.length, "At least one next of kin is required");
