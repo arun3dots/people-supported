@@ -129,7 +129,7 @@ export class CareTaskDayService {
         tenantId,
         isActive: true,
         shift,
-        // Tasks go live once the plan has been agreed at least once.
+        // Tasks go live once the plan has been agreed at least once (CQC safety requirement).
         carePlan: { isCurrent: true, agreedAt: { not: null } },
         AND: [
           { OR: [{ startsOn: null }, { startsOn: { lte: day } }] },

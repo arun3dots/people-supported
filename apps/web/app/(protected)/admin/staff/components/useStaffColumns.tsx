@@ -203,6 +203,12 @@ export function useStaffColumns({
               <RowActions
                 onDelete={() => onDelete(member.id)}
                 deleteLabel="Remove Staff Member"
+                extra={[
+                  {
+                    label: member.isActive ? "Deactivate Account" : "Activate Account",
+                    onClick: () => onToggleStatus(member.id, member.isActive),
+                  },
+                ]}
               />
             </div>
           );

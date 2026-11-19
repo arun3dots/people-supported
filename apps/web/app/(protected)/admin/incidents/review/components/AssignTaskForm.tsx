@@ -91,12 +91,17 @@ export function AssignTaskForm({
             <Input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              maxLength={150}
+              onChange={(e) => setTitle(e.target.value.slice(0, 150))}
               placeholder="Enter the Task"
               className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body px-3 pr-16"
             />
-            <span className="absolute right-3 top-3 text-md text-slate-400">
-              {title.length}/250
+            <span
+              className={`absolute right-3 top-3 text-md ${
+                title.length >= 150 ? "text-amber-600 font-medium" : "text-slate-400"
+              }`}
+            >
+              {title.length}/150
             </span>
           </div>
         </div>
@@ -109,13 +114,18 @@ export function AssignTaskForm({
           <div className="relative">
             <Textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              maxLength={1000}
+              onChange={(e) => setDescription(e.target.value.slice(0, 1000))}
               placeholder="Describe the task in details..."
               rows={3}
               className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20 pr-16"
             />
-            <span className="absolute bottom-2.5 right-3 text-md text-slate-400">
-              {description.length}/250
+            <span
+              className={`absolute bottom-2.5 right-3 text-md ${
+                description.length >= 1000 ? "text-amber-600 font-medium" : "text-slate-400"
+              }`}
+            >
+              {description.length}/1000
             </span>
           </div>
         </div>

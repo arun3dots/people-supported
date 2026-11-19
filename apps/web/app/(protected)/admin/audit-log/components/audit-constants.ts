@@ -13,6 +13,7 @@ export const AUDIT_AREAS = [
   { id: "observation", label: "Observation" },
   { id: "body_map", label: "Body map" },
   { id: "risk", label: "Risk" },
+  { id: "finance", label: "Finance" },
 ] as const;
 
 export type AuditAreaId = (typeof AUDIT_AREAS)[number]["id"];

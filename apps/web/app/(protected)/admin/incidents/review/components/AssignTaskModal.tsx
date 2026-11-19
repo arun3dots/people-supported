@@ -98,6 +98,25 @@ export function AssignTaskModal({
       });
       return;
     }
+
+    if (title.trim().length > 150) {
+      toast({
+        variant: "destructive",
+        title: "Task Title Too Long",
+        description: "Task title cannot exceed 150 characters.",
+      });
+      return;
+    }
+
+    if (description.trim().length > 1000) {
+      toast({
+        variant: "destructive",
+        title: "Task Description Too Long",
+        description: "Task description cannot exceed 1,000 characters.",
+      });
+      return;
+    }
+
     setViewMode("preview");
   };
 

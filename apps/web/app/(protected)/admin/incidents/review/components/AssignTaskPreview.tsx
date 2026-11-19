@@ -77,25 +77,27 @@ export function AssignTaskPreview({
 
           <h4 className="text-md font-bold text-[#141F1E]">Task Summary</h4>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-md">
-            <div>
+          <div className="space-y-3 pt-1 text-md min-w-0">
+            <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
                 Task Title
               </p>
-              <p className="font-semibold text-slate-800 pt-0.5">{title}</p>
+              <p className="font-semibold text-slate-800 pt-0.5 break-words [overflow-wrap:anywhere] min-w-0">
+                {title}
+              </p>
             </div>
-            <div>
+            <div className="min-w-0 pt-2 border-t border-[#EAEAEA]">
               <p className="text-md text-text-description font-normal">
                 Task Description
               </p>
-              <p className="text-slate-600 text-md leading-relaxed pt-0.5">
+              <p className="text-slate-600 text-md leading-relaxed pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0">
                 {description}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md">
-            <div>
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md min-w-0">
+            <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
                 Priority
               </p>
@@ -104,23 +106,23 @@ export function AssignTaskPreview({
                 <span>{priority}</span>
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
                 Assigned To
               </p>
-              <div className="flex items-center gap-2 pt-1">
-                <Avatar className="size-6">
+              <div className="flex items-center gap-2 pt-1 min-w-0">
+                <Avatar className="size-6 shrink-0">
                   <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&q=80" />
                   <AvatarFallback className="text-md bg-slate-200">
                     {assignedTo.slice(0, 2).toUpperCase() || "ST"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="text-md leading-tight">
-                  <span className="font-medium text-slate-800">
+                <div className="text-md leading-tight min-w-0">
+                  <span className="font-medium text-slate-800 break-words block">
                     {assignedTo}
                   </span>
                   {assignedRole && (
-                    <span className="text-md text-slate-500 block">
+                    <span className="text-md text-slate-500 block truncate">
                       ({assignedRole})
                     </span>
                   )}

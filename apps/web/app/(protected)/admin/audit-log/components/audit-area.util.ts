@@ -31,6 +31,14 @@ export function getLogArea(log: AuditLogItem): string {
     return "Care plan";
   }
   if (act.includes("RISK") || act.includes("HAZARD")) return "Risk";
+  if (
+    act.includes("EXPENSE") ||
+    act.includes("INVOICE") ||
+    act.includes("PAYMENT") ||
+    cat === "FINANCE"
+  ) {
+    return "Finance";
+  }
   if (act.includes("OBSERVATION")) return "Observation";
   if (act.includes("BODY_MAP")) return "Body map";
   if (act.includes("HANDOVER")) return "Handover";

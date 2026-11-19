@@ -144,15 +144,22 @@ export function InvestigationModal({
                     <div className="relative">
                       <Textarea
                         value={currentNotes}
+                        maxLength={1000}
                         onChange={(e) =>
-                          handleNoteChange(step.id, e.target.value)
+                          handleNoteChange(step.id, e.target.value.slice(0, 1000))
                         }
                         placeholder={`Write your ${step.title} notes here...`}
                         rows={3}
-                        className="w-full bg-white border border-[#D1D1D1] rounded-lg p-3 text-md text-text-body min-h-[90px]"
+                        className="w-full bg-white border border-[#D1D1D1] rounded-lg p-3 text-md text-text-body min-h-[90px] pr-16"
                       />
-                      <span className="absolute bottom-2 right-2 text-md text-slate-400">
-                        {(currentNotes || "").length}/250
+                      <span
+                        className={`absolute bottom-2 right-2 text-md ${
+                          (currentNotes || "").length >= 1000
+                            ? "text-amber-600 font-medium"
+                            : "text-slate-400"
+                        }`}
+                      >
+                        {(currentNotes || "").length}/1000
                       </span>
                     </div>
 
