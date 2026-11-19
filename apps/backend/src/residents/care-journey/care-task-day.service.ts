@@ -39,7 +39,7 @@ export class CareTaskDayService {
   constructor(
     private readonly access: ResidentAccessService,
     private readonly auditService: AuditService,
-  ) {}
+  ) { }
 
   async getBoard(
     query: CareTaskBoardQueryDTO,
@@ -68,13 +68,13 @@ export class CareTaskDayService {
     );
     const records = due.length
       ? await prisma.residentCareTaskRecord.findMany({
-          where: {
-            tenantId,
-            date: day,
-            undoneAt: null,
-            taskId: { in: due.map((task) => task.id) },
-          },
-        })
+        where: {
+          tenantId,
+          date: day,
+          undoneAt: null,
+          taskId: { in: due.map((task) => task.id) },
+        },
+      })
       : [];
     const recordByTask = new Map(
       records.map((record) => [record.taskId, record]),

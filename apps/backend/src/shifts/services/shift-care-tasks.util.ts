@@ -46,7 +46,8 @@ const isTaskInShiftWindow = (
   const startMin = startParts[0] * 60 + startParts[1];
   const endMin = endParts[0] * 60 + endParts[1];
   const isOvernight = startMin > endMin;
-  const isNight = isOvernight || shiftTypeName?.toLowerCase().includes('night');
+  const isNight =
+    isOvernight || shiftTypeName?.toLowerCase().includes('night');
 
   const timeMatch = taskTime.trim().match(/^(\d{1,2}):(\d{2})$/);
   if (timeMatch) {
@@ -74,11 +75,8 @@ export async function loadShiftCareTasks(
 ): Promise<MappedShiftCareTask[]> {
   if (residentIdsList.length === 0) return [];
 
-  const {
-    start: taskDayStart,
-    end: taskDayEnd,
-    ukDateStr,
-  } = getUkDayBoundaries(timings.rawStartTime);
+  const { start: taskDayStart, end: taskDayEnd, ukDateStr } =
+    getUkDayBoundaries(timings.rawStartTime);
 
   const careTasks = await prisma.residentCareTask.findMany({
     where: {
@@ -134,11 +132,7 @@ export async function loadShiftCareTasks(
     const rec = recordByTaskId.get(t.id);
     const isCompleted = rec?.outcome === 'Done';
     const isDeclined = rec?.outcome === 'Declined';
-    const status = isCompleted
-      ? 'Completed'
-      : isDeclined
-        ? 'Declined'
-        : 'Pending';
+    const status = isCompleted ? 'Completed' : isDeclined ? 'Declined' : 'Pending';
 
     return {
       id: t.id,
@@ -151,9 +145,9 @@ export async function loadShiftCareTasks(
       priority: 'Medium',
       status,
       time: t.time || (t.shift ? `${t.shift} Routine` : 'Scheduled'),
-      scheduledTimeStr:
-        t.time || (t.shift ? `${t.shift} Routine` : 'Scheduled'),
+      scheduledTimeStr: t.time || (t.shift ? `${t.shift} Routine` : 'Scheduled'),
       timingStatus: isCompleted ? 'Completed' : 'Due Today',
     };
   });
 }
+
