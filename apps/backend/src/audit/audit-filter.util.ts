@@ -97,6 +97,12 @@ export function buildAreaFilter(
         OR: [
           { actionType: { contains: 'SHIFT', mode: 'insensitive' } },
           { actionType: { contains: 'ROTA', mode: 'insensitive' } },
+          { actionType: { contains: 'LEAVE', mode: 'insensitive' } },
+          {
+            entityType: {
+              in: ['Shift', 'ShiftAssignment', 'ShiftRequest', 'LeaveRequest'],
+            },
+          },
         ],
       };
     case 'staff':

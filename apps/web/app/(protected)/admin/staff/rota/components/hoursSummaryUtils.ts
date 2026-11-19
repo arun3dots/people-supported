@@ -46,7 +46,8 @@ export function getScopedCommissionedHours(
     if (resHours > 0) return resHours;
     const prop = properties.find((p) => p.id === propertyFilter);
     const scheme = schemes.find((s) => s.id === prop?.schemeId);
-    if (scheme?.commissionedHours && scheme.properties.length === 1) {
+    const schemeProps = properties.filter((p) => p.schemeId === prop?.schemeId);
+    if (scheme?.commissionedHours && scheme.commissionedHours > 0 && schemeProps.length === 1) {
       return roundHours(scheme.commissionedHours);
     }
     return 0;
@@ -54,17 +55,18 @@ export function getScopedCommissionedHours(
 
   if (schemeFilter !== "all") {
     const scheme = schemes.find((s) => s.id === schemeFilter);
-    if (scheme?.commissionedHours) return roundHours(scheme.commissionedHours);
     const propIds = new Set(
       properties.filter((p) => p.schemeId === schemeFilter).map((p) => p.id),
     );
-    return getResidentCommissionedHours(
-      residents.filter(
-        (r) =>
-          r.bed?.room?.wing?.schemeId === schemeFilter ||
-          (r.bed?.room?.wing?.id ? propIds.has(r.bed.room.wing.id) : false),
-      ),
+    const schemeResidents = residents.filter(
+      (r) =>
+        r.bed?.room?.wing?.schemeId === schemeFilter ||
+        (r.bed?.room?.wing?.id ? propIds.has(r.bed.room.wing.id) : false),
     );
+    if (scheme?.commissionedHours && scheme.commissionedHours > 0) {
+      return roundHours(scheme.commissionedHours);
+    }
+    return getResidentCommissionedHours(schemeResidents);
   }
 
   return getCommissionedHours(schemes, residents);
@@ -175,7 +177,7 @@ function formatCoverage(
   planned: number,
 ): string {
   if (commissioned <= 0) {
-    return planned > 0 ? "100.0%" : "0.0%";
+    return planned > 0 ? "100.0%" : "—";
   }
   return `${((planned / commissioned) * 100).toFixed(1)}%`;
 }
@@ -207,7 +209,7 @@ export function buildHoursBreakdownRows(params: {
         ? schemes
         : schemes.filter((s) => s.id === schemeFilter);
 
-    return targetSchemes.map((scheme) => {
+    const schemeRows: HoursBreakdownRow[] = targetSchemes.map((scheme) => {
       const schemePropIds = new Set(
         properties.filter((p) => p.schemeId === scheme.id).map((p) => p.id),
       );
@@ -220,7 +222,9 @@ export function buildHoursBreakdownRows(params: {
           (r.bed?.room?.wing?.id ? schemePropIds.has(r.bed.room.wing.id) : false),
       );
       const commissioned = roundHours(
-        scheme.commissionedHours || getResidentCommissionedHours(schemeResidents),
+        scheme.commissionedHours && scheme.commissionedHours > 0
+          ? scheme.commissionedHours
+          : getResidentCommissionedHours(schemeResidents),
       );
       const planned = roundHours(
         schemeShifts.reduce((sum, s) => sum + getShiftPlannedHours(s), 0),
@@ -241,6 +245,31 @@ export function buildHoursBreakdownRows(params: {
         status: getRowStatus(commissioned, planned),
       };
     });
+
+    const unassignedShifts = filteredShifts.filter(
+      (s) => !resolveShiftLocation(s, properties, schemes, residents).schemeId,
+    );
+    if (unassignedShifts.length > 0 && schemeFilter === "all") {
+      const planned = roundHours(
+        unassignedShifts.reduce((sum, s) => sum + getShiftPlannedHours(s), 0),
+      );
+      const delivered = roundHours(
+        unassignedShifts.reduce((sum, s) => sum + getShiftDeliveredHours(s), 0),
+      );
+      schemeRows.push({
+        key: "unassigned-scheme",
+        scheme: "Unassigned Scheme",
+        property: null,
+        commissioned: 0,
+        planned,
+        delivered,
+        variance: 0,
+        coverage: formatCoverage(0, planned),
+        status: getRowStatus(0, planned),
+      });
+    }
+
+    return schemeRows;
   }
 
   const targetProps =
@@ -257,10 +286,11 @@ export function buildHoursBreakdownRows(params: {
       (r) => r.bed?.room?.wing?.id === prop.id,
     );
     const resHours = getResidentCommissionedHours(propResidents);
+    const parentProperties = properties.filter((p) => p.schemeId === prop.schemeId);
     const commissioned =
       resHours > 0
         ? resHours
-        : parentScheme?.commissionedHours && parentScheme.properties.length === 1
+        : parentScheme?.commissionedHours && parentProperties.length === 1
           ? roundHours(parentScheme.commissionedHours)
           : 0;
     const planned = roundHours(

@@ -56,8 +56,36 @@ export class ProfileService {
       throw new NotFoundException('Profile not found');
     }
 
+    let profile = user.profile;
+    if (!profile || (!profile.phoneNumber && !profile.addressLine1)) {
+      const tenant = await prisma.tenant.findUnique({
+        where: { id: tenantId },
+      });
+      if (tenant && (tenant.primaryContactPhone || tenant.addressLine1)) {
+        profile = await prisma.userProfile.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            phoneNumber: tenant.primaryContactPhone || null,
+            addressLine1: tenant.addressLine1 || null,
+            addressLine2: tenant.addressLine2 || null,
+            city: tenant.city || null,
+            postcode: tenant.postcode || null,
+            startDate: user.createdAt,
+          },
+          update: {
+            phoneNumber: profile?.phoneNumber ?? (tenant.primaryContactPhone || null),
+            addressLine1: profile?.addressLine1 ?? (tenant.addressLine1 || null),
+            addressLine2: profile?.addressLine2 ?? (tenant.addressLine2 || null),
+            city: profile?.city ?? (tenant.city || null),
+            postcode: profile?.postcode ?? (tenant.postcode || null),
+          },
+        });
+      }
+    }
+
     const qualifications =
-      (user.profile?.qualifications as Record<string, unknown>) || {};
+      (profile?.qualifications as Record<string, unknown>) || {};
     const preferredLanguage =
       typeof qualifications.preferredLanguage === 'string'
         ? qualifications.preferredLanguage
@@ -74,15 +102,15 @@ export class ProfileService {
       dob: user.dob,
       dbsNumber: user.dbsNumber,
       dbsExpiryDate: user.dbsExpiryDate,
-      startDate: user.profile?.startDate ?? null,
-      department: user.profile?.department ?? null,
+      startDate: profile?.startDate ?? null,
+      department: profile?.department ?? null,
       preferredLanguage,
-      phoneNumber: user.profile?.phoneNumber ?? null,
-      addressLine1: user.profile?.addressLine1 ?? null,
-      addressLine2: user.profile?.addressLine2 ?? null,
-      city: user.profile?.city ?? null,
-      postcode: user.profile?.postcode ?? null,
-      profilePhotoUrl: user.profile?.profilePhotoUrl ?? null,
+      phoneNumber: profile?.phoneNumber ?? null,
+      addressLine1: profile?.addressLine1 ?? null,
+      addressLine2: profile?.addressLine2 ?? null,
+      city: profile?.city ?? null,
+      postcode: profile?.postcode ?? null,
+      profilePhotoUrl: profile?.profilePhotoUrl ?? null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       passwordChangedAt: user.passwordChangedAt ?? user.createdAt,

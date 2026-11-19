@@ -40,7 +40,7 @@ export function AuditLogFilterSection({
               className={cn(
                 "inline-flex items-center justify-center px-3.5 py-1.5 rounded-lg text-md font-medium transition-colors cursor-pointer select-none",
                 isSelected
-                  ? "bg-[#144738] text-white shadow-xs"
+                  ? "bg-primary text-primary-foreground shadow-xs"
                   : "bg-white text-slate-700 border border-slate-200/90 hover:bg-slate-50 hover:text-slate-900",
               )}
             >
@@ -58,7 +58,7 @@ export function AuditLogFilterSection({
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full h-10 pl-9 pr-3 bg-white border border-slate-200 rounded-lg text-md text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:ring-emerald-800 shadow-none"
+          className="w-full h-10 pl-9 pr-3 bg-white border border-slate-200 rounded-lg text-md text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:ring-primary shadow-none"
         />
       </div>
     </div>

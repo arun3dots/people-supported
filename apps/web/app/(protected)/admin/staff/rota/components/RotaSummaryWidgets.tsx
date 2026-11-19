@@ -38,7 +38,6 @@ interface RotaSummaryWidgetsProps {
   onLockToggle?: (isLocked: boolean) => void;
   onViewHours?: () => void;
   onViewAllocation?: () => void;
-  onExportPdf?: () => void;
   onExportExcel?: () => void;
   onViewAudit?: () => void;
 }
@@ -50,7 +49,6 @@ export function RotaSummaryWidgets({
   onLockToggle,
   onViewHours,
   onViewAllocation,
-  onExportPdf,
   onExportExcel,
   onViewAudit,
 }: RotaSummaryWidgetsProps): React.JSX.Element {

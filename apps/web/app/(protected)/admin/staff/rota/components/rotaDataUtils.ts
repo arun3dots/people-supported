@@ -194,11 +194,34 @@ export function getCommissionedHours(
   schemes: SchemeItem[],
   residents: Resident[],
 ): number {
-  const schemeHours = roundHours(
-    schemes.reduce((sum, scheme) => sum + (scheme.commissionedHours ?? 0), 0),
-  );
-  if (schemeHours > 0) return schemeHours;
-  return getResidentCommissionedHours(residents);
+  let total = 0;
+  const countedResidentIds = new Set<string>();
+
+  for (const scheme of schemes) {
+    if (typeof scheme.commissionedHours === "number" && scheme.commissionedHours > 0) {
+      total += scheme.commissionedHours;
+      residents.forEach((r) => {
+        if (r.bed?.room?.wing?.schemeId === scheme.id) {
+          countedResidentIds.add(r.id);
+        }
+      });
+    } else {
+      residents.forEach((r) => {
+        if (r.bed?.room?.wing?.schemeId === scheme.id) {
+          countedResidentIds.add(r.id);
+          total += r.supportedLivingDetails?.supportHoursPerWeek ?? 0;
+        }
+      });
+    }
+  }
+
+  residents.forEach((r) => {
+    if (!countedResidentIds.has(r.id)) {
+      total += r.supportedLivingDetails?.supportHoursPerWeek ?? 0;
+    }
+  });
+
+  return roundHours(total);
 }
 
 export function computeRotaMetrics(

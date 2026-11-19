@@ -19,20 +19,59 @@ import { useGetAuditLogsQuery } from "../../../../lib/queries/audit/useGetAuditL
 const ACTION_ICONS: Record<string, LucideIcon> = {
   LOGIN: LogIn,
   LOGOUT: LogOut,
+  FAILED_LOGIN: LogIn,
   SELF_PROFILE_UPDATED: UserCircle,
   PASSWORD_CHANGED: LockKeyhole,
   PASSWORD_RESET: LockKeyhole,
   MFA_ENABLED: ShieldCheck,
   MFA_DISABLED: ShieldCheck,
-  STAFF_LIST_VIEWED: Users,
-  STAFF_RECORD_VIEWED: UserCircle,
-  RESIDENT_LIST_VIEWED: Users,
-  RESIDENT_RECORD_VIEWED: UserCircle,
-  DOCUMENT_VIEWED: FileText,
-  DOCUMENT_DOWNLOADED: FileText,
-  REPORT_DOWNLOADED: FileText,
+  MFA_VERIFIED: ShieldCheck,
+  MFA_RESET_REQUESTED: ShieldCheck,
+  ROLE_CHANGED: UserCircle,
+  BRANCH_SWITCHED: UserCircle,
+  ACCOUNT_LOCKED: LockKeyhole,
+  ACCOUNT_UNLOCKED: LockKeyhole,
+  DATA_EXPORTED: FileText,
   DEFAULT: UserCircle,
 };
+
+const ACCOUNT_SECURITY_ACTIONS = new Set([
+  "LOGIN",
+  "LOGOUT",
+  "FAILED_LOGIN",
+  "SELF_PROFILE_UPDATED",
+  "PASSWORD_CHANGED",
+  "PASSWORD_RESET",
+  "FORGOT_PASSWORD_REQUESTED",
+  "MFA_ENABLED",
+  "MFA_DISABLED",
+  "MFA_SECRET_GENERATED",
+  "MFA_VERIFIED",
+  "MFA_RESET_REQUESTED",
+  "MFA_RESET_VERIFIED",
+  "MFA_RESET_COMPLETED",
+  "ROLE_CHANGED",
+  "BRANCH_SWITCHED",
+  "ACCOUNT_LOCKED",
+  "ACCOUNT_UNLOCKED",
+  "DATA_EXPORTED",
+]);
+
+function isAccountActivity(log: { categoryType?: string; actionType?: string }): boolean {
+  if (!log.actionType) return false;
+  // Strictly filter out all page navigation, directory browsing, and view/read events
+  if (
+    log.categoryType === "PAGE_VIEW" ||
+    log.categoryType === "DATA_ACCESS" ||
+    log.actionType === "PAGE_VIEW" ||
+    log.actionType === "PAGE_VIEWED" ||
+    log.actionType.includes("VIEW") ||
+    log.actionType.endsWith("_VIEWED")
+  ) {
+    return false;
+  }
+  return log.categoryType === "AUTH" || ACCOUNT_SECURITY_ACTIONS.has(log.actionType);
+}
 
 function titleFor(actionType: string): string {
   const map: Record<string, string> = {
@@ -44,15 +83,11 @@ function titleFor(actionType: string): string {
     PASSWORD_RESET: "Password Reset",
     MFA_ENABLED: "Enabled multi-factor authentication",
     MFA_DISABLED: "Disabled multi-factor authentication",
-    STAFF_LIST_VIEWED: "Viewed Staff List",
-    STAFF_RECORD_VIEWED: "Viewed Staff Record",
-    RESIDENT_LIST_VIEWED: "Viewed Resident List",
-    RESIDENT_RECORD_VIEWED: "Viewed Resident Record",
-    DOCUMENT_VIEWED: "Viewed Document",
-    DOCUMENT_DOWNLOADED: "Downloaded Document",
-    REPORT_DOWNLOADED: "Downloaded Report",
+    MFA_VERIFIED: "Verified multi-factor authentication",
+    MFA_RESET_REQUESTED: "Requested MFA Reset",
     ROLE_CHANGED: "Role Changed",
     BRANCH_SWITCHED: "Switched Branch",
+    DATA_EXPORTED: "Exported Data / Report",
   };
   if (map[actionType]) {
     return map[actionType];
@@ -119,7 +154,9 @@ export function ProfileRecentActivity({
       .catch(() => {});
   }, []);
 
-  const shown = (activities ?? []).slice(0, 4);
+  const shown = (activities ?? [])
+    .filter(isAccountActivity)
+    .slice(0, 4);
 
   return (
     <Card className="w-full font-sans">

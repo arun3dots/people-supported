@@ -209,7 +209,11 @@ export function PropertyDrawerSections({
                     : "Unassigned"}
                 </Text>
               </div>
-              <Badge variant="secondary" state="success" className="border">
+              <Badge
+                variant="secondary"
+                state={sh.staffNames.length > 0 ? "success" : "inactive"}
+                className="border"
+              >
                 {sh.staffNames.length} assigned
               </Badge>
             </Card>

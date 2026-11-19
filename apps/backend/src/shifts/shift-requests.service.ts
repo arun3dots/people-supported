@@ -90,8 +90,10 @@ export class ShiftRequestsService {
       actionType: 'CREATE',
       entityType: 'ShiftRequest',
       entityId: request.id,
+      entityLabel: `${data.type} Request`,
       tenantId,
       userId,
+      description: `${data.type} request submitted`,
       newValue: toJsonValue(request) as Record<string, unknown>,
     });
 
@@ -218,8 +220,10 @@ export class ShiftRequestsService {
         actionType: 'UPDATE',
         entityType: 'ShiftRequest',
         entityId: id,
+        entityLabel: `${existing.type} Request for ${existing.user?.fullName || 'Staff'}`,
         tenantId,
         userId: adminId,
+        description: `${existing.type} request ${data.status.toLowerCase()} for ${existing.user?.fullName || 'Staff'}`,
         oldValue: toJsonValue(existing) as Record<string, unknown>,
         newValue: toJsonValue(updated) as Record<string, unknown>,
       });

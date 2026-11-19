@@ -42,8 +42,8 @@ describe("PartCForm Diagnoses & Medical History", () => {
     const onChange = vi.fn();
     render(<PartCForm value={samplePartC} onChange={onChange} />);
 
-    expect(screen.getByText("Primary diagnosis")).toBeInTheDocument();
-    expect(screen.getByText("Secondary diagnoses")).toBeInTheDocument();
+    expect(screen.getByText("Primary Need")).toBeInTheDocument();
+    expect(screen.getByText("Secondary Need")).toBeInTheDocument();
     expect(screen.getByText("Medical history")).toBeInTheDocument();
 
     expect(

@@ -111,12 +111,12 @@ export const MandatoryPreAdmissionPartCSchema = PreAdmissionPartCSchema.superRef
     if (!hasPrimary) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Primary diagnosis is required",
+        message: "Primary need is required",
         path: ["primaryDiagnosis"],
       });
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Primary diagnosis is required",
+        message: "Primary need is required",
         path: ["diagnoses"],
       });
     }
@@ -367,7 +367,7 @@ export function getPreAdmissionSubmitIssues(
   need("partA", "admissionReason", a?.admissionReason?.trim(), "Reason for admission is required");
   need("partB", "nextOfKin", parts.partB?.nextOfKin?.length, "At least one next of kin is required");
   const c = parts.partC;
-  need("partC", "diagnoses", c?.diagnoses?.length, "At least one diagnosis is required");
+  need("partC", "diagnoses", c?.diagnoses?.length, "Primary need is required");
   need(
     "partC",
     "allergies",

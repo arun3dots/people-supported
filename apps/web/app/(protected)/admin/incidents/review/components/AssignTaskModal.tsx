@@ -165,6 +165,7 @@ export function AssignTaskModal({
             title={title}
             description={description}
             assignedTo={assignedTo}
+            assignedToAvatarUrl={assignedToAvatarUrl}
             assignedRole={assignedRole}
             priority={priority}
             taskDate={taskDate}

@@ -164,7 +164,7 @@ export function PreAdmissionSummary({
     {
       title: "Health and medicines",
       rows: [
-        ["Primary diagnosis", dash(c.primaryDiagnosis || c.diagnoses[0])],
+        ["Primary need", dash(c.primaryDiagnosis || c.diagnoses[0])],
         ...(c.secondaryDiagnoses?.length || c.diagnoses.length > 1
           ? [
               [

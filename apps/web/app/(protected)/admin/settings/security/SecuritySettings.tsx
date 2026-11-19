@@ -6,10 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema, type ChangePasswordDTO } from "@repo/schema";
 import { useChangePasswordMutation } from "../../../../../lib/queries/auth/authMutations";
 import {
+  Eye,
+  EyeOff,
   KeyRound,
   Loader2,
   RefreshCcw,
 } from "lucide-react";
+import { useAuth } from "../../../../../lib/context/AuthContext";
 import {
   Button,
   Input,
@@ -71,6 +74,11 @@ function ChangePasswordDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { logout } = useAuth();
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -85,10 +93,13 @@ function ChangePasswordDialog({
       reset();
       toast({
         title: "Password Updated",
-        description: "Your password has been successfully changed.",
+        description: "Your password has been successfully changed. Redirecting to login...",
         variant: "success",
       });
       onOpenChange(false);
+      setTimeout(() => {
+        void logout();
+      }, 1000);
     },
     onError: (error) =>
       toast({
@@ -118,39 +129,69 @@ function ChangePasswordDialog({
             <Label>
               Current Password
             </Label>
-            <Input
-              type="password"
-              placeholder="Enter current password"
-              {...register("currentPassword")}
-              errorMessage={errors.currentPassword?.message}
-              className="rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
-            />
+            <div className="relative w-full">
+              <Input
+                type={showCurrentPassword ? "text" : "password"}
+                placeholder="Enter current password"
+                {...register("currentPassword")}
+                errorMessage={errors.currentPassword?.message}
+                className="pr-10 rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-[11px] text-slate-400 hover:text-slate-600 focus:outline-none z-10 cursor-pointer"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                aria-label="Toggle current password visibility"
+              >
+                {showCurrentPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1.5">
             <Label>
               New Password
             </Label>
-            <Input
-              type="password"
-              placeholder="Minimum 8 characters"
-              {...register("newPassword")}
-              errorMessage={errors.newPassword?.message}
-              className="rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
-            />
+            <div className="relative w-full">
+              <Input
+                type={showNewPassword ? "text" : "password"}
+                placeholder="Minimum 8 characters"
+                {...register("newPassword")}
+                errorMessage={errors.newPassword?.message}
+                className="pr-10 rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-[11px] text-slate-400 hover:text-slate-600 focus:outline-none z-10 cursor-pointer"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                aria-label="Toggle new password visibility"
+              >
+                {showNewPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1.5">
             <Label>
               Confirm New Password
             </Label>
-            <Input
-              type="password"
-              placeholder="Repeat new password"
-              {...register("confirmPassword")}
-              errorMessage={errors.confirmPassword?.message}
-              className="rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
-            />
+            <div className="relative w-full">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Repeat new password"
+                {...register("confirmPassword")}
+                errorMessage={errors.confirmPassword?.message}
+                className="pr-10 rounded-xl border-[#BCD3CD] focus-visible:ring-[#4A706A]"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-[11px] text-slate-400 hover:text-slate-600 focus:outline-none z-10 cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label="Toggle confirm password visibility"
+              >
+                {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <DialogFooter className="pt-4 border-t border-gray-100 gap-2">

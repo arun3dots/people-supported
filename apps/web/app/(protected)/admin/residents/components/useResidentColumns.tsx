@@ -197,11 +197,14 @@ export function useResidentColumns({
           const need =
             partC?.primaryDiagnosis?.trim() ||
             partC?.diagnoses?.[0]?.trim() ||
-            r.supportedLivingDetails?.primaryNeed ||
-            r.careProfile?.primaryCareNeed ||
-            r.careProfile?.primaryDiagnosis ||
-            r.fundingType ||
-            "Supported living";
+            r.supportedLivingDetails?.primaryNeed?.trim() ||
+            r.careProfile?.primaryCareNeed?.trim() ||
+            r.careProfile?.primaryDiagnosis?.trim();
+
+          if (!need) {
+            return <span className="text-slate-400 text-md">—</span>;
+          }
+
           return (
             <Badge
               variant="secondary"

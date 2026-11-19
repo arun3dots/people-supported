@@ -41,7 +41,7 @@ const MOCK_FACILITY_STAFF = [
   { id: "1", name: "Mary Vance", nhs: "NHS: 123 456 7890", role: "Administrator", roleState: "success" as const, shiftStatus: "Fully Staffed", hours: "12 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" },
   { id: "2", name: "Sarah Jenkins", nhs: "NHS: 123 456 7890", role: "Clinical Lead", roleState: "info" as const, shiftStatus: "Fully Staffed", hours: "10 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" },
   { id: "3", name: "David Kim", nhs: "NHS: 123 456 7890", role: "Care Coordinator", roleState: "info" as const, shiftStatus: "Fully Staffed", hours: "12 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" },
-  { id: "4", name: "Emily Watson", nhs: "NHS: 123 456 7890", role: "Senior Carer", roleState: "warning" as const, shiftStatus: "Fully Staffed", hours: "12 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" },
+  { id: "4", name: "Emily Watson", nhs: "NHS: 123 456 7890", role: "Senior Supported Worker", roleState: "warning" as const, shiftStatus: "Fully Staffed", hours: "12 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" },
   { id: "5", name: "James Carter", nhs: "NHS: 123 456 7890", role: "Finance Officer", roleState: "inactive" as const, shiftStatus: "Fully Staffed", hours: "12 Hours", availability: "On Duty", status: "Active", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" },
 ];
 
@@ -103,7 +103,7 @@ export function FacilityShiftModal({ isOpen, onClose, wing }: FacilityShiftModal
                 <SelectItem value="all">All Roles</SelectItem>
                 <SelectItem value="admin">Administrator</SelectItem>
                 <SelectItem value="nurse">Nurse</SelectItem>
-                <SelectItem value="carer">Carer</SelectItem>
+                <SelectItem value="carer">Supported Worker</SelectItem>
               </SelectContent>
             </Select>
 

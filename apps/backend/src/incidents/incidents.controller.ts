@@ -99,7 +99,12 @@ export class IncidentsController {
     dto: UpdateIncidentDTO,
     @Req() req: AuthenticatedRequest,
   ) {
-    return this.incidentsService.update(id, dto, req.user.tenantId!);
+    return this.incidentsService.update(
+      id,
+      dto,
+      req.user.tenantId!,
+      req.user.userId,
+    );
   }
 
   @Post(':id/attachments')

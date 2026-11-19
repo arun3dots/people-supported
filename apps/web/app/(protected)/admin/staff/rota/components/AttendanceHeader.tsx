@@ -116,7 +116,7 @@ export function AttendanceHeader({
             type="button"
             variant="secondary"
             size="sm"
-            onClick={onExport || (() => typeof window !== "undefined" && window.print())}
+            onClick={onExport}
             className="h-9 px-3 rounded-xl bg-surface-card-grey hover:bg-slate-200/70 text-md font-medium text-slate-700 flex items-center gap-1.5 shadow-none cursor-pointer"
           >
             <Download className="size-3.5" />
