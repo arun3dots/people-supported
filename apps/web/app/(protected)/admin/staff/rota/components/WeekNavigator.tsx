@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { addDays, format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, DatePicker } from "@repo/ui/components/ui";
@@ -22,10 +22,37 @@ export function WeekNavigator({
   onSelectDate,
   showWeekRange = false,
 }: WeekNavigatorProps): React.JSX.Element {
+  const [isCleared, setIsCleared] = useState(false);
+
   const weekRangeLabel = `${format(currentDate, "dd MMM")} – ${format(
     addDays(currentDate, 6),
     "dd MMM yyyy",
   )}`;
+
+  const handlePrevious = () => {
+    setIsCleared(false);
+    onPreviousWeek();
+  };
+
+  const handleNext = () => {
+    setIsCleared(false);
+    onNextWeek();
+  };
+
+  const handleCurrent = () => {
+    setIsCleared(false);
+    onCurrentWeek?.();
+  };
+
+  const handleDateChange = (d: Date | undefined) => {
+    if (!d) {
+      setIsCleared(true);
+      onCurrentWeek?.();
+    } else {
+      setIsCleared(false);
+      onSelectDate?.(d);
+    }
+  };
 
   return (
     <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
@@ -40,7 +67,7 @@ export function WeekNavigator({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={onPreviousWeek}
+          onClick={handlePrevious}
           title="Previous Week"
           className="size-8 p-0 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white cursor-pointer"
         >
@@ -51,7 +78,7 @@ export function WeekNavigator({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={onCurrentWeek}
+            onClick={handleCurrent}
             className="h-8 px-2.5 rounded-lg text-xs font-semibold text-slate-800 hover:bg-white cursor-pointer"
           >
             This Week
@@ -61,7 +88,7 @@ export function WeekNavigator({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={onNextWeek}
+          onClick={handleNext}
           title="Next Week"
           className="size-8 p-0 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white cursor-pointer"
         >
@@ -72,8 +99,8 @@ export function WeekNavigator({
       {onSelectDate && (
         <div className="w-40 sm:w-44">
           <DatePicker
-            value={currentDate}
-            onChange={(d) => d && onSelectDate(d)}
+            value={isCleared ? undefined : currentDate}
+            onChange={handleDateChange}
             maxYear={new Date().getFullYear() + 5}
             formatString="dd MMM yyyy"
             placeholder="Pick date/week..."

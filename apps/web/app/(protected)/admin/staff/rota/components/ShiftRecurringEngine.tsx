@@ -30,6 +30,7 @@ interface ShiftRecurringEngineProps {
   watch: any;
   setValue: any;
   getValues?: any;
+  isSleepIn?: boolean;
 }
 
 export function ShiftRecurringEngine({
@@ -37,6 +38,7 @@ export function ShiftRecurringEngine({
   watch,
   setValue,
   getValues,
+  isSleepIn = false,
 }: ShiftRecurringEngineProps) {
   const repeatDays: number[] = watch("repeatDays") || [];
   const now = new Date();
@@ -130,50 +132,52 @@ export function ShiftRecurringEngine({
           />
         </div>
 
-        <div className="sm:col-span-4 flex flex-col gap-1.5">
-          <Label>To</Label>
-          <Controller
-            name="repeatUntil"
-            control={control}
-            render={({ field, fieldState }) => {
-              const currentStartDateStr =
-                selectedStart && !Number.isNaN(selectedStart.getTime())
-                  ? getUkDateString(selectedStart)
-                  : today;
+        {!isSleepIn && (
+          <div className="sm:col-span-4 flex flex-col gap-1.5">
+            <Label>To (Optional Repeat)</Label>
+            <Controller
+              name="repeatUntil"
+              control={control}
+              render={({ field, fieldState }) => {
+                const currentStartDateStr =
+                  selectedStart && !Number.isNaN(selectedStart.getTime())
+                    ? getUkDateString(selectedStart)
+                    : today;
 
-              return (
-                <>
-                  <StandardDatePicker
-                    showDecadeJumps={false}
-                    minDate={
-                      currentStartDateStr
-                        ? parseLocalDate(currentStartDateStr)
-                        : undefined
-                    }
-                    value={field.value}
-                    onChange={(d) => {
-                      if (!d) {
-                        field.onChange(null);
-                        return;
+                return (
+                  <>
+                    <StandardDatePicker
+                      showDecadeJumps={false}
+                      minDate={
+                        currentStartDateStr
+                          ? parseLocalDate(currentStartDateStr)
+                          : undefined
                       }
-                      const dateStr = getLocalCalendarDateString(d);
-                      if (currentStartDateStr && dateStr < currentStartDateStr) {
-                        return;
-                      }
-                      field.onChange(d);
-                    }}
-                    placeholder="Select repeat until date"
-                  />
-                  {fieldState.error && (
-                    <Text size="md" className="text-rose-600 font-medium">
-                      {fieldState.error.message}
-                    </Text>
-                  )}
-                </>
-              );
-            }}
-          />
-        </div>
+                      value={field.value}
+                      onChange={(d) => {
+                        if (!d) {
+                          field.onChange(null);
+                          return;
+                        }
+                        const dateStr = getLocalCalendarDateString(d);
+                        if (currentStartDateStr && dateStr < currentStartDateStr) {
+                          return;
+                        }
+                        field.onChange(d);
+                      }}
+                      placeholder="Select repeat until date"
+                    />
+                    {fieldState.error && (
+                      <Text size="md" className="text-rose-600 font-medium">
+                        {fieldState.error.message}
+                      </Text>
+                    )}
+                  </>
+                );
+              }}
+            />
+          </div>
+        )}
 
         <div className="sm:col-span-4 flex flex-col gap-1.5">
           <Label>Target Days</Label>

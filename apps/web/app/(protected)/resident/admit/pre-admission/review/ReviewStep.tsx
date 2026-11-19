@@ -36,8 +36,14 @@ interface ReviewStepProps {
   isAdmitting: boolean;
 }
 
-const stepForPart = (part: string): number => {
-  return Number(Object.entries(STEP_PART).find(([, p]) => p === part)?.[0] ?? 1);
+const stepForIssue = (issue: PreAdmissionSubmitIssue): number => {
+  if (
+    issue.message.toLowerCase().includes("care need area") ||
+    (issue.part === "partD" && issue.field === "areas")
+  ) {
+    return 6;
+  }
+  return Number(Object.entries(STEP_PART).find(([, p]) => p === issue.part)?.[0] ?? 1);
 };
 
 export function ReviewStep({
@@ -99,7 +105,7 @@ export function ReviewStep({
                   <button
                     type="button"
                     className="underline underline-offset-2 cursor-pointer"
-                    onClick={() => onGoToStep(stepForPart(i.part))}
+                    onClick={() => onGoToStep(stepForIssue(i))}
                   >
                     {i.message}
                   </button>

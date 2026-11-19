@@ -196,7 +196,6 @@ export function PartAForm({
           />
           <SelectField
             label="Type of care"
-            required
             options={careTypeOptions}
             value={value.typeOfCare}
             errorMessage={errors?.typeOfCare}
@@ -204,7 +203,6 @@ export function PartAForm({
           />
           <SelectField
             label="Level of care"
-            required
             options={CARE_LEVELS}
             value={value.careLevel}
             errorMessage={errors?.careLevel}

@@ -97,7 +97,7 @@ export function TaskSummaryCard({
                   <Text
                     size={"md"}
                     weight={"semibold"}
-                    className="text-slate-900 flex-1 min-w-0 break-words [overflow-wrap:anywhere]"
+                    className="text-slate-900 break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0 pr-2"
                   >
                     {task.title}
                   </Text>

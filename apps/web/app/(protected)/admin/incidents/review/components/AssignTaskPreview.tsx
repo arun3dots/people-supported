@@ -27,6 +27,7 @@ interface AssignTaskPreviewProps {
   title: string;
   description: string;
   assignedTo: string;
+  assignedToAvatarUrl?: string;
   assignedRole: string;
   priority: "High" | "Medium" | "Low";
   taskDate: string;
@@ -42,6 +43,7 @@ export function AssignTaskPreview({
   title,
   description,
   assignedTo,
+  assignedToAvatarUrl,
   assignedRole,
   priority,
   taskDate,
@@ -77,6 +79,7 @@ export function AssignTaskPreview({
 
           <h4 className="text-md font-bold text-[#141F1E]">Task Summary</h4>
 
+<<<<<<< HEAD
           <div className="space-y-3 pt-1 text-md min-w-0">
             <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
@@ -91,6 +94,22 @@ export function AssignTaskPreview({
                 Task Description
               </p>
               <p className="text-slate-600 text-md leading-relaxed pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0">
+=======
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 text-md">
+            <div className="min-w-0 space-y-1">
+              <p className="text-md text-text-description font-normal">
+                Task Title
+              </p>
+              <p className="font-semibold text-slate-800 pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
+                {title}
+              </p>
+            </div>
+            <div className="min-w-0 space-y-1">
+              <p className="text-md text-text-description font-normal">
+                Task Description
+              </p>
+              <p className="text-slate-600 text-md leading-relaxed pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
+>>>>>>> 89caa5c39a1cbfb96eac01a26d7a4316bc27e814
                 {description}
               </p>
             </div>
@@ -110,10 +129,12 @@ export function AssignTaskPreview({
               <p className="text-md text-text-description font-normal">
                 Assigned To
               </p>
-              <div className="flex items-center gap-2 pt-1 min-w-0">
-                <Avatar className="size-6 shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&q=80" />
-                  <AvatarFallback className="text-md bg-slate-200">
+              <div className="flex items-center gap-2 pt-1">
+                <Avatar className="size-6">
+                  {assignedToAvatarUrl ? (
+                    <AvatarImage src={assignedToAvatarUrl} alt={assignedTo} />
+                  ) : null}
+                  <AvatarFallback className="text-xs font-semibold bg-slate-200 text-slate-700">
                     {assignedTo.slice(0, 2).toUpperCase() || "ST"}
                   </AvatarFallback>
                 </Avatar>

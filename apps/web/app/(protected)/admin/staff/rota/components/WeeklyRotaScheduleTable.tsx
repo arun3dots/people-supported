@@ -110,7 +110,6 @@ export function WeeklyRotaScheduleTable({
               onPreviousWeek={onPreviousWeek}
               onNextWeek={onNextWeek}
               onCurrentWeek={onCurrentWeek}
-              onSelectDate={onSelectDate}
             />
           )}
 
@@ -162,7 +161,10 @@ export function WeeklyRotaScheduleTable({
 
             <TableBody>
               {staffList.map((staff) => {
-                const staffRole = staff.role?.name || "Staff";
+                const staffRole =
+                  staff.role?.name === "Carer"
+                    ? "Supported Worker"
+                    : staff.role?.name || "Staff";
                 const { propertyName } = resolveStaffLocation(
                   staff,
                   schemes,

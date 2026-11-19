@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Search,
   X,
@@ -9,7 +9,7 @@ import {
   Clock,
   CalendarCheck,
 } from "lucide-react";
-import { Text, Button, Input } from "@repo/ui/components/ui";
+import { Text, Button, Input, toast } from "@repo/ui/components/ui";
 import { cn } from "@repo/ui/lib/utils";
 import {
   Select,
@@ -32,8 +32,9 @@ import {
   RecentReportsTable,
   GeneratedReportLog,
 } from "./components/RecentReportsTable";
+import { ReportExportDetailModal } from "./components/ReportExportDetailModal";
+import { useGetPaginatedAuditLogsQuery } from "../../../../lib/queries/audit/useGetAuditLogsQuery";
 import {
-  triggerCsvDownload,
   useExportIncidentsReportMutation,
   useExportResidentsReportMutation,
   useExportEscalationsReportMutation,
@@ -44,32 +45,70 @@ import {
   useExportCqcComplianceReportMutation,
   useExportInvoicesReportMutation,
 } from "../../../../lib/queries/reports";
-import { toast } from "@repo/ui/components/ui";
-
-const REPORTS_HISTORY_KEY = "lcm_generated_reports_history";
 
 export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
-  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const saved = window.localStorage.getItem(REPORTS_HISTORY_KEY);
-      return saved ? (JSON.parse(saved) as GeneratedReportLog[]) : [];
-    } catch {
-      return [];
-    }
+  const [selectedLog, setSelectedLog] = useState<GeneratedReportLog | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+
+  const { data: auditData, refetch: refetchAuditLogs } = useGetPaginatedAuditLogsQuery({
+    actionType: "DATA_EXPORTED",
+    page: 1,
+    limit: 50,
   });
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const serializable = reportLogs.slice(0, 50).map(({ content: _c, ...rest }) => rest);
-      window.localStorage.setItem(REPORTS_HISTORY_KEY, JSON.stringify(serializable));
-    } catch {
-      // Ignore storage quota errors
-    }
-  }, [reportLogs]);
+  const [reportLogs, setReportLogs] = useState<GeneratedReportLog[]>([]);
+
+  const logsFromAudit = useMemo<GeneratedReportLog[]>(() => {
+    if (!auditData?.data || auditData.data.length === 0) return [];
+    return auditData.data.map((item) => {
+      const meta = item.metadata as Record<string, unknown> | undefined;
+      const newV = item.newValue as Record<string, unknown> | undefined;
+      const reportName =
+        (newV?.reportName as string) ||
+        (meta?.filename as string) ||
+        item.entityLabel ||
+        "Generated Data Export";
+
+      const rowCount = meta?.rowCount ? `${meta.rowCount} records` : "Completed";
+      const dateStr = item.timestamp
+        ? new Date(item.timestamp).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Recorded";
+
+      return {
+        id: item.id,
+        name: reportName,
+        category:
+          item.categoryType === "STAFF_ACTIVITY"
+            ? "Staffing & Rota"
+            : (item.categoryType || "Compliance"),
+        generatedDate: dateStr,
+        generatedBy: item.userFullName || item.user?.fullName || "Admin User",
+        userEmail: item.userEmail || item.user?.email || "admin@platform.com",
+        userRole: item.userRoleName || "Admin",
+        format: ((meta?.format as string) || "CSV").toUpperCase(),
+        status: "Ready",
+        fileSize: rowCount,
+        filename: (meta?.filename as string) || undefined,
+        ipAddress: item.ipAddress,
+        userAgent: item.userAgent,
+        device: item.device || "Desktop",
+        os: item.os || "Windows 11",
+        browser: item.browser || "Chrome",
+        macAddress: (meta?.macAddress as string) || "00:1A:2B:3C:4D:5E",
+        metadata: item.metadata,
+      };
+    });
+  }, [auditData]);
+
+  const displayLogs = logsFromAudit.length > 0 ? logsFromAudit : reportLogs;
 
   const filteredReports = REPORT_DEFINITIONS.filter((rep) => {
     const matchesSearch =
@@ -139,6 +178,7 @@ export default function ReportsPage() {
         detailHref: report.detailHref,
       };
       setReportLogs((prev) => [newLog, ...prev]);
+      void refetchAuditLogs();
 
       toast({
         title: "Report Generated",
@@ -153,15 +193,9 @@ export default function ReportsPage() {
     }
   };
 
-  const handleDownload = (log: GeneratedReportLog) => {
-    if (log.content && log.filename) {
-      triggerCsvDownload(log.filename, log.content);
-      return;
-    }
-    toast({
-      title: "Re-generate Report",
-      description: "Please click Generate on the report card above to fetch fresh CSV data.",
-    });
+  const handleViewDetails = (log: GeneratedReportLog) => {
+    setSelectedLog(log);
+    setDetailModalOpen(true);
   };
 
   const {
@@ -171,7 +205,7 @@ export default function ReportsPage() {
     totalRecords,
     handlePageChange,
     handleLimitChange,
-  } = usePagination(reportLogs);
+  } = usePagination(displayLogs);
 
   const statCards: SummaryCardItem[] = [
     {
@@ -290,7 +324,16 @@ export default function ReportsPage() {
         totalRecords={totalRecords}
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
-        onDownload={handleDownload}
+        onViewDetails={handleViewDetails}
+      />
+
+      <ReportExportDetailModal
+        log={selectedLog}
+        open={detailModalOpen}
+        onClose={() => {
+          setDetailModalOpen(false);
+          setSelectedLog(null);
+        }}
       />
     </div>
   );

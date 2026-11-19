@@ -51,12 +51,16 @@ export function ShiftStaffResidentSelectors({
   onClearResidents,
 }: ShiftStaffResidentSelectorsProps): React.JSX.Element {
   const [residentSearch, setResidentSearch] = useState("");
+  const effectiveIsSharedCare =
+    isSharedCare ||
+    careType.includes("Shared Care") ||
+    careType.toLowerCase().includes("shared");
   const isTwoToOne = careType.includes("2:1");
   const isHouseWide =
-    isSharedCare ||
+    effectiveIsSharedCare ||
     careType.includes("Sleep-in") ||
     careType.includes("Waking Night");
-  const isMultiStaff = isSharedCare || isTwoToOne;
+  const isMultiStaff = effectiveIsSharedCare || isTwoToOne;
 
   const activeResident = residents.find((r) => selectedResidentIds.includes(r.id));
 
@@ -150,7 +154,7 @@ export function ShiftStaffResidentSelectors({
                     }`}
                 >
                   {isSelected && <Check className="size-3.5" />}
-                  {st.fullName} ({st.role?.name || "Staff"})
+                  {st.fullName} ({st.role?.name === "Carer" ? "Supported Worker" : st.role?.name || "Staff"})
                   {isRegularTeam && !isSelected && (
                     <span className="text-xs px-1 rounded bg-emerald-100 text-emerald-800 font-normal">
                       Regular Team
@@ -184,7 +188,7 @@ export function ShiftStaffResidentSelectors({
                     value={st.id}
                     disabled={Boolean(isRestricted)}
                   >
-                    {st.fullName} ({st.role?.name || "Staff"})
+                    {st.fullName} ({st.role?.name === "Carer" ? "Supported Worker" : st.role?.name || "Staff"})
                     {isRegularTeam ? " ★ Regular Team" : ""}
                     {isRestricted ? " ⛔ Restricted (Do Not Assign)" : ""}
                   </SelectItem>

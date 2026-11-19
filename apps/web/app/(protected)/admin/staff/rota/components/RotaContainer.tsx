@@ -340,7 +340,10 @@ export function RotaContainer(): React.JSX.Element {
               setDetailsShift(shift);
               setDetailsContext({
                 staffName,
-                staffRole: matchedStaff?.role?.name,
+                staffRole:
+                  matchedStaff?.role?.name === "Carer"
+                    ? "Supported Worker"
+                    : matchedStaff?.role?.name,
                 dayLabel,
               });
             }}
@@ -379,7 +382,6 @@ export function RotaContainer(): React.JSX.Element {
             }}
             onViewHours={() => handleViewChange("hours")}
             onViewAllocation={() => handleViewChange("allocation")}
-            onExportPdf={() => typeof window !== "undefined" && window.print()}
             onExportExcel={handleExportRotaCsv}
             onViewAudit={() => router.push("/admin/audit-log")}
           />

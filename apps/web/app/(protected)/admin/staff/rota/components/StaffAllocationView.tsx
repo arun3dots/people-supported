@@ -77,7 +77,8 @@ export function StaffAllocationView({
         id: m.id,
         fullName: m.fullName,
         email: m.email,
-        roleName: m.role?.name || "Staff",
+        roleName:
+          m.role?.name === "Carer" ? "Supported Worker" : m.role?.name || "Staff",
         contractType: m.contractType ?? null,
         contractedHoursPerWeek: contracted,
         isActive: m.isActive,
