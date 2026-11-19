@@ -17,6 +17,7 @@ import { DutyOfCandourService } from './services/duty-of-candour.service';
 import { IncidentNotificationService } from './services/incident-notification.service';
 import { IncidentMetricsService } from './services/incident-metrics.service';
 import { S3StorageService } from '../storage/s3.service';
+import { AuditService } from '../audit/audit.service';
 
 @Injectable()
 export class IncidentsService {
@@ -25,6 +26,7 @@ export class IncidentsService {
     private readonly incidentNotificationService: IncidentNotificationService,
     private readonly incidentMetricsService: IncidentMetricsService,
     private readonly s3Service: S3StorageService,
+    private readonly auditService: AuditService,
   ) {}
 
   private ensureEditable(incident: {
@@ -180,6 +182,30 @@ export class IncidentsService {
         .catch(() => {});
     }
 
+    void this.auditService.emitSafeguarding({
+      tenantId,
+      userId,
+      entityType: 'Incident',
+      entityId: incident.id,
+      entityLabel: incident.incidentNumber,
+      residentId: incident.residentId || undefined,
+      actionType: 'INCIDENT_REPORTED',
+      description: `Incident reported ${incident.incidentNumber} (${incident.category}, ${incident.severity})`,
+      metadata: {
+        incidentNumber: incident.incidentNumber,
+        category: incident.category,
+        severity: incident.severity,
+        status: incident.status,
+      },
+      newValue: {
+        title: incident.title,
+        category: incident.category,
+        severity: incident.severity,
+        harmLevel: incident.harmLevel ?? undefined,
+        status: incident.status,
+      },
+    });
+
     return incident;
   }
 
@@ -285,7 +311,12 @@ export class IncidentsService {
     return this.incidentMetricsService.getMetrics(tenantId);
   }
 
-  async update(id: string, dto: UpdateIncidentDTO, tenantId: string) {
+  async update(
+    id: string,
+    dto: UpdateIncidentDTO,
+    tenantId: string,
+    userId?: string,
+  ) {
     const incident = await this.findOne(id, tenantId);
     this.ensureEditable(incident);
 
@@ -335,7 +366,7 @@ export class IncidentsService {
         : Prisma.JsonNull;
     }
 
-    return prisma.incident.update({
+    const updated = await prisma.incident.update({
       where: { id: incident.id },
       data,
       include: {
@@ -353,6 +384,32 @@ export class IncidentsService {
         assignedTo: { select: { id: true, fullName: true } },
       },
     });
+
+    if (userId) {
+      const isClosed = dto.status === 'Closed' && incident.status !== 'Closed';
+      void this.auditService.emitSafeguarding({
+        tenantId,
+        userId,
+        entityType: 'Incident',
+        entityId: updated.id,
+        entityLabel: updated.incidentNumber,
+        residentId: updated.residentId || undefined,
+        actionType: isClosed ? 'INCIDENT_CLOSED' : 'INCIDENT_REVIEWED',
+        description: isClosed
+          ? `Incident closed ${updated.incidentNumber}`
+          : `Incident updated ${updated.incidentNumber}`,
+        metadata: {
+          incidentNumber: updated.incidentNumber,
+          category: updated.category,
+          severity: updated.severity,
+          status: updated.status,
+        },
+        oldValue: { status: incident.status, severity: incident.severity },
+        newValue: { status: updated.status, severity: updated.severity },
+      });
+    }
+
+    return updated;
   }
 
   async uploadAttachment(

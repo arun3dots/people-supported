@@ -44,7 +44,17 @@ export function getLogArea(log: AuditLogItem): string {
   ) {
     return "Assessment";
   }
-  if (act.includes("SHIFT") || act.includes("ROTA")) return "Rota";
+  if (
+    act.includes("SHIFT") ||
+    act.includes("ROTA") ||
+    act.includes("LEAVE") ||
+    log.entityType === "Shift" ||
+    log.entityType === "ShiftAssignment" ||
+    log.entityType === "ShiftRequest" ||
+    log.entityType === "LeaveRequest"
+  ) {
+    return "Rota";
+  }
   if (
     cat === "STAFF_ACTIVITY" ||
     act.includes("STAFF") ||

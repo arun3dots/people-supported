@@ -2,31 +2,12 @@
 
 import React from "react";
 import { format } from "date-fns";
+import { Calendar, CheckCircle2, Clock, Download, Edit2, Home, Plus, User } from "lucide-react";
 import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Edit2,
-  Home,
-  Plus,
-  User,
-} from "lucide-react";
-import {
-  Badge,
-  Button,
-  Card,
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  InfoField,
-  Text,
+  Badge, Button, Card, Dialog, DialogContent,
+  DialogFooter, DialogHeader, DialogTitle, InfoField, Text,
 } from "@repo/ui/components/ui";
-import type {
-  PropertyItem,
-  SchemeItem,
-} from "../../../../../../lib/types/facility";
+import type { PropertyItem, SchemeItem } from "../../../../../../lib/types/facility";
 import type { Resident } from "../../../../../../lib/types/resident";
 import type { Shift } from "../../../../../../lib/types/shifts";
 import {
@@ -125,9 +106,9 @@ export function ShiftDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl font-sans max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="pb-3 pr-8 border-b border-slate-100">
-          <div className="flex items-center justify-between gap-3">
+      <DialogContent size="4xl" className="font-sans max-h-[90vh] overflow-y-auto overflow-x-hidden">
+        <DialogHeader className="pb-3 pr-10 border-b border-slate-100">
+          <div className="flex items-center justify-between gap-3 pr-2">
             <div className="flex items-center gap-2">
               <Home className="size-4 text-primary" />
               <Text as="span" size="md" weight="medium" variant="muted">
@@ -315,6 +296,18 @@ export function ShiftDetailsModal({
             )}
           </div>
           <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              size="default"
+              onClick={() => {
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
+                window.open(`${baseUrl}/shifts/${shift.id}/pdf`, "_blank");
+              }}
+              className="flex items-center gap-1.5"
+            >
+              <Download className="size-4" />
+              Export PDF
+            </Button>
             <Button
               variant="outline"
               size="default"

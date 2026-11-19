@@ -240,6 +240,21 @@ export class PropertyService {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
+    const offStaffAssignments = await prisma.shiftAssignment.findMany({
+      where: {
+        shift: {
+          branchId,
+          deletedAt: null,
+          status: { not: 'Cancelled' },
+          careType: { contains: 'Off', mode: 'insensitive' },
+          startTime: { lte: endOfDay },
+          endTime: { gte: startOfDay },
+        },
+      },
+      select: { userId: true },
+    });
+    const offStaffIds = new Set(offStaffAssignments.map((a) => a.userId));
+
     const pageResult = await paginate(
       slice,
       (args) =>
@@ -252,6 +267,9 @@ export class PropertyService {
             shifts: {
               where: {
                 deletedAt: null,
+                status: { not: 'Cancelled' },
+                careType: { notIn: ['Off / Rest Day', 'Off'] },
+                NOT: [{ careType: { contains: 'Off', mode: 'insensitive' } }],
                 startTime: { lte: endOfDay },
                 endTime: { gte: startOfDay },
               },
@@ -293,7 +311,7 @@ export class PropertyService {
     return {
       ...pageResult,
       data: pageResult.data.map((w) => {
-        const mapped = mapWingToPropertyWithDetails(w);
+        const mapped = mapWingToPropertyWithDetails(w, offStaffIds);
         return isArchivedQuery ? { ...mapped, status: 'Archived' } : mapped;
       }),
     };

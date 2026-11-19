@@ -2,10 +2,15 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@repo/db";
 import { CreateLeaveRequestDTO, UpdateLeaveRequestStatusDTO } from "@repo/schema";
 import { ShiftRequestsService } from "../shift-requests.service";
+import { AuditService } from "../../audit/audit.service";
+import { toJsonValue } from "../../common/utils/json.util";
 
 @Injectable()
 export class LeaveRequestService {
-  constructor(private readonly shiftRequestsService: ShiftRequestsService) { }
+  constructor(
+    private readonly shiftRequestsService: ShiftRequestsService,
+    private readonly auditService: AuditService,
+  ) { }
 
   async getAll(tenantId: string) {
     const [leaveRequests, shiftLeaveRequests] = await Promise.all([
@@ -64,7 +69,7 @@ export class LeaveRequestService {
   }
 
   async create(tenantId: string, userId: string, dto: CreateLeaveRequestDTO) {
-    return prisma.leaveRequest.create({
+    const created = await prisma.leaveRequest.create({
       data: {
         tenantId,
         staffId: dto.staffId,
@@ -85,6 +90,20 @@ export class LeaveRequestService {
         },
       },
     });
+
+    void this.auditService.emit({
+      categoryType: 'STAFF_ACTIVITY',
+      actionType: 'LEAVE_REQUESTED',
+      entityType: 'LeaveRequest',
+      entityId: created.id,
+      entityLabel: `Leave Request (${dto.type})`,
+      tenantId,
+      userId,
+      description: `Leave request submitted: ${dto.type}`,
+      newValue: toJsonValue(created) as Record<string, unknown>,
+    });
+
+    return created;
   }
 
   async updateStatus(
@@ -95,10 +114,13 @@ export class LeaveRequestService {
   ) {
     const existing = await prisma.leaveRequest.findFirst({
       where: { id, tenantId },
+      include: {
+        staff: { select: { id: true, fullName: true } },
+      },
     });
 
     if (existing) {
-      return prisma.leaveRequest.update({
+      const updated = await prisma.leaveRequest.update({
         where: { id },
         data: {
           status: dto.status,
@@ -106,6 +128,26 @@ export class LeaveRequestService {
           updatedById: userId,
         },
       });
+
+      void this.auditService.emit({
+        categoryType: 'STAFF_ACTIVITY',
+        actionType:
+          dto.status === 'Approved'
+            ? 'LEAVE_APPROVED'
+            : dto.status === 'Declined'
+              ? 'LEAVE_REJECTED'
+              : 'LEAVE_UPDATED',
+        entityType: 'LeaveRequest',
+        entityId: id,
+        entityLabel: `Leave Request for ${existing.staff?.fullName || 'Staff'} (${existing.type})`,
+        tenantId,
+        userId,
+        description: `Leave request ${dto.status.toLowerCase()} for ${existing.staff?.fullName || 'Staff'} (${existing.type})`,
+        oldValue: { status: existing.status },
+        newValue: { status: dto.status, adminNotes: dto.adminNotes },
+      });
+
+      return updated;
     }
 
     const shiftRequest = await prisma.shiftRequest.findFirst({

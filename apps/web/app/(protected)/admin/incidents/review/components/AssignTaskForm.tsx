@@ -91,6 +91,7 @@ export function AssignTaskForm({
             <Input
               type="text"
               value={title}
+              maxLength={250}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter the Task"
               className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body px-3 pr-16"
@@ -106,17 +107,22 @@ export function AssignTaskForm({
           <Label required>
             Task Description
           </Label>
-          <div className="relative">
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the task in details..."
-              rows={3}
-              className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20 pr-16"
-            />
-            <span className="absolute bottom-2.5 right-3 text-md text-slate-400">
-              {description.length}/250
-            </span>
+          <div>
+            <div className="[&_[data-slot=textarea-error]]:hidden">
+              <Textarea
+                value={description}
+                maxLength={250}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe the task in details..."
+                rows={3}
+                className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20"
+              />
+            </div>
+            <div className="flex justify-end pr-1 pt-2">
+              <span className="text-md text-slate-400">
+                {description.length}/250
+              </span>
+            </div>
           </div>
         </div>
 

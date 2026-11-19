@@ -18,6 +18,15 @@ import {
 } from "../../../../../lib/queries/facility";
 import { ADMISSION_DROPDOWNS } from "../../../../../lib/constants/admissionDropdowns";
 
+const PRIMARY_NEED_OPTIONS = [
+  { value: "Learning Disability", label: "Learning Disability" },
+  { value: "Autism", label: "Autism Spectrum" },
+  { value: "Mental Health", label: "Mental Health" },
+  { value: "Physical Support", label: "Physical Support" },
+  { value: "Sensory Support", label: "Sensory Support" },
+  { value: "Memory & Cognition", label: "Memory & Cognition" },
+];
+
 interface FilterSectionProps {
   search?: string;
   setSearch?: (val: string) => void;
@@ -193,14 +202,14 @@ export function FilterSection({
               </SelectContent>
             </Select>
 
-            {/* Primary Need / Funding Filter */}
+            {/* Primary Need Filter */}
             <Select value={normalizedCareType} onValueChange={setSelectedCareType}>
-              <SelectTrigger className="w-36 sm:w-40 h-10 bg-white border-slate-200 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
+              <SelectTrigger className="w-40 sm:w-44 h-10 bg-white border-slate-200 rounded-xl text-md font-medium text-slate-700 cursor-pointer">
                 <SelectValue placeholder="All Needs" />
               </SelectTrigger>
               <SelectContent className="w-auto min-w-[var(--radix-select-trigger-width)]">
                 <SelectItem value="All">All Needs</SelectItem>
-                {ADMISSION_DROPDOWNS.fundingTypes.map((opt) => (
+                {PRIMARY_NEED_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </SelectItem>

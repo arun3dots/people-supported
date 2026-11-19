@@ -2,29 +2,12 @@
 
 import React from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  Badge,
-  Avatar,
-  AvatarFallback,
-  Button,
-  Card,
-  Text,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  DialogFooter, Badge, Avatar, AvatarFallback, Button, Card, Text,
 } from "@repo/ui/components/ui";
 import {
-  Clock,
-  UserCheck,
-  UserX,
-  MapPin,
-  Users,
-  CheckCircle2,
-  Calendar,
-  FileText,
-  XCircle,
+  Clock, UserCheck, UserX, MapPin, Users, CheckCircle2,
+  Calendar, Download, FileText, XCircle,
 } from "lucide-react";
 import { Shift } from "../../../../../../lib/types/shifts";
 import { formatUkDate, formatUkTime } from "../../../../../../lib/utils/uk-date-time";
@@ -72,7 +55,7 @@ export function PastShiftDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent size="3xl" className="p-0 overflow-hidden">
+      <DialogContent size="4xl" className="p-0 overflow-hidden">
         {/* Header */}
         <DialogHeader className="p-5 sm:p-6 pb-4 border-b border-slate-100 bg-slate-50/60">
           <div className="flex items-start justify-between gap-3">
@@ -167,7 +150,8 @@ export function PastShiftDetailsModal({
             ) : (
               <div className="space-y-2.5">
                 {shift.assignments.map((assignment) => {
-                  const staffName = assignment.user?.fullName || "Assigned Carer";
+                  const staffName =
+                    assignment.user?.fullName || "Assigned Supported Worker";
                   const staffEmail = assignment.user?.email || "";
                   const log = shift.staffLogs?.find((l) => l.userId === assignment.userId);
                   const isClockedIn = Boolean(log?.actualStartTime);
@@ -324,7 +308,19 @@ export function PastShiftDetailsModal({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+        <DialogFooter className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
+              window.open(`${baseUrl}/shifts/${shift.id}/pdf`, "_blank");
+            }}
+            className="rounded-xl px-4 font-semibold flex items-center gap-1.5"
+          >
+            <Download className="size-4" />
+            Export PDF
+          </Button>
           <Button
             type="button"
             variant="outline"

@@ -13,8 +13,7 @@ import {
   Pagination,
   Text,
 } from "@repo/ui/components/ui";
-import { Download, FileText, CheckCircle2, History, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { FileText, CheckCircle2, History, ExternalLink } from "lucide-react";
 
 export interface GeneratedReportLog {
   id: string;
@@ -22,17 +21,27 @@ export interface GeneratedReportLog {
   category: string;
   generatedDate: string;
   generatedBy: string;
+  userEmail?: string;
+  userRole?: string;
   format: "CSV" | string;
   status: "Ready" | "Generating" | "Failed" | string;
   fileSize: string;
   filename?: string;
   content?: string;
   detailHref?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  device?: string;
+  os?: string;
+  browser?: string;
+  macAddress?: string;
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface RecentReportsTableProps {
   logs: GeneratedReportLog[];
-  onDownload: (log: GeneratedReportLog) => void;
+  onDownload?: (log: GeneratedReportLog) => void;
+  onViewDetails?: (log: GeneratedReportLog) => void;
   currentPage?: number;
   pageSize?: number;
   totalRecords?: number;
@@ -42,7 +51,8 @@ export interface RecentReportsTableProps {
 
 export function RecentReportsTable({
   logs,
-  onDownload,
+  onDownload: _onDownload,
+  onViewDetails,
   currentPage,
   pageSize,
   totalRecords,
@@ -159,23 +169,14 @@ export function RecentReportsTable({
                 {/* Action */}
                 <TableCell className="py-3.5 text-right">
                   <div className="inline-flex items-center gap-2">
-                    {log.detailHref && (
-                      <Link
-                        href={log.detailHref}
-                        className="inline-flex items-center gap-1.5 rounded-xl h-8 px-3 text-sm font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                      >
-                        <ExternalLink className="size-3.5" />
-                        View Details
-                      </Link>
-                    )}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onDownload(log)}
-                      className="rounded-xl gap-1.5 shadow-none border-slate-200 bg-white hover:bg-slate-50 cursor-pointer"
+                      onClick={() => onViewDetails?.(log)}
+                      className="rounded-xl gap-1.5 shadow-none border-slate-200 bg-white hover:bg-slate-50 text-slate-700 cursor-pointer"
                     >
-                      <Download className="size-3.5" />
-                      Download
+                      <ExternalLink className="size-3.5" />
+                      View Details
                     </Button>
                   </div>
                 </TableCell>

@@ -114,7 +114,11 @@ export function StaffViewGrid({ currentDate, staffList = [], shifts = [], onAddS
                     </div>
                     <div>
                       <div className="text-md font-bold text-slate-900">{staff.fullName}</div>
-                      <div className="text-md text-slate-500">{staff.role?.name}</div>
+                      <div className="text-md text-slate-500">
+                        {staff.role?.name === "Carer"
+                          ? "Supported Worker"
+                          : staff.role?.name}
+                      </div>
                     </div>
                   </div>
                 </td>

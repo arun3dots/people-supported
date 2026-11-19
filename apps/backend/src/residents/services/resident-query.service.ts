@@ -210,8 +210,35 @@ export class ResidentQueryService {
       whereCondition.status = { not: 'Draft' };
     }
 
-    if (query.careType && query.careType !== 'All Care type') {
-      whereCondition.fundingType = query.careType;
+    if (
+      query.careType &&
+      query.careType !== 'All Care type' &&
+      query.careType !== 'All'
+    ) {
+      const andList =
+        (whereCondition.AND as Array<Record<string, unknown>>) || [];
+      andList.push({
+        OR: [
+          { fundingType: query.careType },
+          {
+            careProfile: {
+              primaryCareNeed: {
+                contains: query.careType,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            careProfile: {
+              primaryDiagnosis: {
+                contains: query.careType,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
+      });
+      whereCondition.AND = andList;
     }
 
     if (query.roomNumber && query.roomNumber !== 'All') {

@@ -226,6 +226,7 @@ export interface RawPropertyWing extends Wing {
 
 export function mapWingToPropertyWithDetails(
   w: RawPropertyWing,
+  offStaffIds?: Set<string>,
 ): PropertyWithDetails {
   const parsedDetails = parsePropertyDetails(w.propertyDetails);
   const rawObj =
@@ -320,10 +321,12 @@ export function mapWingToPropertyWithDetails(
     id: s.id,
     startTime: s.startTime,
     endTime: s.endTime,
-    staffNames: s.assignments.map((a) => {
-      assignedStaffSet.add(a.userId);
-      return a.user.fullName;
-    }),
+    staffNames: s.assignments
+      .filter((a) => !offStaffIds?.has(a.userId))
+      .map((a) => {
+        assignedStaffSet.add(a.userId);
+        return a.user.fullName;
+      }),
   }));
 
   const schemeDetailsObj =

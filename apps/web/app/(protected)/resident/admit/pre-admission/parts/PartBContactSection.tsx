@@ -23,6 +23,7 @@ export function PartBContactSection({
   return (
     <PartCard
       title="Next of kin"
+      required
       description="Who to call, and when. Add as many people as needed."
     >
       <CardRepeatableSection<Contact>
@@ -123,7 +124,9 @@ export function PartBContactSection({
               <TextField
                 label="Phone"
                 type="tel"
+                required
                 value={c.phone}
+                errorMessage={!c.phone?.trim() ? "Phone is required" : undefined}
                 onChange={(v) => update({ phone: v })}
               />
               <TextField
@@ -149,7 +152,7 @@ export function PartBContactSection({
                 variant="primary"
                 size="sm"
                 onClick={onSave}
-                disabled={!c.name?.trim()}
+                disabled={!c.name?.trim() || !c.phone?.trim()}
                 className="rounded-xl font-semibold text-md shadow-none"
               >
                 {isNew ? "Save" : "Save changes"}
