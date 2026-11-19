@@ -50,12 +50,28 @@ export function ManagerResponseCard({
       </div>
 
       <div className="space-y-1.5 pt-1">
-        <div className="flex items-center justify-between">
-          <Label required>
-            Management Response Notes
-          </Label>
-          <span className="text-md text-slate-400">
-            {readOnly ? "Read-only" : `${notes.length}/250`}
+        <Label required >
+          Management Response Notes
+        </Label>
+        <div className="relative">
+          <Textarea
+            value={notes}
+            maxLength={1000}
+            onChange={(e) => onChangeNotes(e.target.value.slice(0, 1000))}
+            placeholder="Write your response notes here..."
+            rows={4}
+            readOnly={readOnly}
+            disabled={readOnly}
+            className="min-h-[100px] bg-white border border-slate-200 rounded-xl text-md text-slate-900 p-3.5 focus-visible:ring-1 focus-visible:ring-emerald-800 shadow-none pr-16"
+          />
+          <span
+            className={`absolute bottom-2.5 right-3 text-md ${
+              !readOnly && notes.length >= 1000
+                ? "text-amber-600 font-medium"
+                : "text-slate-400"
+            }`}
+          >
+            {readOnly ? "Read-only" : `${notes.length}/1000`}
           </span>
         </div>
         <Textarea

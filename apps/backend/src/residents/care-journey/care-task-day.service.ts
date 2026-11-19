@@ -39,7 +39,7 @@ export class CareTaskDayService {
   constructor(
     private readonly access: ResidentAccessService,
     private readonly auditService: AuditService,
-  ) {}
+  ) { }
 
   async getBoard(
     query: CareTaskBoardQueryDTO,
@@ -68,13 +68,13 @@ export class CareTaskDayService {
     );
     const records = due.length
       ? await prisma.residentCareTaskRecord.findMany({
-          where: {
-            tenantId,
-            date: day,
-            undoneAt: null,
-            taskId: { in: due.map((task) => task.id) },
-          },
-        })
+        where: {
+          tenantId,
+          date: day,
+          undoneAt: null,
+          taskId: { in: due.map((task) => task.id) },
+        },
+      })
       : [];
     const recordByTask = new Map(
       records.map((record) => [record.taskId, record]),
@@ -129,7 +129,7 @@ export class CareTaskDayService {
         tenantId,
         isActive: true,
         shift,
-        // Tasks go live once the plan has been agreed at least once.
+        // Tasks go live once the plan has been agreed at least once (CQC safety requirement).
         carePlan: { isCurrent: true, agreedAt: { not: null } },
         AND: [
           { OR: [{ startsOn: null }, { startsOn: { lte: day } }] },

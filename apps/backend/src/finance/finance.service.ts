@@ -1,4 +1,4 @@
-﻿import {
+import {
   BadRequestException,
   ForbiddenException,
   Injectable,
@@ -141,6 +141,7 @@ export class FinanceService {
       userId,
       entityType: 'Invoice',
       entityId: created.id,
+      entityLabel: created.invoiceNumber,
       newValue: toJsonValue(created),
     });
 
@@ -195,6 +196,12 @@ export class FinanceService {
 
   async deleteInvoice(id: string, tenantId: string, userId: string) {
     const existing = await this.getInvoiceById(id, tenantId);
+
+    if (existing.status === 'Paid') {
+      throw new BadRequestException(
+        'Cannot delete a paid invoice. Financial records for settled invoices are protected by audit compliance.',
+      );
+    }
 
     await prisma.invoice.update({
       where: { id },
@@ -280,6 +287,7 @@ export class FinanceService {
       userId,
       entityType: 'PaymentHistory',
       entityId: payment.id,
+      entityLabel: payment.reference || invoice.invoiceNumber,
       newValue: toJsonValue(payment),
     });
 
@@ -354,6 +362,7 @@ export class FinanceService {
       userId,
       entityType: 'Expense',
       entityId: created.id,
+      entityLabel: created.expenseNo,
       newValue: toJsonValue(created),
     });
 

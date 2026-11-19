@@ -2,6 +2,7 @@ import { EndpointDetails } from "../types";
 
 export const GET_ORGANIZATION_PROFILE = "GET_ORGANIZATION_PROFILE";
 export const UPDATE_ORGANIZATION_PROFILE = "UPDATE_ORGANIZATION_PROFILE";
+export const UPDATE_ORGANIZATION_STATUS = "UPDATE_ORGANIZATION_STATUS";
 export const GET_ORGANIZATION_DOCUMENTS = "GET_ORGANIZATION_DOCUMENTS";
 export const UPLOAD_ORGANIZATION_DOCUMENT = "UPLOAD_ORGANIZATION_DOCUMENT";
 export const DELETE_ORGANIZATION_DOCUMENT = "DELETE_ORGANIZATION_DOCUMENT";
@@ -16,6 +17,10 @@ const organizationEndpoints: EndpointDetails = {
   },
   [UPDATE_ORGANIZATION_PROFILE]: {
     endpoint: "/api/organization",
+    requestType: "PATCH",
+  },
+  [UPDATE_ORGANIZATION_STATUS]: {
+    endpoint: "/api/organization/status",
     requestType: "PATCH",
   },
   [GET_ORGANIZATION_DOCUMENTS]: {

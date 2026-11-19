@@ -252,9 +252,11 @@ export default function TasksScreen() {
             ))}
 
             {filteredTasks.length === 0 && (
-              <View className="py-12 items-center justify-center bg-surface rounded-2xl">
-                <Text className="text-md font-semibold text-muted-foreground">
-                  No tasks found for this filter
+              <View className="py-12 px-6 items-center justify-center bg-surface rounded-2xl">
+                <Text className="text-md font-semibold text-muted-foreground text-center">
+                  {tasks.length === 0
+                    ? "No care tasks scheduled for this shift. If care plans were recently created, ensure tasks are marked active."
+                    : "No tasks found for this filter"}
                 </Text>
               </View>
             )}

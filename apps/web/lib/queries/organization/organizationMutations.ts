@@ -3,6 +3,7 @@ import { makeAPICall } from "../../api";
 import {
   GET_ORGANIZATION_PROFILE,
   UPDATE_ORGANIZATION_PROFILE,
+  UPDATE_ORGANIZATION_STATUS,
   GET_ORGANIZATION_DOCUMENTS,
   UPLOAD_ORGANIZATION_DOCUMENT,
   DELETE_ORGANIZATION_DOCUMENT,
@@ -84,6 +85,27 @@ export function useDeleteOrganizationDocumentMutation(
     },
     onSuccess: async (...args) => {
       await queryClient.invalidateQueries({ queryKey: [GET_ORGANIZATION_DOCUMENTS] });
+      onSuccess?.(...args);
+    },
+    ...restOptions,
+  });
+}
+
+export function useUpdateOrganizationStatusMutation(
+  options?: UseMutationOptions<unknown, Error, { status: string }>,
+) {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...restOptions } = options || {};
+
+  return useMutation({
+    mutationFn: async ({ status }: { status: string }) => {
+      return await makeAPICall<unknown>(
+        UPDATE_ORGANIZATION_STATUS,
+        { status },
+      );
+    },
+    onSuccess: async (...args) => {
+      await queryClient.invalidateQueries({ queryKey: [GET_ORGANIZATION_PROFILE] });
       onSuccess?.(...args);
     },
     ...restOptions,

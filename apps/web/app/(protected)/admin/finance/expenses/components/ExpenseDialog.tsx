@@ -242,7 +242,7 @@ export function ExpenseDialog({ isOpen, onOpenChange }: ExpenseDialogProps) {
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="date" required>
-                Date
+                Expense Date
               </Label>
               <Controller
                 name="date"

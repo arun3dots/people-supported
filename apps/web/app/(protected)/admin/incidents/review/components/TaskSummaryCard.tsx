@@ -92,7 +92,7 @@ export function TaskSummaryCard({
                 <button
                   type="button"
                   onClick={() => toggleTask(task.id)}
-                  className="w-full flex items-center justify-between p-3.5 text-left cursor-pointer hover:bg-slate-50/70 transition-colors"
+                  className="w-full flex items-center justify-between p-3.5 text-left cursor-pointer hover:bg-slate-50/70 transition-colors gap-3 min-w-0"
                 >
                   <Text
                     size={"md"}
@@ -102,7 +102,7 @@ export function TaskSummaryCard({
                     {task.title}
                   </Text>
 
-                  <div className="text-slate-400">
+                  <div className="text-slate-400 shrink-0">
                     {isExpanded ? (
                       <ChevronUp className="size-4" />
                     ) : (
@@ -112,7 +112,7 @@ export function TaskSummaryCard({
                 </button>
 
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100 bg-slate-50/30">
+                  <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100 bg-slate-50/30 min-w-0">
                     <Text
                       size={"md"}
                       weight={"regular"}

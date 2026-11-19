@@ -23,6 +23,7 @@ export const PROPERTY_TYPES = [
 interface StaffOption {
   id: string;
   fullName: string;
+  role?: { id?: string; name: string };
 }
 
 interface AddPropertyFormFieldsProps {
@@ -237,7 +238,7 @@ export function AddPropertyFormFields({
             <SelectItem value="none">Unassigned</SelectItem>
             {staffList.map((st) => (
               <SelectItem key={st.id} value={st.id}>
-                {st.fullName}
+                {st.fullName}{st.role?.name ? ` (${st.role.name})` : ""}
               </SelectItem>
             ))}
           </SelectContent>

@@ -142,6 +142,16 @@ export function buildAreaFilter(
           { actionType: { contains: 'HAZARD', mode: 'insensitive' } },
         ],
       };
+    case 'finance':
+      return {
+        OR: [
+          { actionType: { contains: 'EXPENSE', mode: 'insensitive' } },
+          { actionType: { contains: 'INVOICE', mode: 'insensitive' } },
+          { actionType: { contains: 'PAYMENT', mode: 'insensitive' } },
+          { categoryType: 'FINANCE' },
+          { entityType: { in: ['Expense', 'Invoice', 'PaymentHistory'] } },
+        ],
+      };
     default:
       return null;
   }

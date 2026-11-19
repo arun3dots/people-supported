@@ -98,8 +98,8 @@ export function AssignTaskPreview({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md">
-            <div>
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#EAEAEA] text-md min-w-0">
+            <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
                 Priority
               </p>
@@ -108,7 +108,7 @@ export function AssignTaskPreview({
                 <span>{priority}</span>
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-md text-text-description font-normal">
                 Assigned To
               </p>
@@ -121,12 +121,12 @@ export function AssignTaskPreview({
                     {assignedTo.slice(0, 2).toUpperCase() || "ST"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="text-md leading-tight">
-                  <span className="font-medium text-slate-800">
+                <div className="text-md leading-tight min-w-0">
+                  <span className="font-medium text-slate-800 break-words block">
                     {assignedTo}
                   </span>
                   {assignedRole && (
-                    <span className="text-md text-slate-500 block">
+                    <span className="text-md text-slate-500 block truncate">
                       ({assignedRole})
                     </span>
                   )}
