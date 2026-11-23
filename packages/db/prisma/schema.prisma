@@ -358,6 +358,7 @@ model Bed {
 
 model User {
   id                     String                  @id @default(uuid())
+  cognitoSub             String?                 @unique
   tenantId               String?
   roleId                 String
   email                  String                  @unique
@@ -2791,4 +2792,22 @@ model LeaveRequest {
 
   @@index([tenantId, staffId])
   @@index([status])
+}
+
+// ----------------------------------------------------------------------------
+// AWS KMS Envelope Encryption Key Ring (E-02 / C-03)
+// ----------------------------------------------------------------------------
+model EncryptionKey {
+  id           String    @id @default(uuid())
+  version      Int
+  purpose      String    // "DB_FIELD" | "AUDIT_HMAC"
+  kmsKeyId     String    // KMS Key ARN or Alias used to wrap this DEK
+  encryptedDek String    // Base64-encoded KMS CiphertextBlob (never plaintext)
+  status       String    @default("Active") // Active | DecryptOnly | Retired
+  createdAt    DateTime  @default(now())
+  rotatedAt    DateTime?
+
+  @@unique([purpose, version])
+  @@index([purpose, status])
+  // The SQL migration also enforces one Active key per purpose.
 }

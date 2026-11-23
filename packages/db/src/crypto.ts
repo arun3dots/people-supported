@@ -1,8 +1,18 @@
 import * as crypto from "crypto";
+import {
+  getActiveFieldEncryptionKey,
+  getFieldDecryptionKey,
+} from "./kms-keyring";
 
 const ALGORITHM = "aes-256-gcm";
 const PUBLIC_DEMO_HEX_KEY =
   "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+const TEST_EPHEMERAL_HEX_KEY =
+  "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210";
+const KMS_ENVELOPE_REGEX =
+  /^kms:v1:([1-9]\d*):([0-9a-f]{32}):([0-9a-f]{32}):([0-9a-f]*)$/i;
+const LEGACY_ENVELOPE_REGEX = /^([0-9a-f]{32}):([0-9a-f]{32}):([0-9a-f]*)$/i;
+const KMS_ENVELOPE_PREFIX = "kms:v1:";
 
 /**
  * Validates that ENCRYPTION_KEY is explicitly configured as a 64-character hex
@@ -38,15 +48,14 @@ function resolveKeyHex(): string {
   ) {
     // Allow isolated unit tests that don't test missing-key failure to run
     // with an ephemeral test key unless STRICT_SECRET_CHECK='true' is set.
-    return "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210";
+    return TEST_EPHEMERAL_HEX_KEY;
   }
   return assertEncryptionKeyConfigured();
 }
 
 export function isEncrypted(text: string | null | undefined): boolean {
   if (!text || typeof text !== "string") return false;
-  // Encrypted strings start with a 32-character hex IV followed by a colon
-  return /^[0-9a-fA-F]{32}:/.test(text);
+  return KMS_ENVELOPE_REGEX.test(text) || LEGACY_ENVELOPE_REGEX.test(text);
 }
 
 export function encrypt(
@@ -55,16 +64,18 @@ export function encrypt(
   if (!text) return text;
   if (isEncrypted(text)) return text;
 
-  const keyHex = resolveKeyHex();
   const iv = crypto.randomBytes(16);
-  const key = Buffer.from(keyHex, "hex");
+  const kmsKey = getActiveFieldEncryptionKey();
+  const key = kmsKey ? kmsKey.key : Buffer.from(resolveKeyHex(), "hex");
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
 
   let encrypted = cipher.update(text, "utf8", "hex");
   encrypted += cipher.final("hex");
   const authTag = cipher.getAuthTag().toString("hex");
 
-  // Format: iv:authTag:encryptedText
+  if (kmsKey) {
+    return `kms:v1:${kmsKey.version}:${iv.toString("hex")}:${authTag}:${encrypted}`;
+  }
   return `${iv.toString("hex")}:${authTag}:${encrypted}`;
 }
 
@@ -72,12 +83,14 @@ function tryDecryptGcm(
   ivHex: string,
   authTagHex: string,
   encryptedText: string,
-  keyHex: string,
+  keyInput: string | Buffer,
 ): string | null {
+  if (encryptedText.length % 2 !== 0) return null;
   try {
     const iv = Buffer.from(ivHex, "hex");
     const authTag = Buffer.from(authTagHex, "hex");
-    const key = Buffer.from(keyHex, "hex");
+    const key =
+      typeof keyInput === "string" ? Buffer.from(keyInput, "hex") : keyInput;
     const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
     decipher.setAuthTag(authTag);
 
@@ -89,40 +102,63 @@ function tryDecryptGcm(
   }
 }
 
-function decryptOnce(text: string): string {
-  if (!text.includes(":")) return text;
-
-  const parts = text.split(":");
-
-  // 1. Try Primary AES-256-GCM (3 parts: iv:authTag:ciphertext)
-  if (parts.length === 3) {
-    const keyHex = resolveKeyHex();
-    const primaryDecrypted = tryDecryptGcm(
-      parts[0]!,
-      parts[1]!,
-      parts[2]!,
-      keyHex,
-    );
-    if (primaryDecrypted !== null) {
-      return primaryDecrypted;
-    }
-
-    // 2. Try Key-Rotation fallback (ENCRYPTION_KEY_PREVIOUS) if configured
-    const prevKey = process.env.ENCRYPTION_KEY_PREVIOUS?.trim();
-    if (prevKey && /^[0-9a-fA-F]{64}$/.test(prevKey)) {
-      const rotatedDecrypted = tryDecryptGcm(
-        parts[0]!,
-        parts[1]!,
-        parts[2]!,
-        prevKey,
-      );
-      if (rotatedDecrypted !== null) {
-        return rotatedDecrypted;
-      }
+function resolveLegacyDecryptKeys(): string[] {
+  const candidates: string[] = [];
+  for (const raw of [
+    process.env.ENCRYPTION_KEY_LEGACY,
+    process.env.ENCRYPTION_KEY,
+    process.env.ENCRYPTION_KEY_PREVIOUS,
+  ]) {
+    const trimmed = raw?.trim();
+    if (trimmed && /^[0-9a-fA-F]{64}$/.test(trimmed)) {
+      candidates.push(trimmed);
     }
   }
+  if (
+    candidates.length === 0 &&
+    process.env.NODE_ENV === "test" &&
+    process.env.STRICT_SECRET_CHECK !== "true"
+  ) {
+    candidates.push(TEST_EPHEMERAL_HEX_KEY);
+  }
+  return candidates;
+}
 
-  return text;
+function decryptOnce(text: string): string {
+  const kmsMatch = text.match(KMS_ENVELOPE_REGEX);
+  if (kmsMatch) {
+    const version = Number(kmsMatch[1]);
+    const key = getFieldDecryptionKey(version);
+    if (!key) {
+      throw new Error(`[E-02] KMS field key v${version} is unavailable.`);
+    }
+    const decrypted = tryDecryptGcm(
+      kmsMatch[2]!,
+      kmsMatch[3]!,
+      kmsMatch[4]!,
+      key,
+    );
+    if (decrypted === null) {
+      throw new Error(
+        `[E-02] KMS field authentication failed for key v${version}.`,
+      );
+    }
+    return decrypted;
+  }
+  const legacyMatch = text.match(LEGACY_ENVELOPE_REGEX);
+  if (!legacyMatch) {
+    throw new Error("[E-02] Malformed KMS field envelope.");
+  }
+  for (const keyHex of resolveLegacyDecryptKeys()) {
+    const decrypted = tryDecryptGcm(
+      legacyMatch[1]!,
+      legacyMatch[2]!,
+      legacyMatch[3]!,
+      keyHex,
+    );
+    if (decrypted !== null) return decrypted;
+  }
+  throw new Error("[E-02] Legacy field authentication failed.");
 }
 
 export function decrypt(
@@ -136,7 +172,7 @@ export function decrypt(
   while (
     current &&
     typeof current === "string" &&
-    isEncrypted(current) &&
+    (isEncrypted(current) || current.startsWith(KMS_ENVELOPE_PREFIX)) &&
     attempts < 100
   ) {
     const next = decryptOnce(current);
@@ -146,4 +182,21 @@ export function decrypt(
   }
 
   return current;
+}
+
+export function reencryptWithKms(text: string): string {
+  const isKmsEnvelope = KMS_ENVELOPE_REGEX.test(text);
+  const inner = isKmsEnvelope ? decryptOnce(text) : text;
+  const plaintext = decrypt(inner);
+  if (typeof plaintext !== "string" || isEncrypted(plaintext)) {
+    throw new Error("[E-02] Could not fully unwrap field for KMS backfill.");
+  }
+  if (isKmsEnvelope && inner === plaintext) return text;
+  if (!plaintext) return plaintext;
+
+  const replacement = encrypt(plaintext);
+  if (!replacement || !KMS_ENVELOPE_REGEX.test(replacement)) {
+    throw new Error("[E-02] Backfill requires an active KMS field write key.");
+  }
+  return replacement;
 }

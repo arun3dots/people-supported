@@ -15,10 +15,14 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:system": "tsx prisma/seed-system.ts",
+    "db:backfill:kms": "tsx prisma/scripts/reencrypt-data-to-kms.ts",
+    "db:rotate:kms": "tsx prisma/scripts/rotate-kms-data-key.ts",
+    "db:test:kms": "tsx --test prisma/scripts/kms.integration.ts",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-kms": "^3.1173.0",
     "@prisma/client": "^6.4.1",
     "bcrypt": "^6.0.0"
   },

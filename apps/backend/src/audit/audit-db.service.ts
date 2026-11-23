@@ -5,7 +5,6 @@ import {
   OnModuleDestroy,
 } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { createHmac } from 'crypto';
 import { Prisma, PrismaClient } from '@repo/audit-db';
 import { AuditEvent } from './audit.types';
 import { buildAreaFilter } from './audit-filter.util';
@@ -13,21 +12,14 @@ import {
   writeDeadLetterLog,
   drainDeadLetterQueue,
 } from './audit-dead-letter.util';
+import {
+  assertAuditSigningKeyConfigured,
+  computeAuditRecordHash,
+  computeCumulativeBlockHash,
+  verifyAuditLogChain,
+} from './audit-hash.util';
 
-export function assertAuditSigningKeyConfigured(
-  rawKey: string | undefined = process.env.AUDIT_SIGNING_KEY,
-  nodeEnv: string | undefined = process.env.NODE_ENV,
-): string {
-  if (!rawKey || rawKey.trim().length < 16) {
-    if (nodeEnv === 'test' && process.env.STRICT_SECRET_CHECK !== 'true') {
-      return 'test-only-ephemeral-audit-signing-key-32b';
-    }
-    throw new Error(
-      'FATAL [C-03]: AUDIT_SIGNING_KEY environment variable is required (min 16 characters) for tamper-evident audit logging.',
-    );
-  }
-  return rawKey.trim();
-}
+export { assertAuditSigningKeyConfigured };
 
 @Injectable()
 export class AuditDbService implements OnModuleInit, OnModuleDestroy {
@@ -195,30 +187,10 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
       },
     });
 
-    const brokenLinks: Array<{ id: string; expected: string; actual: string }> =
-      [];
-    let prevHash: string | null = null;
-
-    for (const log of logs) {
-      const recomputedHash = this.computeHash(
-        log as unknown as Partial<AuditEvent>,
-        prevHash,
-      );
-      if (recomputedHash !== log.recordHash) {
-        brokenLinks.push({
-          id: log.id,
-          expected: recomputedHash,
-          actual: log.recordHash,
-        });
-      }
-      prevHash = log.recordHash;
-    }
-
-    return {
-      valid: brokenLinks.length === 0,
-      checkedCount: logs.length,
-      brokenLinks,
-    };
+    return verifyAuditLogChain(
+      logs as Array<{ id: string; recordHash: string } & Partial<AuditEvent>>,
+      this.signingKey,
+    );
   }
 
   async findAll(params: {
@@ -302,22 +274,11 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
     event: Partial<AuditEvent>,
     previousHash: string | null,
   ): string {
-    const payload = JSON.stringify({
-      tenantId: event.tenantId,
-      userId: event.userId,
-      categoryType: event.categoryType,
-      actionType: event.actionType,
-      entityType: event.entityType,
-      entityId: event.entityId,
-      oldValue: event.oldValue,
-      newValue: event.newValue,
-      metadata: event.metadata,
-      latitude: event.latitude ?? undefined,
-      longitude: event.longitude ?? undefined,
-      locationName: event.locationName ?? undefined,
+    return computeAuditRecordHash(
+      event,
       previousHash,
-    });
-    return createHmac('sha256', this.signingKey).update(payload).digest('hex');
+      this.signingKey,
+    );
   }
 
   private async getLastHash(tenantId?: string | null): Promise<string | null> {
@@ -351,9 +312,10 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
 
     if (logs.length === 0) return;
 
-    const cumulativeHash = createHmac('sha256', this.signingKey)
-      .update(logs.map((l: { recordHash: string }) => l.recordHash).join(''))
-      .digest('hex');
+    const cumulativeHash = computeCumulativeBlockHash(
+      logs.map((l: { recordHash: string }) => l.recordHash),
+      this.signingKey,
+    );
 
     const lastBlock = await this.auditClient.auditIntegrityBlock.findFirst({
       where: tenantId ? { tenantId } : {},

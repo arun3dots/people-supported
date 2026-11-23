@@ -2,11 +2,13 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  OnModuleInit,
 } from '@nestjs/common';
 import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  GetBucketEncryptionCommand,
   HeadObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
@@ -15,25 +17,74 @@ import { randomUUID } from 'crypto';
 import { Readable, PassThrough } from 'stream';
 import {
   getAwsClientConfig,
+  getKmsS3KeyId,
   getS3BucketName,
 } from '../common/utils/aws-config.util';
 
 @Injectable()
-export class S3StorageService {
+export class S3StorageService implements OnModuleInit {
   private readonly logger = new Logger(S3StorageService.name);
   private s3Client: S3Client;
   private bucketName: string;
+  private readonly kmsS3KeyId: string;
 
   constructor() {
     this.bucketName = getS3BucketName();
+    this.kmsS3KeyId = getKmsS3KeyId();
+
+    if (process.env.NODE_ENV === 'production' && !this.kmsS3KeyId) {
+      throw new Error(
+        'FATAL [E-02]: AWS_KMS_S3_KEY_ID environment variable is required in production for S3 SSE-KMS encryption.',
+      );
+    }
 
     if (!this.bucketName) {
       this.logger.warn(
         'S3_BUCKET_NAME is not set. S3 file upload/download operations will fail until configured.',
       );
     }
+    if (!this.kmsS3KeyId) {
+      this.logger.warn(
+        'AWS_KMS_S3_KEY_ID is not set. S3 uploads will fall back to bucket default encryption until configured.',
+      );
+    }
 
     this.s3Client = new S3Client(getAwsClientConfig());
+  }
+
+  async onModuleInit(): Promise<void> {
+    if (!this.kmsS3KeyId) return;
+    if (!this.bucketName) {
+      throw new Error('FATAL [E-02]: S3_BUCKET_NAME is required for SSE-KMS.');
+    }
+    if (!/^arn:[^:]+:kms:[^:]+:\d{12}:key\/.+$/.test(this.kmsS3KeyId)) {
+      throw new Error('FATAL [E-02]: AWS_KMS_S3_KEY_ID must be a KMS key ARN.');
+    }
+
+    const { ServerSideEncryptionConfiguration } = await this.s3Client.send(
+      new GetBucketEncryptionCommand({ Bucket: this.bucketName }),
+    );
+    const encryption =
+      ServerSideEncryptionConfiguration?.Rules?.[0]
+        ?.ApplyServerSideEncryptionByDefault;
+    if (
+      encryption?.SSEAlgorithm !== 'aws:kms' ||
+      encryption.KMSMasterKeyID !== this.kmsS3KeyId
+    ) {
+      throw new Error(
+        'FATAL [E-02]: S3 bucket defaults must use SSE-KMS with AWS_KMS_S3_KEY_ID for presigned uploads.',
+      );
+    }
+  }
+
+  private getEncryptionParams():
+    | { ServerSideEncryption: 'aws:kms'; SSEKMSKeyId: string }
+    | Record<string, never> {
+    if (!this.kmsS3KeyId) return {};
+    return {
+      ServerSideEncryption: 'aws:kms',
+      SSEKMSKeyId: this.kmsS3KeyId,
+    };
   }
 
   /**
@@ -75,6 +126,7 @@ export class S3StorageService {
           Key: key,
           Body: file,
           ContentType: contentType,
+          ...this.getEncryptionParams(),
         }),
       );
       return {
@@ -116,6 +168,7 @@ export class S3StorageService {
           Key: s3FileName,
           Body: file,
           ContentType: contentType,
+          ...this.getEncryptionParams(),
         }),
       );
 
@@ -231,6 +284,7 @@ export class S3StorageService {
       Key: s3FileName,
       ContentType: contentType,
     });
+    // Bucket defaults apply SSE-KMS without adding signed headers to the upload contract.
     const url = await getSignedUrl(this.s3Client, command, { expiresIn: 900 });
 
     return {
