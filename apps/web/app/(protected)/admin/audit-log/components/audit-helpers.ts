@@ -14,6 +14,7 @@ import {
   isTechnicalKey,
   formatFieldKey,
   formatBodyMapFindings,
+  formatRoleAuditValue,
 } from "./audit-formatters.util";
 
 export {
@@ -25,30 +26,6 @@ export {
   type AuditAreaId,
   getLogArea,
 };
-
-function formatRoleAuditValue(val: unknown): string[] {
-  if (!val || typeof val !== "object") return ["—"];
-  const role = val as Record<string, unknown>;
-  const lines: string[] = [];
-
-  if (typeof role.name === "string" && role.name.trim()) {
-    lines.push(`Role: ${role.name.trim()}`);
-  }
-
-  if (role.permissions && typeof role.permissions === "object") {
-    const permissions = role.permissions as Record<string, unknown>;
-    const summaries = Object.entries(permissions).flatMap(([module, actions]) => {
-      if (!actions || typeof actions !== "object" || Array.isArray(actions)) return [];
-      const enabled = Object.entries(actions as Record<string, unknown>)
-        .filter(([, enabled]) => enabled === true || enabled === 1)
-        .map(([action]) => action);
-      return enabled.length > 0 ? [`${module}: ${enabled.join(", ")}`] : [];
-    });
-    if (summaries.length > 0) lines.push(...summaries);
-  }
-
-  return lines.length > 0 ? lines : ["—"];
-}
 
 export function getLogChange(log: AuditLogItem): string {
   const meta = (log.metadata || {}) as Record<string, unknown>;
@@ -125,6 +102,25 @@ export function getLogChange(log: AuditLogItem): string {
   }
   if (area === "Handover") {
     return `Handover notes updated: ${log.entityLabel || "Shift Handover"}`;
+  }
+  if (area === "Rota") {
+    if (act.includes("ASSIGN")) return `Staff assigned to shift: ${log.entityLabel || meta.shiftWindow || "Shift"}`;
+    if (
+      act.includes("LEAVE") ||
+      log.entityType === "LeaveRequest" ||
+      (log.entityType === "ShiftRequest" && (log.entityLabel as string)?.includes("Leave"))
+    ) {
+      const status = (meta.status as string) || (log.newValue as Record<string, unknown>)?.status;
+      return `Leave request ${status ? String(status).toLowerCase() : "updated"}: ${log.entityLabel || meta.staffName || "Staff"}`;
+    }
+    if (log.entityType === "ShiftRequest") {
+      const status = (meta.status as string) || (log.newValue as Record<string, unknown>)?.status;
+      return `Shift request ${status ? String(status).toLowerCase() : "updated"}: ${log.entityLabel || meta.staffName || "Staff"}`;
+    }
+    if (act.includes("CREATE")) return `Shift created: ${log.entityLabel || meta.careType || "Shift"}`;
+    if (act.includes("UPDATE") || act.includes("MODIFIED")) return `Shift modified: ${log.entityLabel || meta.careType || "Shift"}`;
+    if (act.includes("DELETE")) return `Shift cancelled/deleted: ${log.entityLabel || "Shift"}`;
+    return `Rota updated: ${log.entityLabel || "Shift"}`;
   }
 
   if (act === "LOGIN") return "User logged in";

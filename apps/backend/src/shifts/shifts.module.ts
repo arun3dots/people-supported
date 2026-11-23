@@ -11,8 +11,22 @@ import { LeaveRequestsController } from './leave-requests.controller';
 
 @Module({
   imports: [AuditModule, NotificationsModule],
-  controllers: [ShiftsController, ShiftRequestsController, LeaveRequestsController],
-  providers: [ShiftsService, ShiftRequestsService, ShiftNotificationService, LeaveRequestService],
-  exports: [ShiftsService, ShiftRequestsService, ShiftNotificationService, LeaveRequestService],
+  controllers: [
+    ShiftsController,
+    ShiftRequestsController,
+    LeaveRequestsController,
+  ],
+  providers: [
+    ShiftsService,
+    ShiftRequestsService,
+    ShiftNotificationService,
+    LeaveRequestService,
+  ],
+  exports: [
+    ShiftsService,
+    ShiftRequestsService,
+    ShiftNotificationService,
+    LeaveRequestService,
+  ],
 })
 export class ShiftsModule {}

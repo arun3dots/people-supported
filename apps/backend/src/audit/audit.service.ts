@@ -161,6 +161,7 @@ export class AuditService {
     actionType: string;
     entityType: string;
     entityId?: string;
+    entityLabel?: string;
     oldValue?: any;
     newValue?: any;
     ipAddress?: string;
@@ -180,6 +181,7 @@ export class AuditService {
       userId: data.userId,
       entityType: data.entityType,
       entityId: data.entityId,
+      entityLabel: data.entityLabel,
       oldValue: data.oldValue,
       newValue: data.newValue,
       ipAddress: data.ipAddress,

@@ -108,6 +108,9 @@ export function HoursSummaryTable({
                   Planned / Wk
                 </TableHead>
                 <TableHead className="text-right font-medium text-slate-500">
+                  Delivered / Wk
+                </TableHead>
+                <TableHead className="text-right font-medium text-slate-500">
                   Variance
                 </TableHead>
                 <TableHead className="text-right font-medium text-slate-500">
@@ -148,6 +151,9 @@ export function HoursSummaryTable({
                   <TableCell className="text-right font-medium text-slate-900">
                     {row.planned} hrs
                   </TableCell>
+                  <TableCell className="text-right font-medium text-slate-700">
+                    {row.delivered > 0 ? `${row.delivered} hrs` : "0 hrs"}
+                  </TableCell>
                   <TableCell
                     className={`text-right font-medium ${
                       row.variance < 0 ? "text-rose-600" : "text-slate-700"
@@ -185,6 +191,9 @@ export function HoursSummaryTable({
                 </TableCell>
                 <TableCell className="text-right font-semibold text-slate-900">
                   {metrics.planned} hrs
+                </TableCell>
+                <TableCell className="text-right font-semibold text-slate-900">
+                  {metrics.delivered} hrs
                 </TableCell>
                 <TableCell
                   className={`text-right font-semibold ${

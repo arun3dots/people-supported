@@ -9,8 +9,12 @@ import {
   UseGuards,
   Query,
   Req,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ShiftsService } from './shifts.service';
+import { AuditService } from '../audit/audit.service';
+import { exportShiftDetailPdf } from './services/shift-pdf.util';
 import {
   CreateShiftDto,
   CreateShiftTypeDto,
@@ -40,7 +44,10 @@ import {
 @UseGuards(JwtAuthGuard)
 @Controller('shifts')
 export class ShiftsController {
-  constructor(private readonly shiftsService: ShiftsService) { }
+  constructor(
+    private readonly shiftsService: ShiftsService,
+    private readonly auditService: AuditService,
+  ) {}
 
   // --- Shift Types ---
 
@@ -259,7 +266,8 @@ export class ShiftsController {
 
   @Get('staff-allocation')
   @ApiOperation({
-    summary: 'Get staff allocation overview, scheduled workload, and property coverage',
+    summary:
+      'Get staff allocation overview, scheduled workload, and property coverage',
   })
   async getStaffAllocation(
     @Req() req: AuthenticatedRequest,
@@ -298,5 +306,22 @@ export class ShiftsController {
   ) {
     const tenantId = req.user?.tenantId || '';
     return this.shiftsService.getShiftLogs(id, tenantId);
+  }
+
+  @Get(':id/pdf')
+  @ApiOperation({ summary: 'Export shift details report as PDF' })
+  async exportShiftPdf(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+    @Res() res: Response,
+  ) {
+    await exportShiftDetailPdf(
+      id,
+      req.user?.tenantId || '',
+      req.user?.userId || '',
+      req.user?.fullName || req.user?.email || 'Authorized User',
+      this.auditService,
+      res,
+    );
   }
 }

@@ -51,14 +51,23 @@ export class ShiftCrudService {
     startTime: Date,
     endTime: Date,
     excludedShiftId?: string,
+    careType?: string | null,
   ): Promise<void> {
     if (userIds.length === 0) return;
+    if (
+      careType === 'Off / Rest Day' ||
+      careType?.toLowerCase().includes('off')
+    ) {
+      return;
+    }
 
     const overlap = await prisma.shift.findFirst({
       where: {
         tenantId,
         deletedAt: null,
         status: { not: 'Cancelled' },
+        careType: { notIn: ['Off / Rest Day', 'Off'] },
+        NOT: [{ careType: { contains: 'Off', mode: 'insensitive' } }],
         ...(excludedShiftId ? { id: { not: excludedShiftId } } : {}),
         startTime: { lt: endTime },
         endTime: { gt: startTime },
@@ -89,7 +98,9 @@ export class ShiftCrudService {
         ),
       );
       const residentIds = Array.from(
-        new Set(overlap.assignments.flatMap((a) => a.assignedResidentIds ?? [])),
+        new Set(
+          overlap.assignments.flatMap((a) => a.assignedResidentIds ?? []),
+        ),
       );
       const residents =
         residentIds.length > 0
@@ -115,7 +126,8 @@ export class ShiftCrudService {
           timeZone: 'Europe/London',
         });
 
-      const who = staffNames.length > 0 ? staffNames.join(', ') : 'A staff member';
+      const who =
+        staffNames.length > 0 ? staffNames.join(', ') : 'A staff member';
       const when = `${fmtTime(overlap.startTime)} - ${fmtTime(overlap.endTime)}, ${fmtDate(overlap.startTime)}`;
       const careLabel = overlap.careType || 'shift';
       const supporting =
@@ -448,11 +460,37 @@ export class ShiftCrudService {
     for (const currentStart of datesToCreate) {
       const currentEnd = new Date(currentStart.getTime() + durationMs);
 
+      const isWorkingShift =
+        careTypeVal !== 'Off / Rest Day' &&
+        !careTypeVal?.toLowerCase().includes('off');
+      if (isWorkingShift && rawUserIds.length > 0) {
+        const { start: dayStart, end: dayEnd } =
+          getUkDayBoundaries(currentStart);
+        await prisma.shift.updateMany({
+          where: {
+            tenantId,
+            deletedAt: null,
+            status: { not: 'Cancelled' },
+            careType: { contains: 'Off', mode: 'insensitive' },
+            startTime: { gte: dayStart, lte: dayEnd },
+            assignments: {
+              some: { userId: { in: rawUserIds }, deletedAt: null },
+            },
+          },
+          data: {
+            status: 'Cancelled',
+            notes: 'Superseded by scheduled working shift',
+          },
+        });
+      }
+
       await this.ensureNoOverlappingShift(
         tenantId,
         rawUserIds,
         currentStart,
         currentEnd,
+        undefined,
+        careTypeVal,
       );
       await assertShiftCompliance({
         tenantId,
@@ -569,8 +607,10 @@ export class ShiftCrudService {
         actionType: 'CREATE',
         entityType: 'Shift',
         entityId: shift.id,
+        entityLabel: `${shift.careType || 'Shift'} (${shift.shiftWindow || 'Scheduled'})`,
         tenantId,
         userId,
+        description: `Shift created and assigned: ${shift.careType || 'Shift'} (${shift.shiftWindow || 'Scheduled'})`,
         newValue: toJsonValue(shift) as Record<string, unknown>,
       });
 
@@ -706,8 +746,29 @@ export class ShiftCrudService {
           }
         });
 
+        const enrichShift = <
+          T extends {
+            assignments?: Array<{
+              userId: string;
+              assignedResidentIds?: string[] | null;
+            }>;
+          },
+        >(
+          s: T,
+        ) => ({
+          ...s,
+          userIds: s.assignments?.map((a) => a.userId).filter(Boolean) || [],
+          residentIds: Array.from(
+            new Set(
+              s.assignments
+                ?.flatMap((a) => a.assignedResidentIds || [])
+                .filter(Boolean) || [],
+            ),
+          ),
+        });
+
         return shifts.map((shift) => {
-          if (shift.wingId || shift.wing) return shift;
+          if (shift.wingId || shift.wing) return enrichShift(shift);
           const assignedIds =
             shift.assignments?.flatMap((a) => a.assignedResidentIds || []) ||
             [];
@@ -716,20 +777,30 @@ export class ShiftCrudService {
               | { id: string; branch?: { id: string; name: string } }
               | undefined;
             if (foundWing) {
-              return {
+              return enrichShift({
                 ...shift,
                 wingId: foundWing.id,
                 wing: foundWing,
                 branch: shift.branch || foundWing.branch,
-              };
+              });
             }
           }
-          return shift;
+          return enrichShift(shift);
         });
       }
     }
 
-    return shifts;
+    return shifts.map((s) => ({
+      ...s,
+      userIds: s.assignments?.map((a) => a.userId).filter(Boolean) || [],
+      residentIds: Array.from(
+        new Set(
+          s.assignments
+            ?.flatMap((a) => a.assignedResidentIds || [])
+            .filter(Boolean) || [],
+        ),
+      ),
+    }));
   }
 
   async update(
@@ -892,6 +963,7 @@ export class ShiftCrudService {
       nextStart,
       nextEnd,
       id,
+      (data.careType || existing.careType) as string | undefined,
     );
     await assertShiftCompliance({
       tenantId,
@@ -1085,8 +1157,10 @@ export class ShiftCrudService {
       actionType: 'UPDATE',
       entityType: 'Shift',
       entityId: id,
+      entityLabel: `${shift.careType || 'Shift'} (${shift.shiftWindow || 'Scheduled'})`,
       tenantId,
       userId,
+      description: `Shift modified: ${shift.careType || 'Shift'} (${shift.shiftWindow || 'Scheduled'})`,
       oldValue: toJsonValue(existing) as Record<string, unknown>,
       newValue: toJsonValue(shift) as Record<string, unknown>,
     });
@@ -1148,7 +1222,7 @@ export class ShiftCrudService {
   }
 
   async delete(id: string, tenantId: string, userId: string): Promise<void> {
-    await prisma.shift.update({
+    const shift = await prisma.shift.update({
       where: { id, tenantId },
       data: {
         deletedAt: new Date(),
@@ -1158,11 +1232,13 @@ export class ShiftCrudService {
 
     void this.auditService.emit({
       categoryType: 'STAFF_ACTIVITY',
-      actionType: 'DELETE',
+      actionType: 'SHIFT_DELETED',
       entityType: 'Shift',
       entityId: id,
+      entityLabel: `${shift.careType || 'Shift'}`,
       tenantId,
       userId,
+      description: `Shift deleted: ${shift.careType || 'Shift'}`,
     });
   }
 
@@ -1227,6 +1303,7 @@ export class ShiftCrudService {
       shift.startTime,
       shift.endTime,
       data.shiftId,
+      shift.careType,
     );
 
     const assignment = await prisma.shiftAssignment.create({
@@ -1248,13 +1325,16 @@ export class ShiftCrudService {
       },
     });
 
+    const staffName = assignment.user?.fullName || 'Staff';
     void this.auditService.emit({
       categoryType: 'STAFF_ACTIVITY',
       actionType: 'CREATE',
       entityType: 'ShiftAssignment',
       entityId: assignment.id,
+      entityLabel: `${staffName} assigned to shift`,
       tenantId,
       userId,
+      description: `Staff ${staffName} assigned to shift`,
       newValue: toJsonValue(assignment) as Record<string, unknown>,
     });
 
@@ -1292,11 +1372,13 @@ export class ShiftCrudService {
 
     void this.auditService.emit({
       categoryType: 'STAFF_ACTIVITY',
-      actionType: 'DELETE',
+      actionType: 'SHIFT_ASSIGNMENT_DELETED',
       entityType: 'ShiftAssignment',
       entityId: id,
+      entityLabel: 'Staff unassigned from shift',
       tenantId,
       userId,
+      description: 'Staff unassigned from shift',
     });
   }
 }

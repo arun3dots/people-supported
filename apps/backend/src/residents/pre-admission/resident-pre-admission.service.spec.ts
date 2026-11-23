@@ -240,14 +240,7 @@ describe('ResidentPreAdmissionService', () => {
       admissionReason: 'Fall at home',
     };
 
-    for (const field of [
-      'maritalStatus',
-      'nhsNumber',
-      'previousAddress',
-      'language',
-      'typeOfCare',
-      'careLevel',
-    ]) {
+    for (const field of ['maritalStatus', 'previousAddress', 'language']) {
       const partA = { ...completePartA };
       delete partA[field];
       await expect(
@@ -311,8 +304,6 @@ describe('ResidentPreAdmissionService', () => {
     delete partA.nhsNumber;
     delete partA.previousAddress;
     delete partA.language;
-    delete partA.typeOfCare;
-    delete partA.careLevel;
     db.residentPreAdmission.findFirst.mockResolvedValue(
       row({ ...completeParts, partA }),
     );
@@ -323,8 +314,6 @@ describe('ResidentPreAdmissionService', () => {
           expect.objectContaining({ field: 'maritalStatus' }),
           expect.objectContaining({ field: 'previousAddress' }),
           expect.objectContaining({ field: 'language' }),
-          expect.objectContaining({ field: 'typeOfCare' }),
-          expect.objectContaining({ field: 'careLevel' }),
         ]),
       },
     });

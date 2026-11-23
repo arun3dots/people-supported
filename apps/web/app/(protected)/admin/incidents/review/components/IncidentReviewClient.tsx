@@ -634,6 +634,7 @@ export function IncidentReviewClient({
           <ManagerResponseCard
             notes={managerNotes}
             onChangeNotes={setManagerNotes}
+            lastSavedDate={incident?.updatedAt || incident?.createdAt}
             readOnly={isReadOnly}
           />
         </div>

@@ -1,5 +1,10 @@
 import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -22,7 +27,8 @@ export class ComplianceReviewController {
   @Get()
   @Roles('Admin', 'Manager', 'Nurse')
   @ApiOperation({
-    summary: 'Get unified list of expiring support plans, staff certifications, and medications',
+    summary:
+      'Get unified list of expiring support plans, staff certifications, and medications',
   })
   @ApiResponse({ status: 200, description: 'Compliance review feed retrieved' })
   async getComplianceReviews(
@@ -33,4 +39,3 @@ export class ComplianceReviewController {
     return this.service.getComplianceReviews(req.user.tenantId!, query);
   }
 }
-

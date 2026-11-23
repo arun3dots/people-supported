@@ -81,12 +81,10 @@ export function ShiftDialog({
     [rawApiResidents],
   );
 
-  const staffOptions = staff
-    .filter((s: any) => s.id !== user?.userId && s.userId !== user?.userId)
-    .map((s: any) => ({
-      value: s.id,
-      label: s.fullName || s.email || "Staff",
-    }));
+  const staffOptions = staff.map((s: any) => ({
+    value: s.id,
+    label: s.fullName || s.email || "Staff",
+  }));
 
   const createShiftMutation = useCreateShiftMutation();
   const updateShiftMutation = useUpdateShiftMutation();
@@ -145,6 +143,9 @@ export function ShiftDialog({
 
   const overlappingShiftAssignments = existingShifts.filter((existing: Shift) => {
     if (existing.id === shift?.id) return false;
+    if (existing.status === "Cancelled") return false;
+    const existingCareType = (existing.careType || existing.type?.name || "").toLowerCase();
+    if (existingCareType.includes("off") || existingCareType.includes("rest")) return false;
     const existingStart = new Date(existing.startTime).getTime();
     const existingEnd = new Date(existing.endTime).getTime();
     const proposedStart = selectedStartTime ? new Date(selectedStartTime).getTime() : NaN;
@@ -202,7 +203,9 @@ export function ShiftDialog({
       const uniqueAssignedIds: string[] = Array.from(new Set<string>(rawAssignedIds));
 
       const initialUserIds: string[] = shift?.assignments?.length
-        ? shift.assignments.map((a: any) => a.userId)
+        ? shift.assignments
+            .map((a: any) => a.userId || a.user?.id)
+            .filter((id: any): id is string => Boolean(id))
         : shift?.userIds?.length
           ? shift.userIds
           : shift?.entityType === "staff" && shift?.entityId
@@ -451,6 +454,9 @@ export function ShiftDialog({
     const selectedStaffIds: string[] = values.userIds || [];
     const conflictingShift = existingShifts.find((existing: Shift) => {
       if (existing.id === shift?.id) return false;
+      if (existing.status === "Cancelled") return false;
+      const careType = (existing.careType || existing.type?.name || "").toLowerCase();
+      if (careType.includes("off") || careType.includes("rest")) return false;
       const existingStaffIds = existing.assignments?.map(
         (assignment: { userId: string }) => assignment.userId,
       ) || existing.userIds || [];
@@ -667,6 +673,10 @@ export function ShiftDialog({
               watch={watch}
               setValue={setValue}
               getValues={getValues}
+              isSleepIn={Boolean(
+                shiftTypes.find((t: any) => t.id === watch("typeId"))?.name?.toLowerCase().includes("sleep") ||
+                shift?.type?.name?.toLowerCase().includes("sleep")
+              )}
             />
           )}
 

@@ -3,6 +3,7 @@
 import React from "react";
 import { format } from "date-fns";
 import { Eye, CreditCard, Trash2, Calendar, FileText } from "lucide-react";
+import { cn } from "@repo/ui/lib/utils";
 import {
   Button,
   Badge,
@@ -135,21 +136,35 @@ export function InvoiceCard({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onDeleteInvoice(invoice)}
-                className="size-8 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
-                aria-label="Delete Invoice"
-              >
-                <Trash2 className="size-4" />
-              </Button>
+              <span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={invoice.status === "Paid"}
+                  onClick={() => onDeleteInvoice(invoice)}
+                  className={cn(
+                    "size-8 rounded-lg",
+                    invoice.status === "Paid"
+                      ? "text-slate-300 opacity-50 cursor-not-allowed"
+                      : "text-slate-400 hover:text-red-600 hover:bg-red-50 cursor-pointer",
+                  )}
+                  aria-label={
+                    invoice.status === "Paid"
+                      ? "Paid invoice cannot be deleted"
+                      : "Delete Invoice"
+                  }
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </span>
             </TooltipTrigger>
             <TooltipContent
               sideOffset={6}
               className="bg-white border border-slate-200/80 text-slate-800 rounded-lg px-2.5 py-1 text-md font-medium shadow-lg"
             >
-              Delete Invoice
+              {invoice.status === "Paid"
+                ? "Paid invoices cannot be deleted (audit compliance)"
+                : "Delete Invoice"}
             </TooltipContent>
           </Tooltip>
         </div>

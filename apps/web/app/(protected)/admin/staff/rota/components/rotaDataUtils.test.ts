@@ -45,6 +45,7 @@ describe("rotaDataUtils & hoursSummaryUtils (no fallback data)", () => {
       delivered: 0,
       gap: 0,
       overtime: 0,
+      offDays: 0,
       gapPercent: "0.0",
       coveragePercent: "0.0",
       overtimePercent: "0.0",
@@ -52,8 +53,8 @@ describe("rotaDataUtils & hoursSummaryUtils (no fallback data)", () => {
 
     const daily = buildDailyHoursPoints(SAMPLE_DAYS, [], 0);
     expect(daily).toEqual([
-      { day: "Mon", req: 0, plan: 0, del: 0 },
-      { day: "Tue", req: 0, plan: 0, del: 0 },
+      { day: "Mon", req: 0, plan: 0, del: 0, offCount: 0 },
+      { day: "Tue", req: 0, plan: 0, del: 0, offCount: 0 },
     ]);
 
     const rows = buildHoursBreakdownRows({
@@ -166,5 +167,52 @@ describe("rotaDataUtils & hoursSummaryUtils (no fallback data)", () => {
       sleepInHours: 0,
       wakingNightHours: 0,
     });
+  });
+
+  it("consistently sums scheme-level and resident-level commissioned hours without dropping either", () => {
+    const schemeA = {
+      id: "sch-a",
+      name: "Scheme A",
+      commissionedHours: 40,
+      properties: [{ id: "prop-a", name: "Prop A" }],
+    } as unknown as SchemeItem;
+
+    const schemeB = {
+      id: "sch-b",
+      name: "Scheme B",
+      commissionedHours: null,
+      properties: [{ id: "prop-b", name: "Prop B" }],
+    } as unknown as SchemeItem;
+
+    const residentInB = {
+      id: "res-b",
+      name: "Resident B",
+      status: "Active",
+      bed: { room: { wing: { id: "prop-b", schemeId: "sch-b" } } },
+      supportedLivingDetails: { supportHoursPerWeek: 25 },
+    } as unknown as Resident;
+
+    const unassignedResident = {
+      id: "res-u",
+      name: "Resident Unassigned",
+      status: "Active",
+      bed: null,
+      supportedLivingDetails: { supportHoursPerWeek: 15 },
+    } as unknown as Resident;
+
+    const totalCommissioned = getCommissionedHours(
+      [schemeA, schemeB],
+      [residentInB, unassignedResident],
+    );
+    expect(totalCommissioned).toBe(80); // 40 (scheme A) + 25 (resident in B) + 15 (unassigned resident)
+
+    const scopedCommissioned = getScopedCommissionedHours(
+      [schemeA, schemeB],
+      [],
+      [residentInB, unassignedResident],
+      "all",
+      "all",
+    );
+    expect(scopedCommissioned).toBe(80);
   });
 });

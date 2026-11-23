@@ -14,7 +14,9 @@ export async function syncPropertyRoomsTx(
 ): Promise<void> {
   const existingRooms = await tx.room.findMany({
     where: { wingId, deletedAt: null },
-    include: { beds: { where: { deletedAt: null }, orderBy: { createdAt: 'asc' } } },
+    include: {
+      beds: { where: { deletedAt: null }, orderBy: { createdAt: 'asc' } },
+    },
   });
 
   const existingById = new Map(existingRooms.map((r) => [r.id, r]));
@@ -44,7 +46,7 @@ export async function syncPropertyRoomsTx(
   }
 
   for (let idx = 0; idx < draftRooms.length; idx++) {
-    const draft = draftRooms[idx]!;
+    const draft = draftRooms[idx];
     const existing = draft.id ? existingById.get(draft.id) : undefined;
     const rNum = draft.roomNumber.trim();
     const targetBeds = Math.max(1, draft.bedsCount ?? 1);
@@ -90,7 +92,9 @@ export async function syncPropertyRoomsTx(
         }
       } else if (targetBeds < currentBeds.length) {
         const excess = currentBeds.slice(targetBeds);
-        if (excess.some((b) => b.status === 'Occupied' || Boolean(b.residentId))) {
+        if (
+          excess.some((b) => b.status === 'Occupied' || Boolean(b.residentId))
+        ) {
           throw new ConflictException(
             `Cannot reduce beds in room "${rNum}" below occupied count`,
           );

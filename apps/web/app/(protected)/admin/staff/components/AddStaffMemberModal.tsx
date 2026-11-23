@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Button,
   Dialog,
@@ -49,9 +49,15 @@ export function AddStaffMemberModal({
   const [email, setEmail] = useState("");
   const [contractedHours, setContractedHours] = useState("37.5");
 
-  const filteredProperties = schemeId
-    ? properties.filter((p) => p.schemeId === schemeId)
-    : properties;
+  const filteredProperties = React.useMemo(() => {
+    if (!schemeId || schemeId === "all") {
+      return properties;
+    }
+    if (schemeId === "standalone") {
+      return properties.filter((p) => !p.schemeId);
+    }
+    return properties.filter((p) => p.schemeId === schemeId);
+  }, [properties, schemeId]);
 
   const handleSubmit = async () => {
     if (!fullName.trim() || !email.trim() || !roleId) {
@@ -63,6 +69,13 @@ export function AddStaffMemberModal({
       return;
     }
 
+    const resolvedSchemeId =
+      schemeId && schemeId !== "all" && schemeId !== "standalone"
+        ? schemeId
+        : undefined;
+    const resolvedPropertyId =
+      propertyId && propertyId !== "none" ? propertyId : undefined;
+
     try {
       await createMutation.mutateAsync({
         fullName: fullName.trim(),
@@ -73,9 +86,9 @@ export function AddStaffMemberModal({
         startDate: new Date().toISOString(),
         contractType,
         contractedHoursPerWeek: Number(contractedHours) || 37.5,
-        schemeId: schemeId || undefined,
-        propertyId: propertyId || undefined,
-        unitIds: propertyId ? [propertyId] : [],
+        schemeId: resolvedSchemeId,
+        propertyId: resolvedPropertyId,
+        unitIds: resolvedPropertyId ? [resolvedPropertyId] : [],
       });
 
       toast({
@@ -161,12 +174,26 @@ export function AddStaffMemberModal({
           {/* Scheme & Property */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
             <div className="space-y-1">
-              <Label className="text-md font-bold text-slate-800">Scheme *</Label>
-              <Select value={schemeId} onValueChange={(val) => { setSchemeId(val); setPropertyId(""); }}>
+              <Label className="text-md font-bold text-slate-800">Scheme</Label>
+              <Select
+                value={schemeId}
+                onValueChange={(val) => {
+                  setSchemeId(val);
+                  if (val === "standalone") {
+                    const currentProp = properties.find((p) => p.id === propertyId);
+                    if (currentProp?.schemeId) setPropertyId("");
+                  } else if (val && val !== "all") {
+                    const currentProp = properties.find((p) => p.id === propertyId);
+                    if (currentProp && currentProp.schemeId !== val) setPropertyId("");
+                  }
+                }}
+              >
                 <SelectTrigger className="h-10 rounded-xl border-slate-200">
-                  <SelectValue placeholder="Select scheme" />
+                  <SelectValue placeholder="All Schemes / Standalone" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">All Schemes / Standalone</SelectItem>
+                  <SelectItem value="standalone">Independent / Standalone (No Scheme)</SelectItem>
                   {schemes.map((s) => (
                     <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
                   ))}
@@ -175,14 +202,30 @@ export function AddStaffMemberModal({
             </div>
 
             <div className="space-y-1">
-              <Label className="text-md font-bold text-slate-800">Property *</Label>
-              <Select value={propertyId} onValueChange={setPropertyId} disabled={!schemeId}>
+              <Label className="text-md font-bold text-slate-800">Property</Label>
+              <Select
+                value={propertyId}
+                onValueChange={(selectedId) => {
+                  setPropertyId(selectedId);
+                  const prop = properties.find((p) => p.id === selectedId);
+                  if (prop) {
+                    if (prop.schemeId) {
+                      setSchemeId(prop.schemeId);
+                    } else if (schemeId !== "all") {
+                      setSchemeId("standalone");
+                    }
+                  }
+                }}
+              >
                 <SelectTrigger className="h-10 rounded-xl border-slate-200">
-                  <SelectValue placeholder={schemeId ? "Select property" : "Select scheme first"} />
+                  <SelectValue placeholder="Select property" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="none">None / Unassigned</SelectItem>
                   {filteredProperties.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name}{!p.schemeId ? " (Standalone)" : ""}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

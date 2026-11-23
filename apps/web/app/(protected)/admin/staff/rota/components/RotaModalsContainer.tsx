@@ -59,12 +59,25 @@ export function RotaModalsContainer({
       ? `${slotToAdd.day.dayName} ${slotToAdd.day.dayNumber}`
       : "";
 
+  const editingStaffIds = editingShift
+    ? editingShift.userIds?.length
+      ? editingShift.userIds
+      : editingShift.assignments?.map((a) => a.userId || a.user?.id).filter((id): id is string => Boolean(id)) || []
+    : [];
+
+  const matchedEditingStaff = editingShift
+    ? staffList.find((s) => editingStaffIds.includes(s.id))
+    : null;
+
   const modifyStaffName = editingShift
-    ? staffList.find((s) => editingShift.userIds?.includes(s.id))?.fullName || "Staff"
+    ? matchedEditingStaff?.fullName ||
+      editingShift.assignments?.[0]?.user?.fullName ||
+      "Staff"
     : slotToAdd?.staff?.fullName || "Staff";
 
   const modifyStaffRole = editingShift
-    ? staffList.find((s) => editingShift.userIds?.includes(s.id))?.role?.name
+    ? matchedEditingStaff?.role?.name ||
+      slotToAdd?.staff?.role?.name
     : slotToAdd?.staff?.role?.name;
 
   const reassignStaffData = reassignStaff

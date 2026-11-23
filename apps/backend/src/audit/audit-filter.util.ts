@@ -97,6 +97,12 @@ export function buildAreaFilter(
         OR: [
           { actionType: { contains: 'SHIFT', mode: 'insensitive' } },
           { actionType: { contains: 'ROTA', mode: 'insensitive' } },
+          { actionType: { contains: 'LEAVE', mode: 'insensitive' } },
+          {
+            entityType: {
+              in: ['Shift', 'ShiftAssignment', 'ShiftRequest', 'LeaveRequest'],
+            },
+          },
         ],
       };
     case 'staff':
@@ -134,6 +140,16 @@ export function buildAreaFilter(
         OR: [
           { actionType: { contains: 'RISK', mode: 'insensitive' } },
           { actionType: { contains: 'HAZARD', mode: 'insensitive' } },
+        ],
+      };
+    case 'finance':
+      return {
+        OR: [
+          { actionType: { contains: 'EXPENSE', mode: 'insensitive' } },
+          { actionType: { contains: 'INVOICE', mode: 'insensitive' } },
+          { actionType: { contains: 'PAYMENT', mode: 'insensitive' } },
+          { categoryType: 'FINANCE' },
+          { entityType: { in: ['Expense', 'Invoice', 'PaymentHistory'] } },
         ],
       };
     default:

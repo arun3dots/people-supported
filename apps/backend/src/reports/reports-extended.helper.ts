@@ -84,7 +84,11 @@ export async function exportMedicationsCsv(
   const rounds = await prisma.medicationRound.findMany({
     where: {
       deletedAt: null,
-      resident: { tenantId, deletedAt: null, ...(branchId ? { branchId } : {}) },
+      resident: {
+        tenantId,
+        deletedAt: null,
+        ...(branchId ? { branchId } : {}),
+      },
     },
     include: {
       resident: { select: { fullName: true } },
@@ -210,8 +214,10 @@ export async function exportShiftsCsv(
     s.careType || 'Standard Shift',
     s.wing?.name || 'Facility Wide',
     s.status,
-    s.assignments.map((a) => a.user?.fullName).filter(Boolean).join('; ') ||
-      'Unassigned',
+    s.assignments
+      .map((a) => a.user?.fullName)
+      .filter(Boolean)
+      .join('; ') || 'Unassigned',
     s.notes || '',
   ]);
 

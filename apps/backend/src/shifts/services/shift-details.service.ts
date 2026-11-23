@@ -7,6 +7,7 @@ import {
   formatShiftTimeRemaining,
   hasContinuousFollowingShiftForUser,
 } from './shift-continuity.util';
+import { loadShiftCareTasks } from './shift-care-tasks.util';
 
 @Injectable()
 export class ShiftDetailsService {
@@ -44,6 +45,12 @@ export class ShiftDetailsService {
     if (!shift) {
       throw new NotFoundException('Shift not found');
     }
+
+    const requestingUser = await prisma.user.findFirst({
+      where: { id: userId, tenantId },
+      select: { role: { select: { name: true } } },
+    });
+    const userRole = requestingUser?.role?.name;
 
     const now = new Date();
     const timings = resolveShiftTimings(shift.startTime, shift.endTime);
@@ -131,6 +138,16 @@ export class ShiftDetailsService {
         scheduledTimeStr: t.targetTime || 'Scheduled',
         timingStatus: t.status === 'Completed' ? 'Completed' : 'Due Today',
       }));
+
+      const careTasks = await loadShiftCareTasks(
+        tenantId,
+        residentIdsList,
+        timings,
+        userRole,
+        shift.type?.name,
+      );
+
+      mappedTasks = [...mappedTasks, ...careTasks];
     }
 
     const incidentCount = await prisma.incident.count({

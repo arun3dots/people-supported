@@ -7,28 +7,35 @@ import {
   CREATE_MEDICATION_ROUND_BULK,
   ADMINISTER_MEDICATION_ADHOC,
 } from "@repo/endpoints";
-import { residentKeys } from "./keys";
+import {
+  CreateMedicationRoundSchema,
+  CreateMedicationRoundBulkSchema,
+  AdministerAdHocMedicationSchema,
+  type CreateMedicationRoundDTO,
+} from "@repo/schema";
+import type { z } from "zod";
+import { refreshMedicationQueries } from "./refreshMedicationQueries";
 import { toast } from "@repo/ui/components/ui";
 
 export function useCreateMedicationRoundMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ residentId, data }: { residentId: string; data: any }) =>
-      makeAPICall(CREATE_MEDICATION_ROUND, data as any, {}, { id: residentId }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+    mutationFn: ({
+      residentId,
+      data,
+    }: {
+      residentId: string;
+      data: z.input<typeof CreateMedicationRoundSchema>;
+    }) => makeAPICall(CREATE_MEDICATION_ROUND, data, {}, { id: residentId }),
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Medication round created successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to create medication round",
@@ -42,26 +49,22 @@ export function useCreateMedicationRoundBulkMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ residentId, data }: { residentId: string; data: any }) =>
-      makeAPICall(
-        CREATE_MEDICATION_ROUND_BULK,
-        data as any,
-        {},
-        { id: residentId },
-      ),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+    mutationFn: ({
+      residentId,
+      data,
+    }: {
+      residentId: string;
+      data: z.input<typeof CreateMedicationRoundBulkSchema>;
+    }) =>
+      makeAPICall(CREATE_MEDICATION_ROUND_BULK, data, {}, { id: residentId }),
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Medication schedule created successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to create medication schedule",
@@ -82,22 +85,16 @@ export function useUpdateMedicationRoundMutation() {
     }: {
       roundId: string;
       residentId: string;
-      data: any;
-    }) =>
-      makeAPICall(UPDATE_MEDICATION_ROUND, data as any, {}, { id: roundId }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+      data: Partial<CreateMedicationRoundDTO>;
+    }) => makeAPICall(UPDATE_MEDICATION_ROUND, data, {}, { id: roundId }),
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Medication round updated successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to update medication round",
@@ -120,19 +117,14 @@ export function useDeleteMedicationRoundMutation() {
       residentId: string;
       reason: string;
     }) => makeAPICall(DELETE_MEDICATION_ROUND, { reason }, {}, { id: roundId }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Medication round deleted successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to delete medication round",
@@ -146,26 +138,34 @@ export function useAdministerAdHocMedicationMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ residentId, data }: { residentId: string; data: any }) =>
-      makeAPICall(
+    mutationFn: ({
+      residentId,
+      data,
+    }: {
+      residentId: string;
+      data: unknown;
+    }) => {
+      if (!data || typeof data !== "object" || Array.isArray(data))
+        throw new Error("Medication details are required.");
+      const payload = AdministerAdHocMedicationSchema.parse({
+        ...data,
+        residentId,
+      });
+      return makeAPICall(
         ADMINISTER_MEDICATION_ADHOC,
-        data as any,
+        payload,
         {},
         { id: residentId },
-      ),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ...residentKeys.detail(variables.residentId),
-          "medication-rounds",
-        ],
-      });
+      );
+    },
+    onSuccess: async (_, variables) => {
+      await refreshMedicationQueries(queryClient, variables.residentId);
       toast({
         title: "Success",
         description: "Ad-hoc medication recorded successfully",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
         description: error.message || "Failed to record ad-hoc medication",

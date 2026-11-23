@@ -27,11 +27,25 @@ function errorMessage(error: unknown, fallback: string): string {
 function useRefreshPreAdmission() {
   const queryClient = useQueryClient();
   return (record: PreAdmissionRecordDTO) => {
-    queryClient.setQueryData(preAdmissionKeys.detail(record.residentId), record);
+    queryClient.setQueryData(
+      preAdmissionKeys.detail(record.residentId),
+      record,
+    );
+    queryClient.setQueryData(
+      [
+        ...residentKeys.detail(record.residentId),
+        "medication-rounds",
+        "onboarding",
+      ],
+      record.partC?.medicines ?? [],
+    );
     queryClient.invalidateQueries({
       queryKey: preAdmissionKeys.versions(record.residentId),
     });
     queryClient.invalidateQueries({ queryKey: residentKeys.lists() });
+    queryClient.invalidateQueries({
+      queryKey: residentKeys.detail(record.residentId),
+    });
   };
 }
 

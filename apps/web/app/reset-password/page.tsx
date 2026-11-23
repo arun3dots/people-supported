@@ -49,6 +49,15 @@ function ResetPasswordForm() {
     }
   }, [token, setValue]);
 
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitted, router]);
+
   const onSubmit = async (data: ResetPasswordWithTokenDTO) => {
     if (!token) {
       toast({

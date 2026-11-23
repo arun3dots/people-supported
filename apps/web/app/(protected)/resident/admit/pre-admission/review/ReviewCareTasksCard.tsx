@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, FileText } from "lucide-react";
+import { Clock, FileText, Smartphone } from "lucide-react";
 import {
   Button,
   Table,
@@ -41,12 +41,14 @@ export function ReviewCareTasksCard({
     <div className="bg-white rounded-2xl border border-slate-200/80 p-5 space-y-4 font-sans">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <Text as="h3" size="md" weight="bold" className="text-slate-900">
-            Care plans &amp; scheduled carer tasks
-          </Text>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Text as="h3" size="md" weight="bold" className="text-slate-900">
+              Carer&apos;s Activities &amp; Daily Support Schedule
+            </Text>
+          </div>
           <p className="text-md text-slate-600 mt-0.5">
-            {plans.length} care plan{plans.length === 1 ? "" : "s"} · {tasks.length}{" "}
-            scheduled task{tasks.length === 1 ? "" : "s"}
+            {plans.length} support plan{plans.length === 1 ? "" : "s"} · {tasks.length}{" "}
+            planned carer activit{tasks.length === 1 ? "y" : "ies"}
           </p>
         </div>
         {onEditAssessment && (
@@ -56,7 +58,7 @@ export function ReviewCareTasksCard({
             onClick={onEditAssessment}
             className="rounded-xl text-md font-semibold shadow-none cursor-pointer"
           >
-            Edit care plans &amp; tasks
+            Edit support plans &amp; activities
           </Button>
         )}
       </div>
@@ -80,27 +82,27 @@ export function ReviewCareTasksCard({
 
       {tasks.length === 0 ? (
         <p className="text-md text-slate-500">
-          No scheduled carer tasks recorded yet. Open a care plan in Step E to create tasks.
+          No carer activities scheduled yet. Activities created in the assessment (Step 6) will appear here and sync directly to the Carer App upon admission.
         </p>
       ) : (
         <div className="rounded-xl border border-slate-200/80 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-36 text-md font-bold text-slate-800">
-                  Shift &amp; Time
+                <TableHead className="w-40 text-md font-bold text-slate-800">
+                  Timing &amp; Routine
                 </TableHead>
                 <TableHead className="min-w-52 text-md font-bold text-slate-800">
-                  Task
+                  Carer Activity
                 </TableHead>
                 <TableHead className="w-52 text-md font-bold text-slate-800">
-                  Care plan
+                  Support Plan Area
                 </TableHead>
                 <TableHead className="w-32 text-md font-bold text-slate-800">
-                  Role
+                  Assigned Role
                 </TableHead>
                 <TableHead className="w-52 text-md font-bold text-slate-800">
-                  Schedule
+                  Frequency &amp; Schedule
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -115,20 +117,25 @@ export function ReviewCareTasksCard({
                         {task.time || "Flexible"}
                       </span>
                       <span className="block text-md text-slate-500">
-                        {task.shift} shift
+                        {task.shift ? `${task.shift} routine` : "Daily routine"}
                       </span>
                     </TableCell>
                     <TableCell className="py-3">
-                      <span className="font-medium text-md">{task.title}</span>
+                      <span className="font-medium text-md text-slate-900 block">{task.title}</span>
+                      {task.description && (
+                        <span className="text-md text-slate-500 block line-clamp-1 mt-0.5">
+                          {task.description}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="py-3">
-                      <span className="font-medium text-md">{task.area}</span>
+                      <span className="font-medium text-md text-slate-700">{task.area}</span>
                     </TableCell>
                     <TableCell className="py-3">
-                      <span className="font-medium text-md">{task.role}</span>
+                      <span className="font-medium text-md text-slate-700">{task.role}</span>
                     </TableCell>
                     <TableCell className="py-3">
-                      <span className="font-medium text-md block">
+                      <span className="font-medium text-md text-slate-900 block">
                         {describeTaskRecurrence(task.recurrence)}
                       </span>
                       {dateWindow && (

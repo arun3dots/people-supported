@@ -210,8 +210,35 @@ export class ResidentQueryService {
       whereCondition.status = { not: 'Draft' };
     }
 
-    if (query.careType && query.careType !== 'All Care type') {
-      whereCondition.fundingType = query.careType;
+    if (
+      query.careType &&
+      query.careType !== 'All Care type' &&
+      query.careType !== 'All'
+    ) {
+      const andList =
+        (whereCondition.AND as Array<Record<string, unknown>>) || [];
+      andList.push({
+        OR: [
+          { fundingType: query.careType },
+          {
+            careProfile: {
+              primaryCareNeed: {
+                contains: query.careType,
+                mode: 'insensitive',
+              },
+            },
+          },
+          {
+            careProfile: {
+              primaryDiagnosis: {
+                contains: query.careType,
+                mode: 'insensitive',
+              },
+            },
+          },
+        ],
+      });
+      whereCondition.AND = andList;
     }
 
     if (query.roomNumber && query.roomNumber !== 'All') {
@@ -516,8 +543,13 @@ export class ResidentQueryService {
 
     const missingBedIds: string[] = [];
     for (const r of paginatedResult.data) {
-      if (!r.bed && Array.isArray(r.preAdmissions) && r.preAdmissions.length > 0) {
-        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })?.roomAllocation;
+      if (
+        !r.bed &&
+        Array.isArray(r.preAdmissions) &&
+        r.preAdmissions.length > 0
+      ) {
+        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })
+          ?.roomAllocation;
         if (
           alloc &&
           typeof alloc === 'object' &&
@@ -551,8 +583,13 @@ export class ResidentQueryService {
     const formattedData = paginatedResult.data.map((r) => {
       const dec = this.decryptResidentFields(r) as Record<string, unknown>;
       let assignedBed = dec.bed;
-      if (!assignedBed && Array.isArray(r.preAdmissions) && r.preAdmissions.length > 0) {
-        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })?.roomAllocation;
+      if (
+        !assignedBed &&
+        Array.isArray(r.preAdmissions) &&
+        r.preAdmissions.length > 0
+      ) {
+        const alloc = (r.preAdmissions[0] as { roomAllocation?: unknown })
+          ?.roomAllocation;
         if (
           alloc &&
           typeof alloc === 'object' &&
@@ -560,7 +597,8 @@ export class ResidentQueryService {
           'bedId' in alloc &&
           typeof (alloc as { bedId: unknown }).bedId === 'string'
         ) {
-          assignedBed = resolvedBedsById.get((alloc as { bedId: string }).bedId) ?? null;
+          assignedBed =
+            resolvedBedsById.get((alloc as { bedId: string }).bedId) ?? null;
         }
       }
       const bed = assignedBed as {
@@ -576,10 +614,12 @@ export class ResidentQueryService {
       }
       dec.bed = bed;
       if (Array.isArray(dec.carePlans)) {
-        dec.carePlans = (dec.carePlans as Array<Record<string, unknown>>).map((cp) => ({
-          ...cp,
-          reviewDate: cp.nextReviewDate,
-        }));
+        dec.carePlans = (dec.carePlans as Array<Record<string, unknown>>).map(
+          (cp) => ({
+            ...cp,
+            reviewDate: cp.nextReviewDate,
+          }),
+        );
       }
       return dec;
     });

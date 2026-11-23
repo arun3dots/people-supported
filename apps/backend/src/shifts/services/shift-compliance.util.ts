@@ -81,28 +81,29 @@ export async function assertShiftCompliance(
 
   // 4. Off / Rest Day conflict check on the same UK calendar day
   const { start: dayStart, end: dayEnd } = getUkDayBoundaries(startTime);
-  const isOffDay = careType === 'Off / Rest Day';
-  const sameDayConflict = await prisma.shift.findFirst({
-    where: {
-      tenantId,
-      deletedAt: null,
-      status: { not: 'Cancelled' },
-      ...(excludedShiftId ? { id: { not: excludedShiftId } } : {}),
-      startTime: { gte: dayStart, lte: dayEnd },
-      ...(isOffDay
-        ? { careType: { not: 'Off / Rest Day' } }
-        : { careType: 'Off / Rest Day' }),
-      assignments: { some: { userId: { in: userIds }, deletedAt: null } },
-    },
-    select: { id: true, careType: true },
-  });
+  const isOffDay =
+    careType === 'Off / Rest Day' ||
+    Boolean(careType?.toLowerCase().includes('off'));
+  if (isOffDay) {
+    const workingShiftConflict = await prisma.shift.findFirst({
+      where: {
+        tenantId,
+        deletedAt: null,
+        status: { not: 'Cancelled' },
+        ...(excludedShiftId ? { id: { not: excludedShiftId } } : {}),
+        startTime: { gte: dayStart, lte: dayEnd },
+        careType: { not: 'Off / Rest Day' },
+        NOT: [{ careType: { contains: 'Off', mode: 'insensitive' } }],
+        assignments: { some: { userId: { in: userIds }, deletedAt: null } },
+      },
+      select: { id: true, careType: true },
+    });
 
-  if (sameDayConflict) {
-    throw new BadRequestException(
-      isOffDay
-        ? 'Cannot schedule an Off / Rest Day when the staff member already has a working shift on this date.'
-        : 'Staff member is marked as Off / Rest Day on this date and cannot be assigned a working shift.',
-    );
+    if (workingShiftConflict) {
+      throw new BadRequestException(
+        'Cannot schedule an Off / Rest Day when the staff member already has a working shift on this date.',
+      );
+    }
   }
 }
 
@@ -118,7 +119,8 @@ export async function checkRestPeriodCompliance(options: {
   careType?: string | null;
   excludedShiftId?: string;
 }): Promise<string | null> {
-  const { tenantId, userIds, startTime, endTime, careType, excludedShiftId } = options;
+  const { tenantId, userIds, startTime, endTime, careType, excludedShiftId } =
+    options;
   if (userIds.length === 0 || careType === 'Off / Rest Day') return null;
 
   const minRestMs = 11 * 3600 * 1000;
@@ -145,4 +147,3 @@ export async function checkRestPeriodCompliance(options: {
     ? 'Working Time Regulations alert: Less than 11 hours rest between shifts.'
     : null;
 }
-

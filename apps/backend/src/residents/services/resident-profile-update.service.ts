@@ -218,9 +218,7 @@ export class ResidentProfileUpdateService {
     const updated = await prisma.resident.update({
       where: { id },
       data: {
-        supportedLivingDetails: toJsonValue(
-          mergedDetails,
-        ) as Prisma.InputJsonValue,
+        supportedLivingDetails: toJsonValue(mergedDetails),
         updatedById: updaterId,
       },
     });

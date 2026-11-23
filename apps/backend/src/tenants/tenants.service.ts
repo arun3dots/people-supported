@@ -293,7 +293,20 @@ export class TenantsService {
           },
         });
 
-        // 5. Assign default Admin user to the default branch
+        // 5. Create initial UserProfile for the registered Admin user
+        await tx.userProfile.create({
+          data: {
+            userId: adminUser.id,
+            phoneNumber: dto.primaryContactPhone || null,
+            addressLine1: dto.addressLine1 || null,
+            addressLine2,
+            city: dto.city || null,
+            postcode: dto.postcode || null,
+            startDate: new Date(),
+          },
+        });
+
+        // 6. Assign default Admin user to the default branch
         await tx.userBranch.create({
           data: {
             userId: adminUser.id,
@@ -302,7 +315,7 @@ export class TenantsService {
           },
         });
 
-        // 6. Log to CQC Audit DB (fire-and-forget, won't block transaction)
+        // 7. Log to CQC Audit DB (fire-and-forget, won't block transaction)
         void this.auditService.emit({
           categoryType: 'SYSTEM',
           actionType: 'TENANT_CREATED',

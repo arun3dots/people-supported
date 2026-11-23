@@ -31,6 +31,14 @@ export function getLogArea(log: AuditLogItem): string {
     return "Care plan";
   }
   if (act.includes("RISK") || act.includes("HAZARD")) return "Risk";
+  if (
+    act.includes("EXPENSE") ||
+    act.includes("INVOICE") ||
+    act.includes("PAYMENT") ||
+    cat === "FINANCE"
+  ) {
+    return "Finance";
+  }
   if (act.includes("OBSERVATION")) return "Observation";
   if (act.includes("BODY_MAP")) return "Body map";
   if (act.includes("HANDOVER")) return "Handover";
@@ -44,7 +52,17 @@ export function getLogArea(log: AuditLogItem): string {
   ) {
     return "Assessment";
   }
-  if (act.includes("SHIFT") || act.includes("ROTA")) return "Rota";
+  if (
+    act.includes("SHIFT") ||
+    act.includes("ROTA") ||
+    act.includes("LEAVE") ||
+    log.entityType === "Shift" ||
+    log.entityType === "ShiftAssignment" ||
+    log.entityType === "ShiftRequest" ||
+    log.entityType === "LeaveRequest"
+  ) {
+    return "Rota";
+  }
   if (
     cat === "STAFF_ACTIVITY" ||
     act.includes("STAFF") ||

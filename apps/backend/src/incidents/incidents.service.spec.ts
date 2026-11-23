@@ -6,6 +6,7 @@ import { IncidentNotificationService } from './services/incident-notification.se
 import { IncidentMetricsService } from './services/incident-metrics.service';
 import { S3StorageService } from '../storage/s3.service';
 import { GcsService } from '../storage/gcs.service';
+import { AuditService } from '../audit/audit.service';
 
 jest.mock('@repo/db', () => ({
   prisma: {
@@ -53,6 +54,12 @@ describe('IncidentsService', () => {
         { provide: IncidentMetricsService, useValue: {} },
         { provide: S3StorageService, useValue: {} },
         { provide: GcsService, useValue: {} },
+        {
+          provide: AuditService,
+          useValue: {
+            emitSafeguarding: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     }).compile();
     service = module.get<IncidentsService>(IncidentsService);

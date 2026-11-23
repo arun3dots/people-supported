@@ -94,3 +94,27 @@ export function formatBodyMapFindings(
 
   return lines;
 }
+
+export function formatRoleAuditValue(val: unknown): string[] {
+  if (!val || typeof val !== "object") return ["—"];
+  const role = val as Record<string, unknown>;
+  const lines: string[] = [];
+
+  if (typeof role.name === "string" && role.name.trim()) {
+    lines.push(`Role: ${role.name.trim()}`);
+  }
+
+  if (role.permissions && typeof role.permissions === "object") {
+    const permissions = role.permissions as Record<string, unknown>;
+    const summaries = Object.entries(permissions).flatMap(([module, actions]) => {
+      if (!actions || typeof actions !== "object" || Array.isArray(actions)) return [];
+      const enabled = Object.entries(actions as Record<string, unknown>)
+        .filter(([, enabled]) => enabled === true || enabled === 1)
+        .map(([action]) => action);
+      return enabled.length > 0 ? [`${module}: ${enabled.join(", ")}`] : [];
+    });
+    if (summaries.length > 0) lines.push(...summaries);
+  }
+
+  return lines.length > 0 ? lines : ["—"];
+}

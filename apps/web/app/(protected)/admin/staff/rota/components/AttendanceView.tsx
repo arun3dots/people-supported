@@ -10,6 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  DatePicker,
 } from "@repo/ui/components/ui";
 import type { PropertyItem, SchemeItem } from "../../../../../../lib/types/facility";
 import type { Shift } from "../../../../../../lib/types/shifts";
@@ -18,12 +19,8 @@ import { AttendanceHeader } from "./AttendanceHeader";
 import { AttendanceTable, type AttendanceRecord } from "./AttendanceTable";
 import { AttendanceSidebar } from "./AttendanceSidebar";
 import { AdjustAttendanceModal } from "./AdjustAttendanceModal";
-import {
-  getCareBlockAppearance,
-  getShiftDateStr,
-  getShiftStaffIds,
-  resolveStaffLocation,
-} from "./rotaDataUtils";
+import { buildAttendanceRecords } from "./attendanceRecords.util";
+import { exportAttendanceTimesheetCsv } from "./attendanceExport.util";
 
 interface AttendanceViewProps {
   shifts: Shift[];
@@ -88,132 +85,10 @@ export function AttendanceView({
     [weekStart],
   );
 
-  const initialRecords = useMemo(() => {
-    const records: AttendanceRecord[] = [];
-    const weekDateStrings = new Set(weekDays.map((d) => format(d, "yyyy-MM-dd")));
-    const targetShifts = shifts.filter((s) => {
-      if (s.status === "Cancelled" || s.careType?.includes("Off")) return false;
-      const dStr = getShiftDateStr(s);
-      if (!dStr || !weekDateStrings.has(dStr)) return false;
-      if (dayFilter !== "all" && dStr !== dayFilter) return false;
-      return true;
-    });
-
-    const now = new Date();
-
-    targetShifts.forEach((shift) => {
-      const shiftDateStr = getShiftDateStr(shift);
-      const dateLabel = shiftDateStr
-        ? format(new Date(`${shiftDateStr}T00:00:00`), "dd MMM yyyy")
-        : "-";
-      const staffIds = getShiftStaffIds(shift);
-      const appearance = getCareBlockAppearance(shift.careType, 0);
-      const targetStaffList = staffIds
-        .map((id) => staff.find((m) => m.id === id))
-        .filter(Boolean) as StaffMember[];
-
-      const shiftStart = shift.startTime ? new Date(shift.startTime) : null;
-      const shiftEnd = shift.endTime ? new Date(shift.endTime) : null;
-
-      targetStaffList.forEach((member) => {
-        const loc = resolveStaffLocation(member, schemes, properties);
-        const shiftLog = shift.staffLogs?.find((l) => l.userId === member.id);
-
-        let clockInTime: string | null = null;
-        let clockOutTime: string | null = null;
-        let clockInLateMinutes: number | undefined = undefined;
-        let hoursLogged: string | null = null;
-        let status: AttendanceRecord["status"] = "Not started";
-
-        if (member.isOnLeave) {
-          status = "On leave";
-        } else if (shiftLog) {
-          const actualStart = shiftLog.actualStartTime
-            ? new Date(shiftLog.actualStartTime)
-            : null;
-          const actualEnd = shiftLog.actualEndTime
-            ? new Date(shiftLog.actualEndTime)
-            : null;
-
-          if (actualStart) {
-            clockInTime = format(actualStart, "HH:mm");
-            if (shiftStart) {
-              const lateMins = Math.round(
-                (actualStart.getTime() - shiftStart.getTime()) / 60_000,
-              );
-              if (lateMins > 5) {
-                clockInLateMinutes = lateMins;
-              }
-            }
-          }
-
-          if (actualEnd) {
-            clockOutTime = format(actualEnd, "HH:mm");
-            if (actualStart) {
-              const loggedHrs = Math.max(
-                0,
-                (actualEnd.getTime() - actualStart.getTime()) / 3_600_000,
-              );
-              hoursLogged = loggedHrs.toFixed(1);
-            }
-            if (
-              shiftEnd &&
-              (shiftEnd.getTime() - actualEnd.getTime()) / 60_000 > 5
-            ) {
-              status = "Left early";
-            } else if (clockInLateMinutes && clockInLateMinutes > 5) {
-              status = "Late";
-            } else {
-              status = "On time";
-            }
-          } else if (clockInTime) {
-            status =
-              clockInLateMinutes && clockInLateMinutes > 5
-                ? "Late"
-                : "On shift";
-          }
-        } else if (shiftStart && now > shiftStart) {
-          status = "Absent";
-        }
-
-        if (!hoursLogged && shiftLog?.actualStartTime && shift.durationHours) {
-          hoursLogged = `${shift.durationHours}`;
-        }
-
-        const dotClass = appearance.isSleepIn
-          ? "bg-amber-500"
-          : appearance.isNight
-            ? "bg-rose-600"
-            : appearance.shortLabel.includes("1:1")
-              ? "bg-primary"
-              : "bg-slate-700";
-
-        records.push({
-          id: `${shift.id}-${member.id}`,
-          shiftId: shift.id,
-          staffId: member.id,
-          staffName: member.fullName,
-          staffRole: member.role?.name || "Support Worker",
-          staffPhone: member.phoneNumber || null,
-          property: loc.propertyName || "Unassigned",
-          dateLabel,
-          shiftDateStr: shiftDateStr || undefined,
-          scheduledTime: shift.shiftWindow || "08:00 - 16:00",
-          careType: appearance.shortLabel || "Shared",
-          careTypeColor: dotClass,
-          clockInTime,
-          clockInLateMinutes,
-          clockInMethod: shiftLog ? "app" : undefined,
-          clockOutTime,
-          hoursLogged,
-          status,
-          notes: shift.notes || undefined,
-        });
-      });
-    });
-
-    return records;
-  }, [shifts, staff, schemes, properties, weekDays, dayFilter]);
+  const initialRecords = useMemo(
+    () => buildAttendanceRecords(shifts, staff, schemes, properties, weekDays, dayFilter),
+    [shifts, staff, schemes, properties, weekDays, dayFilter],
+  );
 
   const records = useMemo(() => {
     return initialRecords.map((r) => {
@@ -256,52 +131,7 @@ export function AttendanceView({
       onExport();
       return;
     }
-    const escapeCsv = (val: string | number | null | undefined): string => {
-      const str = String(val ?? "");
-      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-    };
-    const headers = [
-      "Date",
-      "Staff Member",
-      "Role",
-      "Property",
-      "Care Type",
-      "Scheduled",
-      "Clock In",
-      "Clock Out",
-      "Hours Logged",
-      "Status",
-    ];
-    const csvRows = [
-      headers.join(","),
-      ...filteredRecords.map((r) =>
-        [
-          r.dateLabel,
-          r.staffName,
-          r.staffRole,
-          r.property,
-          r.careType,
-          r.scheduledTime,
-          r.clockInTime || "",
-          r.clockOutTime || "",
-          r.hoursLogged ? `${r.hoursLogged}h` : "",
-          r.status,
-        ]
-          .map(escapeCsv)
-          .join(","),
-      ),
-    ];
-    const blob = new Blob([csvRows.join("\n")], {
-      type: "text/csv;charset=utf-8;",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `attendance-timesheet-${format(weekStart, "yyyy-MM-dd")}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    exportAttendanceTimesheetCsv(filteredRecords, weekStart);
   };
 
   return (
@@ -323,9 +153,9 @@ export function AttendanceView({
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 justify-between">
-            <div className="relative flex-1 min-w-48 [&_[data-slot=input-error]]:hidden">
+        <div className="lg:col-span-2 space-y-4 min-w-0">
+          <div className="flex flex-col xl:flex-row items-stretch xl:items-center gap-2.5 justify-between">
+            <div className="relative flex-1 min-w-[140px] [&_[data-slot=input-error]]:hidden">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 size-4 pointer-events-none z-10" />
               <Input
                 value={search}
@@ -335,9 +165,29 @@ export function AttendanceView({
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 flex-nowrap overflow-x-auto no-scrollbar">
+              <div className="w-[130px] shrink-0">
+                <DatePicker
+                  value={dayFilter !== "all" ? new Date(dayFilter) : undefined}
+                  onChange={(d) => {
+                    if (!d) {
+                      setDayFilter("all");
+                    } else {
+                      const newStart = startOfWeek(d, { weekStartsOn: 1 });
+                      setInternalWeekStart(newStart);
+                      onSelectDate?.(d);
+                      setDayFilter(format(d, "yyyy-MM-dd"));
+                    }
+                  }}
+                  formatString="dd MMM yyyy"
+                  placeholder="Select Date..."
+                  className="w-full h-10"
+                  triggerClassName="h-10 px-2.5 rounded-xl text-xs font-medium border-slate-200/80 bg-white shadow-none"
+                />
+              </div>
+
               <Select value={dayFilter} onValueChange={setDayFilter}>
-                <SelectTrigger className="w-36 h-10 bg-white rounded-xl text-sm font-medium">
+                <SelectTrigger className="w-[110px] h-10 px-2.5 bg-white border-slate-200/80 rounded-xl text-xs font-medium shrink-0">
                   <SelectValue placeholder="All Days" />
                 </SelectTrigger>
                 <SelectContent>
@@ -354,7 +204,7 @@ export function AttendanceView({
               </Select>
 
               <Select value={propertyFilter} onValueChange={setPropertyFilter}>
-                <SelectTrigger className="w-40 h-10 bg-white rounded-xl text-sm font-medium">
+                <SelectTrigger className="w-[136px] h-10 px-2.5 bg-white border-slate-200/80 rounded-xl text-xs font-medium shrink-0">
                   <SelectValue placeholder="All Properties" />
                 </SelectTrigger>
                 <SelectContent>
@@ -368,7 +218,7 @@ export function AttendanceView({
               </Select>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-36 h-10 bg-white rounded-xl text-sm font-medium">
+                <SelectTrigger className="w-[122px] h-10 px-2.5 bg-white border-slate-200/80 rounded-xl text-xs font-medium shrink-0">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
                 <SelectContent>

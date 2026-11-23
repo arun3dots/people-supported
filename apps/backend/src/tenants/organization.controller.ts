@@ -19,9 +19,11 @@ import { TenantsService } from './tenants.service';
 import { OrganizationDocumentsService } from './organization-documents.service';
 import {
   updateTenantSchema,
+  tenantStatusSchema,
   acceptDpaSchema,
   updateTenantRetentionPolicySchema,
   type UpdateTenantDTO,
+  type TenantStatus,
   type AcceptDpaDTO,
   type UpdateTenantRetentionPolicyDTO,
 } from '@repo/schema';
@@ -63,6 +65,23 @@ export class OrganizationController {
     if (!tenantId) throw new ForbiddenException('Tenant context missing');
 
     return this.tenantsService.updateOwnProfile(tenantId, updateDto, userId);
+  }
+
+  @Patch('status')
+  @Roles('Admin')
+  @ApiOperation({
+    summary: 'Update organization status (e.g. deactivate/activate)',
+  })
+  async updateStatus(
+    @Body('status', new ZodValidationPipe(tenantStatusSchema))
+    status: TenantStatus,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const tenantId = req.user.tenantId;
+    const userId = req.user.userId;
+    if (!tenantId) throw new ForbiddenException('Tenant context missing');
+
+    return this.tenantsService.setStatus(tenantId, status, userId);
   }
 
   /**

@@ -147,7 +147,12 @@ export function ReassignStaffModal({
                   {staff.fullName}
                 </Text>
                 <Text size="md" variant="muted">
-                  {[staff.roleName || "Staff", staff.email]
+                  {[
+                    staff.roleName === "Carer"
+                      ? "Supported Worker"
+                      : staff.roleName || "Staff",
+                    staff.email,
+                  ]
                     .filter(Boolean)
                     .join(" · ")}
                 </Text>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Building2 } from "lucide-react";
 import {
   Button,
@@ -18,6 +18,7 @@ import type {
 import { useGetStaffQuery } from "../../../../../../../lib/queries/staff/useGetStaffQuery";
 import { AddSchemeFormFields } from "./AddSchemeFormFields";
 import { AddSchemeAssociationsSection } from "./AddSchemeAssociationsSection";
+import { filterEligibleManagers } from "./addPropertyUtils";
 
 interface AddSchemeModalProps {
   isOpen: boolean;
@@ -40,6 +41,10 @@ export function AddSchemeModal({
 }: AddSchemeModalProps) {
   const isEdit = Boolean(initialData);
   const { data: staffList = [] } = useGetStaffQuery({ enabled: isOpen });
+  const eligibleManagers = useMemo(
+    () => filterEligibleManagers(staffList, initialData?.schemeManagerId),
+    [staffList, initialData?.schemeManagerId],
+  );
 
   const [name, setName] = useState("");
   const [referenceId, setReferenceId] = useState("");
@@ -222,7 +227,7 @@ export function AddSchemeModal({
               onHousingPartnerChange={setHousingPartner}
               schemeManagerId={schemeManagerId}
               onSchemeManagerIdChange={setSchemeManagerId}
-              staffList={staffList}
+              staffList={eligibleManagers}
               commissionedHours={commissionedHours}
               onCommissionedHoursChange={setCommissionedHours}
               targetOccupancy={targetOccupancy}

@@ -155,7 +155,6 @@ export function RotaUnifiedFilterBar({
             onPreviousWeek={weekNavigation.onPreviousWeek}
             onNextWeek={weekNavigation.onNextWeek}
             onCurrentWeek={weekNavigation.onCurrentWeek}
-            onSelectDate={weekNavigation.onSelectDate}
             showWeekRange
           />
         </div>

@@ -94,7 +94,9 @@ export function ModifyShiftBlockModal({
   const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
   const [selectedResidentIds, setSelectedResidentIds] = useState<string[]>([]);
 
-  const isSharedCare = careType === "Shared Care (Core Support)";
+  const isSharedCare =
+    careType.includes("Shared Care") ||
+    careType.toLowerCase().includes("shared");
   const isOneToOne = careType === "1:1 Dedicated Support";
   const isSleepIn = careType === "Sleep-in (Overnight)";
   const isOffDay = careType === "Off / Rest Day";
@@ -125,13 +127,17 @@ export function ModifyShiftBlockModal({
 
     setNotes(initialShift?.notes || "");
 
-    const assignedStaff =
+    const resolvedStaff =
       initialShift?.userIds && initialShift.userIds.length > 0
         ? initialShift.userIds
-        : initialStaffId
-          ? [initialStaffId]
-          : [];
-    setSelectedStaffIds(assignedStaff);
+        : initialShift?.assignments && initialShift.assignments.length > 0
+          ? initialShift.assignments
+              .map((a: { userId?: string; user?: { id: string } }) => a.userId || a.user?.id)
+              .filter((id): id is string => Boolean(id))
+          : initialStaffId
+            ? [initialStaffId]
+            : [];
+    setSelectedStaffIds(resolvedStaff);
 
     // Resolve initial Scheme & Property only when editing an existing shift
     const initPropId = initialShift?.wingId || "";
@@ -147,7 +153,15 @@ export function ModifyShiftBlockModal({
     const initialRes =
       initialShift?.residentIds && initialShift.residentIds.length > 0
         ? initialShift.residentIds
-        : [];
+        : initialShift?.assignments && initialShift.assignments.length > 0
+          ? Array.from(
+              new Set(
+                initialShift.assignments
+                  .flatMap((a: { assignedResidentIds?: string[] }) => a.assignedResidentIds || [])
+                  .filter((id): id is string => Boolean(id)),
+              ),
+            )
+          : [];
     setSelectedResidentIds(initialRes);
   }, [open, initialShift, initialStaffId, initialDateStr, properties]);
 

@@ -3,6 +3,7 @@
 import React from "react";
 import {
   Calendar,
+  Download,
   Heart,
   Plus,
   TrendingUp,
@@ -120,15 +121,15 @@ export function SupportHoursRotaHeader({
         <div className="flex flex-wrap items-center gap-2 shrink-0">
 
 
-          {/*<Button
+          <Button
             variant="secondary"
             size="sm"
             onClick={onExport}
-            className="h-9 rounded-xl px-3 bg-surface-card-grey hover:bg-slate-200/70 text-slate-700 font-medium"
+            className="h-9 rounded-xl px-3 bg-surface-card-grey hover:bg-slate-200/70 text-slate-700 font-medium flex items-center gap-1.5 cursor-pointer shadow-none"
           >
             <Download className="size-3.5" />
-            Export Report
-          </Button>*/}
+            Export Excel
+          </Button>
 
 
 
