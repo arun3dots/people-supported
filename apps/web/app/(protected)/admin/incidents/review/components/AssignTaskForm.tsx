@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Clock } from "lucide-react";
 import {
   DialogHeader,
@@ -80,7 +80,28 @@ export function AssignTaskForm({
   onCancel,
 }: AssignTaskFormProps) {
   const { data: staff = [], isLoading: isStaffLoading } = useGetStaffQuery();
-  const activeStaff = staff.filter((member) => member.isActive);
+  const activeAdminStaff = useMemo(() => {
+    return staff.filter((member) => {
+      if (!member.isActive) return false;
+      const roleName = member.role?.name?.trim().toUpperCase() || "";
+      if (
+        roleName === "CARER" ||
+        roleName === "NURSE" ||
+        roleName === "RESIDENT" ||
+        roleName.includes("CARER") ||
+        roleName.includes("NURSE")
+      ) {
+        return false;
+      }
+      return (
+        roleName === "ADMIN" ||
+        roleName === "SUPERADMIN" ||
+        roleName === "MANAGER" ||
+        roleName.includes("ADMIN") ||
+        roleName.includes("MANAGER")
+      );
+    });
+  }, [staff]);
 
   return (
     <div className="space-y-4">
@@ -152,35 +173,35 @@ export function AssignTaskForm({
             <Select
               value={assignedToId || assignedTo}
               onValueChange={(val) => {
-                const selectedStaff = activeStaff.find(
+                const selectedStaff = activeAdminStaff.find(
                   (member) => member.id === val || member.fullName === val,
                 );
                 if (selectedStaff) {
                   setAssignedToId(selectedStaff.id);
                   setAssignedTo(selectedStaff.fullName);
                   setAssignedToEmail(selectedStaff.email);
-                  setAssignedRole(selectedStaff.role?.name || "Staff");
+                  setAssignedRole(selectedStaff.role?.name || "Admin");
                   setAssignedToAvatarUrl(selectedStaff.avatarUrl || "");
                 }
               }}
             >
               <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body">
-                <SelectValue placeholder="Select staff member" />
+                <SelectValue placeholder="Select admin user" />
               </SelectTrigger>
               <SelectContent>
                 {isStaffLoading ? (
                   <SelectItem value="__loading" disabled>
-                    Loading staff...
+                    Loading admin users...
                   </SelectItem>
-                ) : activeStaff.length > 0 ? (
-                  activeStaff.map((member) => (
+                ) : activeAdminStaff.length > 0 ? (
+                  activeAdminStaff.map((member) => (
                     <SelectItem key={member.id} value={member.id}>
                       {member.fullName} ({member.role.name})
                     </SelectItem>
                   ))
                 ) : (
                   <SelectItem value="__none" disabled>
-                    No active staff available
+                    No active admin users available
                   </SelectItem>
                 )}
               </SelectContent>

@@ -95,13 +95,18 @@ export function NotificationDropdown() {
     // 1. Direct explicit actionUrl parsing
     if (actionUrl) {
       if (
-        actionUrl.includes("/facilities") ||
-        actionUrl.includes("/admin/facilities") ||
         actionUrl.includes("bed-management") ||
         notification.title?.toUpperCase().includes("VACANCY") ||
         category === "VACANCY"
       ) {
-        return "/admin/bed-management";
+        return "/admin/staff/rota";
+      }
+
+      if (
+        actionUrl.includes("/facilities") ||
+        actionUrl.includes("/admin/facilities")
+      ) {
+        return "/admin/configuration/facility/properties";
       }
 
       if (actionUrl.includes("escalation") || actionUrl.includes("/admin/escalations")) {
@@ -190,12 +195,14 @@ export function NotificationDropdown() {
         return role === "admin" ? `/admin/incidents` : `/${role}/dashboard`;
 
       case "VACANCY":
+        return "/admin/staff/rota";
+
       case "FACILITY":
-        return "/admin/bed-management";
+        return "/admin/configuration/facility/properties";
 
       case "ROTA":
       case "SHIFT":
-        return `/${role}/rota`;
+        return role === "admin" ? "/admin/staff/rota" : `/${role}/rota`;
 
       default:
         if (residentId) {
