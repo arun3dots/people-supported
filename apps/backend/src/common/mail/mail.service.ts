@@ -9,49 +9,57 @@ import {
   getAwsClientConfig,
   getSesConfigurationSet,
   getSesFromEmail,
-  hasAwsCredentials,
 } from '../utils/aws-config.util';
+
+type MailTransport =
+  | {
+      provider: 'ses';
+      client: SESClient;
+      fromEmail: string;
+      configurationSetName?: string;
+    }
+  | { provider: 'resend'; client: Resend; fromEmail: string };
 
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
-  private readonly ses: SESClient;
-  private readonly resend: Resend | null = null;
-  private readonly fromEmail: string;
-  private readonly configurationSetName?: string;
-  private readonly hasSesCredentials: boolean;
+  private readonly transport: MailTransport;
 
   constructor() {
-    this.hasSesCredentials = hasAwsCredentials();
-    this.ses = new SESClient(getAwsClientConfig());
-
-    if (process.env.RESEND_API_KEY) {
-      this.resend = new Resend(process.env.RESEND_API_KEY.trim());
+    const provider = process.env.MAIL_PROVIDER?.trim().toLowerCase() || 'ses';
+    if (provider === 'ses') {
+      this.transport = {
+        provider,
+        client: new SESClient(getAwsClientConfig()),
+        fromEmail: getSesFromEmail(),
+        configurationSetName: getSesConfigurationSet(),
+      };
+    } else if (provider === 'resend') {
+      const apiKey = process.env.RESEND_API_KEY?.trim();
+      if (!apiKey)
+        throw new Error('MAIL_PROVIDER=resend requires RESEND_API_KEY.');
+      this.transport = {
+        provider,
+        client: new Resend(apiKey),
+        fromEmail:
+          process.env.RESEND_FROM_EMAIL?.trim() || 'onboarding@resend.dev',
+      };
+    } else {
+      throw new Error('MAIL_PROVIDER must be ses or resend.');
     }
-
-    this.fromEmail = getSesFromEmail();
-    this.configurationSetName = getSesConfigurationSet();
   }
 
-  /**
-   * Sends an HTML email via AWS SES. Falls back to Resend only when AWS
-   * credentials are not configured and RESEND_API_KEY is set.
-   */
   private async sendEmail(
     to: string,
     subject: string,
     html: string,
     fromName = 'Cantra Care',
   ): Promise<void> {
-    const resendKey = process.env.RESEND_API_KEY?.trim();
+    const transport = this.transport;
+    const sender = `${fromName} <${transport.fromEmail}>`;
 
-    if (!this.hasSesCredentials && (this.resend || resendKey)) {
-      const client = this.resend ?? new Resend(resendKey);
-      const resendFrom =
-        process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-      const sender = `${fromName} <${resendFrom}>`;
-
-      const response = await client.emails.send({
+    if (transport.provider === 'resend') {
+      const response = await transport.client.emails.send({
         from: sender,
         to: [to],
         subject,
@@ -70,17 +78,17 @@ export class MailService {
     }
 
     const command = new SendEmailCommand({
-      Source: `${fromName} <${this.fromEmail}>`,
+      Source: sender,
       Destination: { ToAddresses: [to] },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },
         Body: { Html: { Data: html, Charset: 'UTF-8' } },
       },
-      ...(this.configurationSetName
-        ? { ConfigurationSetName: this.configurationSetName }
+      ...(transport.configurationSetName
+        ? { ConfigurationSetName: transport.configurationSetName }
         : {}),
     });
-    await this.ses.send(command);
+    await transport.client.send(command);
   }
 
   async sendVerificationEmail(

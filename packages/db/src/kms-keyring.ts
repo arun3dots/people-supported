@@ -3,6 +3,7 @@ import {
   GenerateDataKeyCommand,
   KMSClient,
 } from "@aws-sdk/client-kms";
+import { getAwsClientConfig } from "./aws-client-config";
 
 export type EncryptionKeyPurpose = "DB_FIELD" | "AUDIT_HMAC";
 
@@ -43,11 +44,6 @@ export interface KmsClientLike {
 export interface KmsConnectionOptions {
   kmsKeyId?: string;
   region?: string;
-  credentials?: {
-    accessKeyId: string;
-    secretAccessKey: string;
-    sessionToken?: string;
-  };
   kmsClient?: KmsClientLike;
 }
 
@@ -74,13 +70,9 @@ const globalForKeyRing = globalThis as typeof globalThis & {
 const KEY_ARN = /^arn:[^:]+:kms:[^:]+:\d{12}:key\/.+$/;
 
 export function getKmsClient(options: KmsConnectionOptions): KmsClientLike {
-  return (
-    options.kmsClient ??
-    new KMSClient({
-      region: options.region || process.env.AWS_REGION || "eu-north-1",
-      credentials: options.credentials,
-    })
-  );
+  if (options.kmsClient) return options.kmsClient;
+  const config = getAwsClientConfig();
+  return new KMSClient({ ...config, region: options.region || config.region });
 }
 
 export async function generateWrappedDataKey(
