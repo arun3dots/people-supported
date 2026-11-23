@@ -21,7 +21,11 @@ import {
   UpdateStaffRoleDto,
   UpdateStaffStatusDto,
 } from './dto/staff.dto';
-import type { StaffListQueryDTO, PaginatedResponse, ReassignStaffWorkDTO } from '@repo/schema';
+import type {
+  StaffListQueryDTO,
+  PaginatedResponse,
+  ReassignStaffWorkDTO,
+} from '@repo/schema';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '../common/mail/mail.service';
 import { encrypt, decrypt } from '@repo/db';
@@ -57,7 +61,7 @@ export class StaffService {
     private auditService: AuditService,
     private s3Service: S3StorageService,
     private passwordGeneratorService: PasswordGeneratorService,
-  ) { }
+  ) {}
 
   /** Decrypt a stored value, tolerating legacy/plaintext rows. */
   private safeDecrypt(value: string | null): string | null {
@@ -79,7 +83,11 @@ export class StaffService {
   ): StaffDetail {
     const profile = user.profile as UserProfile | null | undefined;
     const dbsCheck = user.dbsCheck as
-      | { expiryDate?: Date | null; certificateNumber?: string | null; status?: string | null }
+      | {
+          expiryDate?: Date | null;
+          certificateNumber?: string | null;
+          status?: string | null;
+        }
       | null
       | undefined;
     const quals = (profile?.qualifications as Record<string, any>) || {};
@@ -99,7 +107,7 @@ export class StaffService {
       contractType: profile?.contractType ?? null,
       contractedHoursPerWeek: profile?.contractedHoursPerWeek ?? null,
       schemeId: profile?.schemeId ?? null,
-      propertyId: profile?.propertyId ?? (user.assignedWings?.[0]?.id ?? null),
+      propertyId: profile?.propertyId ?? user.assignedWings?.[0]?.id ?? null,
       employmentDetails: profile?.employmentDetails ?? null,
       emergencyContacts: quals.emergencyContacts ?? null,
       isOnLeave: !!isOnLeave,
@@ -195,11 +203,11 @@ export class StaffService {
             },
             branches: targetBranchId
               ? {
-                create: {
-                  branchId: targetBranchId,
-                  isPrimary: true,
-                },
-              }
+                  create: {
+                    branchId: targetBranchId,
+                    isPrimary: true,
+                  },
+                }
               : undefined,
             // Persist contact/employment details entered on the add form so they
             // are available on the view/edit screens (previously dropped).
@@ -209,7 +217,8 @@ export class StaffService {
                 addressLine1: createStaffDto.address ?? undefined,
                 department: createStaffDto.department ?? undefined,
                 contractType: createStaffDto.contractType ?? undefined,
-                contractedHoursPerWeek: createStaffDto.contractedHoursPerWeek ?? undefined,
+                contractedHoursPerWeek:
+                  createStaffDto.contractedHoursPerWeek ?? undefined,
                 schemeId: createStaffDto.schemeId ?? undefined,
                 propertyId: createStaffDto.propertyId ?? undefined,
                 startDate: createStaffDto.startDate
@@ -491,9 +500,9 @@ export class StaffService {
     const updatedQualifications =
       updateStaffDto.emergencyContacts !== undefined
         ? {
-          ...currentQuals,
-          emergencyContacts: updateStaffDto.emergencyContacts,
-        }
+            ...currentQuals,
+            emergencyContacts: updateStaffDto.emergencyContacts,
+          }
         : undefined;
 
     const updatedStaff = await prisma.user.update({

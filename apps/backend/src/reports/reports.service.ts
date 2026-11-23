@@ -360,27 +360,45 @@ export class ReportsService {
     };
   }
 
-  exportOccupancyCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportOccupancyCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportOccupancyCsv(tenantId, branchId);
   }
 
-  exportMedicationsCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportMedicationsCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportMedicationsCsv(tenantId, branchId);
   }
 
-  exportCarePlansCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportCarePlansCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportCarePlansCsv(tenantId, branchId);
   }
 
-  exportShiftsCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportShiftsCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportShiftsCsv(tenantId, branchId);
   }
 
-  exportCqcComplianceCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportCqcComplianceCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportCqcComplianceCsv(tenantId, branchId);
   }
 
-  exportInvoicesCsv(tenantId: string, branchId?: string): Promise<ReportCsvResponseDTO> {
+  exportInvoicesCsv(
+    tenantId: string,
+    branchId?: string,
+  ): Promise<ReportCsvResponseDTO> {
     return exportInvoicesCsv(tenantId, branchId);
   }
 }

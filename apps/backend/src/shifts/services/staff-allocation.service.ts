@@ -165,9 +165,14 @@ export class StaffAllocationService {
           entry.count += 1;
           entry.hours += durationHours;
           if (careLower.includes('2:1')) entry.twoToOneHours += durationHours;
-          else if (careLower.includes('1:1')) entry.oneToOneHours += durationHours;
-          else if (careLower.includes('sleep')) entry.sleepInHours += durationHours;
-          else if (careLower.includes('waking') || careLower.includes('night')) {
+          else if (careLower.includes('1:1'))
+            entry.oneToOneHours += durationHours;
+          else if (careLower.includes('sleep'))
+            entry.sleepInHours += durationHours;
+          else if (
+            careLower.includes('waking') ||
+            careLower.includes('night')
+          ) {
             entry.wakingNightHours += durationHours;
           } else {
             entry.sharedHours += durationHours;
@@ -279,7 +284,9 @@ export class StaffAllocationService {
       };
     });
 
-    const coveredProperties = propertySummaries.filter((p) => p.isCovered).length;
+    const coveredProperties = propertySummaries.filter(
+      (p) => p.isCovered,
+    ).length;
     const assignedStaffCount = staffItems.filter(
       (s) => s.assignedWings.length > 0 || s.scheduledShiftsCount > 0,
     ).length;
@@ -320,4 +327,3 @@ export class StaffAllocationService {
     return end;
   }
 }
-

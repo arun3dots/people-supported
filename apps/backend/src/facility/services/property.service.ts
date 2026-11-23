@@ -92,7 +92,11 @@ export class PropertyService {
     const roomsList = dto.rooms ?? [];
     const roomMetaMap: Record<
       string,
-      { weeklyRent?: number | null; floor?: string | null; isAccessible?: boolean }
+      {
+        weeklyRent?: number | null;
+        floor?: string | null;
+        isAccessible?: boolean;
+      }
     > = {};
     for (const r of roomsList) {
       roomMetaMap[r.roomNumber.trim()] = {
@@ -137,16 +141,14 @@ export class PropertyService {
           notes: dto.notes?.trim() || null,
           status: dto.status ?? 'Active',
           schemeId: dto.schemeId || null,
-          propertyDetails: toJsonValue(
-            detailsPayload,
-          ) as Prisma.InputJsonValue,
+          propertyDetails: toJsonValue(detailsPayload),
           createdById: userId,
           updatedById: userId,
         },
       });
 
       for (let i = 0; i < roomsList.length; i++) {
-        const roomDraft = roomsList[i]!;
+        const roomDraft = roomsList[i];
         const rNum = roomDraft.roomNumber.trim();
         const rCode = `${code}-R${String(i + 1).padStart(2, '0')}`;
 
@@ -179,7 +181,8 @@ export class PropertyService {
           const bedLabel =
             roomDraft.bedLabels?.[b] ||
             (bedsCount === 1 ? `${rNum} Bed` : `Bed ${b + 1}`);
-          const bedNumber = bedsCount === 1 ? `${rNum}-B1` : `${rNum}-B${b + 1}`;
+          const bedNumber =
+            bedsCount === 1 ? `${rNum}-B1` : `${rNum}-B${b + 1}`;
           const bedCode = `${rCode}-B${b + 1}-${Math.floor(100 + Math.random() * 900)}`;
 
           await tx.bed.create({
@@ -364,14 +367,16 @@ export class PropertyService {
         data: {
           ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
           ...(nextCode !== undefined ? { code: nextCode.trim() } : {}),
-          ...(dto.description !== undefined ? { description: dto.description } : {}),
+          ...(dto.description !== undefined
+            ? { description: dto.description }
+            : {}),
           ...(dto.primaryContact !== undefined
             ? { primaryContact: dto.primaryContact }
             : {}),
           ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
           ...(dto.status !== undefined ? { status: dto.status } : {}),
           ...(dto.schemeId !== undefined ? { schemeId: dto.schemeId } : {}),
-          propertyDetails: toJsonValue(mergedDetails) as Prisma.InputJsonValue,
+          propertyDetails: toJsonValue(mergedDetails),
           updatedById: userId,
         },
       });

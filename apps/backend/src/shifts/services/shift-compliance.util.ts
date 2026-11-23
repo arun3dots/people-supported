@@ -81,7 +81,9 @@ export async function assertShiftCompliance(
 
   // 4. Off / Rest Day conflict check on the same UK calendar day
   const { start: dayStart, end: dayEnd } = getUkDayBoundaries(startTime);
-  const isOffDay = careType === 'Off / Rest Day' || Boolean(careType?.toLowerCase().includes('off'));
+  const isOffDay =
+    careType === 'Off / Rest Day' ||
+    Boolean(careType?.toLowerCase().includes('off'));
   if (isOffDay) {
     const workingShiftConflict = await prisma.shift.findFirst({
       where: {
@@ -117,7 +119,8 @@ export async function checkRestPeriodCompliance(options: {
   careType?: string | null;
   excludedShiftId?: string;
 }): Promise<string | null> {
-  const { tenantId, userIds, startTime, endTime, careType, excludedShiftId } = options;
+  const { tenantId, userIds, startTime, endTime, careType, excludedShiftId } =
+    options;
   if (userIds.length === 0 || careType === 'Off / Rest Day') return null;
 
   const minRestMs = 11 * 3600 * 1000;
@@ -144,4 +147,3 @@ export async function checkRestPeriodCompliance(options: {
     ? 'Working Time Regulations alert: Less than 11 hours rest between shifts.'
     : null;
 }
-

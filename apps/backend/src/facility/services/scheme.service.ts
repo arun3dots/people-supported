@@ -107,9 +107,7 @@ export class SchemeService {
           schemeManagerId: dto.schemeManagerId || null,
           commissionedHours: dto.commissionedHours ?? null,
           status: dto.status ?? 'Active',
-          schemeDetails: toJsonValue(
-            schemeDetailsPayload,
-          ) as Prisma.InputJsonValue,
+          schemeDetails: toJsonValue(schemeDetailsPayload),
           createdById: userId,
           updatedById: userId,
         },
@@ -310,7 +308,9 @@ export class SchemeService {
     const mergedDetails = {
       ...existingDetails,
       ...(dto.schemeDetails ?? {}),
-      ...(dto.propertyIds !== undefined ? { propertyIds: dto.propertyIds } : {}),
+      ...(dto.propertyIds !== undefined
+        ? { propertyIds: dto.propertyIds }
+        : {}),
     };
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -337,7 +337,7 @@ export class SchemeService {
             ? { commissionedHours: dto.commissionedHours }
             : {}),
           ...(dto.status !== undefined ? { status: dto.status } : {}),
-          schemeDetails: toJsonValue(mergedDetails) as Prisma.InputJsonValue,
+          schemeDetails: toJsonValue(mergedDetails),
           updatedById: userId,
         },
       });

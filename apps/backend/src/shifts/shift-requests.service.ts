@@ -42,7 +42,9 @@ export class ShiftRequestsService {
     }
 
     if (!data.startTime) {
-      throw new BadRequestException('Start time is required for shift requests.');
+      throw new BadRequestException(
+        'Start time is required for shift requests.',
+      );
     }
     const start = new Date(data.startTime);
     if (isNaN(start.getTime())) {
