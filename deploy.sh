@@ -129,7 +129,9 @@ with_migration_env apply_migrations
 echo
 echo "===== RESTART PM2 APPLICATIONS ====="
 
-pm2 restart all --update-env
+# Keep the first KMS release on legacy writes, the existing AWS identity, and SES.
+KMS_FIELD_WRITES_ENABLED=false AWS_CREDENTIALS_MODE=default MAIL_PROVIDER=ses \
+    pm2 restart all --update-env
 pm2 save
 
 # Verify the applications respond locally.
