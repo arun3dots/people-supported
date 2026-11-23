@@ -215,9 +215,15 @@ export class AuditController {
       },
       totalErrors: errors.length,
       breakdown: {
-        missed: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_MISSED').length,
-        refused: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_REFUSED').length,
-        withheld: errors.filter((l: CqcAuditLog) => l.actionType === 'DOSE_WITHHELD').length,
+        missed: errors.filter(
+          (l: CqcAuditLog) => l.actionType === 'DOSE_MISSED',
+        ).length,
+        refused: errors.filter(
+          (l: CqcAuditLog) => l.actionType === 'DOSE_REFUSED',
+        ).length,
+        withheld: errors.filter(
+          (l: CqcAuditLog) => l.actionType === 'DOSE_WITHHELD',
+        ).length,
       },
       records: errors,
     };

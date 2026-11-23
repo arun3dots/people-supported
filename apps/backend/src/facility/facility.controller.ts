@@ -16,7 +16,10 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { WingService } from './services/wing.service';
 import { RoomService } from './services/room.service';
 import { BedService } from './services/bed.service';
-import { SchemeService, type SchemeWithMetrics } from './services/scheme.service';
+import {
+  SchemeService,
+  type SchemeWithMetrics,
+} from './services/scheme.service';
 import {
   PropertyService,
   type PropertyWithDetails,

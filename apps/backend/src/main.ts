@@ -13,10 +13,7 @@ import {
 import { assertJwtSecretConfigured } from './auth/jwt-secret.util';
 import { assertAuditSigningKeyConfigured } from './audit/audit-db.service';
 import { assertApiUrlConfigured } from './common/utils/api-url.util';
-import {
-  getAwsClientConfig,
-  getKmsDataKeyId,
-} from './common/utils/aws-config.util';
+import { getKmsDataKeyId } from './common/utils/aws-config.util';
 import { StructuredLoggerService } from './common/logger/structured-logger.service';
 
 function isAllowedCorsOrigin(
@@ -55,7 +52,6 @@ async function bootstrap() {
   assertEncryptionKeyConfigured();
   const kmsInit = await initKmsKeyRing(rawPrisma, {
     kmsKeyId: getKmsDataKeyId(),
-    ...getAwsClientConfig(),
   });
   if (kmsInit.mode === 'kms') {
     logger.log(

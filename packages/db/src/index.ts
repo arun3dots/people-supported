@@ -24,6 +24,7 @@ export {
   assertEncryptionKeyConfigured,
 };
 export * from "./crypto";
+export * from "./aws-client-config";
 export * from "./kms-keyring";
 export * from "./pre-admission-crypto";
 export * from "./generated/client";

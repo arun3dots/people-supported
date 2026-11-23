@@ -56,7 +56,9 @@ describe('IncidentsService', () => {
         { provide: GcsService, useValue: {} },
         {
           provide: AuditService,
-          useValue: { emitSafeguarding: jest.fn().mockResolvedValue(undefined) },
+          useValue: {
+            emitSafeguarding: jest.fn().mockResolvedValue(undefined),
+          },
         },
       ],
     }).compile();

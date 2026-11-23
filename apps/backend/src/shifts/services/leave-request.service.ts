@@ -1,16 +1,19 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { prisma } from "@repo/db";
-import { CreateLeaveRequestDTO, UpdateLeaveRequestStatusDTO } from "@repo/schema";
-import { ShiftRequestsService } from "../shift-requests.service";
-import { AuditService } from "../../audit/audit.service";
-import { toJsonValue } from "../../common/utils/json.util";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { prisma } from '@repo/db';
+import {
+  CreateLeaveRequestDTO,
+  UpdateLeaveRequestStatusDTO,
+} from '@repo/schema';
+import { ShiftRequestsService } from '../shift-requests.service';
+import { AuditService } from '../../audit/audit.service';
+import { toJsonValue } from '../../common/utils/json.util';
 
 @Injectable()
 export class LeaveRequestService {
   constructor(
     private readonly shiftRequestsService: ShiftRequestsService,
     private readonly auditService: AuditService,
-  ) { }
+  ) {}
 
   async getAll(tenantId: string) {
     const [leaveRequests, shiftLeaveRequests] = await Promise.all([
@@ -27,10 +30,10 @@ export class LeaveRequestService {
             },
           },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
       }),
       prisma.shiftRequest.findMany({
-        where: { tenantId, type: "Leave" },
+        where: { tenantId, type: 'Leave' },
         include: {
           user: {
             select: {
@@ -42,7 +45,7 @@ export class LeaveRequestService {
             },
           },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
       }),
     ]);
 
@@ -50,7 +53,7 @@ export class LeaveRequestService {
       id: sr.id,
       tenantId: sr.tenantId,
       staffId: sr.userId,
-      type: "Annual Leave",
+      type: 'Annual Leave',
       startDate: sr.startTime,
       endDate: sr.endTime ?? sr.startTime,
       reason: sr.reason,
@@ -64,7 +67,8 @@ export class LeaveRequestService {
     }));
 
     return [...leaveRequests, ...mappedShiftRequests].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
   }
 
@@ -77,7 +81,7 @@ export class LeaveRequestService {
         startDate: new Date(dto.startDate),
         endDate: new Date(dto.endDate),
         reason: dto.reason,
-        status: "Pending",
+        status: 'Pending',
         createdById: userId,
       },
       include: {
@@ -151,13 +155,13 @@ export class LeaveRequestService {
     }
 
     const shiftRequest = await prisma.shiftRequest.findFirst({
-      where: { id, tenantId, type: "Leave" },
+      where: { id, tenantId, type: 'Leave' },
       select: { id: true },
     });
 
     if (shiftRequest) {
-      const mappedStatus: "Pending" | "Approved" | "Rejected" =
-        dto.status === "Approved" ? "Approved" : "Rejected";
+      const mappedStatus: 'Pending' | 'Approved' | 'Rejected' =
+        dto.status === 'Approved' ? 'Approved' : 'Rejected';
       return this.shiftRequestsService.updateStatus(
         id,
         { status: mappedStatus, adminNotes: dto.adminNotes },
