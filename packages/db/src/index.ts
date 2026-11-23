@@ -24,6 +24,7 @@ export {
   assertEncryptionKeyConfigured,
 };
 export * from "./crypto";
+export * from "./kms-keyring";
 export * from "./pre-admission-crypto";
 export * from "./generated/client";
 
@@ -47,6 +48,26 @@ export const rawPrisma =
 if (process.env.NODE_ENV !== "production")
   globalForPrisma.rawPrisma = rawPrisma;
 
+type ProfileField =
+  | string
+  | null
+  | Prisma.NullableStringFieldUpdateOperationsInput;
+
+function encryptProfileFields(profile?: {
+  phoneNumber?: ProfileField;
+  addressLine1?: ProfileField;
+}): void {
+  if (!profile) return;
+  for (const field of ["phoneNumber", "addressLine1"] as const) {
+    const value = profile[field];
+    if (typeof value === "string") {
+      profile[field] = encrypt(value);
+    } else if (value && typeof value.set === "string") {
+      value.set = encrypt(value.set);
+    }
+  }
+}
+
 function createExtendedClient() {
   // Adding the NHS Compliance Extension for Data at Rest Encryption (E-02)
   return rawPrisma.$extends({
@@ -55,8 +76,7 @@ function createExtendedClient() {
         async create({ args, query }) {
           if (args.data.nhsNumber)
             args.data.nhsNumber = encrypt(args.data.nhsNumber) as string;
-          if (args.data.dob)
-            args.data.dob = encrypt(args.data.dob) as string;
+          if (args.data.dob) args.data.dob = encrypt(args.data.dob) as string;
           return query(args);
         },
         async update({ args, query }) {
@@ -96,25 +116,16 @@ function createExtendedClient() {
       },
       userProfile: {
         async create({ args, query }) {
-          if (args.data.phoneNumber)
-            args.data.phoneNumber = encrypt(args.data.phoneNumber) as string;
-          if (args.data.addressLine1)
-            args.data.addressLine1 = encrypt(args.data.addressLine1) as string;
+          encryptProfileFields(args.data);
           return query(args);
         },
         async update({ args, query }) {
-          if (
-            args.data.phoneNumber &&
-            typeof args.data.phoneNumber === "string"
-          ) {
-            args.data.phoneNumber = encrypt(args.data.phoneNumber) as string;
-          }
-          if (
-            args.data.addressLine1 &&
-            typeof args.data.addressLine1 === "string"
-          ) {
-            args.data.addressLine1 = encrypt(args.data.addressLine1) as string;
-          }
+          encryptProfileFields(args.data);
+          return query(args);
+        },
+        async upsert({ args, query }) {
+          encryptProfileFields(args.create);
+          encryptProfileFields(args.update);
           return query(args);
         },
       },
@@ -157,6 +168,7 @@ function createExtendedClient() {
       },
       user: {
         async create({ args, query }) {
+          encryptProfileFields(args.data.profile?.create);
           if (args.data.dbsNumber) {
             args.data.dbsNumber = encrypt(args.data.dbsNumber) as string;
           }
@@ -169,6 +181,8 @@ function createExtendedClient() {
           return query(args);
         },
         async update({ args, query }) {
+          encryptProfileFields(args.data.profile?.upsert?.create);
+          encryptProfileFields(args.data.profile?.upsert?.update);
           if (args.data.dbsNumber && typeof args.data.dbsNumber === "string") {
             args.data.dbsNumber = encrypt(args.data.dbsNumber) as string;
           }

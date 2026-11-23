@@ -5,10 +5,18 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { assertEncryptionKeyConfigured } from '@repo/db';
+import {
+  assertEncryptionKeyConfigured,
+  initKmsKeyRing,
+  rawPrisma,
+} from '@repo/db';
 import { assertJwtSecretConfigured } from './auth/jwt-secret.util';
 import { assertAuditSigningKeyConfigured } from './audit/audit-db.service';
 import { assertApiUrlConfigured } from './common/utils/api-url.util';
+import {
+  getAwsClientConfig,
+  getKmsDataKeyId,
+} from './common/utils/aws-config.util';
 import { StructuredLoggerService } from './common/logger/structured-logger.service';
 
 function isAllowedCorsOrigin(
@@ -41,10 +49,23 @@ function isAllowedCorsOrigin(
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
-  // D-04, E-02, C-03: Fail closed at startup if cryptographic secrets are missing/weak
+  // D-04, E-02, C-03: Fail closed at startup if cryptographic secrets/KMS keys are missing/weak
   assertJwtSecretConfigured();
-  assertEncryptionKeyConfigured();
   assertAuditSigningKeyConfigured();
+  assertEncryptionKeyConfigured();
+  const kmsInit = await initKmsKeyRing(rawPrisma, {
+    kmsKeyId: getKmsDataKeyId(),
+    ...getAwsClientConfig(),
+  });
+  if (kmsInit.mode === 'kms') {
+    logger.log(
+      `AWS KMS keys loaded (DB_FIELD v${kmsInit.fieldKeyVersion}, AUDIT_HMAC v${kmsInit.auditKeyVersion}). Field writes use ${kmsInit.writeFieldsWithKms ? 'KMS' : 'legacy encryption'}.`,
+    );
+  } else {
+    logger.warn(
+      'AWS_KMS_DATA_KEY_ID is not set — falling back to legacy local encryption keys',
+    );
+  }
   assertApiUrlConfigured();
 
   // rawBody:true makes req.rawBody (Buffer) available for webhook signature

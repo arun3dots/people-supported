@@ -55,6 +55,10 @@ export class PasswordService {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException('User not found');
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
     const isMatch = await bcrypt.compare(currentPass, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException('Current password is incorrect');
