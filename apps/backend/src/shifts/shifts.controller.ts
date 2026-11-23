@@ -47,7 +47,7 @@ export class ShiftsController {
   constructor(
     private readonly shiftsService: ShiftsService,
     private readonly auditService: AuditService,
-  ) { }
+  ) {}
 
   // --- Shift Types ---
 
@@ -266,7 +266,8 @@ export class ShiftsController {
 
   @Get('staff-allocation')
   @ApiOperation({
-    summary: 'Get staff allocation overview, scheduled workload, and property coverage',
+    summary:
+      'Get staff allocation overview, scheduled workload, and property coverage',
   })
   async getStaffAllocation(
     @Req() req: AuthenticatedRequest,

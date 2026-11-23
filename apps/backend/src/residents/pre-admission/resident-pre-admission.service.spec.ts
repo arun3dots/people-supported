@@ -240,11 +240,7 @@ describe('ResidentPreAdmissionService', () => {
       admissionReason: 'Fall at home',
     };
 
-    for (const field of [
-      'maritalStatus',
-      'previousAddress',
-      'language',
-    ]) {
+    for (const field of ['maritalStatus', 'previousAddress', 'language']) {
       const partA = { ...completePartA };
       delete partA[field];
       await expect(

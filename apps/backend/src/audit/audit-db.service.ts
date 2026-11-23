@@ -274,11 +274,7 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
     event: Partial<AuditEvent>,
     previousHash: string | null,
   ): string {
-    return computeAuditRecordHash(
-      event,
-      previousHash,
-      this.signingKey,
-    );
+    return computeAuditRecordHash(event, previousHash, this.signingKey);
   }
 
   private async getLastHash(tenantId?: string | null): Promise<string | null> {

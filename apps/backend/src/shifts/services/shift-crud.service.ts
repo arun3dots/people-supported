@@ -54,7 +54,10 @@ export class ShiftCrudService {
     careType?: string | null,
   ): Promise<void> {
     if (userIds.length === 0) return;
-    if (careType === 'Off / Rest Day' || careType?.toLowerCase().includes('off')) {
+    if (
+      careType === 'Off / Rest Day' ||
+      careType?.toLowerCase().includes('off')
+    ) {
       return;
     }
 
@@ -95,7 +98,9 @@ export class ShiftCrudService {
         ),
       );
       const residentIds = Array.from(
-        new Set(overlap.assignments.flatMap((a) => a.assignedResidentIds ?? [])),
+        new Set(
+          overlap.assignments.flatMap((a) => a.assignedResidentIds ?? []),
+        ),
       );
       const residents =
         residentIds.length > 0
@@ -121,7 +126,8 @@ export class ShiftCrudService {
           timeZone: 'Europe/London',
         });
 
-      const who = staffNames.length > 0 ? staffNames.join(', ') : 'A staff member';
+      const who =
+        staffNames.length > 0 ? staffNames.join(', ') : 'A staff member';
       const when = `${fmtTime(overlap.startTime)} - ${fmtTime(overlap.endTime)}, ${fmtDate(overlap.startTime)}`;
       const careLabel = overlap.careType || 'shift';
       const supporting =
@@ -454,9 +460,12 @@ export class ShiftCrudService {
     for (const currentStart of datesToCreate) {
       const currentEnd = new Date(currentStart.getTime() + durationMs);
 
-      const isWorkingShift = careTypeVal !== 'Off / Rest Day' && !careTypeVal?.toLowerCase().includes('off');
+      const isWorkingShift =
+        careTypeVal !== 'Off / Rest Day' &&
+        !careTypeVal?.toLowerCase().includes('off');
       if (isWorkingShift && rawUserIds.length > 0) {
-        const { start: dayStart, end: dayEnd } = getUkDayBoundaries(currentStart);
+        const { start: dayStart, end: dayEnd } =
+          getUkDayBoundaries(currentStart);
         await prisma.shift.updateMany({
           where: {
             tenantId,
@@ -464,7 +473,9 @@ export class ShiftCrudService {
             status: { not: 'Cancelled' },
             careType: { contains: 'Off', mode: 'insensitive' },
             startTime: { gte: dayStart, lte: dayEnd },
-            assignments: { some: { userId: { in: rawUserIds }, deletedAt: null } },
+            assignments: {
+              some: { userId: { in: rawUserIds }, deletedAt: null },
+            },
           },
           data: {
             status: 'Cancelled',
@@ -735,12 +746,23 @@ export class ShiftCrudService {
           }
         });
 
-        const enrichShift = <T extends { assignments?: Array<{ userId: string; assignedResidentIds?: string[] | null }> }>(s: T) => ({
+        const enrichShift = <
+          T extends {
+            assignments?: Array<{
+              userId: string;
+              assignedResidentIds?: string[] | null;
+            }>;
+          },
+        >(
+          s: T,
+        ) => ({
           ...s,
           userIds: s.assignments?.map((a) => a.userId).filter(Boolean) || [],
           residentIds: Array.from(
             new Set(
-              s.assignments?.flatMap((a) => a.assignedResidentIds || []).filter(Boolean) || [],
+              s.assignments
+                ?.flatMap((a) => a.assignedResidentIds || [])
+                .filter(Boolean) || [],
             ),
           ),
         });
@@ -773,7 +795,9 @@ export class ShiftCrudService {
       userIds: s.assignments?.map((a) => a.userId).filter(Boolean) || [],
       residentIds: Array.from(
         new Set(
-          s.assignments?.flatMap((a) => a.assignedResidentIds || []).filter(Boolean) || [],
+          s.assignments
+            ?.flatMap((a) => a.assignedResidentIds || [])
+            .filter(Boolean) || [],
         ),
       ),
     }));

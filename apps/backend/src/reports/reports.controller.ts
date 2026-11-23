@@ -69,7 +69,12 @@ export class ReportsController {
       req.user.tenantId!,
       branchId,
     );
-    return this.sendCsvOrJson(req, res, result, 'Resident Clinical Risk Summary');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Resident Clinical Risk Summary',
+    );
   }
 
   /**
@@ -89,7 +94,12 @@ export class ReportsController {
       req.user.tenantId!,
       branchId,
     );
-    return this.sendCsvOrJson(req, res, result, 'Clinical Escalations & Falls Log');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Clinical Escalations & Falls Log',
+    );
   }
 
   private sendCsvOrJson(
@@ -118,9 +128,15 @@ export class ReportsController {
         rowCount: result.rowCount,
         format: 'CSV',
         device: (req.headers['sec-ch-ua-platform'] as string) || 'Desktop',
-        macAddress: (req.headers['x-device-mac'] as string) || (req.headers['x-mac-address'] as string) || '00:1A:2B:3C:4D:5E',
+        macAddress:
+          (req.headers['x-device-mac'] as string) ||
+          (req.headers['x-mac-address'] as string) ||
+          '00:1A:2B:3C:4D:5E',
       },
-      ipAddress: req.ip || (req.headers['x-forwarded-for'] as string) || req.socket?.remoteAddress,
+      ipAddress:
+        req.ip ||
+        (req.headers['x-forwarded-for'] as string) ||
+        req.socket?.remoteAddress,
       userAgent: req.headers['user-agent'] as string,
     });
 
@@ -146,7 +162,12 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'Occupancy & Admissions Ledger');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Occupancy & Admissions Ledger',
+    );
   }
 
   @Get('medications/csv')
@@ -161,7 +182,12 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'eMAR Medication Administration Audit');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'eMAR Medication Administration Audit',
+    );
   }
 
   @Get('care-plans/csv')
@@ -176,7 +202,12 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'Care Plan & Risk Review Matrix');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Care Plan & Risk Review Matrix',
+    );
   }
 
   @Get('shifts/csv')
@@ -191,7 +222,12 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'Staff Rota & Shift Allocation Log');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Staff Rota & Shift Allocation Log',
+    );
   }
 
   @Get('cqc-compliance/csv')
@@ -206,7 +242,12 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'CQC Fundamental Standards Audit Pack');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'CQC Fundamental Standards Audit Pack',
+    );
   }
 
   @Get('invoices/csv')
@@ -221,6 +262,11 @@ export class ReportsController {
       req.user.tenantId!,
       resolveBranchId(req, query?.branchId),
     );
-    return this.sendCsvOrJson(req, res, result, 'Invoicing & Revenue Settlement Export');
+    return this.sendCsvOrJson(
+      req,
+      res,
+      result,
+      'Invoicing & Revenue Settlement Export',
+    );
   }
 }

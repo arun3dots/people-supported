@@ -74,9 +74,12 @@ export class ProfileService {
             startDate: user.createdAt,
           },
           update: {
-            phoneNumber: profile?.phoneNumber ?? (tenant.primaryContactPhone || null),
-            addressLine1: profile?.addressLine1 ?? (tenant.addressLine1 || null),
-            addressLine2: profile?.addressLine2 ?? (tenant.addressLine2 || null),
+            phoneNumber:
+              profile?.phoneNumber ?? (tenant.primaryContactPhone || null),
+            addressLine1:
+              profile?.addressLine1 ?? (tenant.addressLine1 || null),
+            addressLine2:
+              profile?.addressLine2 ?? (tenant.addressLine2 || null),
             city: profile?.city ?? (tenant.city || null),
             postcode: profile?.postcode ?? (tenant.postcode || null),
           },

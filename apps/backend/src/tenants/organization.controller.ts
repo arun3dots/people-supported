@@ -69,7 +69,9 @@ export class OrganizationController {
 
   @Patch('status')
   @Roles('Admin')
-  @ApiOperation({ summary: 'Update organization status (e.g. deactivate/activate)' })
+  @ApiOperation({
+    summary: 'Update organization status (e.g. deactivate/activate)',
+  })
   async updateStatus(
     @Body('status', new ZodValidationPipe(tenantStatusSchema))
     status: TenantStatus,

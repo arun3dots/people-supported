@@ -2,7 +2,7 @@
  * Single source of AWS configuration shared by S3, SES, SNS, KMS, and Cognito clients.
  *
  * Env vars:
- *   AWS_REGION; optional AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN
+ *   AWS_REGION, AWS_CREDENTIALS_MODE and SDK credential settings
  *   S3_BUCKET_NAME                                         (S3)
  *   SES_FROM_EMAIL, SES_CONFIGURATION_SET                  (SES)
  *   AWS_SNS_TOPIC_ARN, AWS_SNS_SENDER_ID                   (SNS)
@@ -12,40 +12,10 @@
  *   COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET               (Cognito)
  */
 export type PlatformServiceId = 'supported-living' | 'care-home';
-
-export interface AwsClientConfig {
-  region: string;
-  credentials?: {
-    accessKeyId: string;
-    secretAccessKey: string;
-    sessionToken?: string;
-  };
-}
+export { getAwsClientConfig, type AwsClientConfig } from '@repo/db';
 
 const env = (key: string): string =>
   (process.env[key] || '').trim().replace(/^['"]|['"]$/g, '');
-
-export function getAwsClientConfig(): AwsClientConfig {
-  const accessKeyId = env('AWS_ACCESS_KEY_ID');
-  const secretAccessKey = env('AWS_SECRET_ACCESS_KEY');
-  const sessionToken = env('AWS_SESSION_TOKEN');
-
-  return {
-    region: env('AWS_REGION') || 'eu-north-1',
-    credentials:
-      accessKeyId && secretAccessKey
-        ? {
-            accessKeyId,
-            secretAccessKey,
-            ...(sessionToken ? { sessionToken } : {}),
-          }
-        : undefined,
-  };
-}
-
-export function hasAwsCredentials(): boolean {
-  return Boolean(env('AWS_ACCESS_KEY_ID') && env('AWS_SECRET_ACCESS_KEY'));
-}
 
 export const getS3BucketName = (): string => env('S3_BUCKET_NAME');
 

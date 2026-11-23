@@ -64,7 +64,9 @@ export async function exportShiftDetailPdf(
   });
 
   const staffNames = (shift.assignments || [])
-    .map((a: { user?: { fullName?: string | null } | null }) => a.user?.fullName)
+    .map(
+      (a: { user?: { fullName?: string | null } | null }) => a.user?.fullName,
+    )
     .filter((n: string | null | undefined): n is string => Boolean(n));
 
   streamShiftDetailPdf(
@@ -103,7 +105,11 @@ export function streamShiftDetailPdf(
   doc.fillColor('#FFFFFF').fontSize(20).font('Helvetica-Bold');
   doc.text('CANTRA CARE — SHIFT DETAIL REPORT', 55, 52);
   doc.fontSize(10).font('Helvetica').fillColor('#E4ECEA');
-  doc.text(`Shift ID: ${shift.id} | Generated: ${new Date().toLocaleString()}`, 55, 76);
+  doc.text(
+    `Shift ID: ${shift.id} | Generated: ${new Date().toLocaleString()}`,
+    55,
+    76,
+  );
 
   doc.fillColor('#1F2937');
   let y = 120;
@@ -119,10 +125,19 @@ export function streamShiftDetailPdf(
   const rowH = 18;
 
   doc.fillColor('#4B5563').text('Care Type:', col1, y + 30);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(shift.careType || 'Shared Care', col1 + 80, y + 30);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(shift.careType || 'Shared Care', col1 + 80, y + 30);
 
-  doc.font('Helvetica').fillColor('#4B5563').text('Status:', col2, y + 30);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(shift.status || 'Published', col2 + 60, y + 30);
+  doc
+    .font('Helvetica')
+    .fillColor('#4B5563')
+    .text('Status:', col2, y + 30);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(shift.status || 'Published', col2 + 60, y + 30);
 
   const dateStr = new Date(shift.startTime).toLocaleDateString('en-GB', {
     weekday: 'short',
@@ -130,20 +145,50 @@ export function streamShiftDetailPdf(
     month: 'short',
     year: 'numeric',
   });
-  doc.font('Helvetica').fillColor('#4B5563').text('Date:', col1, y + 30 + rowH);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(dateStr, col1 + 80, y + 30 + rowH);
+  doc
+    .font('Helvetica')
+    .fillColor('#4B5563')
+    .text('Date:', col1, y + 30 + rowH);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(dateStr, col1 + 80, y + 30 + rowH);
 
-  const startFormatted = new Date(shift.startTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  const endFormatted = new Date(shift.endTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  const startFormatted = new Date(shift.startTime).toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const endFormatted = new Date(shift.endTime).toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
   const windowStr = shift.shiftWindow || `${startFormatted} - ${endFormatted}`;
-  doc.font('Helvetica').fillColor('#4B5563').text('Time Window:', col2, y + 30 + rowH);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(windowStr, col2 + 80, y + 30 + rowH);
+  doc
+    .font('Helvetica')
+    .fillColor('#4B5563')
+    .text('Time Window:', col2, y + 30 + rowH);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(windowStr, col2 + 80, y + 30 + rowH);
 
-  doc.font('Helvetica').fillColor('#4B5563').text('Duration:', col1, y + 30 + rowH * 2);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(`${shift.durationHours ?? '8'} hrs`, col1 + 80, y + 30 + rowH * 2);
+  doc
+    .font('Helvetica')
+    .fillColor('#4B5563')
+    .text('Duration:', col1, y + 30 + rowH * 2);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(`${shift.durationHours ?? '8'} hrs`, col1 + 80, y + 30 + rowH * 2);
 
-  doc.font('Helvetica').fillColor('#4B5563').text('Location:', col2, y + 30 + rowH * 2);
-  doc.fillColor('#111827').font('Helvetica-Bold').text(shift.locationName || 'Main Facility', col2 + 80, y + 30 + rowH * 2);
+  doc
+    .font('Helvetica')
+    .fillColor('#4B5563')
+    .text('Location:', col2, y + 30 + rowH * 2);
+  doc
+    .fillColor('#111827')
+    .font('Helvetica-Bold')
+    .text(shift.locationName || 'Main Facility', col2 + 80, y + 30 + rowH * 2);
 
   y += 140;
 
@@ -152,9 +197,10 @@ export function streamShiftDetailPdf(
   doc.fontSize(11).font('Helvetica-Bold').fillColor('#4A706A');
   doc.text('ASSIGNED STAFF MEMBERS', 55, y + 10);
   doc.fontSize(10).font('Helvetica').fillColor('#111827');
-  const staffList = shift.assignedStaffNames && shift.assignedStaffNames.length > 0
-    ? shift.assignedStaffNames.join(', ')
-    : 'No staff assigned yet';
+  const staffList =
+    shift.assignedStaffNames && shift.assignedStaffNames.length > 0
+      ? shift.assignedStaffNames.join(', ')
+      : 'No staff assigned yet';
   doc.text(staffList, 55, y + 30, { width: 480 });
 
   y += 80;
@@ -164,7 +210,10 @@ export function streamShiftDetailPdf(
   doc.fontSize(11).font('Helvetica-Bold').fillColor('#4A706A');
   doc.text('HANDOVER & SHIFT NOTES', 55, y + 10);
   doc.fontSize(10).font('Helvetica').fillColor('#374151');
-  const notesText = shift.handoverNotes || shift.notes || 'No handover notes recorded for this shift block.';
+  const notesText =
+    shift.handoverNotes ||
+    shift.notes ||
+    'No handover notes recorded for this shift block.';
   doc.text(notesText, 55, y + 30, { width: 480, height: 50 });
 
   y += 110;
