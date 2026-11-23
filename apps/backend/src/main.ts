@@ -14,6 +14,7 @@ import { assertJwtSecretConfigured } from './auth/jwt-secret.util';
 import { assertAuditSigningKeyConfigured } from './audit/audit-db.service';
 import { assertApiUrlConfigured } from './common/utils/api-url.util';
 import { getKmsDataKeyId } from './common/utils/aws-config.util';
+import { applyKmsCompatibilityReleaseSettings } from './common/utils/kms-compatibility-release.util';
 import { StructuredLoggerService } from './common/logger/structured-logger.service';
 
 function isAllowedCorsOrigin(
@@ -44,6 +45,7 @@ function isAllowedCorsOrigin(
 }
 
 async function bootstrap() {
+  applyKmsCompatibilityReleaseSettings();
   const logger = new Logger('Bootstrap');
 
   // D-04, E-02, C-03: Fail closed at startup if cryptographic secrets/KMS keys are missing/weak
