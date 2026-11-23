@@ -385,6 +385,22 @@ export class IncidentsService {
       },
     });
 
+    if (dto.tasks && Array.isArray(dto.tasks)) {
+      const existingTaskIds = new Set(
+        Array.isArray(incident.tasks)
+          ? (incident.tasks as Array<{ id?: string }>).map((t) => t?.id).filter(Boolean)
+          : [],
+      );
+      for (const t of dto.tasks as Array<{ id?: string; notifyEmail?: boolean }>) {
+        if (t && (!t.id || !existingTaskIds.has(t.id)) && t.notifyEmail) {
+          void this.incidentNotificationService.notifyTaskAssigned(
+            { id: updated.id, incidentNumber: updated.incidentNumber, tenantId },
+            t as any,
+          );
+        }
+      }
+    }
+
     if (userId) {
       const isClosed = dto.status === 'Closed' && incident.status !== 'Closed';
       void this.auditService.emitSafeguarding({

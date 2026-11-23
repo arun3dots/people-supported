@@ -395,6 +395,17 @@ export class FinanceService {
       },
     });
 
+    void this.auditService.createLog({
+      actionType: 'EXPENSE_UPDATED',
+      tenantId,
+      userId,
+      entityType: 'Expense',
+      entityId: updated.id,
+      entityLabel: updated.expenseNo,
+      oldValue: toJsonValue(existing),
+      newValue: toJsonValue(updated),
+    });
+
     return updated;
   }
 }

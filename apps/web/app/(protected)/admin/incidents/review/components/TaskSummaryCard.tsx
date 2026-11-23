@@ -97,7 +97,7 @@ export function TaskSummaryCard({
                   <Text
                     size={"md"}
                     weight={"semibold"}
-                    className="text-slate-900 break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0 pr-2"
+                    className="text-slate-900 break-all break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0 pr-2"
                   >
                     {task.title}
                   </Text>
@@ -116,7 +116,7 @@ export function TaskSummaryCard({
                     <Text
                       size={"md"}
                       weight={"regular"}
-                      className="text-slate-600 leading-relaxed break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0"
+                      className="text-slate-600 leading-relaxed break-all break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0"
                     >
                       {task.description}
                     </Text>
@@ -256,6 +256,48 @@ export function TaskSummaryCard({
                         </div>
                       </div>
                     </div>
+
+                    {task.attachments && task.attachments.length > 0 && (
+                      <div className="pt-2 border-t border-slate-200/60 space-y-1.5">
+                        <Text
+                          size={"md"}
+                          weight={"medium"}
+                          className="text-slate-700"
+                        >
+                          Attached Documents ({task.attachments.length})
+                        </Text>
+                        <div className="space-y-1">
+                          {task.attachments.map((att) => (
+                            <div
+                              key={att.id}
+                              className="flex items-center justify-between p-2 px-3 rounded-lg bg-white border border-slate-200 text-md shadow-2xs"
+                            >
+                              <div className="flex items-center gap-2 min-w-0 pr-2">
+                                <Paperclip className="size-3.5 text-[#4A706A] shrink-0" />
+                                <span className="font-medium text-slate-800 truncate">
+                                  {att.name}
+                                </span>
+                                {att.size ? (
+                                  <span className="text-slate-400 shrink-0 text-xs">
+                                    ({(att.size / 1024).toFixed(0)} KB)
+                                  </span>
+                                ) : null}
+                              </div>
+                              {att.url && (
+                                <a
+                                  href={att.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-xs font-semibold text-[#4A706A] hover:underline shrink-0"
+                                >
+                                  View / Download
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

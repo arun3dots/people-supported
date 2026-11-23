@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
-import { Calendar, Clock, Upload } from "lucide-react";
+import React from "react";
+import { Clock } from "lucide-react";
 import {
   DialogHeader,
   DialogTitle,
@@ -19,8 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui/Select";
-import { toast, DatePicker } from "@repo/ui/components/ui";
+import { DatePicker } from "@repo/ui/components/ui";
 import { useGetStaffQuery } from "../../../../../../lib/queries/staff";
+import {
+  TaskAttachmentPicker,
+  TaskAttachmentItem,
+} from "./TaskAttachmentPicker";
 
 interface AssignTaskFormProps {
   title: string;
@@ -29,6 +33,10 @@ interface AssignTaskFormProps {
   setDescription: (val: string) => void;
   assignedTo: string;
   setAssignedTo: (val: string) => void;
+  assignedToId: string;
+  setAssignedToId: (val: string) => void;
+  assignedToEmail: string;
+  setAssignedToEmail: (val: string) => void;
   setAssignedToAvatarUrl: (val: string) => void;
   setAssignedRole: (val: string) => void;
   priority: "High" | "Medium" | "Low";
@@ -39,7 +47,8 @@ interface AssignTaskFormProps {
   setTaskTime: (val: string) => void;
   notifyEmail: boolean;
   setNotifyEmail: (val: boolean) => void;
-  setAttachedFilesCount: React.Dispatch<React.SetStateAction<number>>;
+  attachments: TaskAttachmentItem[];
+  setAttachments: React.Dispatch<React.SetStateAction<TaskAttachmentItem[]>>;
   onSubmit: () => void;
   onCancel: () => void;
 }
@@ -51,6 +60,10 @@ export function AssignTaskForm({
   setDescription,
   assignedTo,
   setAssignedTo,
+  assignedToId,
+  setAssignedToId,
+  assignedToEmail: _assignedToEmail,
+  setAssignedToEmail,
   setAssignedToAvatarUrl,
   setAssignedRole,
   priority,
@@ -61,11 +74,11 @@ export function AssignTaskForm({
   setTaskTime,
   notifyEmail,
   setNotifyEmail,
-  setAttachedFilesCount,
+  attachments,
+  setAttachments,
   onSubmit,
   onCancel,
 }: AssignTaskFormProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { data: staff = [], isLoading: isStaffLoading } = useGetStaffQuery();
   const activeStaff = staff.filter((member) => member.isActive);
 
@@ -91,8 +104,8 @@ export function AssignTaskForm({
             <Input
               type="text"
               value={title}
-              maxLength={250}
-              onChange={(e) => setTitle(e.target.value)}
+              maxLength={150}
+              onChange={(e) => setTitle(e.target.value.slice(0, 150))}
               placeholder="Enter the Task"
               className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body px-3 pr-16"
             />
@@ -114,18 +127,18 @@ export function AssignTaskForm({
           <div className="relative">
             <Textarea
               value={description}
-              maxLength={500}
-              onChange={(e) => setDescription(e.target.value.slice(0, 500))}
+              maxLength={1000}
+              onChange={(e) => setDescription(e.target.value.slice(0, 1000))}
               placeholder="Describe the task in details..."
               rows={3}
               className="min-h-[85px] bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body p-3 focus-visible:ring-1 focus-visible:ring-primary/20 pr-16"
             />
             <span
               className={`absolute bottom-2.5 right-3 text-md ${
-                description.length >= 500 ? "text-amber-600 font-medium" : "text-slate-400"
+                description.length >= 1000 ? "text-amber-600 font-medium" : "text-slate-400"
               }`}
             >
-              {description.length}/500
+              {description.length}/1000
             </span>
           </div>
         </div>
@@ -137,18 +150,22 @@ export function AssignTaskForm({
               Assigned To
             </Label>
             <Select
-              value={assignedTo}
+              value={assignedToId || assignedTo}
               onValueChange={(val) => {
-                setAssignedTo(val);
                 const selectedStaff = activeStaff.find(
-                  (member) => member.fullName === val,
+                  (member) => member.id === val || member.fullName === val,
                 );
-                setAssignedRole(selectedStaff?.role.name || "Staff");
-                setAssignedToAvatarUrl(selectedStaff?.avatarUrl || "");
+                if (selectedStaff) {
+                  setAssignedToId(selectedStaff.id);
+                  setAssignedTo(selectedStaff.fullName);
+                  setAssignedToEmail(selectedStaff.email);
+                  setAssignedRole(selectedStaff.role?.name || "Staff");
+                  setAssignedToAvatarUrl(selectedStaff.avatarUrl || "");
+                }
               }}
             >
               <SelectTrigger className="h-10 bg-white border border-[#D1D1D1] rounded-xl text-md text-text-body">
-                <SelectValue placeholder="Select" />
+                <SelectValue placeholder="Select staff member" />
               </SelectTrigger>
               <SelectContent>
                 {isStaffLoading ? (
@@ -157,7 +174,7 @@ export function AssignTaskForm({
                   </SelectItem>
                 ) : activeStaff.length > 0 ? (
                   activeStaff.map((member) => (
-                    <SelectItem key={member.id} value={member.fullName}>
+                    <SelectItem key={member.id} value={member.id}>
                       {member.fullName} ({member.role.name})
                     </SelectItem>
                   ))
@@ -240,64 +257,10 @@ export function AssignTaskForm({
         </div>
 
         {/* Attachments Section */}
-        <div className="space-y-1.5">
-          <Label>
-            Attachments(Optional)
-          </Label>
-          <div className="border-2 border-dashed border-[#C5D6D3] rounded-xl p-5 flex flex-col items-center justify-center text-center bg-slate-50/50">
-            <Upload className="size-5 text-[#4A706A] mb-1.5" />
-            <p className="text-md font-medium text-slate-800">
-              Drag and drop your file here
-            </p>
-            <p className="text-md text-text-description my-1">or</p>
-            {/* Hidden real file input — BUG-036 fix */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                const files = e.target.files;
-                if (files && files.length > 0) {
-                  const validFiles: File[] = [];
-                  Array.from(files).forEach((file) => {
-                    if (file.size > 10 * 1024 * 1024) {
-                      toast({
-                        title: "File too large",
-                        description: `${file.name} exceeds the 10MB limit. Document must be smaller than 10MB.`,
-                        variant: "destructive",
-                      });
-                    } else {
-                      validFiles.push(file);
-                    }
-                  });
-
-                  if (validFiles.length > 0) {
-                    setAttachedFilesCount((prev) => prev + validFiles.length);
-                    toast({
-                      title: "File Attached",
-                      description: `${validFiles.length} attachment${validFiles.length > 1 ? "s" : ""} added to task.`,
-                    });
-                  }
-                }
-                // reset so the same file can be re-selected
-                e.target.value = "";
-              }}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => fileInputRef.current?.click()}
-              className="h-7 px-3 bg-white border border-[#4A706A] text-[#4A706A] hover:bg-[#F0F5F4] rounded-xl text-md font-medium shadow-none cursor-pointer"
-            >
-              Browse Files
-            </Button>
-            <p className="text-md text-text-description mt-2">
-              Supported formats: PDF, JPG, PNG (Max: 10 MB)
-            </p>
-          </div>
-        </div>
+        <TaskAttachmentPicker
+          attachments={attachments}
+          setAttachments={setAttachments}
+        />
 
         {/* Email Notification Checkbox */}
         <div className="flex items-center gap-2.5 pt-1">

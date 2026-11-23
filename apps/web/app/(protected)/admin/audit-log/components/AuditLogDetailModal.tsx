@@ -1,9 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { User, FileText, Globe, Monitor } from "lucide-react";
+import {
+  User,
+  FileText,
+  Globe,
+  Monitor,
+  Hash,
+  PoundSterling,
+  Building2,
+  Tag,
+  Calendar,
+  CreditCard,
+  CheckCircle2,
+} from "lucide-react";
 import { Text } from "@repo/ui/components/ui";
-import { EntityViewModal } from "../../../../../lib/components/shared";
+import {
+  EntityViewModal,
+  type EntityViewSection,
+  type EntityViewField,
+} from "../../../../../lib/components/shared";
 import type { AuditLog as AuditLogItem } from "../../../../../lib/queries/audit/useGetAuditLogsQuery";
 import {
   formatLogWhen,
@@ -13,6 +29,7 @@ import {
   getLogAfter,
   getLogResident,
 } from "./audit-helpers";
+import { extractFinanceDetails } from "./audit-finance.util";
 
 interface AuditLogDetailModalProps {
   log: AuditLogItem | null;
@@ -70,6 +87,121 @@ export function AuditLogDetailModal({
     [log.device || "Desktop", os, log.browser].filter(Boolean).join(" • ") ||
     "Not recorded";
 
+  const fin = extractFinanceDetails(log);
+
+  const metaSection: EntityViewSection = {
+    columns: 2,
+    fields: [
+      {
+        label: "Performed By",
+        value: staffName,
+        subValue: staffRole,
+        icon: User,
+      },
+      {
+        label: "Resident",
+        value: resident !== "—" ? resident : "No Resident Linked",
+        subValue: `Entity: ${log.entityType || "General"}`,
+        icon: FileText,
+      },
+      {
+        label: "IP Address",
+        value: ipAddress,
+        subValue: `Tenant: ${log.tenantId ? log.tenantId.slice(0, 8) : "Platform"}`,
+        icon: Globe,
+      },
+      {
+        label: "Device & Browser",
+        value: deviceInfo,
+        icon: Monitor,
+      },
+    ],
+  };
+
+  const transactionFields: EntityViewField[] = [];
+  if (fin.referenceId) {
+    const refLabel =
+      log.entityType === "Expense"
+        ? "Expense Reference ID"
+        : log.entityType === "Invoice"
+          ? "Invoice Number"
+          : "Reference ID";
+    transactionFields.push({
+      label: refLabel,
+      value: fin.referenceId,
+      icon: Hash,
+    });
+  }
+  if (fin.amount) {
+    transactionFields.push({
+      label: "Amount",
+      value: fin.amount,
+      icon: PoundSterling,
+    });
+  }
+  if (fin.supplier) {
+    transactionFields.push({
+      label: "Supplier / Vendor",
+      value: fin.supplier,
+      icon: Building2,
+    });
+  }
+  if (fin.category) {
+    transactionFields.push({
+      label: "Category",
+      value: fin.category,
+      icon: Tag,
+    });
+  }
+  if (fin.status) {
+    transactionFields.push({
+      label: "Payment Status",
+      value: fin.status,
+      icon: CheckCircle2,
+    });
+  }
+  if (fin.txDate) {
+    transactionFields.push({
+      label: "Transaction Date",
+      value: fin.txDate,
+      icon: Calendar,
+    });
+  }
+  if (fin.paymentMethod) {
+    transactionFields.push({
+      label: "Payment Method",
+      value: fin.paymentMethod,
+      icon: CreditCard,
+    });
+  }
+  if (fin.description && fin.description !== fin.referenceId) {
+    transactionFields.push({
+      label: "Description",
+      value: fin.description,
+      icon: FileText,
+      className: "sm:col-span-2",
+      multiline: true,
+    });
+  }
+  if (fin.notes) {
+    transactionFields.push({
+      label: "Notes",
+      value: fin.notes,
+      icon: FileText,
+      className: "sm:col-span-2",
+      multiline: true,
+    });
+  }
+
+  const sections: EntityViewSection[] = [metaSection];
+  if (transactionFields.length > 0) {
+    sections.push({
+      title: "Transaction Details",
+      columns: 2,
+      fields: transactionFields,
+    });
+  }
+
   return (
     <EntityViewModal
       open={open}
@@ -78,36 +210,7 @@ export function AuditLogDetailModal({
       description={`Recorded on ${date} at ${time}`}
       badge={{ label: area }}
       secondaryBadge={{ label: log.actionType }}
-      sections={[
-        {
-          columns: 2,
-          fields: [
-            {
-              label: "Performed By",
-              value: staffName,
-              subValue: staffRole,
-              icon: User,
-            },
-            {
-              label: "Resident",
-              value: resident !== "—" ? resident : "No Resident Linked",
-              subValue: `Entity: ${log.entityType || "General"}`,
-              icon: FileText,
-            },
-            {
-              label: "IP Address",
-              value: ipAddress,
-              subValue: `Tenant: ${log.tenantId ? log.tenantId.slice(0, 8) : "Platform"}`,
-              icon: Globe,
-            },
-            {
-              label: "Device & Browser",
-              value: deviceInfo,
-              icon: Monitor,
-            },
-          ],
-        },
-      ]}
+      sections={sections}
     >
       {/* ================= Before vs After Comparison ================= */}
       <div className="pt-1 min-w-0 w-full">

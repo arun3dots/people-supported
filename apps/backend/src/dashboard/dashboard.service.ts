@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { prisma } from '@repo/db';
 import { DashboardSummaryDTO } from '@repo/schema';
 import { getUkDayBoundaries } from '../common/utils/time.util';
+import { findAssignedIncidentTasks } from './dashboard-incident-tasks.util';
 
 @Injectable()
 export class DashboardService {
@@ -305,9 +306,13 @@ export class DashboardService {
       orderBy: { scheduledTime: 'asc' },
     });
 
+    // 6. Fetch Incident Tasks assigned to this staff member
+    const incidentTasks = await findAssignedIncidentTasks(carerId, tenantId);
+
     return {
       dailyTasks,
       medicationRounds,
+      incidentTasks,
     };
   }
 }

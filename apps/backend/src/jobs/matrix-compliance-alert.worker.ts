@@ -348,7 +348,7 @@ export class MatrixComplianceAlertWorker {
         branchId: bed.branchId || bed.room?.branchId,
         title: `VACANCY ALERT: Bed ${bedIdentifier} (${daysVacant}d vacant)`,
         message: `Bed ${bedIdentifier} in Room ${bed.room?.roomNumber || ''} has been vacant for ${daysVacant} days (threshold: ${thresholdDays} days).`,
-        actionUrl: `/admin/facilities`,
+        actionUrl: `/admin/bed-management`,
         dedupeKey: `rm-006-${bed.id}-${weekKey}`,
         dedupeWindowHours: 24 * 6,
         metadata: { bedId: bed.id, daysVacant },

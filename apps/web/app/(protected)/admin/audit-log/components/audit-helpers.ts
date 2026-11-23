@@ -8,6 +8,9 @@ import {
 } from "./audit-badge.util";
 import { AUDIT_AREAS, type AuditAreaId } from "./audit-constants";
 import { getLogArea } from "./audit-area.util";
+import { getLogChange } from "./audit-change.util";
+import { getLogResident, getLogResidentId } from "./audit-resident.util";
+import { formatFinanceAuditValue } from "./audit-finance.util";
 import {
   isUuid,
   sanitizePagePathOrName,
@@ -25,125 +28,10 @@ export {
   AUDIT_AREAS,
   type AuditAreaId,
   getLogArea,
+  getLogChange,
+  getLogResident,
+  getLogResidentId,
 };
-
-export function getLogChange(log: AuditLogItem): string {
-  const meta = (log.metadata || {}) as Record<string, unknown>;
-  const residentName = getLogResident(log);
-  const fallbackLabel = residentName !== "—" ? residentName : undefined;
-
-  if (typeof meta.description === "string" && meta.description) {
-    return sanitizePagePathOrName(meta.description, fallbackLabel);
-  }
-  const descCandidate = (log as unknown as { description?: string }).description;
-  if (typeof descCandidate === "string" && descCandidate) {
-    return sanitizePagePathOrName(descCandidate, fallbackLabel);
-  }
-
-  const act = (log.actionType || "").toUpperCase();
-  const area = getLogArea(log);
-
-  if (area === "Medication") {
-    const drug =
-      (meta.drugName as string) || (log.entityLabel as string) || "Medication";
-    const dose = (meta.dose as string) || "";
-    const isCd = meta.isControlledDrug || meta.witnessName;
-    const prefix = isCd ? "CD administered" : "Medication administered";
-    if (act === "DOSE_GIVEN" || act === "MEDICATION_ADMINISTERED") {
-      return `${prefix}: ${drug}${dose ? ` ${dose}` : ""}`;
-    }
-    if (act === "DOSE_MISSED") return `Dose missed: ${drug}${dose ? ` ${dose}` : ""}`;
-    if (act === "DOSE_REFUSED") return `Dose refused: ${drug}${dose ? ` ${dose}` : ""}`;
-    if (act === "DOSE_WITHHELD") return `Dose withheld: ${drug}${dose ? ` ${dose}` : ""}`;
-  }
-
-  if (area === "Incident") {
-    const code = (log.entityLabel as string) || (meta.incidentNumber as string) || "";
-    const cat = (meta.category as string) || "";
-    const harm = (meta.harmLevel as string) || "";
-    const details = [cat, harm].filter(Boolean).join(", ");
-    return `Incident reported ${code}${details ? ` (${details})` : ""}`;
-  }
-
-  if (area === "Care plan") {
-    const version =
-      meta.version ||
-      (log.newValue as Record<string, unknown>)?.version ||
-      (log.oldValue as Record<string, unknown>)?.version ||
-      "";
-    const vStr = version ? `v${version} ` : "";
-    if (act === "SUBMITTED") return `Care plan ${vStr}submitted for approval`;
-    if (act === "APPROVED") return `Care plan ${vStr}approved`;
-    if (act === "REJECTED" || act === "CHANGES_REQUESTED") {
-      return `Care plan ${vStr}returned for changes`;
-    }
-    if (act === "CARE_PLAN_CREATED" || act === "CREATED") {
-      return `Care plan ${vStr}created`;
-    }
-    if (act === "CARE_PLAN_UPDATED") return `Care plan ${vStr}updated`;
-  }
-
-  if (area === "Assessment") {
-    return `Assessment completed: ${log.entityLabel || log.entityType || "Health Assessment"}`;
-  }
-  if (area === "Body map") {
-    if (log.entityLabel?.startsWith("Body Map Assessment for ")) {
-      return "Body Map Assessment recorded";
-    }
-    return `Body map updated: ${log.entityLabel || "Clinical zone record"}`;
-  }
-  if (area === "Observation") {
-    return `Observation recorded: ${log.entityLabel || "Vitals / News2"}`;
-  }
-  if (area === "Tasks") {
-    if (act === "TASK_COMPLETED") return `Task completed: ${log.entityLabel || "Daily Care Task"}`;
-    if (act === "TASK_SKIPPED") return `Task skipped: ${log.entityLabel || "Daily Care Task"}`;
-    return `Task updated: ${log.entityLabel || "Daily Care Task"}`;
-  }
-  if (area === "Handover") {
-    return `Handover notes updated: ${log.entityLabel || "Shift Handover"}`;
-  }
-  if (area === "Rota") {
-    if (act.includes("ASSIGN")) return `Staff assigned to shift: ${log.entityLabel || meta.shiftWindow || "Shift"}`;
-    if (
-      act.includes("LEAVE") ||
-      log.entityType === "LeaveRequest" ||
-      (log.entityType === "ShiftRequest" && (log.entityLabel as string)?.includes("Leave"))
-    ) {
-      const status = (meta.status as string) || (log.newValue as Record<string, unknown>)?.status;
-      return `Leave request ${status ? String(status).toLowerCase() : "updated"}: ${log.entityLabel || meta.staffName || "Staff"}`;
-    }
-    if (log.entityType === "ShiftRequest") {
-      const status = (meta.status as string) || (log.newValue as Record<string, unknown>)?.status;
-      return `Shift request ${status ? String(status).toLowerCase() : "updated"}: ${log.entityLabel || meta.staffName || "Staff"}`;
-    }
-    if (act.includes("CREATE")) return `Shift created: ${log.entityLabel || meta.careType || "Shift"}`;
-    if (act.includes("UPDATE") || act.includes("MODIFIED")) return `Shift modified: ${log.entityLabel || meta.careType || "Shift"}`;
-    if (act.includes("DELETE")) return `Shift cancelled/deleted: ${log.entityLabel || "Shift"}`;
-    return `Rota updated: ${log.entityLabel || "Shift"}`;
-  }
-
-  if (act === "LOGIN") return "User logged in";
-  if (act === "LOGOUT") return "User logged out";
-  if (act === "FAILED_LOGIN") return "Failed login attempt";
-  if (act === "PAGE_VIEW" || act === "PAGE_VIEWED") {
-    const rawTarget = log.entityLabel || (meta.pageName as string) || "";
-    const friendlyTarget = sanitizePagePathOrName(rawTarget, fallbackLabel);
-    return `Viewed page ${friendlyTarget}`;
-  }
-  if (act === "RESIDENT_RECORD_VIEWED") {
-    return `Viewed resident record ${log.entityLabel || fallbackLabel || ""}`;
-  }
-  if (act === "RESIDENT_EMERGENCY_VIEWED") {
-    return `Emergency directory (read-only) view of ${log.entityLabel || fallbackLabel || "resident"}`;
-  }
-  if (act === "DOCUMENT_VIEWED") return `Viewed document ${log.entityLabel || ""}`;
-  if (act === "DOCUMENT_DOWNLOADED") return `Downloaded document ${log.entityLabel || ""}`;
-
-  return log.entityLabel
-    ? `${formatActivityLabel(log.actionType)}: ${log.entityLabel}`
-    : formatActivityLabel(log.actionType);
-}
 
 export function formatValueCellLines(
   val: unknown,
@@ -164,6 +52,12 @@ export function formatValueCellLines(
     // Special clean rendering for Body Map findings
     if (Array.isArray(obj.findings) || obj.findingCount !== undefined) {
       return formatBodyMapFindings(obj.findings, obj.findingCount);
+    }
+
+    // Special clean rendering for Finance transactions (Expense, Invoice, Payment)
+    const finLines = formatFinanceAuditValue(obj);
+    if (finLines.length > 0) {
+      return finLines;
     }
 
     const keys = Object.keys(obj).filter((k) => !isTechnicalKey(k));
@@ -227,6 +121,18 @@ export function getLogBeforeLines(log: AuditLogItem): string[] {
     return formatRoleAuditValue(log.oldValue);
   }
 
+  if (
+    log.entityType === "Expense" ||
+    log.entityType === "Invoice" ||
+    log.entityType === "PaymentHistory"
+  ) {
+    if (log.oldValue) {
+      const fl = formatFinanceAuditValue(log.oldValue);
+      if (fl.length > 0) return fl;
+    }
+    return ["—"];
+  }
+
   if (meta.previousStock !== undefined) {
     return [`Balance ${meta.previousStock}`];
   }
@@ -251,6 +157,18 @@ export function getLogAfterLines(log: AuditLogItem): string[] {
     return formatRoleAuditValue(log.newValue);
   }
 
+  if (
+    log.entityType === "Expense" ||
+    log.entityType === "Invoice" ||
+    log.entityType === "PaymentHistory"
+  ) {
+    if (log.newValue) {
+      const fl = formatFinanceAuditValue(log.newValue);
+      if (fl.length > 0) return fl;
+    }
+    return ["—"];
+  }
+
   if (meta.newStock !== undefined) {
     const witness = meta.witnessName ? ` · witness ${meta.witnessName}` : "";
     return [`Balance ${meta.newStock}${witness}`];
@@ -272,62 +190,11 @@ export function getLogAfterLines(log: AuditLogItem): string[] {
 }
 
 export function getLogBefore(log: AuditLogItem): string {
-  return getLogBeforeLines(log).join(", ");
+  return getLogBeforeLines(log).join("\n");
 }
 
 export function getLogAfter(log: AuditLogItem): string {
-  return getLogAfterLines(log).join(", ");
-}
-
-export function getLogResident(log: AuditLogItem): string {
-  const meta = (log.metadata || {}) as Record<string, unknown>;
-  if (typeof meta.residentName === "string" && meta.residentName) {
-    return meta.residentName;
-  }
-  if (log.entityType === "Resident" && log.entityLabel) {
-    return log.entityLabel;
-  }
-  if (log.entityLabel) {
-    if (log.entityLabel.startsWith("Body Map Assessment for ")) {
-      return log.entityLabel.replace("Body Map Assessment for ", "").trim();
-    }
-    if (
-      log.entityType === "CarePlan" ||
-      log.entityType === "MedicationRound" ||
-      log.entityType === "Incident" ||
-      log.entityType === "Observation" ||
-      log.entityType === "BodyMapAssessment" ||
-      log.entityType === "BodyMapFinding"
-    ) {
-      if (
-        !log.entityLabel.startsWith("Plan ") &&
-        !log.entityLabel.startsWith("INC-") &&
-        !log.entityLabel.startsWith("Resolved:")
-      ) {
-        return log.entityLabel;
-      }
-    }
-  }
-  return "—";
-}
-
-export function getLogResidentId(log: AuditLogItem): string | null {
-  const meta = (log.metadata || {}) as Record<string, unknown>;
-  if (typeof meta.residentId === "string" && meta.residentId) {
-    return meta.residentId;
-  }
-  if (log.entityType === "Resident" && log.entityId) {
-    return log.entityId;
-  }
-  const nv = (log.newValue || {}) as Record<string, unknown>;
-  if (typeof nv.residentId === "string" && nv.residentId) {
-    return nv.residentId;
-  }
-  const ov = (log.oldValue || {}) as Record<string, unknown>;
-  if (typeof ov.residentId === "string" && ov.residentId) {
-    return ov.residentId;
-  }
-  return null;
+  return getLogAfterLines(log).join("\n");
 }
 
 export function formatLogWhen(timestamp: string): { date: string; time: string } {

@@ -15,6 +15,8 @@ export interface ComplianceItem {
 
 interface ComplianceChecklistWidgetProps {
   items?: ComplianceItem[];
+  onNotifyFamily?: () => void;
+  readOnly?: boolean;
 }
 
 const DEFAULT_CHECKLIST: ComplianceItem[] = [
@@ -40,6 +42,8 @@ const DEFAULT_CHECKLIST: ComplianceItem[] = [
 
 export function ComplianceChecklistWidget({
   items = DEFAULT_CHECKLIST,
+  onNotifyFamily,
+  readOnly = false,
 }: ComplianceChecklistWidgetProps) {
   return (
     <Card variant="surface">
@@ -50,6 +54,10 @@ export function ComplianceChecklistWidget({
       <div className="space-y-2.5">
         {items.map((item) => {
           const isDone = item.status === "Completed";
+          const isFamilyItem =
+            item.id === "c-1" ||
+            item.title.toLowerCase().includes("family");
+
           return (
             <div
               key={item.id}
@@ -70,6 +78,14 @@ export function ComplianceChecklistWidget({
                 <Text size={'md'} weight={'regular'} className="text-slate-400 shrink-0 pl-2">
                   {item.timestamp}
                 </Text>
+              ) : isFamilyItem && onNotifyFamily && !readOnly ? (
+                <button
+                  type="button"
+                  onClick={onNotifyFamily}
+                  className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-300 hover:bg-amber-100 transition-colors cursor-pointer"
+                >
+                  Notify
+                </button>
               ) : (
                 <Badge
                   variant="secondary"

@@ -94,6 +94,16 @@ export function NotificationDropdown() {
 
     // 1. Direct explicit actionUrl parsing
     if (actionUrl) {
+      if (
+        actionUrl.includes("/facilities") ||
+        actionUrl.includes("/admin/facilities") ||
+        actionUrl.includes("bed-management") ||
+        notification.title?.toUpperCase().includes("VACANCY") ||
+        category === "VACANCY"
+      ) {
+        return "/admin/bed-management";
+      }
+
       if (actionUrl.includes("escalation") || actionUrl.includes("/admin/escalations")) {
         return "/admin/escalations";
       }
@@ -178,6 +188,10 @@ export function NotificationDropdown() {
 
       case "INCIDENT":
         return role === "admin" ? `/admin/incidents` : `/${role}/dashboard`;
+
+      case "VACANCY":
+      case "FACILITY":
+        return "/admin/bed-management";
 
       case "ROTA":
       case "SHIFT":

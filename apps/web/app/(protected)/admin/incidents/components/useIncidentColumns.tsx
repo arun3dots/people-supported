@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo } from "react";
 import Link from "next/link";
@@ -143,6 +143,23 @@ export function useIncidentColumns(): TableColumn<Incident>[] {
         header: "Priority",
         getState: (i) => getIncidentPriorityBadgeState(i.priority || "Medium"),
         getLabel: (i) => i.priority || "Medium",
+      },
+      {
+        id: "tasks",
+        header: "Tasks",
+        enableSorting: false,
+        cell: ({ row }) => {
+          const tasks = (row.original.tasks || []) as unknown[];
+          const count = Array.isArray(tasks) ? tasks.length : 0;
+          if (count === 0) {
+            return <span className="text-md text-slate-400">—</span>;
+          }
+          return (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-md font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              {count} {count === 1 ? "Task" : "Tasks"}
+            </span>
+          );
+        },
       },
       {
         id: "actions",

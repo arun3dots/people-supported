@@ -71,6 +71,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!user.isActive) {
+      throw new UnauthorizedException(
+        'This account has been deactivated. Please contact your administrator.',
+      );
+    }
+
     const now = new Date();
     if (user.lockedUntil) {
       if (user.lockedUntil > now) {

@@ -270,6 +270,7 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
           { actionType: { contains: s, mode: 'insensitive' } },
           { entityType: { contains: s, mode: 'insensitive' } },
           { entityLabel: { contains: s, mode: 'insensitive' } },
+          { entityId: { contains: s, mode: 'insensitive' } },
         ],
       });
     }
