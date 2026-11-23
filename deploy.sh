@@ -79,49 +79,51 @@ echo "===== INSTALL DEPENDENCIES ====="
 
 pnpm install --frozen-lockfile
 
-# Load migration database credentials.
+# Keep migration credentials in a subshell so they do not reach PM2.
 echo
-echo "===== LOAD MIGRATION ENVIRONMENT ====="
+echo "===== CHECK MIGRATION ENVIRONMENT ====="
 
 if [ ! -f "$APP_DIR/.env.migrate" ]; then
     echo "ERROR: .env.migrate not found."
     exit 1
 fi
 
-set -a
-source "$APP_DIR/.env.migrate"
-set +a
+with_migration_env() (
+    set -a
+    source "$APP_DIR/.env.migrate"
+    set +a
 
-if [ -z "${DATABASE_URL:-}" ]; then
-    echo "ERROR: DATABASE_URL is missing from .env.migrate."
-    exit 1
-fi
+    if [ -z "${DATABASE_URL:-}" ] || [ -z "${AUDIT_DATABASE_URL:-}" ]; then
+        echo "ERROR: DATABASE_URL and AUDIT_DATABASE_URL are required in .env.migrate."
+        exit 1
+    fi
+    "$@"
+)
 
-if [ -z "${AUDIT_DATABASE_URL:-}" ]; then
-    echo "ERROR: AUDIT_DATABASE_URL is missing from .env.migrate."
-    exit 1
-fi
+# CI generates its own clients. Generate the ignored clients for this checkout too.
+echo
+echo "===== GENERATE PRISMA CLIENTS ====="
 
-# Prisma clients are generated in GitHub Actions CI.
-# Do not generate them again on the production server.
-# This prevents tracked generated files from becoming modified.
+with_migration_env pnpm db:generate
 
-# Build the application using the Prisma clients from CI.
+# Build before applying schema changes.
 echo
 echo "===== BUILD APPLICATIONS ====="
 
 pnpm build
 
 # Apply existing migrations only. No db push or seeding.
-echo
-echo "===== APPLY MAIN DATABASE MIGRATIONS ====="
+apply_migrations() {
+    echo
+    echo "===== APPLY MAIN DATABASE MIGRATIONS ====="
+    pnpm --filter @repo/db exec prisma migrate deploy --schema=prisma/schema.prisma
 
-pnpm --filter @repo/db exec prisma migrate deploy --schema=prisma/schema.prisma
+    echo
+    echo "===== APPLY AUDIT DATABASE MIGRATIONS ====="
+    pnpm --filter @repo/audit-db exec prisma migrate deploy --schema=prisma/schema.prisma
+}
 
-echo
-echo "===== APPLY AUDIT DATABASE MIGRATIONS ====="
-
-pnpm --filter @repo/audit-db exec prisma migrate deploy --schema=prisma/schema.prisma
+with_migration_env apply_migrations
 
 # Restart the running production applications.
 echo

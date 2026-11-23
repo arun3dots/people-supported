@@ -153,6 +153,10 @@ export class MfaService {
       );
     }
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException('Incorrect password');

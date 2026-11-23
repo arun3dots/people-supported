@@ -90,6 +90,10 @@ export class AuthService {
       }
     }
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const isMatch = await bcrypt.compare(pass, user.passwordHash);
     if (!isMatch) {
       const maxAttempts = 5; // NCSC guidance: 5-10 attempts (D-01)
