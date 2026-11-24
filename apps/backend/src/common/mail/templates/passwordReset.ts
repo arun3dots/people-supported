@@ -1,7 +1,7 @@
 export const passwordResetTemplate = (fullName: string, resetUrl: string) => `
 <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff;">
   <div style="margin-bottom: 32px; text-align: left;">
-    <div style="display: inline-block; padding: 12px 16px; background-color: #0b1220; border-radius: 12px;">
+    <div style="display: inline-block;">
         <img src="${process.env.FRONTEND_URL || 'http://localhost:3000'}/primary-logo.png" alt="Cantra Care" style="height: 30px; width: auto; display: block;" />
     </div>
   </div>

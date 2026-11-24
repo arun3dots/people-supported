@@ -656,7 +656,11 @@ export function IncidentReviewClient({
           />
 
           {/* Compliance Checklist Widget */}
-          <ComplianceChecklistWidget items={activeComplianceItems} />
+          <ComplianceChecklistWidget
+            items={activeComplianceItems}
+            onNotifyFamily={() => !isReadOnly && setNotifyFamilyModalOpen(true)}
+            readOnly={isReadOnly}
+          />
 
           {/* Compliance Reminder Alert Card */}
           {/*<ComplianceReminderWidget incident={incident} />*/}

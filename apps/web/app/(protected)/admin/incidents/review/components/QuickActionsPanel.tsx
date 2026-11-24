@@ -40,19 +40,6 @@ export function QuickActionsPanel({
       onClick: onStartInvestigation,
     },
     {
-      id: "notify-family",
-      title: "Notify Family",
-      icon: Users,
-      onClick: () => {
-        if (onNotifyFamily) {
-          onNotifyFamily();
-        } else {
-          toast({ title: "Family Notified", description: "Family notification sent & logged in checklist." });
-          onActionTrigger?.("Family Notified");
-        }
-      },
-    },
-    {
       id: "assign-task",
       title: "Assign Task",
       icon: UserCheck,

@@ -38,6 +38,19 @@ export function SchemesTab() {
   const { data: allSchemes = [], isLoading, isError } = useGetSchemesQuery();
   const { data: allProperties = [] } = useGetPropertiesQuery();
 
+  const availableForNewScheme = useMemo(
+    () => allProperties.filter((p) => !p.schemeId),
+    [allProperties],
+  );
+
+  const availableForEditScheme = useMemo(
+    () =>
+      allProperties.filter(
+        (p) => !p.schemeId || p.schemeId === editScheme?.id,
+      ),
+    [allProperties, editScheme?.id],
+  );
+
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: [GET_SCHEMES] });
     queryClient.invalidateQueries({ queryKey: [GET_PROPERTIES] });
@@ -243,7 +256,7 @@ export function SchemesTab() {
       <AddSchemeModal
         isOpen={isAddOpen}
         onOpenChange={setIsAddOpen}
-        properties={allProperties}
+        properties={availableForNewScheme}
         onCreate={(payload) => createMutation.mutateAsync(payload)}
         isSubmitting={createMutation.isPending}
       />
@@ -251,7 +264,7 @@ export function SchemesTab() {
       <AddSchemeModal
         isOpen={Boolean(editScheme)}
         onOpenChange={(open) => !open && setEditScheme(null)}
-        properties={allProperties}
+        properties={availableForEditScheme}
         initialData={editScheme}
         onCreate={async () => {}}
         onUpdate={(id, data) => updateMutation.mutateAsync({ id, data })}

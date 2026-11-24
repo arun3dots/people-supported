@@ -5,7 +5,7 @@ export const securityTemplate = (
 ) => `
 <div style="font-family: 'Outfit', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; border: 1px solid #fee2e2; border-radius: 20px; background-color: #fffafb;">
   <div style="margin-bottom: 32px; text-align: center;">
-    <div style="display: inline-block; padding: 16px 22px; background-color: #0b1220; border-radius: 16px;">
+    <div style="display: inline-block;">
         <img src="${process.env.FRONTEND_URL || 'http://localhost:3000'}/primary-logo.png" alt="Cantra Care" style="height: 32px; width: auto; display: block;" />
     </div>
   </div>

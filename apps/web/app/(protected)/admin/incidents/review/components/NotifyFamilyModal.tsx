@@ -51,7 +51,21 @@ export function NotifyFamilyModal({
       ? [rawNokList]
       : [];
 
-  const primaryNok = nokArray[0] || {};
+  const primaryNok = (nokArray[0] || {}) as Record<string, unknown>;
+  const nokName = typeof primaryNok.name === "string" ? primaryNok.name : "";
+  const nokEmail =
+    typeof primaryNok.email === "string"
+      ? primaryNok.email
+      : typeof primaryNok.emailAddress === "string"
+        ? primaryNok.emailAddress
+        : "";
+  const nokRelation =
+    typeof primaryNok.relation === "string"
+      ? primaryNok.relation
+      : typeof primaryNok.relationship === "string"
+        ? primaryNok.relationship
+        : "";
+  const nokPhone = typeof primaryNok.phone === "string" ? primaryNok.phone : "";
 
   const [recipientName, setRecipientName] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
@@ -70,33 +84,20 @@ export function NotifyFamilyModal({
   // Populate default form values when dialog opens or incident changes
   useEffect(() => {
     if (open && incident) {
-      const name = primaryNok.name || "Margaret Ashworth";
-      const email = primaryNok.email || "family.contact@gmail.com";
-      const rel = primaryNok.relation || "Primary Next of Kin";
-      const ph = primaryNok.phone || "+44 7123 456789";
-
-      setRecipientName(name);
-      setRecipientEmail(email);
-      setRelationship(rel);
-      setPhone(ph);
-
-      const defaultSubject = `Important Care Notification regarding ${residentName} (${incidentNumber})`;
-      setSubject(defaultSubject);
-
-      const defaultMessage = `We are writing to inform you that an incident (${incidentCategory}) occurred involving ${residentName} on ${incidentDate}.\n\nImmediate care protocols and initial medical assessments were provided promptly by our on-duty clinical team. ${residentName} is safe and currently resting comfortably under observation.\n\nPlease contact our care manager directly if you would like to discuss this further.`;
-      setMessage(defaultMessage);
+      setRecipientName(nokName);
+      setRecipientEmail(nokEmail);
+      setRelationship(nokRelation);
+      setPhone(nokPhone);
+      setSubject("");
+      setMessage("");
     }
   }, [
     open,
     incident,
-    primaryNok.name,
-    primaryNok.email,
-    primaryNok.relation,
-    primaryNok.phone,
-    residentName,
-    incidentNumber,
-    incidentCategory,
-    incidentDate,
+    nokName,
+    nokEmail,
+    nokRelation,
+    nokPhone,
   ]);
 
   const notifyMutation = useNotifyIncidentNokMutation(incident?.id || "");

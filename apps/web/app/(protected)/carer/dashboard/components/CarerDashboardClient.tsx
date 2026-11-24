@@ -21,10 +21,30 @@ export function CarerDashboardClient() {
   const updateTaskStatus = useUpdateDailyTaskStatusMutation();
 
   const dailyTasks = (data?.dailyTasks ?? []) as CarerTaskItem[];
+  const incidentTasks = data?.incidentTasks ?? [];
+  const mappedIncidentTasks: CarerTaskItem[] = incidentTasks.map((it) => ({
+    id: it.id,
+    title: `[Incident #${it.incidentNumber}] ${it.title}`,
+    status: it.status || "Pending",
+    priority: it.priority,
+    category: "Incident Follow-up",
+    timeSlot: it.dueTime || "Action Required",
+    targetTime: it.dueTime,
+    residentId: it.resident?.id,
+    resident: it.resident,
+    carePlanTask: {
+      category: "Incident Follow-up",
+      priority: it.priority,
+    },
+  }));
+
+  const allTasks = [...dailyTasks, ...mappedIncidentTasks];
   const isShiftStarted = !isCarer || Boolean(shiftData?.active?.isStarted);
 
   const handleCompleteTask = (taskId: string) => {
     if (!isShiftStarted) return;
+    // If it is an incident task, we don't update via care plan daily task endpoint
+    if (taskId.startsWith("task-")) return;
     updateTaskStatus.mutate({
       taskId,
       data: { status: "Completed" },
@@ -33,13 +53,14 @@ export function CarerDashboardClient() {
 
   const handleSkipTask = (taskId: string, skipReason: string) => {
     if (!isShiftStarted) return;
+    if (taskId.startsWith("task-")) return;
     updateTaskStatus.mutate({
       taskId,
       data: { status: "Skipped", skipReason },
     });
   };
 
-  const pendingTasksCount = dailyTasks.filter(
+  const pendingTasksCount = allTasks.filter(
     (t: { status?: string }) => t.status === "Pending"
   ).length;
 
@@ -87,14 +108,14 @@ export function CarerDashboardClient() {
       <CarerWelcomeCard user={user} pendingTasksCount={pendingTasksCount} />
 
       {/* 2. Key Metrics Row */}
-      <CarerStatsGrid tasks={dailyTasks} />
+      <CarerStatsGrid tasks={allTasks} />
 
       {/* 3. Main Tasks & Briefing Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full items-stretch">
         <div className="lg:col-span-8 w-full">
           {isShiftStarted ? (
             <UpcomingTasksList
-              tasks={dailyTasks}
+              tasks={allTasks}
               isLoading={isLoading}
               onCompleteTask={handleCompleteTask}
               onSkipTask={handleSkipTask}
