@@ -460,7 +460,7 @@ export class AuthService {
    * Retrieves live profile, tenant, and permission data for the authenticated user,
    * enforcing security validation (soft-delete, account status, tenant status).
    */
-  async getMe(currentUser: AuthenticatedUser) {
+  async getMe(currentUser: AuthenticatedUser, isCognitoSession = false) {
     if (!currentUser?.userId) {
       throw new UnauthorizedException('Authentication session is invalid');
     }
@@ -468,13 +468,14 @@ export class AuthService {
     // 1. SuperAdmin user (platform-wide, tenantId is null/undefined)
     if (!currentUser.tenantId) {
       const superAdminUser = await prisma.user.findFirst({
-        where: { id: currentUser.userId, deletedAt: null },
+        where: { id: currentUser.userId, tenantId: null, deletedAt: null },
         select: {
           id: true,
           isActive: true,
           lockedUntil: true,
+          mfaEnabled: true,
           profile: { select: { profilePhotoUrl: true } },
-          role: { select: { name: true, permissions: true } },
+          role: { select: { name: true, permissions: true, deletedAt: true } },
         },
       });
 
@@ -495,10 +496,36 @@ export class AuthService {
         throw new UnauthorizedException('Account is temporarily locked');
       }
 
+      if (
+        !superAdminUser.role ||
+        superAdminUser.role.deletedAt ||
+        superAdminUser.role.name !== 'SuperAdmin'
+      ) {
+        throw new UnauthorizedException(
+          'SuperAdmin privileges are unavailable',
+        );
+      }
+
+      const mfaSetupRequired =
+        !isCognitoSession &&
+        !superAdminUser.mfaEnabled &&
+        process.env.ENFORCE_MFA === 'true';
+      const mfaRequiredButMissing =
+        !isCognitoSession &&
+        superAdminUser.mfaEnabled &&
+        currentUser.mfaVerified !== true;
+      const mfaVerified = isCognitoSession
+        ? currentUser.mfaVerified === true
+        : !mfaSetupRequired &&
+          !mfaRequiredButMissing &&
+          currentUser.mfaVerified === true;
+
       return {
         ...currentUser,
-        roleName: superAdminUser.role?.name ?? currentUser.roleName,
-        permissions: superAdminUser.role?.permissions
+        mfaVerified,
+        mfaSetupRequired,
+        roleName: superAdminUser.role.name,
+        permissions: superAdminUser.role.permissions
           ? coercePermissions(superAdminUser.role.permissions)
           : (currentUser.permissions ?? EMPTY_ROLE_PERMISSIONS),
         subscriptionStatus: 'active',
@@ -518,6 +545,7 @@ export class AuthService {
           subscriptionStatus: true,
           name: true,
           primaryContactName: true,
+          enforceMfaForAllStaff: true,
         },
       }),
       prisma.user.findFirst({
@@ -530,8 +558,9 @@ export class AuthService {
           isActive: true,
           lockedUntil: true,
           emailVerified: true,
+          mfaEnabled: true,
           profile: { select: { profilePhotoUrl: true } },
-          role: { select: { name: true, permissions: true } },
+          role: { select: { name: true, permissions: true, deletedAt: true } },
           branches: { select: { branchId: true } },
         },
       }),
@@ -551,6 +580,10 @@ export class AuthService {
       throw new UnauthorizedException('Account is temporarily locked');
     }
 
+    if (!user.role || user.role.deletedAt) {
+      throw new UnauthorizedException('User role is unavailable');
+    }
+
     if (!tenant) {
       throw new UnauthorizedException(
         'Organization not found or has been deactivated',
@@ -565,6 +598,22 @@ export class AuthService {
 
     const subscriptionStatus = tenant.subscriptionStatus ?? 'active';
     const emailVerified = user.emailVerified ?? true;
+    const roleName = user.role.name ?? currentUser.roleName;
+    const roleRequiresMfa =
+      ['SuperAdmin', 'Admin', 'Manager'].includes(roleName) ||
+      tenant.enforceMfaForAllStaff === true;
+    const mfaSetupRequired =
+      !isCognitoSession &&
+      !user.mfaEnabled &&
+      roleRequiresMfa &&
+      process.env.ENFORCE_MFA === 'true';
+    const mfaRequiredButMissing =
+      !isCognitoSession && user.mfaEnabled && currentUser.mfaVerified !== true;
+    const mfaVerified = isCognitoSession
+      ? currentUser.mfaVerified === true
+      : !mfaSetupRequired &&
+        !mfaRequiredButMissing &&
+        currentUser.mfaVerified === true;
 
     let paymentUrl: string | undefined;
     if (subscriptionStatus !== 'active') {
@@ -589,9 +638,11 @@ export class AuthService {
 
     return {
       ...currentUser,
+      mfaVerified,
+      mfaSetupRequired,
       // Refresh live role name and live permissions directly from database
-      roleName: user.role?.name ?? currentUser.roleName,
-      permissions: user.role?.permissions
+      roleName,
+      permissions: user.role.permissions
         ? coercePermissions(user.role.permissions)
         : (currentUser.permissions ?? EMPTY_ROLE_PERMISSIONS),
       branchIds: liveBranchIds,

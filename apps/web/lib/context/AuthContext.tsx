@@ -9,7 +9,13 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import type { RolePermissions } from "@repo/schema";
+import type { RolePermissions, SessionLogoutDTO } from "@repo/schema";
+import { makeAPICall } from "../api";
+import {
+  getBrowserApiBaseUrl,
+  resolveSafeSignOutDestination,
+} from "../auth/apiBase";
+import { isPublicWebRoute } from "../auth/middlewareAuth";
 import {
   beginLogout,
   expireSession,
@@ -58,19 +64,13 @@ const IDLE_TIMEOUT_MS = ACCESS_TOKEN_LIFETIME_MS; // 5 hours of inactivity
 const ACTIVITY_BROADCAST_INTERVAL_MS = 5000;
 const ACTIVITY_CHANNEL_NAME = "care-home-auth-activity";
 
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
-}
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
 
-  const API_URL = getApiBaseUrl();
+  const API_URL = getBrowserApiBaseUrl();
 
   const silentRefresh = useCallback(
     (): Promise<RefreshResult> => refreshSession(),
@@ -101,17 +101,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(async () => {
     beginLogout();
     stopRefreshTimer();
+    let destination = "/login";
     try {
-      await fetch(`${API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const { signOutUrl } = await makeAPICall<SessionLogoutDTO>("LOGOUT");
+      destination = resolveSafeSignOutDestination(signOutUrl);
     } catch (error) {
       console.error("Logout request failed:", error);
     }
     setUser(null);
-    window.location.replace("/login");
-  }, [API_URL, stopRefreshTimer]);
+    window.location.replace(destination);
+  }, [stopRefreshTimer]);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -156,6 +155,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           setUser(null);
           stopRefreshTimer();
+          if (
+            refreshResult === "invalid" &&
+            typeof window !== "undefined" &&
+            !isPublicWebRoute(window.location.pathname)
+          ) {
+            expireSession();
+          }
         }
       }
     } catch (error) {
@@ -223,8 +229,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     activityChannel?.addEventListener("message", handleActivityMessage);
-    const events = ["mousedown", "mousemove", "keydown", "touchstart", "scroll"];
-    events.forEach((evt) => window.addEventListener(evt, updateActivity, { passive: true }));
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keydown",
+      "touchstart",
+      "scroll",
+    ];
+    events.forEach((evt) =>
+      window.addEventListener(evt, updateActivity, { passive: true }),
+    );
     window.addEventListener("focus", updateActivity);
 
     const idleChecker = setInterval(() => {

@@ -1,11 +1,10 @@
 import endpointInfo from "./endpoints";
-import { recoverSession, refreshSession } from "./auth/sessionManager";
-
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
-}
+import { resolveApiUrl } from "./auth/apiBase";
+import {
+  expireSession,
+  recoverSession,
+  refreshSession,
+} from "./auth/sessionManager";
 
 export async function makeAPICall<T>(
   apiName: string,
@@ -25,14 +24,7 @@ export async function makeAPICall<T>(
     endpoint = endpoint.replace(`[${key}]`, value);
   });
 
-  const finalBaseUrl = getApiBaseUrl();
-
-  // Ensure we don't double the /api prefix if it's already in the baseUrl
-  const cleanEndpoint = endpoint.startsWith("/api")
-    ? endpoint.substring(4)
-    : endpoint;
-
-  const url = new URL(`${finalBaseUrl}${cleanEndpoint}`);
+  const url = resolveApiUrl(endpoint);
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
@@ -42,7 +34,6 @@ export async function makeAPICall<T>(
 
   const isFormData = payload instanceof FormData;
 
-  // Built fresh for the retry so the request body (FormData/JSON) is reusable.
   const buildOptions = (): RequestInit => {
     const fetchOptions: RequestInit = {
       method: requestType,
@@ -51,7 +42,6 @@ export async function makeAPICall<T>(
         : {
             "Content-Type": "application/json",
           },
-      // Include credentials so the HttpOnly auth cookies are sent
       credentials: "include",
     };
 
@@ -68,25 +58,21 @@ export async function makeAPICall<T>(
 
   let response = await fetch(url.toString(), buildOptions());
 
-  // Access token most likely expired (15-minute TTL). Never attempt to refresh
-  // the refresh call itself, to avoid an infinite loop.
-  if (response.status === 401 && !endpoint.includes("/auth/refresh")) {
-    // 1) Try a silent single-flight refresh — the common, invisible case.
-    let recovered = await refreshSession();
-    // 2) If that failed, escalate to the visible recovery flow: this shows the
-    //    "reauthenticating" popup and retries in the background, ending in the
-    //    session-timeout + redirect only if every retry fails.
-    if (!recovered) {
-      recovered = await recoverSession();
+  const isAuthFlowRequest = endpoint.includes("/auth/");
+  if (response.status === 401 && !isAuthFlowRequest) {
+    let refreshResult = await refreshSession();
+    if (refreshResult === "temporary") {
+      refreshResult = await recoverSession();
     }
-    if (recovered) {
+    if (refreshResult === "refreshed") {
       response = await fetch(url.toString(), buildOptions());
+    } else if (refreshResult === "invalid") {
+      expireSession();
     }
   }
 
   if (!response.ok) {
-    // Try to parse error message from response
-    let errorData;
+    let errorData: unknown;
     try {
       errorData = await response.json();
     } catch {
@@ -95,5 +81,10 @@ export async function makeAPICall<T>(
     return Promise.reject(errorData);
   }
 
-  return response.json() as Promise<T>;
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const text = await response.text();
+  return text ? (JSON.parse(text) as T) : (undefined as T);
 }

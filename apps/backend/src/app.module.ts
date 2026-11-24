@@ -44,6 +44,9 @@ import { ReportsModule } from './reports/reports.module';
       {
         ttl: 60000,
         limit: 120,
+        skipIf: () =>
+          process.env.NODE_ENV === 'test' &&
+          Boolean(process.env.COGNITO_DISPOSABLE_DB),
       },
     ]),
     ScheduleModule.forRoot(),

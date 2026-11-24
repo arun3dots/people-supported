@@ -9,25 +9,29 @@ import {
   useRef,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import type { SessionLogoutDTO } from "@repo/schema";
+import {
+  getBrowserApiBaseUrl,
+  resolveSafeSignOutDestination,
+} from "../auth/apiBase";
+import { isPublicSuperAdminRoute } from "../auth/middlewareAuth";
 import {
   beginLogout,
+  expireSession,
   recoverSession,
   refreshSession,
   resetSessionStatus,
   subscribeSession,
+  type RefreshResult,
 } from "../auth/sessionManager";
 
-/**
- * The platform admin behind this app. Unlike the tenant web app, a SuperAdmin
- * has no tenant, permissions, subscription or MFA state — so this is the
- * trimmed-down mirror of `apps/web`'s `AuthContext` user.
- */
 interface User {
   userId: string;
   email: string;
   fullName: string;
   roleName: string;
+  tenantId?: string | null;
+  mfaVerified?: boolean;
 }
 
 interface AuthContextType {
@@ -43,47 +47,40 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 /** Interval for silent token refresh (12 minutes — before 15m access token expires) */
 const REFRESH_INTERVAL_MS = 12 * 60 * 1000;
 
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
+function isSuperAdminUser(user: User): boolean {
+  return (
+    user.roleName?.toUpperCase() === "SUPERADMIN" &&
+    !user.tenantId &&
+    user.mfaVerified === true
+  );
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const API_URL = getApiBaseUrl();
+  const API_URL = getBrowserApiBaseUrl();
 
-  /**
-   * Silently refresh the access token. Delegates to the shared session manager
-   * so this and `makeAPICall`'s 401 handler never fire two refreshes at once
-   * (which the backend would treat as token reuse and revoke the whole family).
-   */
   const silentRefresh = useCallback(
-    (): Promise<boolean> => refreshSession(),
+    (): Promise<RefreshResult> => refreshSession(),
     [],
   );
 
-  /** Start the automatic refresh timer */
   const startRefreshTimer = useCallback(() => {
     if (refreshTimerRef.current) {
       clearInterval(refreshTimerRef.current);
     }
     refreshTimerRef.current = setInterval(async () => {
-      const success = await silentRefresh();
-      if (!success) {
-        // Proactive refresh failed — hand off to the visible recovery flow
-        // (popup + background retries). The SessionReauthDialog owns the
-        // session-timeout message and redirect if recovery ultimately fails.
+      const result = await silentRefresh();
+      if (result === "invalid") {
+        expireSession();
+      } else if (result === "temporary") {
         await recoverSession();
       }
     }, REFRESH_INTERVAL_MS);
   }, [silentRefresh]);
 
-  /** Stop the refresh timer */
   const stopRefreshTimer = useCallback(() => {
     if (refreshTimerRef.current) {
       clearInterval(refreshTimerRef.current);
@@ -91,7 +88,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  /** Fetch the current user from the /auth/me endpoint */
   const refreshUser = useCallback(async () => {
     try {
       const res = await fetch(`${API_URL}/auth/me`, {
@@ -99,20 +95,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         credentials: "include",
       });
       if (res.ok) {
-        const userData: User = await res.json();
+        const userData = (await res.json()) as User;
+        if (!isSuperAdminUser(userData)) {
+          setUser(null);
+          stopRefreshTimer();
+          return;
+        }
         setUser(userData);
         resetSessionStatus();
         startRefreshTimer();
       } else {
-        // Access token expired — try silent refresh, then retry once.
-        const refreshed = await silentRefresh();
-        if (refreshed) {
+        let refreshResult = await silentRefresh();
+        if (refreshResult === "temporary") {
+          refreshResult = await recoverSession();
+        }
+        if (refreshResult === "refreshed") {
           const retryRes = await fetch(`${API_URL}/auth/me`, {
             method: "POST",
             credentials: "include",
           });
           if (retryRes.ok) {
-            const userData: User = await retryRes.json();
+            const userData = (await retryRes.json()) as User;
+            if (!isSuperAdminUser(userData)) {
+              setUser(null);
+              stopRefreshTimer();
+              return;
+            }
             setUser(userData);
             resetSessionStatus();
             startRefreshTimer();
@@ -123,6 +131,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           setUser(null);
           stopRefreshTimer();
+          if (
+            refreshResult === "invalid" &&
+            typeof window !== "undefined" &&
+            !isPublicSuperAdminRoute(window.location.pathname)
+          ) {
+            expireSession();
+          }
         }
       }
     } catch (error) {
@@ -135,13 +150,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [API_URL, silentRefresh, startRefreshTimer, stopRefreshTimer]);
 
   useEffect(() => {
-    refreshUser();
+    void refreshUser();
     return () => stopRefreshTimer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshUser, stopRefreshTimer]);
 
-  // When the session manager gives up (every refresh retry failed), clear the
-  // user and stop the timer. The SessionReauthDialog handles the redirect.
   useEffect(
     () =>
       subscribeSession((status) => {
@@ -162,7 +174,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
+      const err = (await res.json().catch(() => ({}))) as { message?: string };
       throw new Error(err.message || "Login failed");
     }
 
@@ -170,20 +182,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    // Suppress the reauth popup: clearing cookies will 401 any racing request,
-    // but that is an intentional logout, not a session timeout.
     beginLogout();
     stopRefreshTimer();
+    let destination = "/login";
     try {
-      await fetch(`${API_URL}/auth/logout`, {
+      const res = await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
+      if (res.ok) {
+        const body = (await res.json().catch(() => ({}))) as Partial<SessionLogoutDTO>;
+        destination = resolveSafeSignOutDestination(body.signOutUrl);
+      }
     } catch (error) {
       console.error("Logout request failed:", error);
     }
     setUser(null);
-    router.push("/login");
+    window.location.replace(destination);
   };
 
   return (

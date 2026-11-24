@@ -2,6 +2,8 @@ import { EndpointDetails } from "../types";
 
 export const LOGIN = "LOGIN";
 export const AUTH_LOGIN = "LOGIN";
+export const COGNITO_START = "COGNITO_START";
+export const COGNITO_START_PATH = "/auth/cognito/start";
 export const LOGOUT = "LOGOUT";
 export const AUTH_LOGOUT = "LOGOUT";
 export const MFA_VERIFY = "MFA_VERIFY";
@@ -28,6 +30,10 @@ const authEndpoints: EndpointDetails = {
   [LOGIN]: {
     endpoint: "/auth/login",
     requestType: "POST",
+  },
+  [COGNITO_START]: {
+    endpoint: COGNITO_START_PATH,
+    requestType: "GET",
   },
   [LOGOUT]: {
     endpoint: "/auth/logout",

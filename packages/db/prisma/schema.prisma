@@ -384,6 +384,7 @@ model User {
   mfaEnabled             Boolean                 @default(false)
   mfaResetRequests       MfaResetRequest[]
   refreshTokens          RefreshToken[]
+  cognitoSessions        CognitoSession[]
   keyworkerFor           Resident[]              @relation("Keyworker")
   shiftAssignments       ShiftAssignment[]
   staffExpenses          StaffExpense[]
@@ -429,6 +430,45 @@ model User {
   staffAppraisals        StaffAppraisal[]        @relation("StaffAppraisals")
   appraiserSessions      StaffAppraisal[]        @relation("AppraiserSessions")
   leaveRequests          LeaveRequest[]
+}
+
+model CognitoLoginAttempt {
+  stateHash      String   @id
+  bindingHash    String
+  nonceHash      String
+  sealedVerifier String
+  expiresAt      DateTime @db.Timestamptz(3)
+
+  @@index([expiresAt])
+}
+
+model CognitoSession {
+  id                  String    @id
+  userId              String
+  tenantId            String?
+  issuer              String
+  subject             String
+  authenticatedAt     DateTime  @db.Timestamptz(3)
+  expiresAt           DateTime  @db.Timestamptz(3)
+  revokedAt           DateTime? @db.Timestamptz(3)
+  activeBranchId      String?
+  refreshHash         String
+  previousRefreshHash String?
+  previousValidUntil  DateTime? @db.Timestamptz(3)
+  sealedCredentials   String?
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([issuer, subject, authenticatedAt])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model CognitoRevocation {
+  issuer        String
+  subject       String
+  revokedBefore DateTime @db.Timestamptz(3)
+
+  @@id([issuer, subject])
 }
 
 model RefreshToken {

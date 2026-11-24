@@ -1,5 +1,6 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
   Post,
   Body,
@@ -25,10 +26,6 @@ import {
   VerifyOtpDTO,
   resetPasswordWithTokenSchema,
   ResetPasswordWithTokenDTO,
-  switchBranchSchema,
-  SwitchBranchDTO,
-  refreshTokenSchema,
-  RefreshTokenDTO,
   mfaVerifySchema,
   MfaVerifyDTO,
   disableMfaSchema,
@@ -37,18 +34,24 @@ import {
   MfaResetVerifyDTO,
 } from '@repo/schema';
 import { ZodValidationPipe } from '../common/pipes/zod.pipe';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import {
+  JwtAuthGuard,
+  LegacyJwtAuthGuard,
+} from '../common/guards/jwt-auth.guard';
 import {
   ACCESS_COOKIE_OPTIONS,
   REFRESH_COOKIE_OPTIONS,
+  clearRefreshCookie,
+  clearStaleDomainCookies,
   formatAuthUser,
+  isSecureCookieRequest,
 } from './auth-cookie.util';
+import { assertSafeBrowserOrigin } from './auth-origin.util';
+import { cognitoRequestSession } from './cognito/cognito-jwt.strategy';
 import {
   ACCESS_TOKEN_MAX_AGE_MS,
   MFA_PENDING_ACCESS_TOKEN_MAX_AGE_MS,
 } from './auth.constants';
-
-const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || undefined;
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -57,10 +60,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly auditService: AuditService,
   ) {}
-
-  private get isProduction(): boolean {
-    return process.env.NODE_ENV === 'production';
-  }
 
   @Post('login')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
@@ -72,6 +71,14 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    if (
+      process.env.COGNITO_AUTH_ENABLED === 'true' &&
+      process.env.LEGACY_AUTH_ENABLED === 'false'
+    ) {
+      throw new ForbiddenException(
+        'Password sign-in is disabled. Use Cognito Managed Login.',
+      );
+    }
     let user: SafeUser;
     try {
       user = await this.authService.validateUser(
@@ -98,12 +105,14 @@ export class AuthController {
       throw new UnauthorizedException();
     }
     const result = await this.authService.login(user);
+    const secure = isSecureCookieRequest(req);
+    clearStaleDomainCookies(res, req, secure);
 
     res.cookie(
       'access_token',
       result.access_token,
       ACCESS_COOKIE_OPTIONS(
-        this.isProduction,
+        secure,
         result.mfaVerified
           ? ACCESS_TOKEN_MAX_AGE_MS
           : MFA_PENDING_ACCESS_TOKEN_MAX_AGE_MS,
@@ -113,13 +122,10 @@ export class AuthController {
       res.cookie(
         'refresh_token',
         result.refresh_token,
-        REFRESH_COOKIE_OPTIONS(this.isProduction),
+        REFRESH_COOKIE_OPTIONS(secure),
       );
     } else {
-      res.clearCookie('refresh_token', {
-        path: '/api/auth',
-        domain: COOKIE_DOMAIN,
-      });
+      clearRefreshCookie(res, req, secure);
     }
 
     if (user.tenantId) {
@@ -149,79 +155,6 @@ export class AuthController {
     };
   }
 
-  @Post('refresh')
-  @ApiOperation({
-    summary: 'Refresh access token using refresh token cookie or body',
-  })
-  async refresh(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-    @Body(new ZodValidationPipe(refreshTokenSchema.optional().default({})))
-    body?: RefreshTokenDTO,
-  ) {
-    const oldRefreshToken: string =
-      (req.cookies?.refresh_token as string) || body?.refreshToken || '';
-    if (!oldRefreshToken) {
-      throw new UnauthorizedException('No refresh token provided');
-    }
-
-    const accessToken: string | undefined = req.cookies?.access_token;
-    const result = await this.authService.refreshAccessToken(
-      oldRefreshToken,
-      accessToken,
-    );
-    res.cookie(
-      'access_token',
-      result.access_token,
-      ACCESS_COOKIE_OPTIONS(this.isProduction),
-    );
-    res.cookie(
-      'refresh_token',
-      result.refresh_token,
-      REFRESH_COOKIE_OPTIONS(this.isProduction),
-    );
-
-    return {
-      success: true,
-      accessToken: result.access_token,
-      refreshToken: result.refresh_token,
-    };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  @ApiOperation({ summary: 'Logout and revoke all refresh tokens' })
-  async logout(
-    @Req() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    if (req.user.tenantId) {
-      await this.auditService
-        .emitAuth({
-          userId: req.user.userId,
-          tenantId: req.user.tenantId,
-          userEmail: req.user.email,
-          userFullName: req.user.fullName,
-          userRoleName: req.user.roleName,
-          actionType: 'LOGOUT',
-          entityType: 'User',
-          entityId: req.user.userId,
-          ipAddress: req.ip,
-          userAgent: req.headers['user-agent'] as string,
-        })
-        .catch(() => {});
-    }
-
-    await this.authService.logout(req.user.userId);
-    res.clearCookie('access_token', { path: '/', domain: COOKIE_DOMAIN });
-    res.clearCookie('refresh_token', {
-      path: '/api/auth',
-      domain: COOKIE_DOMAIN,
-    });
-
-    return { success: true };
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post('me')
   @ApiOperation({
@@ -229,7 +162,10 @@ export class AuthController {
       'Get live profile, role, tenant, and permissions for current session',
   })
   async getMe(@Req() req: AuthenticatedRequest) {
-    return this.authService.getMe(req.user);
+    return this.authService.getMe(
+      req.user,
+      Boolean(cognitoRequestSession(req)),
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -238,13 +174,14 @@ export class AuthController {
     return this.authService.getSecurityState(req.user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Post('mfa/generate')
   async generateMfa(@Req() req: AuthenticatedRequest) {
+    assertSafeBrowserOrigin(req);
     return this.authService.generateMfaSecret(req.user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('mfa/verify')
   async verifyMfa(
@@ -252,19 +189,22 @@ export class AuthController {
     @Req() req: AuthenticatedRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
+    assertSafeBrowserOrigin(req);
     const result = await this.authService.verifyMfaAndIssueTokens(
       req.user.userId,
       dto.token,
     );
+    const secure = isSecureCookieRequest(req);
+    clearStaleDomainCookies(res, req, secure);
     res.cookie(
       'access_token',
       result.access_token,
-      ACCESS_COOKIE_OPTIONS(this.isProduction),
+      ACCESS_COOKIE_OPTIONS(secure),
     );
     res.cookie(
       'refresh_token',
       result.refresh_token,
-      REFRESH_COOKIE_OPTIONS(this.isProduction),
+      REFRESH_COOKIE_OPTIONS(secure),
     );
     return {
       success: true,
@@ -272,69 +212,50 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Post('mfa/disable')
   async disableMfa(
     @Body(new ZodValidationPipe(disableMfaSchema)) dto: DisableMfaDTO,
     @Req() req: AuthenticatedRequest,
   ) {
+    assertSafeBrowserOrigin(req);
     await this.authService.disableMfa(req.user.userId, dto.password);
     return { success: true };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('mfa/reset-request')
   async requestMfaReset(@Req() req: AuthenticatedRequest) {
+    assertSafeBrowserOrigin(req);
     return this.authService.requestMfaReset(req.user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('mfa/reset-verify')
   async verifyMfaReset(
     @Body(new ZodValidationPipe(mfaResetVerifySchema)) dto: MfaResetVerifyDTO,
     @Req() req: AuthenticatedRequest,
   ) {
+    assertSafeBrowserOrigin(req);
     return this.authService.verifyMfaReset(req.user.userId, dto.code);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('switch-branch')
-  async switchBranch(
-    @Body(new ZodValidationPipe(switchBranchSchema)) dto: SwitchBranchDTO,
-    @Req() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const refreshToken: string = req.cookies?.refresh_token as string;
-    if (!refreshToken) {
-      throw new UnauthorizedException('No refresh token provided');
-    }
-    const result = await this.authService.switchBranch(
-      req.user.userId,
-      refreshToken,
-      dto.branchId,
-    );
-    res.cookie(
-      'access_token',
-      result.access_token,
-      ACCESS_COOKIE_OPTIONS(this.isProduction),
-    );
-    return { success: true, activeBranchId: result.activeBranchId };
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Post('resend-verification')
   async resendVerification(@Req() req: AuthenticatedRequest) {
+    assertSafeBrowserOrigin(req);
     return this.authService.resendVerification(req.user.userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LegacyJwtAuthGuard)
   @Post('change-password')
   async changePassword(
     @Body(new ZodValidationPipe(changePasswordSchema)) dto: ChangePasswordDTO,
     @Req() req: AuthenticatedRequest,
   ): Promise<{ success: boolean }> {
+    assertSafeBrowserOrigin(req);
     await this.authService.changePassword(
       req.user.userId,
       dto.currentPassword,

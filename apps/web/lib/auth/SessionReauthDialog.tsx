@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +25,6 @@ const EXPIRED_REDIRECT_DELAY_MS = 2000;
  * - status "active"  → nothing rendered. Refresh retries remain in the background.
  */
 export function SessionReauthDialog() {
-  const router = useRouter();
   const [status, setStatus] = useState<SessionStatus>(() => getSessionStatus());
 
   useEffect(() => subscribeSession(setStatus), []);
@@ -35,10 +33,10 @@ export function SessionReauthDialog() {
     if (status !== "expired") return;
     const timer = setTimeout(() => {
       resetSessionStatus();
-      router.push("/login");
+      window.location.replace("/login?reason=session_expired");
     }, EXPIRED_REDIRECT_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [status, router]);
+  }, [status]);
 
   const open = status === "expired";
 
