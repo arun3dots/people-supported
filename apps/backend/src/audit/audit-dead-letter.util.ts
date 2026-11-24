@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import Redis from 'ioredis';
-import { encrypt, decrypt } from '@repo/db';
+import { encrypt, decrypt, isEncrypted } from '@repo/db';
 import { AuditEvent } from './audit.types';
 
 const REDIS_DEAD_LETTER_KEY = 'cqc:audit:dead-letter:v1';
@@ -81,10 +81,8 @@ export async function writeDeadLetterLog(
       inMemoryEncryptedBuffer.shift();
     }
     inMemoryEncryptedBuffer.push(ciphertext);
-  } catch (err: unknown) {
-    logger?.error(
-      `Failed to enqueue encrypted audit dead-letter event: ${(err as Error).message}`,
-    );
+  } catch {
+    logger?.error('Failed to enqueue encrypted audit dead-letter event.');
   }
 }
 
@@ -147,14 +145,22 @@ async function replaySingleCiphertext(
   logger?: Logger,
 ): Promise<boolean> {
   try {
+    if (!isEncrypted(ciphertext))
+      throw new Error('Invalid dead-letter envelope');
     const plaintext = decrypt(ciphertext);
-    if (!plaintext) return false;
+    if (!plaintext) throw new Error('Empty dead-letter envelope');
     const parsed = JSON.parse(plaintext) as DeadLetterEnvelope;
+    if (
+      typeof parsed?.event?.categoryType !== 'string' ||
+      typeof parsed.event.actionType !== 'string'
+    ) {
+      throw new Error('Invalid dead-letter event');
+    }
     await replayFn(parsed.event);
     return true;
-  } catch (err: unknown) {
+  } catch {
     logger?.warn(
-      `Dead-letter replay attempt failed (will retry): ${(err as Error).message}`,
+      'Encrypted audit dead-letter replay failed. Entry retained for retry.',
     );
     return false;
   }

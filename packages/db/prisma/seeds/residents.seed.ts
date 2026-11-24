@@ -1,4 +1,5 @@
 import { PrismaClient } from "../../src/generated/client";
+import { encryptPrismaWrite } from "../../src/encrypted-prisma-writes";
 import { DEMO_TENANT_ID, MAIN_BRANCH_ID } from "./tenant.seed";
 
 export async function seedResidents(prisma: PrismaClient): Promise<void> {
@@ -27,11 +28,13 @@ export async function seedResidents(prisma: PrismaClient): Promise<void> {
   ];
 
   for (const r of residents) {
-    await prisma.resident.upsert({
+    const input = {
       where: { id: r.id },
       update: { branchId: MAIN_BRANCH_ID, ...r },
       create: { tenantId: DEMO_TENANT_ID, branchId: MAIN_BRANCH_ID, ...r },
-    });
+    };
+    encryptPrismaWrite("Resident", "upsert", input);
+    await prisma.resident.upsert(input);
   }
 
   // 2. Profiles & Admissions

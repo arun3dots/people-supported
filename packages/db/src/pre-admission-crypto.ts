@@ -1,4 +1,4 @@
-import { decrypt, encrypt, isEncrypted } from "./crypto";
+import { decrypt, decryptionFailure, encrypt, isEncrypted } from "./crypto";
 
 /**
  * ResidentPreAdmission field-level encryption (E-02).
@@ -6,7 +6,11 @@ import { decrypt, encrypt, isEncrypted } from "./crypto";
  *   encrypted, and stored as a JSON string in the JSONB column.
  * - Part A keeps its structure; only the identifiers below are encrypted.
  */
-export const PRE_ADMISSION_ENCRYPTED_PARTS = ["partB", "partE", "partF"] as const;
+export const PRE_ADMISSION_ENCRYPTED_PARTS = [
+  "partB",
+  "partE",
+  "partF",
+] as const;
 
 export const PRE_ADMISSION_SENSITIVE_KEYS = {
   partA: ["dob", "nhsNumber", "nationalId", "previousAddress"],
@@ -29,7 +33,17 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 export function encryptWholePart(value: unknown): unknown {
-  if (Array.isArray(value) || isPlainObject(value)) {
+  if (typeof value === "string" && isEncrypted(value)) {
+    decryptWholePart(value);
+    return value;
+  }
+  if (
+    Array.isArray(value) ||
+    isPlainObject(value) ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
     return encrypt(JSON.stringify(value));
   }
   return value;
@@ -38,11 +52,14 @@ export function encryptWholePart(value: unknown): unknown {
 export function decryptWholePart(value: unknown): unknown {
   if (typeof value !== "string" || !isEncrypted(value)) return value;
   const plain = decrypt(value);
-  if (!plain) return null;
   try {
+    if (typeof plain !== "string") throw new Error();
     return JSON.parse(plain) as unknown;
   } catch {
-    return null;
+    throw decryptionFailure(
+      "invalid_json",
+      "[E-02] Encrypted field does not contain valid JSON.",
+    );
   }
 }
 

@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import {
@@ -22,9 +23,10 @@ import {
 } from '../common/utils/aws-config.util';
 
 @Injectable()
-export class S3StorageService implements OnModuleInit {
+export class S3StorageService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(S3StorageService.name);
   private s3Client: S3Client;
+  private readonly uploadSigner: S3Client;
   private bucketName: string;
   private readonly kmsS3KeyId: string;
 
@@ -49,7 +51,18 @@ export class S3StorageService implements OnModuleInit {
       );
     }
 
-    this.s3Client = new S3Client(getAwsClientConfig());
+    const config = getAwsClientConfig();
+    this.s3Client = new S3Client(config);
+    // A presigned PUT has no file body yet, so avoid signing an empty-body checksum.
+    this.uploadSigner = new S3Client({
+      ...config,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+    });
+  }
+
+  onModuleDestroy(): void {
+    this.s3Client.destroy();
+    this.uploadSigner.destroy();
   }
 
   async onModuleInit(): Promise<void> {
@@ -285,7 +298,9 @@ export class S3StorageService implements OnModuleInit {
       ContentType: contentType,
     });
     // Bucket defaults apply SSE-KMS without adding signed headers to the upload contract.
-    const url = await getSignedUrl(this.s3Client, command, { expiresIn: 900 });
+    const url = await getSignedUrl(this.uploadSigner, command, {
+      expiresIn: 900,
+    });
 
     return {
       url,

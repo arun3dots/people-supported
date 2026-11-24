@@ -1,4 +1,9 @@
-import { decrypt, isEncrypted, reencryptWithKms } from "./crypto";
+import {
+  decrypt,
+  inspectCiphertext,
+  isEncrypted,
+  reencryptWithKms,
+} from "./crypto";
 import { Prisma } from "./generated/client";
 import {
   PRE_ADMISSION_ENCRYPTED_PARTS,
@@ -18,17 +23,20 @@ const tables = [
   },
 ] as const;
 
-interface BackfillDb {
+interface ReadableDb {
   $queryRaw<T>(
     query: TemplateStringsArray | Prisma.Sql,
     ...values: unknown[]
   ): Promise<T>;
+}
+interface BackfillDb extends ReadableDb {
   $executeRaw(
     query: TemplateStringsArray | Prisma.Sql,
     ...values: unknown[]
   ): Promise<number>;
 }
 type Row = Record<string, unknown> & { id: string };
+type FieldTable = (typeof tables)[number];
 type Change = {
   column: string;
   original: string;
@@ -59,10 +67,7 @@ function migratePartA(value: unknown): unknown {
 
 function migrateWholePart(value: unknown): unknown {
   if (value === null) return value;
-  if (
-    typeof value === "string" &&
-    (isEncrypted(value) || value.startsWith("kms:v1:"))
-  ) {
+  if (typeof value === "string" && isEncrypted(value)) {
     const plaintext = decrypt(value);
     if (typeof plaintext !== "string")
       throw new Error("[E-02] Invalid encrypted JSON.");
@@ -99,6 +104,108 @@ function planChanges(table: (typeof tables)[number], row: Row): Change[] {
 // Identifiers are sourced exclusively from the table definitions above.
 const identifier = (value: string): Prisma.Sql => Prisma.raw(`"${value}"`);
 
+async function* scanRows(
+  db: ReadableDb,
+  table: FieldTable,
+  batchSize: number,
+): AsyncGenerator<Row> {
+  const fields = [
+    ...table.text,
+    ...("partA" in table ? [table.partA, ...table.wholeParts] : []),
+  ];
+  const columns = Prisma.join(fields.map(identifier));
+  let cursor: string | undefined;
+  for (;;) {
+    const after =
+      cursor === undefined ? Prisma.empty : Prisma.sql`WHERE "id" > ${cursor}`;
+    const rows = await db.$queryRaw<Row[]>`
+      SELECT "id", ${columns} FROM ${identifier(table.name)} ${after}
+      ORDER BY "id" LIMIT ${batchSize}
+    `;
+    yield* rows;
+    if (rows.length < batchSize) return;
+    cursor = rows.at(-1)?.id;
+  }
+}
+
+function inventoryValues(
+  table: FieldTable,
+  row: Row,
+): Array<{ value: string; json?: boolean }> {
+  const values: Array<{ value: string; json?: boolean }> = [];
+  for (const field of table.text) {
+    const value = row[field];
+    if (typeof value === "string" && value) values.push({ value });
+  }
+  if ("partA" in table) {
+    const partA = row[table.partA];
+    if (partA && typeof partA === "object" && !Array.isArray(partA)) {
+      for (const field of PRE_ADMISSION_SENSITIVE_KEYS.partA) {
+        const value = (partA as Record<string, unknown>)[field];
+        if (typeof value === "string" && value) values.push({ value });
+      }
+    }
+    for (const field of table.wholeParts) {
+      const value = row[field];
+      if (value == null) continue;
+      values.push({
+        value:
+          typeof value === "string" && isEncrypted(value)
+            ? value
+            : JSON.stringify(value),
+        json: true,
+      });
+    }
+  }
+  return values;
+}
+
+export async function inventoryKmsFields(db: ReadableDb, batchSize = 100) {
+  validateBatchSize(batchSize);
+  const results = [];
+  for (const table of tables) {
+    const result = {
+      table: table.name,
+      scanned: 0,
+      candidates: 0,
+      conflicts: 0,
+      unreadable: 0,
+      legacy: 0,
+      plaintext: 0,
+      kms: 0,
+      kmsVersions: {} as Record<number, number>,
+    };
+    for await (const row of scanRows(db, table, batchSize)) {
+      result.scanned++;
+      let candidate = false;
+      let unreadable = false;
+      for (const { value, json } of inventoryValues(table, row)) {
+        try {
+          const status = inspectCiphertext(value, json);
+          result[status.format]++;
+          if (status.version !== undefined) {
+            result.kmsVersions[status.version] =
+              (result.kmsVersions[status.version] ?? 0) + 1;
+          }
+          candidate ||= status.candidate;
+        } catch {
+          unreadable = true;
+        }
+      }
+      if (unreadable) result.unreadable++;
+      else if (candidate) result.candidates++;
+    }
+    results.push(result);
+  }
+  return results;
+}
+
+function validateBatchSize(batchSize: number): void {
+  if (!Number.isInteger(batchSize) || batchSize < 1 || batchSize > 1000) {
+    throw new Error("Batch size must be an integer from 1 to 1000.");
+  }
+}
+
 function applyChanges(
   db: BackfillDb,
   table: Prisma.Sql,
@@ -123,9 +230,7 @@ export async function backfillKmsFields(
   db: BackfillDb,
   { apply, batchSize }: { apply: boolean; batchSize: number },
 ): Promise<TableResult[]> {
-  if (!Number.isInteger(batchSize) || batchSize < 1 || batchSize > 1000) {
-    throw new Error("Batch size must be an integer from 1 to 1000.");
-  }
+  validateBatchSize(batchSize);
 
   const results: TableResult[] = [];
   for (const table of tables) {
@@ -138,41 +243,22 @@ export async function backfillKmsFields(
       unreadable: 0,
     };
     const name = identifier(table.name);
-    const columns = [
-      ...table.text,
-      ...("partA" in table ? [table.partA, ...table.wholeParts] : []),
-    ];
-    const selection = Prisma.join(columns.map(identifier));
-    let cursor: string | undefined;
-
-    for (;;) {
-      const afterCursor =
-        cursor === undefined
-          ? Prisma.empty
-          : Prisma.sql`WHERE "id" > ${cursor}`;
-      const rows = await db.$queryRaw<Row[]>`
-        SELECT "id", ${selection} FROM ${name} ${afterCursor}
-        ORDER BY "id" LIMIT ${batchSize}
-      `;
-      for (const row of rows) {
-        result.scanned++;
-        let changes: Change[];
-        try {
-          changes = planChanges(table, row);
-        } catch {
-          result.unreadable++;
-          continue;
-        }
-        if (changes.length === 0) continue;
-        result.candidates++;
-        if (apply) {
-          const updated = await applyChanges(db, name, row.id, changes);
-          result.updated += updated;
-          result.conflicts += 1 - updated;
-        }
+    for await (const row of scanRows(db, table, batchSize)) {
+      result.scanned++;
+      let changes: Change[];
+      try {
+        changes = planChanges(table, row);
+      } catch {
+        result.unreadable++;
+        continue;
       }
-      if (rows.length < batchSize) break;
-      cursor = rows.at(-1)?.id;
+      if (changes.length === 0) continue;
+      result.candidates++;
+      if (apply) {
+        const updated = await applyChanges(db, name, row.id, changes);
+        result.updated += updated;
+        result.conflicts += 1 - updated;
+      }
     }
     results.push(result);
   }

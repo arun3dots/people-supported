@@ -1,4 +1,5 @@
 import { PrismaClient } from "../../src/generated/client";
+import { encryptPrismaWrite } from "../../src/encrypted-prisma-writes";
 import * as bcrypt from "bcrypt";
 import { DEMO_TENANT_ID, MAIN_BRANCH_ID } from "./tenant.seed";
 
@@ -88,7 +89,7 @@ export async function seedUsers(prisma: PrismaClient): Promise<void> {
     });
 
     // 2. Staff Profile
-    await prisma.userProfile.upsert({
+    const profile = {
       where: { userId: user.id },
       update: {
         department: u.department,
@@ -103,7 +104,9 @@ export async function seedUsers(prisma: PrismaClient): Promise<void> {
         addressLine1: "Staff Quarters, 124 St John's Way",
         startDate: new Date("2023-01-15"),
       },
-    });
+    };
+    encryptPrismaWrite("UserProfile", "upsert", profile);
+    await prisma.userProfile.upsert(profile);
   }
 
   // 3. Mandatory Staff Compliance & DBS
@@ -115,7 +118,7 @@ export async function seedUsers(prisma: PrismaClient): Promise<void> {
 
   for (const staff of complianceUsers) {
     // DBS Check
-    await prisma.dbsCheck.upsert({
+    const dbsCheck = {
       where: { id: `dbs-${staff.userId}` },
       update: { status: "Verified" },
       create: {
@@ -126,7 +129,9 @@ export async function seedUsers(prisma: PrismaClient): Promise<void> {
         issueDate: new Date("2024-01-10"),
         status: "Verified",
       },
-    });
+    };
+    encryptPrismaWrite("DbsCheck", "upsert", dbsCheck);
+    await prisma.dbsCheck.upsert(dbsCheck);
 
     // Mandatory Training: Safeguarding
     await prisma.staffTraining.upsert({

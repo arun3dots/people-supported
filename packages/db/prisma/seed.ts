@@ -1,4 +1,4 @@
-import { PrismaClient } from "../src/generated/client";
+import { initKmsKeyRing, rawPrisma as prisma } from "../src";
 import { seedSystem } from "./seeds/system.seed";
 import { seedTenant, seedTenantFinancials, MAIN_BRANCH_ID } from "./seeds/tenant.seed";
 import { seedAssessmentTemplates } from "./seeds/assessment-templates.seed";
@@ -6,8 +6,6 @@ import { seedUsers } from "./seeds/users.seed";
 import { seedShifts } from "./seeds/shifts.seed";
 import { seedResidents } from "./seeds/residents.seed";
 import { seedClinical } from "./seeds/clinical.seed";
-
-const prisma = new PrismaClient();
 
 /**
  * The demo seed keeps the documented development credentials. The production
@@ -18,6 +16,7 @@ const DEV_PLATFORM_ADMINS = ["admin@platform.com", "sobin@3dots.co"];
 const DEV_PLATFORM_PASSWORD = "Password123!";
 
 async function main() {
+  await initKmsKeyRing(prisma, { bootstrapMissingKeys: false });
   // Only used by this demo seed; seedSystem refuses to invent credentials.
   process.env.PLATFORM_ADMIN_EMAILS ??= DEV_PLATFORM_ADMINS.join(",");
   process.env.PLATFORM_ADMIN_PASSWORD ??= DEV_PLATFORM_PASSWORD;
