@@ -33,12 +33,14 @@ import { StaffService, StaffDetail } from './staff.service';
 import {
   CreateStaffDto,
   UpdateStaffDto,
+  UpdateStaffStatusDto,
   UpdateStaffAssignmentsDto,
   PaginatedStaffResponseDto,
 } from './dto/staff.dto';
 import {
   createStaffSchema,
   updateStaffSchema,
+  updateStaffStatusSchema,
   updateStaffAssignmentsSchema,
   ReassignStaffWorkSchema,
   type ReassignStaffWorkDTO,
@@ -248,6 +250,27 @@ export class StaffController {
     return this.staffService.update(
       id,
       updateStaffDto,
+      req.user.userId,
+      this.getTenantId(req),
+    );
+  }
+
+  @Patch(':id/status')
+  @Roles('Admin')
+  @ApiOperation({ summary: 'Update staff member status (Active/Inactive)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff status updated successfully',
+  })
+  async updateStatus(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateStaffStatusSchema))
+    updateStatusDto: UpdateStaffStatusDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<User> {
+    return this.staffService.updateStatus(
+      id,
+      updateStatusDto,
       req.user.userId,
       this.getTenantId(req),
     );

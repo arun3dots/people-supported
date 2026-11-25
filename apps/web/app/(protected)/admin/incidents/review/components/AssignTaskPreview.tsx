@@ -22,6 +22,7 @@ import {
   AvatarImage,
 } from "@repo/ui/components/ui/Avatar";
 import { Incident } from "../../../../../../lib/types/incident";
+import { TaskAttachmentItem } from "./TaskAttachmentPicker";
 
 interface AssignTaskPreviewProps {
   title: string;
@@ -32,7 +33,7 @@ interface AssignTaskPreviewProps {
   priority: "High" | "Medium" | "Low";
   taskDate: string;
   taskTime: string;
-  attachedFilesCount: number;
+  attachments: TaskAttachmentItem[];
   notifyEmail: boolean;
   incident: Incident;
   onEdit: () => void;
@@ -48,7 +49,7 @@ export function AssignTaskPreview({
   priority,
   taskDate,
   taskTime,
-  attachedFilesCount,
+  attachments,
   notifyEmail,
   incident,
   onEdit,
@@ -79,20 +80,20 @@ export function AssignTaskPreview({
 
           <h4 className="text-md font-bold text-[#141F1E]">Task Summary</h4>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 text-md">
-            <div className="min-w-0 space-y-1">
+          <div className="space-y-3 pt-1 text-md min-w-0">
+            <div className="min-w-0 space-y-0.5">
               <p className="text-md text-text-description font-normal">
                 Task Title
               </p>
-              <p className="font-semibold text-slate-800 pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
+              <p className="font-semibold text-slate-800 pt-0.5 break-all break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0">
                 {title}
               </p>
             </div>
-            <div className="min-w-0 space-y-1">
+            <div className="min-w-0 space-y-0.5 pt-2 border-t border-[#EAEAEA]">
               <p className="text-md text-text-description font-normal">
                 Task Description
               </p>
-              <p className="text-slate-600 text-md leading-relaxed pt-0.5 break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
+              <p className="text-slate-600 text-md leading-relaxed pt-0.5 break-all break-words [overflow-wrap:anywhere] whitespace-pre-wrap min-w-0">
                 {description}
               </p>
             </div>
@@ -163,7 +164,7 @@ export function AssignTaskPreview({
               </p>
               <div className="flex items-center gap-1.5 pt-0.5 text-slate-700 text-md">
                 <Paperclip className="size-3 text-slate-400" />
-                <span>{attachedFilesCount} Files attached</span>
+                <span>{attachments.length} Files attached</span>
               </div>
             </div>
             <div>
@@ -180,6 +181,30 @@ export function AssignTaskPreview({
               </div>
             </div>
           </div>
+
+          {attachments.length > 0 && (
+            <div className="pt-2 border-t border-[#EAEAEA] space-y-1.5">
+              <p className="text-md font-medium text-slate-700">
+                Attached Files
+              </p>
+              <div className="space-y-1">
+                {attachments.map((att) => (
+                  <div
+                    key={att.id}
+                    className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-white border border-slate-200 text-md text-slate-700"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 pr-2">
+                      <Paperclip className="size-3.5 text-[#4A706A] shrink-0" />
+                      <span className="truncate">{att.name}</span>
+                    </div>
+                    <span className="text-slate-400 text-xs shrink-0">
+                      {(att.size / 1024).toFixed(0)} KB
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Incident Reference Card */}
@@ -197,16 +222,16 @@ export function AssignTaskPreview({
                 <span>#{incident.incidentNumber}</span>
                 <span>•</span>
                 <span>
-                  📅{" "}
+                  <Calendar className="size-3 text-slate-400" />{" "}
                   {incident.incidentDate
                     ? new Date(incident.incidentDate).toLocaleDateString(
-                        "en-GB",
-                        {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        },
-                      )
+                      "en-GB",
+                      {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      },
+                    )
                     : ""}{" "}
                   {incident.incidentTime || ""}
                 </span>

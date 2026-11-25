@@ -3,6 +3,8 @@
  * this single-flight path and serialize across tabs when Web Locks are present.
  */
 
+import { resolveApiUrl } from "./apiBase";
+
 export type RefreshResult = "refreshed" | "invalid" | "temporary" | "cancelled";
 export type SessionStatus = "active" | "expired";
 
@@ -21,12 +23,6 @@ let refreshPromise: Promise<RefreshResult> | null = null;
 let recoveryPromise: Promise<RefreshResult> | null = null;
 let loggingOut = false;
 
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : baseUrl + "/api";
-}
-
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -40,7 +36,7 @@ function setStatus(next: SessionStatus): void {
 async function requestRefresh(): Promise<RefreshAttemptResult> {
   if (loggingOut) return "cancelled";
   try {
-    const response = await fetch(getApiBaseUrl() + "/auth/refresh", {
+    const response = await fetch(resolveApiUrl("/auth/refresh").toString(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({}),

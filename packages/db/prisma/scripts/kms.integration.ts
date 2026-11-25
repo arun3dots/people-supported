@@ -276,10 +276,7 @@ test("migrates existing encrypted data safely and retains decryptability after r
     where: { id: user.id, tenantId: tenant.id },
     data: {
       profile: {
-        upsert: {
-          create: {},
-          update: { addressLine1: { set: "Updated address" } },
-        },
+        update: { addressLine1: { set: "Updated address" } },
       },
     },
     include: { profile: true },

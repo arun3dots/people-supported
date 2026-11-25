@@ -7,6 +7,7 @@ jest.mock('@aws-sdk/client-s3', () => {
     ...actual,
     S3Client: jest.fn().mockImplementation(() => ({
       send: mockSend,
+      destroy: jest.fn(),
     })),
   };
 });
@@ -18,6 +19,7 @@ jest.mock('@aws-sdk/s3-request-presigner', () => ({
 import {
   GetBucketEncryptionCommand,
   PutObjectCommand,
+  S3Client as MockedS3Client,
 } from '@aws-sdk/client-s3';
 import { S3StorageService } from './s3.service';
 
@@ -103,8 +105,10 @@ describe('S3StorageService (SSE-KMS)', () => {
     const { getSignedUrl } = jest.requireActual<
       typeof import('@aws-sdk/s3-request-presigner')
     >('@aws-sdk/s3-request-presigner');
+    const signerMock = jest.mocked(MockedS3Client).mock;
+    const signerConfig = signerMock.lastCall?.[0];
     const signingClient = new S3Client({
-      region: 'eu-west-2',
+      ...signerConfig,
       credentials: { accessKeyId: 'TEST', secretAccessKey: 'TEST' },
     });
     mockGetSignedUrl.mockImplementationOnce((_, command: PutObjectCommand) =>
@@ -127,6 +131,11 @@ describe('S3StorageService (SSE-KMS)', () => {
       'text/plain',
       'handovers',
     );
+    expect(mockGetSignedUrl).toHaveBeenCalledWith(
+      signerMock.results.at(-1)?.value,
+      expect.any(PutObjectCommand),
+      { expiresIn: 900 },
+    );
 
     expect(mockSend).toHaveBeenCalledTimes(2);
     for (const call of mockSend.mock.calls) {
@@ -136,8 +145,11 @@ describe('S3StorageService (SSE-KMS)', () => {
     }
 
     const query = new URL(url).searchParams;
-    expect(query.get('X-Amz-SignedHeaders')).not.toContain(
-      'x-amz-server-side-encryption',
-    );
+    expect(query.get('X-Amz-SignedHeaders')).toBe('host');
+    const queryKeys = Array.from(query.keys(), (key) => key.toLowerCase());
+    expect(queryKeys.filter((key) => key.includes('checksum'))).toEqual([]);
+    expect(
+      queryKeys.filter((key) => key.includes('server-side-encryption')),
+    ).toEqual([]);
   });
 });

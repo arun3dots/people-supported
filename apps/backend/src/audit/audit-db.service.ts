@@ -35,8 +35,7 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
       datasources: {
         db: { url: process.env.AUDIT_DATABASE_URL },
       },
-      log:
-        process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+      log: [],
     });
   }
 
@@ -44,10 +43,9 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
     try {
       await this.auditClient.$connect();
       this.logger.log('Connected to CQC Audit Database ✓');
-    } catch (err: unknown) {
+    } catch {
       this.logger.error(
         'Failed to connect to CQC Audit Database — audit writes will use encrypted dead-letter queue',
-        (err as Error).message,
       );
     }
   }
@@ -98,14 +96,11 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
       );
     } catch (error: unknown) {
       const err = error as Error;
-      this.logger.error(
-        `Failed to write audit event to DB: ${err.message}`,
-        err.stack,
-      );
+      this.logger.error('Failed to write audit event to the audit database.');
       if (!isReplay) {
         await writeDeadLetterLog(event, err, this.logger);
       }
-      throw error;
+      throw new Error('Audit event could not be written.');
     }
   }
 
@@ -143,10 +138,8 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
           `Nightly CQC audit hash chain verification passed (${result.checkedCount} records verified).`,
         );
       }
-    } catch (err: unknown) {
-      this.logger.error(
-        `Nightly audit integrity check encountered an error: ${(err as Error).message}`,
-      );
+    } catch {
+      this.logger.error('Nightly audit integrity check failed.');
     }
   }
 
@@ -242,6 +235,7 @@ export class AuditDbService implements OnModuleInit, OnModuleDestroy {
           { actionType: { contains: s, mode: 'insensitive' } },
           { entityType: { contains: s, mode: 'insensitive' } },
           { entityLabel: { contains: s, mode: 'insensitive' } },
+          { entityId: { contains: s, mode: 'insensitive' } },
         ],
       });
     }

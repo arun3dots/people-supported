@@ -12,6 +12,11 @@ import { AuditModule } from '../audit/audit.module';
 import { MailModule } from '../common/mail/mail.module';
 import { assertJwtSecretConfigured } from './jwt-secret.util';
 import { ACCESS_TOKEN_TTL } from './auth.constants';
+import {
+  AuthSessionController,
+  SessionLogoutGuard,
+} from './auth-session.controller';
+import { CognitoModule } from './cognito/cognito.module';
 
 @Module({
   imports: [
@@ -19,6 +24,7 @@ import { ACCESS_TOKEN_TTL } from './auth.constants';
     AuditModule,
     MailModule,
     PassportModule,
+    CognitoModule,
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: assertJwtSecretConfigured(),
@@ -26,13 +32,14 @@ import { ACCESS_TOKEN_TTL } from './auth.constants';
       }),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, AuthSessionController],
   providers: [
     AuthService,
     MfaService,
     PasswordService,
     RefreshTokenService,
     JwtStrategy,
+    SessionLogoutGuard,
   ],
   exports: [AuthService],
 })

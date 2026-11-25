@@ -15,10 +15,8 @@
  *   PLATFORM_ADMIN_PASSWORD="<at least 12 characters>" \
  *   pnpm db:seed:system --with-admins
  */
-import { PrismaClient } from "../src/generated/client";
+import { rawPrisma as prisma } from "../src";
 import { seedSystem } from "./seeds/system.seed";
-
-const prisma = new PrismaClient();
 
 const wantsAdmins =
   process.argv.includes("--with-admins") ||

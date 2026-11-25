@@ -11,7 +11,6 @@ export const AUDIT_AREAS = [
   { id: "rota", label: "Rota" },
   { id: "staff", label: "Staff" },
   { id: "observation", label: "Observation" },
-  { id: "body_map", label: "Body map" },
   { id: "risk", label: "Risk" },
   { id: "finance", label: "Finance" },
 ] as const;

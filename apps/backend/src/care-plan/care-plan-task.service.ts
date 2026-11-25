@@ -94,6 +94,7 @@ export class CarePlanTaskService {
   ) {
     const resident = await rawPrisma.resident.findFirst({
       where: { id: residentId, tenantId },
+      select: { branchId: true },
     });
 
     if (!resident) {

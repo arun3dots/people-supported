@@ -4,6 +4,10 @@ import { CreateIncidentDTO, NotifyNextOfKinDTO } from '@repo/schema';
 import { MailService } from '../../common/mail/mail.service';
 import { toJsonValue } from '../../common/utils/json.util';
 import { NotificationsService } from '../../notifications/notifications.service';
+import {
+  buildNokEmailHtml,
+  buildTaskAssignedEmailHtml,
+} from './incident-email-templates.util';
 
 export interface IncidentNotificationTarget {
   id: string;
@@ -30,29 +34,14 @@ export class IncidentNotificationService {
     dto: NotifyNextOfKinDTO,
   ) {
     const residentName = incident.resident?.fullName || 'Resident';
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #3D5C57; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
-          <h2 style="margin: 0; font-size: 20px;">Incident & Care Update</h2>
-          <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">Resident: ${residentName}</p>
-        </div>
-        <div style="padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px; background: #ffffff;">
-          <p>Dear ${dto.recipientName},</p>
-          <div style="margin: 16px 0; padding: 16px; background-color: #f8fafc; border-left: 4px solid #3D5C57; border-radius: 4px;">
-            <p style="margin: 0 0 8px 0; font-weight: bold; color: #1e293b;">Incident Reference: ${incident.incidentNumber}</p>
-            <p style="margin: 0; font-size: 14px; color: #475569;">Category: ${incident.category} | Date: ${new Date(incident.incidentDate).toLocaleDateString('en-GB')}</p>
-          </div>
-          <p style="white-space: pre-wrap; margin: 16px 0; font-size: 14px; color: #334155;">${dto.message}</p>
-          <p style="margin-top: 24px; font-size: 13px; color: #64748b;">
-            Please contact our care management team if you have any questions or require additional support.
-          </p>
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-          <p style="margin: 0; font-size: 12px; color: #94a3b8; text-align: center;">
-            This is an official care communication sent by Cantra Care.
-          </p>
-        </div>
-      </div>
-    `;
+    const emailHtml = buildNokEmailHtml(
+      residentName,
+      dto.recipientName,
+      incident.incidentNumber,
+      incident.category,
+      incident.incidentDate,
+      dto.message,
+    );
 
     try {
       await this.mailService.sendNotification(
@@ -109,6 +98,73 @@ export class IncidentNotificationService {
       message: `Notification email sent to ${dto.recipientName} (${dto.recipientEmail})`,
       recipient: dto.recipientEmail,
     };
+  }
+
+  async notifyTaskAssigned(
+    incident: { id: string; incidentNumber: string; tenantId: string },
+    task: {
+      title: string;
+      description?: string;
+      assignedToId?: string;
+      assignedToName: string;
+      assignedToEmail?: string;
+      priority?: string;
+      date?: string;
+      time?: string;
+      notifyEmail?: boolean;
+    },
+  ): Promise<void> {
+    if (!task.notifyEmail) return;
+
+    let email = task.assignedToEmail;
+    if (!email && task.assignedToId) {
+      const user = await prisma.user.findUnique({
+        where: { id: task.assignedToId },
+        select: { email: true, fullName: true },
+      });
+      email = user?.email;
+    }
+
+    if (!email) {
+      const user = await prisma.user.findFirst({
+        where: {
+          tenantId: incident.tenantId,
+          fullName: task.assignedToName,
+          isActive: true,
+        },
+        select: { email: true, fullName: true },
+      });
+      email = user?.email;
+    }
+
+    if (!email) {
+      this.logger.warn(
+        `Cannot send task assignment email: No email found for staff ${task.assignedToName}`,
+      );
+      return;
+    }
+
+    const actionUrl = `/admin/incidents/review?id=${incident.id}`;
+    const subject = `Task Assigned: ${task.title} (Incident ${incident.incidentNumber})`;
+    const emailHtml = buildTaskAssignedEmailHtml(
+      task.assignedToName,
+      incident.incidentNumber,
+      task.title,
+      task.description || '',
+      task.date || '',
+      task.time || '',
+      task.priority || 'Medium',
+      actionUrl,
+    );
+
+    try {
+      await this.mailService.sendNotification(email, subject, emailHtml);
+      this.logger.log(`Task assignment email dispatched to ${email}`);
+    } catch (err: unknown) {
+      this.logger.error(
+        `Failed to send task assignment email: ${(err as Error).message}`,
+      );
+    }
   }
 
   /**

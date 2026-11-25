@@ -3,21 +3,35 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent } from "@repo/ui/components/ui/Dialog";
 import { toast } from "@repo/ui/components/ui";
+import { UPLOAD_INCIDENT_ATTACHMENT } from "@repo/endpoints";
+import { makeAPICall } from "../../../../../../lib/api";
 import { Incident } from "../../../../../../lib/types/incident";
 import { AssignTaskForm } from "./AssignTaskForm";
 import { AssignTaskPreview } from "./AssignTaskPreview";
 import { AssignTaskSuccess } from "./AssignTaskSuccess";
+import { TaskAttachmentItem } from "./TaskAttachmentPicker";
+
+export interface IncidentTaskAttachment {
+  id: string;
+  name: string;
+  url?: string;
+  size?: number;
+}
 
 export interface IncidentTask {
   id: string;
   title: string;
   description: string;
+  assignedToId?: string;
   assignedToName: string;
+  assignedToEmail?: string;
   assignedToAvatarUrl?: string;
+  assignedRole?: string;
   assignedToRole?: string;
   priority: "High" | "Medium" | "Low";
   date: string;
   time: string;
+  attachments?: IncidentTaskAttachment[];
   attachmentCount?: number;
   notifyEmail?: boolean;
 }
@@ -43,6 +57,8 @@ export function AssignTaskModal({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
+  const [assignedToId, setAssignedToId] = useState("");
+  const [assignedToEmail, setAssignedToEmail] = useState("");
   const [assignedToAvatarUrl, setAssignedToAvatarUrl] = useState("");
   const [assignedRole, setAssignedRole] = useState("");
   const [priority, setPriority] = useState<"High" | "Medium" | "Low">("Medium");
@@ -56,12 +72,15 @@ export function AssignTaskModal({
     }),
   );
   const [notifyEmail, setNotifyEmail] = useState(true);
-  const [attachedFilesCount, setAttachedFilesCount] = useState(0);
+  const [attachments, setAttachments] = useState<TaskAttachmentItem[]>([]);
+  const [_isSubmitting, setIsSubmitting] = useState(false);
 
   const handleResetForm = () => {
     setTitle("");
     setDescription("");
     setAssignedTo("");
+    setAssignedToId("");
+    setAssignedToEmail("");
     setAssignedToAvatarUrl("");
     setAssignedRole("");
     setPriority("Medium");
@@ -73,7 +92,8 @@ export function AssignTaskModal({
       }),
     );
     setNotifyEmail(true);
-    setAttachedFilesCount(0);
+    setAttachments([]);
+    setIsSubmitting(false);
     setViewMode("form");
   };
 
@@ -120,23 +140,67 @@ export function AssignTaskModal({
     setViewMode("preview");
   };
 
-  const handleConfirmAssignment = () => {
-    const newTask: IncidentTask = {
-      id: `task-${Date.now()}`,
-      title,
-      description,
-      assignedToName: assignedTo || "Staff Member",
-      assignedToAvatarUrl: assignedToAvatarUrl || undefined,
-      assignedToRole: assignedRole || "Care Staff",
-      priority,
-      date: taskDate,
-      time: taskTime,
-      attachmentCount: attachedFilesCount,
-      notifyEmail,
-    };
+  const handleConfirmAssignment = async () => {
+    setIsSubmitting(true);
+    try {
+      const uploadedAttachments: IncidentTaskAttachment[] = [];
+      for (const att of attachments) {
+        if (att.file && incident?.id) {
+          const formData = new FormData();
+          formData.append("file", att.file);
+          const uploaded = await makeAPICall<{
+            id: string;
+            name: string;
+            fileUrl: string;
+            previewUrl?: string;
+          }>(UPLOAD_INCIDENT_ATTACHMENT, formData, {}, { id: incident.id });
 
-    onTaskCreated?.(newTask);
-    setViewMode("success");
+          uploadedAttachments.push({
+            id: uploaded.id || att.id,
+            name: uploaded.name || att.name,
+            url: uploaded.previewUrl || uploaded.fileUrl,
+            size: att.size,
+          });
+        } else {
+          uploadedAttachments.push({
+            id: att.id,
+            name: att.name,
+            url: att.url,
+            size: att.size,
+          });
+        }
+      }
+
+      const newTask: IncidentTask = {
+        id: `task-${Date.now()}`,
+        title,
+        description,
+        assignedToId: assignedToId || undefined,
+        assignedToName: assignedTo || "Staff Member",
+        assignedToEmail: assignedToEmail || undefined,
+        assignedToAvatarUrl: assignedToAvatarUrl || undefined,
+        assignedRole: assignedRole || "Care Staff",
+        assignedToRole: assignedRole || "Care Staff",
+        priority,
+        date: taskDate,
+        time: taskTime,
+        attachments: uploadedAttachments,
+        attachmentCount: uploadedAttachments.length,
+        notifyEmail,
+      };
+
+      onTaskCreated?.(newTask);
+      setViewMode("success");
+    } catch (err) {
+      console.error("Failed to upload task attachments", err);
+      toast({
+        variant: "destructive",
+        title: "Attachment Upload Failed",
+        description: "Failed to upload task attachments. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -163,6 +227,10 @@ export function AssignTaskModal({
             setDescription={setDescription}
             assignedTo={assignedTo}
             setAssignedTo={setAssignedTo}
+            assignedToId={assignedToId}
+            setAssignedToId={setAssignedToId}
+            assignedToEmail={assignedToEmail}
+            setAssignedToEmail={setAssignedToEmail}
             setAssignedToAvatarUrl={setAssignedToAvatarUrl}
             setAssignedRole={setAssignedRole}
             priority={priority}
@@ -173,7 +241,8 @@ export function AssignTaskModal({
             setTaskTime={setTaskTime}
             notifyEmail={notifyEmail}
             setNotifyEmail={setNotifyEmail}
-            setAttachedFilesCount={setAttachedFilesCount}
+            attachments={attachments}
+            setAttachments={setAttachments}
             onSubmit={handleFormSubmit}
             onCancel={handleClose}
           />
@@ -189,7 +258,7 @@ export function AssignTaskModal({
             priority={priority}
             taskDate={taskDate}
             taskTime={taskTime}
-            attachedFilesCount={attachedFilesCount}
+            attachments={attachments}
             notifyEmail={notifyEmail}
             incident={incident}
             onEdit={() => setViewMode("form")}

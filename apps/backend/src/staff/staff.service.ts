@@ -65,12 +65,7 @@ export class StaffService {
 
   /** Decrypt a stored value, tolerating legacy/plaintext rows. */
   private safeDecrypt(value: string | null): string | null {
-    if (!value) return null;
-    try {
-      return decrypt(value) ?? null;
-    } catch {
-      return value;
-    }
+    return value ? (decrypt(value) ?? null) : null;
   }
 
   /**

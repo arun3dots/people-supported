@@ -4,6 +4,7 @@ import {
   decrypt,
   encrypt,
   initKmsKeyRing,
+  inventoryKmsFields,
   isEncrypted,
   resetKmsKeyRingForTesting,
   type EncryptionKeyDb,
@@ -164,6 +165,19 @@ describe('AWS KMS Envelope KeyRing (E-02 & C-03)', () => {
       digit === '0' ? '1' : '0',
     );
     expect(() => decrypt(tampered)).toThrow(/KMS field authentication failed/);
+    const $queryRaw = jest
+      .fn()
+      .mockResolvedValueOnce([
+        { id: 'fixture', dob: kmsCiphertext, nhsNumber: legacyCiphertext },
+      ])
+      .mockResolvedValue([]);
+    const [inventory] = await inventoryKmsFields({ $queryRaw });
+    expect(inventory).toMatchObject({
+      candidates: 1,
+      kms: 1,
+      legacy: 1,
+      kmsVersions: { 1: 1 },
+    });
   });
 
   it('unwraps the same persisted keys on concurrent first startup', async () => {

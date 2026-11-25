@@ -1,6 +1,15 @@
+function resolveBackendApiBase() {
+  const internal = process.env.INTERNAL_API_URL?.trim();
+  if (internal) return internal.replace(/\/+$/, '');
+  const pub = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (pub && /^https?:\/\//i.test(pub)) return pub.replace(/\/+$/, '');
+  return 'http://127.0.0.1:4400/api';
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   transpilePackages: ['@repo/ui/components/ui'],
   images: {
     remotePatterns: [
@@ -13,7 +22,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4400/api'}/:path*`,
+        destination: `${resolveBackendApiBase()}/:path*`,
       },
     ];
   },
