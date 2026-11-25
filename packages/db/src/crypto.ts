@@ -12,7 +12,29 @@ const TEST_EPHEMERAL_HEX_KEY =
 const KMS_ENVELOPE_REGEX =
   /^kms:v1:([1-9]\d*):([0-9a-f]{32}):([0-9a-f]{32}):([0-9a-f]*)$/i;
 const LEGACY_ENVELOPE_REGEX = /^([0-9a-f]{32}):([0-9a-f]{32}):([0-9a-f]*)$/i;
-const KMS_ENVELOPE_PREFIX = "kms:v1:";
+const KMS_ENVELOPE_PREFIX = /^kms:/i;
+const LEGACY_ENVELOPE_PREFIX = /^[0-9a-f]{32}:/i;
+
+type DecryptionFailure =
+  | "key_unavailable"
+  | "authentication"
+  | "invalid_envelope"
+  | "invalid_json";
+let reportDecryptionFailure: ((reason: DecryptionFailure) => void) | undefined;
+
+export function setDecryptionFailureReporter(
+  reporter?: (reason: DecryptionFailure) => void,
+): void {
+  reportDecryptionFailure = reporter;
+}
+
+export function decryptionFailure(
+  reason: DecryptionFailure,
+  message: string,
+): Error {
+  reportDecryptionFailure?.(reason);
+  return new Error(message);
+}
 
 /**
  * Validates that ENCRYPTION_KEY is explicitly configured as a 64-character hex
@@ -55,14 +77,17 @@ function resolveKeyHex(): string {
 
 export function isEncrypted(text: string | null | undefined): boolean {
   if (!text || typeof text !== "string") return false;
-  return KMS_ENVELOPE_REGEX.test(text) || LEGACY_ENVELOPE_REGEX.test(text);
+  return KMS_ENVELOPE_PREFIX.test(text) || LEGACY_ENVELOPE_PREFIX.test(text);
 }
 
 export function encrypt(
   text: string | null | undefined,
 ): string | null | undefined {
   if (!text) return text;
-  if (isEncrypted(text)) return text;
+  if (isEncrypted(text)) {
+    decrypt(text);
+    return text;
+  }
 
   const iv = crypto.randomBytes(16);
   const kmsKey = getActiveFieldEncryptionKey();
@@ -130,7 +155,10 @@ function decryptOnce(text: string): string {
     const version = Number(kmsMatch[1]);
     const key = getFieldDecryptionKey(version);
     if (!key) {
-      throw new Error(`[E-02] KMS field key v${version} is unavailable.`);
+      throw decryptionFailure(
+        "key_unavailable",
+        `[E-02] KMS field key v${version} is unavailable.`,
+      );
     }
     const decrypted = tryDecryptGcm(
       kmsMatch[2]!,
@@ -139,7 +167,8 @@ function decryptOnce(text: string): string {
       key,
     );
     if (decrypted === null) {
-      throw new Error(
+      throw decryptionFailure(
+        "authentication",
         `[E-02] KMS field authentication failed for key v${version}.`,
       );
     }
@@ -147,7 +176,10 @@ function decryptOnce(text: string): string {
   }
   const legacyMatch = text.match(LEGACY_ENVELOPE_REGEX);
   if (!legacyMatch) {
-    throw new Error("[E-02] Malformed KMS field envelope.");
+    throw decryptionFailure(
+      "invalid_envelope",
+      "[E-02] Invalid encrypted field envelope.",
+    );
   }
   for (const keyHex of resolveLegacyDecryptKeys()) {
     const decrypted = tryDecryptGcm(
@@ -158,7 +190,10 @@ function decryptOnce(text: string): string {
     );
     if (decrypted !== null) return decrypted;
   }
-  throw new Error("[E-02] Legacy field authentication failed.");
+  throw decryptionFailure(
+    "authentication",
+    "[E-02] Legacy field authentication failed.",
+  );
 }
 
 export function decrypt(
@@ -172,7 +207,7 @@ export function decrypt(
   while (
     current &&
     typeof current === "string" &&
-    (isEncrypted(current) || current.startsWith(KMS_ENVELOPE_PREFIX)) &&
+    isEncrypted(current) &&
     attempts < 100
   ) {
     const next = decryptOnce(current);
@@ -181,7 +216,47 @@ export function decrypt(
     attempts++;
   }
 
+  if (isEncrypted(current)) {
+    throw decryptionFailure(
+      "invalid_envelope",
+      "[E-02] Could not fully unwrap encrypted field.",
+    );
+  }
   return current;
+}
+
+export function inspectCiphertext(
+  value: string,
+  encryptedJson = false,
+): {
+  format: "legacy" | "kms" | "plaintext";
+  version?: number;
+  candidate: boolean;
+} {
+  const match = value.match(KMS_ENVELOPE_REGEX);
+  const inner = match ? decryptOnce(value) : value;
+  const decoded = decrypt(inner);
+  if (encryptedJson && isEncrypted(value)) {
+    try {
+      if (typeof decoded !== "string") throw new Error();
+      JSON.parse(decoded);
+    } catch {
+      throw decryptionFailure(
+        "invalid_json",
+        "[E-02] Encrypted field does not contain valid JSON.",
+      );
+    }
+  }
+  if (match)
+    return {
+      format: "kms",
+      version: Number(match[1]),
+      candidate: inner !== decoded,
+    };
+  return {
+    format: isEncrypted(value) ? "legacy" : "plaintext",
+    candidate: true,
+  };
 }
 
 export function reencryptWithKms(text: string): string {

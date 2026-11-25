@@ -1,53 +1,21 @@
-/**
- * Central session/refresh manager.
- *
- * This is the SINGLE source of truth for refreshing the access token. Both the
- * proactive timer in `AuthContext` and the reactive 401 handler in `makeAPICall`
- * MUST go through here.
- *
- * Why this matters: the backend rotates the refresh token on every
- * `/api/auth/refresh` call and treats an already-rotated (re-used) token as a
- * theft attempt — it then revokes the ENTIRE token family and logs the user out
- * (see `apps/backend/src/auth/refresh-token.service.ts`). If two callers fired a
- * refresh at the same time with the same refresh-token cookie, the first would
- * rotate it and the second would send the now-revoked one → instant logout.
- * Single-flighting every refresh through `refreshSession()` prevents that.
- *
- * It also drives the reauthentication UI: when a normal refresh fails,
- * `recoverSession()` flips the status to "reauthenticating" (the popup), retries
- * a few times in the background, and finally flips to "expired" (session timeout
- * → redirect to login) only if every retry fails.
- */
+import { resolveApiUrl } from "./apiBase";
 
+export type RefreshResult = "refreshed" | "invalid" | "temporary" | "cancelled";
 export type SessionStatus = "active" | "reauthenticating" | "expired";
 
-/** Number of background refresh attempts made while the popup is shown. */
 const RECOVERY_ATTEMPTS = 3;
-/** Delay between background recovery attempts. */
-const RECOVERY_DELAY_MS = 2000;
+const RECOVERY_DELAY_MS = 1500;
+const ROTATION_RETRY_DELAYS_MS = [250, 500, 1000, 2000, 3000];
 
+type RefreshAttemptResult = RefreshResult | "rotation-conflict";
 type Listener = (status: SessionStatus) => void;
 
 let status: SessionStatus = "active";
 const listeners = new Set<Listener>();
 
-let refreshPromise: Promise<boolean> | null = null;
-let recoveryPromise: Promise<boolean> | null = null;
-
-/**
- * Set while the user is intentionally logging out. A logout clears the auth
- * cookies, so any in-flight request (or query refetch) that races the redirect
- * will 401 — but that is expected, not a session timeout. While this is true,
- * refresh/recovery short-circuit so the reauthentication popup never appears.
- * Cleared by `resetSessionStatus()` on the next successful login.
- */
+let refreshPromise: Promise<RefreshResult> | null = null;
+let recoveryPromise: Promise<RefreshResult> | null = null;
 let loggingOut = false;
-
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
-}
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -59,11 +27,40 @@ function setStatus(next: SessionStatus): void {
   listeners.forEach((listener) => listener(status));
 }
 
+async function requestRefresh(): Promise<RefreshAttemptResult> {
+  if (loggingOut) return "cancelled";
+  try {
+    const response = await fetch(resolveApiUrl("/auth/refresh").toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+      credentials: "include",
+    });
+
+    if (response.ok) return "refreshed";
+    if (response.status === 409) return "rotation-conflict";
+    if (response.status === 401 || response.status === 403) return "invalid";
+    return "temporary";
+  } catch {
+    return "temporary";
+  }
+}
+
+async function refreshWithRotationRetry(): Promise<RefreshResult> {
+  for (let attempt = 0; ; attempt++) {
+    const result = await requestRefresh();
+    if (result !== "rotation-conflict") return result;
+
+    const retryDelay = ROTATION_RETRY_DELAYS_MS[attempt];
+    if (retryDelay === undefined) return "invalid";
+    await delay(retryDelay);
+  }
+}
+
 export function getSessionStatus(): SessionStatus {
   return status;
 }
 
-/** Subscribe to session-status changes. Returns an unsubscribe function. */
 export function subscribeSession(listener: Listener): () => void {
   listeners.add(listener);
   return () => {
@@ -71,20 +68,24 @@ export function subscribeSession(listener: Listener): () => void {
   };
 }
 
-/**
- * Single-flight access-token refresh. All concurrent callers share one in-flight
- * request, so the refresh token is rotated exactly once. Resolves `true` if the
- * token was refreshed, `false` otherwise. Never throws.
- */
-export function refreshSession(): Promise<boolean> {
-  if (loggingOut) return Promise.resolve(false);
+export function expireSession(): void {
+  if (!loggingOut) setStatus("expired");
+}
+
+export function refreshSession(): Promise<RefreshResult> {
+  if (loggingOut) return Promise.resolve("cancelled");
   if (!refreshPromise) {
-    refreshPromise = fetch(`${getApiBaseUrl()}/auth/refresh`, {
-      method: "POST",
-      credentials: "include",
-    })
-      .then((res) => res.ok)
-      .catch(() => false)
+    const refreshAcrossTabs = async (): Promise<RefreshResult> => {
+      if (typeof navigator !== "undefined" && navigator.locks) {
+        return navigator.locks.request("care-home-superadmin-refresh", () =>
+          refreshWithRotationRetry(),
+        );
+      }
+      return refreshWithRotationRetry();
+    };
+
+    refreshPromise = refreshAcrossTabs()
+      .catch((): RefreshResult => "temporary")
       .finally(() => {
         refreshPromise = null;
       });
@@ -92,45 +93,36 @@ export function refreshSession(): Promise<boolean> {
   return refreshPromise;
 }
 
-/**
- * Recovery flow shown to the user when a normal refresh has already failed.
- * Flips status to "reauthenticating" (drives the "Please wait while we
- * reauthenticate…" popup), retries the refresh a few times in the background,
- * and resolves:
- *   - `true`  → a retry succeeded; status returns to "active" and callers can
- *               safely retry their request.
- *   - `false` → every retry failed; status becomes "expired" so the UI shows the
- *               session-timeout message and redirects to login.
- *
- * Single-flighted: concurrent failures share one recovery attempt.
- */
-export function recoverSession(): Promise<boolean> {
-  if (loggingOut) return Promise.resolve(false);
+export function recoverSession(): Promise<RefreshResult> {
+  if (loggingOut) return Promise.resolve("cancelled");
+  if (status === "expired") return Promise.resolve("invalid");
   if (!recoveryPromise) {
-    recoveryPromise = (async () => {
+    recoveryPromise = (async (): Promise<RefreshResult> => {
       setStatus("reauthenticating");
-      for (let attempt = 1; attempt <= RECOVERY_ATTEMPTS; attempt++) {
-        // A logout may have started mid-recovery — bail without flipping to
-        // "expired" so the session-timeout dialog stays hidden.
+      for (let attempt = 0; attempt < RECOVERY_ATTEMPTS; attempt++) {
         if (loggingOut) {
           setStatus("active");
-          return false;
+          return "cancelled";
         }
-        const ok = await refreshSession();
-        if (ok) {
+        const result = await refreshSession();
+        if (result === "refreshed") {
           setStatus("active");
-          return true;
+          return result;
         }
-        if (attempt < RECOVERY_ATTEMPTS) {
+        if (result === "invalid") {
+          setStatus("expired");
+          return result;
+        }
+        if (result === "cancelled") {
+          setStatus("active");
+          return result;
+        }
+        if (attempt < RECOVERY_ATTEMPTS - 1) {
           await delay(RECOVERY_DELAY_MS);
         }
       }
-      if (loggingOut) {
-        setStatus("active");
-        return false;
-      }
-      setStatus("expired");
-      return false;
+      setStatus(loggingOut ? "active" : "expired");
+      return loggingOut ? "cancelled" : "temporary";
     })().finally(() => {
       recoveryPromise = null;
     });
@@ -138,21 +130,11 @@ export function recoverSession(): Promise<boolean> {
   return recoveryPromise;
 }
 
-/**
- * Reset the status back to "active". Call after a successful login or after the
- * user has been redirected to the login page, so a stale "expired" status does
- * not keep the popup on screen.
- */
 export function resetSessionStatus(): void {
   loggingOut = false;
   setStatus("active");
 }
 
-/**
- * Mark the start of an intentional logout. Hides any session popup and makes
- * subsequent refresh/recovery attempts no-ops until the next login resets the
- * status. Call this before clearing the session / redirecting to /login.
- */
 export function beginLogout(): void {
   loggingOut = true;
   setStatus("active");

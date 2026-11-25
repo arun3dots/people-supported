@@ -55,3 +55,4 @@ export const helloSchema = z.object({
 });
 
 export type HelloDTO = z.infer<typeof helloSchema>;
+export * from "./cognito";

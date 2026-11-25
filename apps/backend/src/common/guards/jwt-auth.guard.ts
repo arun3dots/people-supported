@@ -7,6 +7,8 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { prisma } from '@repo/db';
 import { AuthenticatedUser } from '../interfaces/request.interface';
+import type { Request } from 'express';
+import { cognitoRequestSession } from '../../auth/cognito/cognito-jwt.strategy';
 
 const ALLOWED_UNVERIFIED_ROUTES = [
   '/api/auth/me',
@@ -28,7 +30,7 @@ const ALLOWED_PRE_MFA_ROUTES = [
 const PRIVILEGED_MFA_ROLES = ['SuperAdmin', 'Admin', 'Manager'];
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard(['cognito-session', 'jwt']) {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const activated = (await super.canActivate(context)) as boolean;
     if (!activated) return false;
@@ -38,6 +40,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (!user?.userId) return false;
 
     const url: string = request.url ?? '';
+    if (cognitoRequestSession(request as Request)) return true;
 
     const dbUser = await prisma.user.findUnique({
       where: { id: user.userId },
@@ -112,5 +115,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw err || new UnauthorizedException();
     }
     return user;
+  }
+}
+
+@Injectable()
+export class LegacyJwtAuthGuard extends JwtAuthGuard {
+  async canActivate(context: ExecutionContext) {
+    if (!(await super.canActivate(context))) return false;
+    if (cognitoRequestSession(context.switchToHttp().getRequest<Request>())) {
+      throw new ForbiddenException(
+        'Manage your credentials in Cognito Managed Login.',
+      );
+    }
+    return true;
   }
 }

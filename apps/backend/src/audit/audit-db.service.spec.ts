@@ -1,4 +1,5 @@
 import { DecryptCommand, GenerateDataKeyCommand } from '@aws-sdk/client-kms';
+import { Logger } from '@nestjs/common';
 import * as crypto from 'crypto';
 import {
   initKmsKeyRing,
@@ -52,6 +53,24 @@ describe('AuditDbService KMS HMAC Signing (C-03)', () => {
 
   afterEach(() => {
     resetKmsKeyRingForTesting();
+  });
+
+  it('returns and logs a sanitized error when the audit insert fails', async () => {
+    const logger = jest.spyOn(Logger.prototype, 'error').mockImplementation();
+    mockPrismaAuditClient.cqcAuditLog.create.mockRejectedValueOnce(
+      new Error('fixture-sensitive-database-detail'),
+    );
+    try {
+      const auditDb = new AuditDbService();
+      await expect(
+        auditDb.writeEvent({ categoryType: 'AUTH', actionType: 'LOGIN' }, true),
+      ).rejects.toThrow('Audit event could not be written.');
+      expect(logger.mock.calls).toEqual([
+        ['Failed to write audit event to the audit database.'],
+      ]);
+    } finally {
+      logger.mockRestore();
+    }
   });
 
   it('continues signing with the legacy key and verifies KMS-signed history', async () => {

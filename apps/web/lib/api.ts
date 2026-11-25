@@ -1,16 +1,11 @@
 import endpointInfo, { ApiName } from "@repo/endpoints";
+import { resolveApiUrl } from "./auth/apiBase";
 import {
   expireSession,
   recoverSession,
   refreshSession,
 } from "./auth/sessionManager";
 import { getPositionHeaders } from "./geolocation";
-
-function getApiBaseUrl(): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:4400/api";
-  return baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
-}
 
 export async function makeAPICall<T>(
   apiName: ApiName | (string & {}),
@@ -30,14 +25,7 @@ export async function makeAPICall<T>(
     endpoint = endpoint.replace(`[${key}]`, value);
   });
 
-  const finalBaseUrl = getApiBaseUrl();
-
-  // Ensure we don't double the /api prefix if it's already in the baseUrl
-  const cleanEndpoint = endpoint.startsWith("/api")
-    ? endpoint.substring(4)
-    : endpoint;
-
-  const url = new URL(`${finalBaseUrl}${cleanEndpoint}`);
+  const url = resolveApiUrl(endpoint);
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
@@ -63,7 +51,7 @@ export async function makeAPICall<T>(
 
     if (requestType.toUpperCase() !== "GET") {
       if (isFormData) {
-        fetchOptions.body = payload as any;
+        fetchOptions.body = payload;
       } else if (Object.keys(payload).length > 0) {
         fetchOptions.body = JSON.stringify(payload);
       }

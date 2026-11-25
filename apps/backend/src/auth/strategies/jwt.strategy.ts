@@ -4,6 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import type { RolePermissions } from '@repo/schema';
 import { AuthenticatedUser } from '../../common/interfaces/request.interface';
+import { extractVerifiedJwtByAlg } from '../auth-cookie.util';
+import { hasRs256AccessCookie } from '../auth-origin.util';
 import { assertJwtSecretConfigured } from '../jwt-secret.util';
 
 interface JwtPayload {
@@ -21,17 +23,31 @@ interface JwtPayload {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    const secret = assertJwtSecretConfigured();
     super({
       // D-03 & E-04: Never extract JWT from URL query parameters (?token=),
       // as tokens in URLs leak via server logs, browser history, and Referer headers.
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          return (request?.cookies?.access_token as string | undefined) ?? null;
+          if (
+            process.env.COGNITO_AUTH_ENABLED === 'true' &&
+            (process.env.LEGACY_AUTH_ENABLED === 'false' ||
+              hasRs256AccessCookie(request))
+          ) {
+            return null;
+          }
+          return extractVerifiedJwtByAlg(
+            request,
+            'access_token',
+            'HS256',
+            secret,
+          );
         },
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: assertJwtSecretConfigured(),
+      algorithms: ['HS256'],
+      secretOrKey: secret,
     });
   }
 

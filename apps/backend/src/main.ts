@@ -9,6 +9,7 @@ import {
   assertEncryptionKeyConfigured,
   initKmsKeyRing,
   rawPrisma,
+  setDecryptionFailureReporter,
 } from '@repo/db';
 import { assertJwtSecretConfigured } from './auth/jwt-secret.util';
 import { assertAuditSigningKeyConfigured } from './audit/audit-db.service';
@@ -47,6 +48,10 @@ function isAllowedCorsOrigin(
 async function bootstrap() {
   applyKmsCompatibilityReleaseSettings();
   const logger = new Logger('Bootstrap');
+  const encryptionLogger = new Logger('FieldEncryption');
+  setDecryptionFailureReporter((reason) =>
+    encryptionLogger.error(`[E-02] Field decryption failed (${reason}).`),
+  );
 
   // D-04, E-02, C-03: Fail closed at startup if cryptographic secrets/KMS keys are missing/weak
   assertJwtSecretConfigured();
@@ -76,6 +81,7 @@ async function bootstrap() {
         : ['log', 'error', 'warn', 'debug', 'verbose'],
   });
 
+  app.getHttpAdapter().getInstance().set('trust proxy', 'loopback');
   app.setGlobalPrefix('api');
 
   // E-04: Security headers via Helmet (HSTS, CSP, frame-ancestors, X-Content-Type-Options)
@@ -155,8 +161,9 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  await app.listen(4400, '127.0.0.1');
-  logger.log('Server is listening on port 4400');
+  const port = Number(process.env.PORT) || 4400;
+  await app.listen(port, '127.0.0.1');
+  logger.log(`Server is listening on port ${port}`);
 }
 
 bootstrap().catch((err) => {
