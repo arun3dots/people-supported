@@ -4,6 +4,10 @@ export const LOGIN = "LOGIN";
 export const AUTH_LOGIN = "LOGIN";
 export const COGNITO_START = "COGNITO_START";
 export const COGNITO_START_PATH = "/auth/cognito/start";
+export const GET_MANAGED_STAFF = "GET_MANAGED_STAFF";
+export const CREATE_MANAGED_STAFF = "CREATE_MANAGED_STAFF";
+export const MANAGED_STAFF_ACTION = "MANAGED_STAFF_ACTION";
+export const VERIFY_MANAGED_INVITATION = "VERIFY_MANAGED_INVITATION";
 export const LOGOUT = "LOGOUT";
 export const AUTH_LOGOUT = "LOGOUT";
 export const MFA_VERIFY = "MFA_VERIFY";
@@ -27,6 +31,22 @@ export const SWITCH_BRANCH = "SWITCH_BRANCH";
 export const AUTH_SWITCH_BRANCH = "SWITCH_BRANCH";
 
 const authEndpoints: EndpointDetails = {
+  [GET_MANAGED_STAFF]: {
+    endpoint: "/managed-staff/accounts",
+    requestType: "GET",
+  },
+  [CREATE_MANAGED_STAFF]: {
+    endpoint: "/managed-staff/accounts",
+    requestType: "POST",
+  },
+  [MANAGED_STAFF_ACTION]: {
+    endpoint: "/managed-staff/accounts/[userId]/actions",
+    requestType: "POST",
+  },
+  [VERIFY_MANAGED_INVITATION]: {
+    endpoint: "/auth/cognito/invitations/verify",
+    requestType: "POST",
+  },
   [LOGIN]: {
     endpoint: "/auth/login",
     requestType: "POST",

@@ -30,6 +30,7 @@ import {
   lockCognitoSession,
   parseCredentials,
   parseVerifiedCredentials,
+  persistCognitoSession,
   readCognitoSessionIdentity,
   revokeCognitoSessionLocked,
   sealCredentials,
@@ -72,9 +73,10 @@ export class CognitoSessions {
     const settings = this.config.require();
     const app: CognitoAppKey =
       options?.app ?? (options?.requireSuperAdmin ? 'superadmin' : 'web');
+    const linked = await findLinkedUser(identity.subject);
     const user = resolveIdentity(
-      await findLinkedUser(identity.subject),
-      settings.pilotIds,
+      linked,
+      settings,
       undefined,
       identity.mfaVerified,
     );
@@ -92,8 +94,8 @@ export class CognitoSessions {
     );
     const id = randomUUID();
     const browserRefresh = issueRefresh(id);
-    const session = await prisma.cognitoSession.create({
-      data: {
+    const session = await persistCognitoSession(
+      {
         id,
         userId: user.userId,
         tenantId: user.tenantId,
@@ -110,7 +112,8 @@ export class CognitoSessions {
           mfaVerified: identity.mfaVerified,
         }),
       },
-    });
+      linked?.authMode === 'Cognito',
+    );
     return this.issue(session, user, browserRefresh, app);
   }
 
@@ -126,7 +129,7 @@ export class CognitoSessions {
     return readCognitoSessionIdentity(
       prisma,
       session,
-      this.config.require().pilotIds,
+      this.config.require(),
       creds.mfaVerified,
     );
   }
@@ -146,7 +149,7 @@ export class CognitoSessions {
         const user = await readCognitoSessionIdentity(
           tx,
           session,
-          settings.pilotIds,
+          settings,
           creds.mfaVerified,
         );
         const now = new Date();
@@ -221,7 +224,7 @@ export class CognitoSessions {
       const user = await readCognitoSessionIdentity(
         tx,
         session,
-        this.config.require().pilotIds,
+        this.config.require(),
         creds.mfaVerified,
       );
       if (!user.branchIds?.includes(branchId))

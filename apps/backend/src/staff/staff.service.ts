@@ -115,6 +115,11 @@ export class StaffService {
     tenantId: string,
     branchId?: string,
   ): Promise<User> {
+    if (process.env.COGNITO_PROVISIONING_ENABLED === 'true') {
+      throw new ForbiddenException(
+        'Invite new staff through managed account provisioning.',
+      );
+    }
     const existingUser = await prisma.user.findUnique({
       where: { email: createStaffDto.email },
     });
@@ -466,6 +471,16 @@ export class StaffService {
   ): Promise<User> {
     const staff = await this.findOne(id, tenantId);
 
+    if (
+      staff.authMode === 'Cognito' &&
+      ((updateStaffDto.email && updateStaffDto.email !== staff.email) ||
+        (updateStaffDto.roleId && updateStaffDto.roleId !== staff.roleId))
+    ) {
+      throw new ForbiddenException(
+        'A managed account’s email and role cannot be changed here.',
+      );
+    }
+
     if (updateStaffDto.roleId) {
       const targetRole = await prisma.role.findFirst({
         where: {
@@ -479,6 +494,13 @@ export class StaffService {
       if (!targetRole || targetRole.name.toLowerCase() === 'superadmin') {
         throw new BadRequestException(
           'SuperAdmin role cannot be assigned to tenant staff',
+        );
+      }
+      if (updateStaffDto.roleId !== staff.roleId) {
+        await this.assertManagedRolloutAdminGrant(
+          targetRole.name,
+          updaterId,
+          tenantId,
         );
       }
     }
@@ -575,6 +597,10 @@ export class StaffService {
     tenantId: string,
   ): Promise<User> {
     const staff = await this.findOne(id, tenantId);
+    if (staff.authMode === 'Cognito')
+      throw new ForbiddenException(
+        'The role of a managed account cannot be changed here.',
+      );
 
     const targetRole = await prisma.role.findFirst({
       where: {
@@ -588,6 +614,13 @@ export class StaffService {
     if (!targetRole || targetRole.name.toLowerCase() === 'superadmin') {
       throw new BadRequestException(
         'SuperAdmin role cannot be assigned to tenant staff',
+      );
+    }
+    if (updateRoleDto.roleId !== staff.roleId) {
+      await this.assertManagedRolloutAdminGrant(
+        targetRole.name,
+        updaterId,
+        tenantId,
       );
     }
 
@@ -624,6 +657,37 @@ export class StaffService {
     return updatedStaff;
   }
 
+  private async assertManagedRolloutAdminGrant(
+    roleName: string,
+    actorId: string,
+    tenantId: string,
+  ) {
+    if (
+      process.env.COGNITO_PROVISIONING_ENABLED !== 'true' ||
+      roleName !== 'Admin'
+    )
+      return;
+    const admin = await prisma.user.findFirst({
+      where: {
+        id: actorId,
+        tenantId,
+        isActive: true,
+        deletedAt: null,
+        role: {
+          name: 'Admin',
+          isSystem: true,
+          tenantId: null,
+          deletedAt: null,
+        },
+      },
+      select: { id: true },
+    });
+    if (!admin)
+      throw new ForbiddenException(
+        'Only an existing tenant administrator can grant administrator access.',
+      );
+  }
+
   async updateStatus(
     id: string,
     updateStatusDto: UpdateStaffStatusDto,
@@ -635,6 +699,10 @@ export class StaffService {
     }
 
     const staff = await this.findOne(id, tenantId);
+    if (staff.authMode === 'Cognito')
+      throw new ForbiddenException(
+        'Use managed account actions to change access.',
+      );
 
     const updatedStaff = await prisma.user.update({
       where: { id },
@@ -667,6 +735,10 @@ export class StaffService {
     }
 
     const staff = await this.findOne(id, tenantId);
+    if (staff.authMode === 'Cognito')
+      throw new ForbiddenException(
+        'Disable the account using managed account actions.',
+      );
 
     const archivedEmail = `deleted_${Date.now()}_${staff.email}`;
 

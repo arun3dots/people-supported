@@ -233,7 +233,13 @@ export function StaffDirectory() {
         description="Manage staff profiles, roles, qualifications, training and compliance records."
         overviewTitle="Staff Directory"
         storageKey="staff_directory_view_mode"
-        onAdd={() => setIsAddModalOpen(true)}
+        onAdd={() => {
+          if (process.env.NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED === "true") {
+            router.push("/admin/staff/managed-accounts");
+          } else {
+            setIsAddModalOpen(true);
+          }
+        }}
         addLabel="Add Staff"
         addIcon={<Plus className="size-4" />}
         stats={<StaffStatCards staff={allStaff} />}

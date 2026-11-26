@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   Button,
   Badge,
@@ -63,6 +65,14 @@ export function TenantCard({ tenant }: TenantCardProps) {
       </div>
 
       <div className="pt-2 flex items-center justify-between">
+        {tenant.status === "Active" &&
+          process.env.NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED === "true" && (
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/tenants/${encodeURIComponent(tenant.id)}/users`}>
+                Manage Cognito users
+              </Link>
+            </Button>
+          )}
         <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-xs text-emerald-800 font-semibold">
           <Eye className="size-3.5" />
           View Details

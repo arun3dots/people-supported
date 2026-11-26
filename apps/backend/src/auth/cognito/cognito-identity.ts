@@ -3,6 +3,12 @@ import { prisma, type Prisma, type PrismaTransactionClient } from '@repo/db';
 import { EMPTY_ROLE_PERMISSIONS, rolePermissionsSchema } from '@repo/schema';
 import type { AuthenticatedUser } from '../../common/interfaces/request.interface';
 import { CognitoMfaAssuranceException } from './cognito-mfa.util';
+import type { CognitoSettings } from './cognito-config';
+
+export type CognitoEligibility = Pick<
+  CognitoSettings,
+  'pilotIds' | 'poolId' | 'managedUsersEnabled'
+>;
 
 export type IdentityDb = Pick<
   PrismaTransactionClient,
@@ -18,6 +24,16 @@ export const clearedCredentials = {
 const selection = {
   id: true,
   cognitoSub: true,
+  authMode: true,
+  cognitoProvisioning: {
+    select: {
+      poolId: true,
+      email: true,
+      providerUsername: true,
+      accessRequested: true,
+      verifiedAt: true,
+    },
+  },
   tenantId: true,
   email: true,
   fullName: true,
@@ -67,11 +83,20 @@ export class CognitoDisabledIdentityException extends UnauthorizedException {
 
 export function resolveIdentity(
   user: LinkedUser | null,
-  pilot: ReadonlySet<string>,
+  settings: CognitoEligibility,
   activeBranchId?: string | null,
   mfaVerified = false,
 ): AuthenticatedUser {
-  if (!user || !pilot.has(user.id)) {
+  const provisioned = user?.cognitoProvisioning;
+  const eligible =
+    user?.authMode === 'Cognito'
+      ? settings.managedUsersEnabled &&
+        provisioned?.poolId === settings.poolId &&
+        provisioned.accessRequested &&
+        provisioned.email === user.email &&
+        Boolean(provisioned.providerUsername && provisioned.verifiedAt)
+      : Boolean(user && settings.pilotIds.has(user.id));
+  if (!user || !eligible) {
     throw new UnauthorizedException('Local identity is unavailable.');
   }
   if (mfaVerified !== true) {

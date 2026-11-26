@@ -1,6 +1,11 @@
 import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { CognitoSession, PrismaTransactionClient } from '@repo/db';
+import {
+  prisma,
+  type CognitoSession,
+  type Prisma,
+  type PrismaTransactionClient,
+} from '@repo/db';
 import { z } from '@repo/schema';
 import { timingSafeEqual } from 'node:crypto';
 import type { AuthenticatedUser } from '../../common/interfaces/request.interface';
@@ -16,6 +21,7 @@ import {
   clearedCredentials,
   findSessionUser,
   resolveIdentity,
+  type CognitoEligibility,
 } from './cognito-identity';
 import { CognitoMfaAssuranceException } from './cognito-mfa.util';
 
@@ -23,6 +29,26 @@ export const REFRESH_TOKEN_PATTERN =
   /^slc1\.([a-f0-9-]{36})\.[a-zA-Z0-9_-]{43}$/;
 export const COGNITO_SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 export const REFRESH_RETRY_WINDOW_MS = 10_000;
+
+export function persistCognitoSession(
+  data: Prisma.CognitoSessionUncheckedCreateInput,
+  managed: boolean,
+) {
+  if (!managed) return prisma.cognitoSession.create({ data });
+  return prisma.$transaction(async (tx) => {
+    const session = await tx.cognitoSession.create({ data });
+    await tx.cognitoProvisioning.updateMany({
+      where: { userId: data.userId, activatedAt: null },
+      data: {
+        activatedAt: new Date(),
+        phase: 'Activated',
+        invitationDelivery: 'Sent',
+        lastError: null,
+      },
+    });
+    return session;
+  });
+}
 
 const credentialsSchema = z.object({
   providerRefresh: z.string().min(1),
@@ -114,7 +140,7 @@ export function revokeCognitoSessionLocked(
 export async function readCognitoSessionIdentity(
   db: PrismaTransactionClient,
   session: CognitoSession | null,
-  pilotIds: ReadonlySet<string>,
+  eligibility: CognitoEligibility,
   mfaVerified: boolean,
 ) {
   if (!session || session.revokedAt || session.expiresAt <= new Date()) {
@@ -132,7 +158,12 @@ export async function readCognitoSessionIdentity(
     session.tenantId,
     session.subject,
   );
-  return resolveIdentity(user, pilotIds, session.activeBranchId, mfaVerified);
+  return resolveIdentity(
+    user,
+    eligibility,
+    session.activeBranchId,
+    mfaVerified,
+  );
 }
 
 export function signCognitoAccessToken(

@@ -150,6 +150,11 @@ export class ProfileService {
       dto.email &&
       dto.email.trim().toLowerCase() !== existing.email.toLowerCase()
     ) {
+      if (existing.authMode === 'Cognito') {
+        throw new BadRequestException(
+          'The email address is bound to this managed identity.',
+        );
+      }
       const emailConflict = await prisma.user.findFirst({
         where: {
           email: { equals: dto.email.trim(), mode: 'insensitive' },

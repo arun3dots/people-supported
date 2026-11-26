@@ -44,6 +44,7 @@ export const PUBLIC_WEB_PATHS = new Set([
   "/accessibility",
   "/get-started",
   "/verify",
+  "/verify-invitation",
   "/reset-password",
   "/onboarding",
   "/billing",
