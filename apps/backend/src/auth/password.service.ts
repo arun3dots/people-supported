@@ -91,6 +91,7 @@ export class PasswordService {
         'No active user account found with this email address',
       );
     }
+    if (user.authMode === 'Cognito') return { success: true };
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -191,7 +192,7 @@ export class PasswordService {
     const user = await prisma.user.findUnique({
       where: { email: targetEmail },
     });
-    if (!user) {
+    if (!user || user.authMode === 'Cognito') {
       throw new UnauthorizedException('User account not found');
     }
 

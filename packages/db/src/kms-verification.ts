@@ -149,6 +149,11 @@ export async function verifyKmsDatabase(
             "The two KMS compatibility migrations must be recorded as applied.",
           );
         }
+        const managedAccountsMigrationApplied = migrations.some(
+          ({ migration_name }) =>
+            migration_name ===
+            "20261125100000_add_managed_cognito_provisioning",
+        );
         const columns = await tx.$queryRaw<
           Array<{ column_name: string; is_nullable: string }>
         >`
@@ -164,14 +169,20 @@ export async function verifyKmsDatabase(
       `;
         const constraints = await tx.$queryRaw<Array<{ name: string }>>`
         SELECT conname::text AS "name" FROM pg_constraint
-        WHERE conrelid = '"EncryptionKey"'::regclass AND contype = 'c' AND convalidated
+        WHERE conrelid IN ('"EncryptionKey"'::regclass, '"User"'::regclass)
+          AND contype = 'c' AND convalidated
       `;
         if (
           !columns.some(
             (column) =>
               column.column_name === "passwordHash" &&
-              column.is_nullable === "NO",
+              column.is_nullable ===
+                (managedAccountsMigrationApplied ? "YES" : "NO"),
           ) ||
+          (managedAccountsMigrationApplied &&
+            !constraints.some(
+              ({ name }) => name === "User_auth_mode_password_check",
+            )) ||
           !columns.some(
             (column) =>
               column.column_name === "cognitoSub" &&

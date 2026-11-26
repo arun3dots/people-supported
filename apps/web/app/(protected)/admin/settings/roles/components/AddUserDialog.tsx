@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
@@ -214,17 +215,23 @@ export function AddUserDialog({ isOpen, onOpenChange, initialUser }: AddUserDial
           </DialogTitle>
         </DialogHeader>
 
-        <AddUserForm
-          form={form}
-          onSubmit={onSubmit}
-          isEditing={isEditing}
-          isPending={isPending}
-          roles={staffRoles}
-          departments={departments}
-          staffList={staffList}
-          locations={locationOptions}
-          onCancel={handleClose}
-        />
+        {!isEditing && process.env.NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED === "true" ? (
+          <Link className="text-sm font-medium text-slate-800 underline" href="/admin/staff/managed-accounts">
+            Invite a managed Cognito user
+          </Link>
+        ) : (
+          <AddUserForm
+            form={form}
+            onSubmit={onSubmit}
+            isEditing={isEditing}
+            isPending={isPending}
+            roles={staffRoles}
+            departments={departments}
+            staffList={staffList}
+            locations={locationOptions}
+            onCancel={handleClose}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

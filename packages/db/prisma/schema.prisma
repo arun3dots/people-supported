@@ -359,10 +359,11 @@ model Bed {
 model User {
   id                     String                  @id @default(uuid())
   cognitoSub             String?                 @unique
+  authMode               UserAuthMode            @default(Legacy)
   tenantId               String?
   roleId                 String
   email                  String                  @unique
-  passwordHash           String
+  passwordHash           String?
   passwordChangedAt      DateTime?               @default(now())
   fullName               String
   mfaSecret              String?
@@ -385,6 +386,7 @@ model User {
   mfaResetRequests       MfaResetRequest[]
   refreshTokens          RefreshToken[]
   cognitoSessions        CognitoSession[]
+  cognitoProvisioning    CognitoProvisioning?
   keyworkerFor           Resident[]              @relation("Keyworker")
   shiftAssignments       ShiftAssignment[]
   staffExpenses          StaffExpense[]
@@ -430,6 +432,45 @@ model User {
   staffAppraisals        StaffAppraisal[]        @relation("StaffAppraisals")
   appraiserSessions      StaffAppraisal[]        @relation("AppraiserSessions")
   leaveRequests          LeaveRequest[]
+}
+
+enum UserAuthMode {
+  Legacy
+  Cognito
+}
+
+enum CognitoOnboardingPhase {
+  VerifyEmail
+  ProvisionIdentity
+  Invite
+  Invited
+  Activated
+}
+
+enum CognitoDeliveryState {
+  NotSent
+  Sending
+  Sent
+  Failed
+}
+
+model CognitoProvisioning {
+  userId                String                 @id
+  requestId             String                 @unique
+  email                 String                 @unique
+  poolId                String
+  providerUsername      String?
+  accessRequested       Boolean                @default(true)
+  phase                 CognitoOnboardingPhase @default(VerifyEmail)
+  verificationDelivery  CognitoDeliveryState   @default(NotSent)
+  invitationDelivery    CognitoDeliveryState   @default(NotSent)
+  verificationHash      String?                @unique
+  verificationExpiresAt DateTime?              @db.Timestamptz(3)
+  verifiedAt            DateTime?              @db.Timestamptz(3)
+  activatedAt           DateTime?              @db.Timestamptz(3)
+  lastActionAt          DateTime?              @db.Timestamptz(3)
+  lastError             String?
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Restrict)
 }
 
 model CognitoLoginAttempt {

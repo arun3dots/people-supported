@@ -24,10 +24,19 @@ export {
 };
 
 export function loadCognitoConfig(env: NodeJS.ProcessEnv) {
+  const managedUsers = env.COGNITO_MANAGED_USERS_ENABLED;
+  if (managedUsers !== undefined && !['true', 'false'].includes(managedUsers)) {
+    throw new Error('Invalid COGNITO_MANAGED_USERS_ENABLED.');
+  }
   if (
     env.COGNITO_AUTH_ENABLED === undefined ||
     env.COGNITO_AUTH_ENABLED === 'false'
   ) {
+    if (managedUsers === 'true') {
+      throw new Error(
+        'Managed Cognito users require COGNITO_AUTH_ENABLED=true.',
+      );
+    }
     return null;
   }
   readCognitoSetting(env, 'COGNITO_AUTH_ENABLED', /^true$/);
@@ -135,13 +144,16 @@ export function loadCognitoConfig(env: NodeJS.ProcessEnv) {
     }
   }
 
-  const pilotIds = readCognitoSetting(
-    env,
-    'COGNITO_PILOT_USER_IDS',
-    /^[a-fA-F\d, -]{1,4096}$/,
-  )
-    .split(',')
-    .map((id) => id.trim());
+  const pilotIds =
+    managedUsers === 'true' && !env.COGNITO_PILOT_USER_IDS
+      ? []
+      : readCognitoSetting(
+          env,
+          'COGNITO_PILOT_USER_IDS',
+          /^[a-fA-F\d, -]{1,4096}$/,
+        )
+          .split(',')
+          .map((id) => id.trim());
   if (
     pilotIds.some(
       (id) => !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id),
@@ -165,6 +177,8 @@ export function loadCognitoConfig(env: NodeJS.ProcessEnv) {
     }
     return {
       region,
+      poolId: pool,
+      managedUsersEnabled: managedUsers === 'true',
       issuer,
       managedOrigin: managed.origin,
       redirectUri: webTarget.redirectUri,
