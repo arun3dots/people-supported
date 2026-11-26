@@ -17,7 +17,7 @@ import { devNull } from 'node:os';
 import { randomBytes } from 'node:crypto';
 import { CognitoConfig } from '../cognito-config';
 
-const marker = 'custom:cantra_provisioning_id';
+const marker = 'custom:cantra_provision_id';
 const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 const temporaryPassword = () => `${randomBytes(72).toString('base64url')}Aa1!`;
 const errorName = (error: unknown) =>

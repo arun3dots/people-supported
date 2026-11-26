@@ -27,7 +27,7 @@ describe('Managed Cognito directory', () => {
     { Name: 'sub', Value: subject },
     { Name: 'email', Value: fixture.email },
     { Name: 'email_verified', Value: 'true' },
-    { Name: 'custom:cantra_provisioning_id', Value: fixture.id },
+    { Name: 'custom:cantra_provision_id', Value: fixture.id },
   ];
   const config = {
     require: () => ({
@@ -71,7 +71,7 @@ describe('Managed Cognito directory', () => {
       ForceAliasCreation: false,
       TemporaryPassword: expect.any(String),
       UserAttributes: expect.arrayContaining([
-        { Name: 'custom:cantra_provisioning_id', Value: fixture.id },
+        { Name: 'custom:cantra_provision_id', Value: fixture.id },
       ]),
     });
   });
