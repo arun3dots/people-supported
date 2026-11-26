@@ -249,9 +249,22 @@ async function main() {
     if (adminOut && !allowedSignOuts.has(adminOut.href)) errors.push("COGNITO_ALLOWED_SIGN_OUT_URLS must include COGNITO_SUPERADMIN_SIGN_OUT_URL");
   }
 
+  const managedUsers = backendEnv.COGNITO_MANAGED_USERS_ENABLED === "true";
   const pilotIds = (backendEnv.COGNITO_PILOT_USER_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
-  if (pilotIds.length === 0 || pilotIds.some((id) => !UUID_RE.test(id))) {
-    errors.push("COGNITO_PILOT_USER_IDS must contain one or more valid UUIDs");
+  if ((!managedUsers && pilotIds.length === 0) || pilotIds.some((id) => !UUID_RE.test(id))) {
+    errors.push("COGNITO_PILOT_USER_IDS must contain valid UUIDs" + (managedUsers ? "" : " (or enable managed users)"));
+  }
+  if (backendEnv.COGNITO_PROVISIONING_ENABLED === "true") {
+    if (!managedUsers) errors.push("COGNITO_PROVISIONING_ENABLED requires COGNITO_MANAGED_USERS_ENABLED='true'");
+    if ((backendEnv.COGNITO_REGION || poolRegion) !== "eu-north-1") errors.push("COGNITO_PROVISIONING_ENABLED requires eu-north-1");
+    if (!["email", "alias"].includes(backendEnv.COGNITO_PROVISIONING_USERNAME_MODE || "")) errors.push("COGNITO_PROVISIONING_USERNAME_MODE must be 'email' or 'alias'");
+    if (webEnv && webEnv.NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED !== "true") errors.push("web: NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED must be 'true'");
+  }
+  const accessTenants = (backendEnv.AUTH_ACCESS_TENANT_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (backendEnv.AUTH_ACCESS_TENANT_IDS?.trim()) {
+    if (accessTenants.length === 0 || accessTenants.some((id) => !UUID_RE.test(id))) errors.push("AUTH_ACCESS_TENANT_IDS must contain valid UUIDs");
+    try { parseEndpoint(backendEnv.AUTH_ACCESS_URL, "AUTH_ACCESS_URL", "/", allowLocal); } catch (e) { errors.push(e.message); }
+    if (!/^[A-Za-z0-9_-]{43,128}$/.test(backendEnv.AUTH_ACCESS_SERVICE_TOKEN || "")) errors.push("AUTH_ACCESS_SERVICE_TOKEN is missing or malformed");
   }
 
   let backendPubPem = null;

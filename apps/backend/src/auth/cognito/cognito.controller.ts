@@ -85,7 +85,10 @@ export class CognitoController {
   async start(@Req() req: Request, @Res() res: Response) {
     const target = this.config.resolveApp(req);
     const secure = isSecureCookieRequest(req, target.secure);
-    const next = await this.authorization.start(target.app);
+    const next = await this.authorization.start(
+      target.app,
+      req.query.reauthenticate === '1',
+    );
     res.cookie(loginCookie, next.binding, {
       httpOnly: true,
       sameSite: 'lax',

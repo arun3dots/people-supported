@@ -2,14 +2,11 @@ import {
   ForbiddenException,
   Injectable,
   Logger,
+  Optional,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import {
-  prisma,
-  type CognitoSession,
-  type PrismaTransactionClient,
-} from '@repo/db';
+import { prisma, type CognitoSession } from '@repo/db';
 import {
   globalIdentityRevocationSchema,
   type GlobalIdentityRevocation,
@@ -23,7 +20,6 @@ import {
 } from './cognito-config';
 import {
   COGNITO_SESSION_TTL_MS,
-  REFRESH_RETRY_WINDOW_MS,
   equalHash,
   isCognitoRefresh,
   issueRefresh,
@@ -45,6 +41,8 @@ import {
 } from './cognito-identity';
 import { CognitoMfaAssuranceException } from './cognito-mfa.util';
 import { CognitoProvider, digest } from './cognito-provider.service';
+import { rotateCognitoSession } from './cognito-refresh.util';
+import { AccessClient } from '../../auth-access/integration/access-client';
 
 export { isCognitoRefresh };
 
@@ -56,6 +54,7 @@ export class CognitoSessions {
     private readonly config: CognitoConfig,
     private readonly provider: CognitoProvider,
     private readonly jwt: JwtService,
+    @Optional() private readonly access?: AccessClient,
   ) {}
 
   async create(
@@ -92,6 +91,7 @@ export class CognitoSessions {
       identity.subject,
       identity.authenticatedAt,
     );
+    await this.access?.check(user, { ...identity, issuer: settings.issuer });
     const id = randomUUID();
     const browserRefresh = issueRefresh(id);
     const session = await persistCognitoSession(
@@ -126,79 +126,24 @@ export class CognitoSessions {
       throw new UnauthorizedException('Cognito session is unavailable.');
     }
     const creds = parseVerifiedCredentials(session, expectedApp);
-    return readCognitoSessionIdentity(
+    const user = await readCognitoSessionIdentity(
       prisma,
       session,
       this.config.require(),
       creds.mfaVerified,
     );
+    await this.access?.check(user, session);
+    return user;
   }
 
   async refresh(browserRefresh: string, target?: CognitoAppTarget) {
     const settings = this.config.require();
-    const appTarget = target ?? settings.apps.web;
-    const hash = digest(browserRefresh);
-    const result = await prisma.$transaction(
-      async (tx) => {
-        const session = await lockCognitoSession(
-          tx,
-          sessionId(browserRefresh),
-          settings.issuer,
-        );
-        const creds = parseVerifiedCredentials(session, appTarget.app);
-        const user = await readCognitoSessionIdentity(
-          tx,
-          session,
-          settings,
-          creds.mfaVerified,
-        );
-        const now = new Date();
-        if (!equalHash(hash, session.refreshHash)) {
-          if (!equalHash(hash, session.previousRefreshHash))
-            throw new UnauthorizedException('Invalid session credential.');
-          if (session.previousValidUntil && session.previousValidUntil > now) {
-            return {
-              session,
-              user,
-              browserRefresh: creds.browserRefresh,
-              app: creds.app,
-            };
-          }
-          await revokeCognitoSessionLocked(tx, session.id);
-          return null;
-        }
-
-        const next = await this.provider
-          .refresh(creds.providerRefresh, session.subject, appTarget)
-          .catch(async (error: unknown) => {
-            if (!(error instanceof UnauthorizedException)) throw error;
-            await revokeCognitoSessionLocked(tx, session.id);
-            return null;
-          });
-        if (!next || next.mfaVerified !== true) return null;
-        const rotated = issueRefresh(session.id);
-        const updated = await tx.cognitoSession.update({
-          where: { id: session.id },
-          data: {
-            refreshHash: digest(rotated),
-            previousRefreshHash: session.refreshHash,
-            previousValidUntil: new Date(Date.now() + REFRESH_RETRY_WINDOW_MS),
-            sealedCredentials: sealCredentials({
-              browserRefresh: rotated,
-              providerRefresh: next.refreshToken,
-              app: creds.app,
-              mfaVerified: next.mfaVerified,
-            }),
-          },
-        });
-        return {
-          session: updated,
-          user,
-          browserRefresh: rotated,
-          app: creds.app,
-        };
-      },
-      { timeout: 20_000 },
+    const result = await rotateCognitoSession(
+      browserRefresh,
+      settings,
+      target ?? settings.apps.web,
+      this.provider,
+      this.access,
     );
     if (!result)
       throw new UnauthorizedException('Session credential has been revoked.');
@@ -227,6 +172,7 @@ export class CognitoSessions {
         this.config.require(),
         creds.mfaVerified,
       );
+      await this.access?.check(user, session);
       if (!user.branchIds?.includes(branchId))
         throw new UnauthorizedException('Branch access denied.');
       const updated = await tx.cognitoSession.update({

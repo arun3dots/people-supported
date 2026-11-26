@@ -20,6 +20,7 @@ export const managedAccountSelection = {
       fullName: true,
       isActive: true,
       roleId: true,
+      role: { select: { name: true } },
       tenantId: true,
       deletedAt: true,
       branches: { select: { branchId: true } },

@@ -10,7 +10,7 @@ const root = resolve(__dirname, "..");
 const env = Object.fromEntries(
   Object.entries(process.env).filter(
     ([name]) =>
-      !/^(PG|POSTGRES|COGNITO_|AWS_|REDIS_|(?:AUDIT_|DIRECT_|SHADOW_)?DATABASE_URL|JWT_SECRET|ENCRYPTION_KEY|AUDIT_SIGNING_KEY|COOKIE_DOMAIN|ENFORCE_MFA)/i.test(
+      !/^(PG|POSTGRES|COGNITO_|AUTH_ACCESS_|AWS_|REDIS_|(?:AUDIT_|DIRECT_|SHADOW_)?DATABASE_URL|JWT_SECRET|ENCRYPTION_KEY|AUDIT_SIGNING_KEY|COOKIE_DOMAIN|ENFORCE_MFA)/i.test(
         name,
       ),
   ),
@@ -125,6 +125,28 @@ async function main() {
     env.DATABASE_URL = `postgresql://cognito_fixture:${password}@127.0.0.1:${port}/postgres`;
     env.AUDIT_DATABASE_URL = "postgresql://fixture@127.0.0.1:1/unused";
     env.COGNITO_DISPOSABLE_DB = `127.0.0.1:${port}`;
+    const withAccess = process.argv.includes("--with-auth-access");
+    if (withAccess) {
+      run(
+        "psql",
+        [
+          "-X",
+          ...destination,
+          "-U",
+          "cognito_fixture",
+          "-d",
+          "postgres",
+          "-v",
+          "ON_ERROR_STOP=1",
+          "-c",
+          "CREATE DATABASE access_fixture",
+        ],
+        { env: { ...env, PGPASSWORD: password } },
+      );
+      const access = new URL(env.DATABASE_URL);
+      access.pathname = "/access_fixture";
+      env.AUTH_ACCESS_DATABASE_URL = access.href;
+    }
 
     npm("packages/db", "run", "build");
     npm("packages/audit-db", "run", "db:generate");
@@ -136,6 +158,15 @@ async function main() {
       "deploy",
       "--schema=packages/db/prisma/schema.prisma",
     ]);
+    if (withAccess) {
+      npm("apps/auth-access", "run", "build");
+      run(process.execPath, [
+        "node_modules/prisma/build/index.js",
+        "migrate",
+        "deploy",
+        "--schema=apps/auth-access/prisma/schema.prisma",
+      ]);
+    }
     npm(
       "apps/backend",
       "run",
@@ -149,6 +180,7 @@ async function main() {
       "test/cognito-mfa.e2e-spec.ts",
       "test/managed-accounts.e2e-spec.ts",
       "test/managed-account-lifecycle.e2e-spec.ts",
+      ...(withAccess ? ["test/auth-access.e2e-spec.ts"] : []),
     );
   } finally {
     if (

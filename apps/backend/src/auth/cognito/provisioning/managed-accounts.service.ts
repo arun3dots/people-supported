@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { prisma } from '@repo/db';
 import type {
@@ -27,6 +28,7 @@ import {
   verifyManagedAccountMailbox,
 } from './managed-account-verification';
 import { ManagedCognitoDirectory } from './managed-cognito-directory';
+import { AccessClient } from '../../../auth-access/integration/access-client';
 import {
   linkManagedIdentity,
   sendManagedInvitation,
@@ -39,6 +41,7 @@ export class ManagedAccountsService {
     private readonly directory: ManagedCognitoDirectory,
     private readonly mail: MailService,
     private readonly audit: AuditService,
+    @Optional() private readonly access?: AccessClient,
   ) {}
 
   async list(
@@ -102,7 +105,10 @@ export class ManagedAccountsService {
     input: CreateManagedAccountDTO,
   ) {
     const { poolId, webOrigin } = this.directory.requireSettings();
+    if (this.access?.enrolled(tenantId))
+      this.access.assertStaffAdmin(actor, tenantId);
     const account = await reserveManagedAccount(actor, tenantId, input, poolId);
+    await this.reserveAccess(actor, tenantId, account.userId, poolId);
     if (
       account.phase === 'VerifyEmail' &&
       account.verificationDelivery === 'NotSent'
@@ -127,7 +133,7 @@ export class ManagedAccountsService {
   async verify(token: string) {
     const { poolId } = this.directory.requireSettings();
     const userId = await verifyManagedAccountMailbox(token, poolId);
-    if (await linkManagedIdentity(this.directory, userId)) {
+    if (await linkManagedIdentity(this.directory, userId, this.access)) {
       await sendManagedInvitation(this.directory, userId, false);
     }
     return { success: true };
@@ -145,21 +151,22 @@ export class ManagedAccountsService {
       throw new ForbiddenException('You cannot manage your own credentials.');
     switch (action) {
       case 'resend':
-        if (entry.phase === 'VerifyEmail')
+        if (entry.phase === 'VerifyEmail') {
+          await this.reserveAccess(actor, tenantId, userId, poolId);
           await sendManagedAccountVerification(
             this.mail,
             userId,
             poolId,
             webOrigin,
           );
-        else await sendManagedInvitation(this.directory, userId, true);
+        } else await sendManagedInvitation(this.directory, userId, true);
         break;
       case 'retry':
         if (entry.phase !== 'ProvisionIdentity' && entry.phase !== 'Invite')
           throw new ConflictException(
             'No identity provisioning operation is pending.',
           );
-        if (await linkManagedIdentity(this.directory, userId))
+        if (await linkManagedIdentity(this.directory, userId, this.access))
           await sendManagedInvitation(this.directory, userId, true);
         break;
       default:
@@ -201,6 +208,30 @@ export class ManagedAccountsService {
         branchId,
       );
     return entry;
+  }
+
+  private async reserveAccess(
+    actor: AuthenticatedUser,
+    tenantId: string,
+    userId: string,
+    poolId: string,
+  ) {
+    if (!this.access?.enrolled(tenantId)) return;
+    const entry = await this.target(actor, tenantId, userId, poolId);
+    try {
+      await this.access.reserveStaff(
+        actor,
+        tenantId,
+        userId,
+        entry.user.role.name.toLowerCase(),
+      );
+    } catch (error) {
+      await prisma.cognitoProvisioning.updateMany({
+        where: { userId, poolId, phase: 'VerifyEmail' },
+        data: { lastError: 'ACCESS_ENROLLMENT_FAILED' },
+      });
+      throw error;
+    }
   }
 
   private note(

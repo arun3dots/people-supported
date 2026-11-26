@@ -1,0 +1,100 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUTH_ACCESS_DATABASE_URL")
+}
+
+model AccessProduct {
+  key         String         @id
+  issuer      String
+  permissions String[]
+  tenants     AccessTenant[]
+}
+
+model AccessUser {
+  id            String             @id @default(uuid()) @db.Uuid
+  issuer        String
+  subject       String
+  name          String?
+  enabled       Boolean            @default(true)
+  revokedBefore DateTime?
+  memberships   AccessMembership[]
+
+  @@unique([issuer, subject])
+}
+
+model AccessTenant {
+  productKey       String
+  tenantId         String                  @db.Uuid
+  enabled          Boolean                 @default(true)
+  product          AccessProduct           @relation(fields: [productKey], references: [key])
+  roles            AccessRole[]
+  memberships      AccessMembership[]
+  staffEnrollments AccessStaffEnrollment[]
+
+  @@id([productKey, tenantId])
+}
+
+model AccessRole {
+  productKey  String
+  tenantId    String             @db.Uuid
+  key         String
+  name        String
+  permissions String[]
+  version     Int                @default(1)
+  tenant      AccessTenant       @relation(fields: [productKey, tenantId], references: [productKey, tenantId])
+  memberships AccessMembership[]
+
+  @@id([productKey, tenantId, key])
+}
+
+model AccessMembership {
+  productKey    String
+  tenantId      String       @db.Uuid
+  userId        String       @db.Uuid
+  roleKey       String
+  enabled       Boolean      @default(true)
+  canManage     Boolean      @default(false)
+  revokedBefore DateTime?
+  version       Int          @default(1)
+  tenant        AccessTenant @relation(fields: [productKey, tenantId], references: [productKey, tenantId])
+  role          AccessRole   @relation(fields: [productKey, tenantId, roleKey], references: [productKey, tenantId, key])
+  user          AccessUser   @relation(fields: [userId], references: [id])
+
+  @@id([productKey, tenantId, userId])
+  @@index([userId])
+  @@index([productKey, tenantId, roleKey])
+}
+
+model AccessAudit {
+  id          String   @id @default(uuid()) @db.Uuid
+  occurredAt  DateTime @default(now())
+  productKey  String
+  tenantId    String   @db.Uuid
+  actorUserId String?  @db.Uuid
+  action      String
+  target      String
+  changes     Json
+
+  @@index([productKey, tenantId, occurredAt])
+}
+
+model AccessStaffEnrollment {
+  productKey    String
+  tenantId      String       @db.Uuid
+  productUserId String       @db.Uuid
+  roleKey       String
+  requestedBy   String       @db.Uuid
+  subject       String?
+  createdAt     DateTime     @default(now())
+  completedAt   DateTime?
+  tenant        AccessTenant @relation(fields: [productKey, tenantId], references: [productKey, tenantId])
+
+  @@id([productKey, tenantId, productUserId])
+  @@unique([productKey, tenantId, subject])
+}

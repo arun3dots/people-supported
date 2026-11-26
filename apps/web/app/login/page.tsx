@@ -29,8 +29,7 @@ export default async function LoginPage({
   }>;
 }) {
   const enabled = process.env.COGNITO_AUTH_ENABLED === "true";
-  const legacyEnabled =
-    !enabled || process.env.LEGACY_AUTH_ENABLED !== "false";
+  const legacyEnabled = !enabled || process.env.LEGACY_AUTH_ENABLED !== "false";
   const params = await searchParams;
   const cognito = firstParam(params.cognito);
   const reason = firstParam(params.reason);
@@ -68,10 +67,18 @@ export default async function LoginPage({
                 </p>
               )}
               <Button asChild variant="outline" size="lg" className="w-full">
-                <a href={`/api${COGNITO_START_PATH}`}>
-                  Sign in with Cognito
-                </a>
+                <a href={`/api${COGNITO_START_PATH}`}>Sign in with Cognito</a>
               </Button>
+              {failureMessage &&
+                process.env.NEXT_PUBLIC_AUTH_ACCESS_CONSOLE_ENABLED ===
+                  "true" && (
+                  <a
+                    className="block text-center text-sm text-slate-700 underline"
+                    href={`/api${COGNITO_START_PATH}?reauthenticate=1`}
+                  >
+                    Sign in again with MFA
+                  </a>
+                )}
             </div>
           )}
 

@@ -15,9 +15,11 @@ import {
 } from './provisioning/managed-accounts.controller';
 import { ManagedAccountsService } from './provisioning/managed-accounts.service';
 import { ManagedCognitoDirectory } from './provisioning/managed-cognito-directory';
+import { AccessIntegrationModule } from '../../auth-access/integration/access-integration.module';
 
 @Module({
   imports: [
+    AccessIntegrationModule,
     CognitoConfigModule,
     JwtModule.register({}),
     AuditModule,
