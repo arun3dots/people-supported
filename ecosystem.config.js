@@ -11,6 +11,7 @@ module.exports = {
       max_memory_restart: '700M',
       env: {
         NODE_ENV: 'production',
+	NODE_EXTRA_CA_CERTS: '/etc/nginx/cantra-auth-access-tls/ca.crt',
       },
     },
     {
@@ -41,5 +42,20 @@ module.exports = {
         NODE_ENV: 'production',
       },
     },
+{
+  name: 'auth-access',
+  cwd: '/home/ubuntu/apps/people-supported/apps/auth-access',
+  script: 'dist/main.js',
+  interpreter: 'node',
+  node_args:
+    '--env-file=/home/ubuntu/apps/people-supported/apps/auth-access/.env',
+  instances: 1,
+  exec_mode: 'fork',
+  autorestart: true,
+  max_memory_restart: '400M',
+  env: {
+    NODE_ENV: 'production',
+  },
+},
   ],
 };

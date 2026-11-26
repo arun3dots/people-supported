@@ -112,6 +112,9 @@ echo "===== BUILD APPLICATIONS ====="
 
 pnpm build
 
+echo '===== BUILD AUTH ACCESS ====='
+pnpm --filter auth-access build
+
 # Apply existing migrations only. No db push or seeding.
 apply_migrations() {
     echo
@@ -125,13 +128,34 @@ apply_migrations() {
 
 with_migration_env apply_migrations
 
+echo
+echo "===== APPLY AUTH ACCESS MIGRATIONS ====="
+
+AUTH_ACCESS_MIGRATE_ENV="/home/ubuntu/.config/people-supported/auth-access-migrate.env"
+
+if [ ! -r "$AUTH_ACCESS_MIGRATE_ENV" ]; then
+    echo "ERROR: Auth Access migrator environment missing."
+    exit 1
+fi
+
+(
+    set -a
+    source "$AUTH_ACCESS_MIGRATE_ENV"
+    set +a
+
+    : "${AUTH_ACCESS_DATABASE_URL:?Missing Auth Access migration URL}"
+
+    pnpm --filter auth-access db:migrate:deploy
+)
+
 # Restart the running production applications.
 echo
 echo "===== RESTART PM2 APPLICATIONS ====="
 
 # Keep the first KMS release on legacy writes, the existing AWS identity, and SES.
 KMS_FIELD_WRITES_ENABLED=false AWS_CREDENTIALS_MODE=default MAIL_PROVIDER=ses \
-    pm2 restart all --update-env
+RUNNER_TRACKING_ID="" \
+    pm2 startOrReload ecosystem.config.js --update-env
 pm2 save
 
 # Verify the applications respond locally.
