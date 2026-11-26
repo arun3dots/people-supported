@@ -78,6 +78,7 @@ export class CognitoProvider {
     challenge: string,
     nonce: string,
     target: CognitoAppTarget = this.config.require().apps.web,
+    reauthenticate = false,
   ) {
     const settings = this.config.require();
     const url = new URL('/oauth2/authorize', settings.managedOrigin);
@@ -94,6 +95,7 @@ export class CognitoProvider {
     if (settings.requiredAcrValues.length > 0) {
       params.set('acr_values', settings.requiredAcrValues.join(' '));
     }
+    if (reauthenticate) params.set('prompt', 'login');
     url.search = params.toString();
     return url.href;
   }

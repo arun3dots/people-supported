@@ -251,6 +251,8 @@ function phaseLabel(value: string) {
 function errorLabel(code: string) {
   if (code === "IDENTITY_CONFLICT")
     return "The provider identity could not be matched safely. Contact an administrator.";
+  if (code === "ACCESS_ENROLLMENT_FAILED")
+    return "Auth & Access enrollment could not be confirmed. Retry after checking the access service.";
   if (code === "VERIFICATION_DELIVERY_FAILED")
     return "Verification email delivery failed.";
   if (code === "INVITATION_DELIVERY_FAILED")

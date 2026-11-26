@@ -3,11 +3,13 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Optional,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { prisma } from '@repo/db';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
+import { AccessClient } from '../../auth-access/integration/access-client';
 
 /**
  * Resolves a "module.action" permission string against the user's
@@ -32,7 +34,10 @@ function hasPermission(
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    @Optional() private readonly access?: AccessClient,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const required = this.reflector.getAllAndOverride<string[]>(
@@ -48,6 +53,10 @@ export class PermissionsGuard implements CanActivate {
     const user = request.user;
     if (!user) {
       throw new ForbiddenException('Not authenticated');
+    }
+    if (this.access?.enrolled(user.tenantId)) {
+      if (this.access.allows(user, required)) return true;
+      throw new ForbiddenException('Central permission required.');
     }
 
     // Carer, Nurse, Manager, Admin can record/draft, submit for review, and delete drafts

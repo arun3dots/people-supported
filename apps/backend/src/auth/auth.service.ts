@@ -648,9 +648,12 @@ export class AuthService {
       mfaSetupRequired,
       // Refresh live role name and live permissions directly from database
       roleName,
-      permissions: user.role.permissions
-        ? coercePermissions(user.role.permissions)
-        : (currentUser.permissions ?? EMPTY_ROLE_PERMISSIONS),
+      permissions:
+        isCognitoSession && currentUser.permissions
+          ? currentUser.permissions
+          : user.role.permissions
+            ? coercePermissions(user.role.permissions)
+            : (currentUser.permissions ?? EMPTY_ROLE_PERMISSIONS),
       branchIds: liveBranchIds,
       activeBranchId: liveActiveBranchId,
       subscriptionStatus,

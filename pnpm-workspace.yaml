@@ -1,6 +1,7 @@
 packages:
   - "apps/web"
   - "apps/backend"
+  - "apps/auth-access"
   - "apps/mobile-v1"
   - "packages/*"
   - "apps/superadmin"

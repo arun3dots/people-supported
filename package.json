@@ -10,6 +10,7 @@
     "check-types": "turbo run check-types",
     "verify:kms:local": "node scripts/verify-kms-local.cjs",
     "verify:cognito:backend": "node scripts/verify-cognito-backend.cjs",
+    "verify:auth-access": "node scripts/verify-cognito-backend.cjs --with-auth-access",
     "verify:cognito:web": "node scripts/verify-cognito-web.cjs",
     "verify:cognito:staging-config": "node scripts/verify-cognito-staging-config.cjs",
     "verify:kms:staging": "node apps/backend/scripts/verify-kms.cjs staging",

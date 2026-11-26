@@ -12,12 +12,14 @@ export const initialRoleId = randomUUID();
 export const newRoleId = randomUUID();
 export const password = 'LocalFixturePassword123!';
 
-export async function seedCognitoFixture() {
+export async function seedCognitoFixture(
+  identity = { subject, email, subdomain: 'cognito-fixture' },
+) {
   await prisma.tenant.create({
     data: {
       id: tenantId,
       name: 'Fixture tenant',
-      subdomain: 'cognito-fixture',
+      subdomain: identity.subdomain,
       status: 'Active',
     },
   });
@@ -49,9 +51,9 @@ export async function seedCognitoFixture() {
   await prisma.user.create({
     data: {
       id: userId,
-      cognitoSub: subject,
+      cognitoSub: identity.subject,
       tenantId,
-      email,
+      email: identity.email,
       fullName: 'Fixture user',
       roleId: initialRoleId,
       passwordHash: await bcrypt.hash(password, 4),

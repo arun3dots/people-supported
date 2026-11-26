@@ -34,6 +34,12 @@ export default function ManagedStaffAccountsPage() {
       <h1 className="text-2xl font-bold text-slate-900">
         Managed staff accounts
       </h1>
+      {enabled && (
+        <p className="text-sm text-slate-600">
+          Staff receive an email verification link first. Their Cognito login
+          and application access are set up after they confirm their address.
+        </p>
+      )}
       {!enabled ? (
         <p>Managed account provisioning is disabled.</p>
       ) : query.isPending ? (
@@ -48,8 +54,11 @@ export default function ManagedStaffAccountsPage() {
               ...Object.fromEntries(fields),
               requestId,
             });
-            await makeAPICall(CREATE_MANAGED_STAFF, dto);
-            await client.invalidateQueries({ queryKey: key });
+            try {
+              await makeAPICall(CREATE_MANAGED_STAFF, dto);
+            } finally {
+              await client.invalidateQueries({ queryKey: key });
+            }
           }}
           onAction={async (userId, action) => {
             await makeAPICall(MANAGED_STAFF_ACTION, { action }, {}, { userId });

@@ -56,7 +56,7 @@ export class CognitoAuthorization {
     private readonly provider: CognitoProvider,
   ) {}
 
-  async start(app: CognitoAppKey = 'web') {
+  async start(app: CognitoAppKey = 'web', reauthenticate = false) {
     const target = this.config.require().apps[app];
     if (!target) throw new NotFoundException();
     const state = newSecret();
@@ -64,7 +64,13 @@ export class CognitoAuthorization {
     const verifier = newSecret();
     const binding = newSecret();
     const now = new Date();
-    const url = this.provider.authorize(state, digest(verifier), nonce, target);
+    const url = this.provider.authorize(
+      state,
+      digest(verifier),
+      nonce,
+      target,
+      reauthenticate,
+    );
     await prisma.$transaction([
       prisma.cognitoLoginAttempt.deleteMany({
         where: { expiresAt: { lte: now } },

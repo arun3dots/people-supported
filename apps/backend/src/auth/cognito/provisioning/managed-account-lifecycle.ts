@@ -3,6 +3,7 @@ import { prisma, type PrismaTransactionClient } from '@repo/db';
 import { clearedCredentials } from '../cognito-identity';
 import { ManagedCognitoDirectory } from './managed-cognito-directory';
 import { lockManagedAccount } from './managed-account-verification';
+import type { AccessClient } from '../../../auth-access/integration/access-client';
 
 async function currentAccount(
   tx: PrismaTransactionClient,
@@ -24,6 +25,8 @@ async function currentAccount(
           email: true,
           cognitoSub: true,
           fullName: true,
+          tenantId: true,
+          role: { select: { name: true } },
           isActive: true,
           deletedAt: true,
           authMode: true,
@@ -63,8 +66,10 @@ function failureCode(error: unknown, fallback: string) {
 export async function linkManagedIdentity(
   directory: ManagedCognitoDirectory,
   userId: string,
+  access?: Pick<AccessClient, 'enrolled' | 'completeStaff'>,
 ) {
-  const { poolId } = directory.requireSettings();
+  const { poolId, issuer } = directory.requireSettings();
+  let failure = 'IDENTITY_PROVISIONING_FAILED';
   try {
     await prisma.$transaction(
       async (tx) => {
@@ -77,6 +82,19 @@ export async function linkManagedIdentity(
           current.identity,
           current.user.fullName,
         );
+        const tenantId = current.user.tenantId ?? undefined;
+        if (access?.enrolled(tenantId)) {
+          failure = 'ACCESS_ENROLLMENT_FAILED';
+          await access.completeStaff({
+            tenantId,
+            issuer,
+            subject: remote.subject,
+            productUserId: userId,
+            name: current.user.fullName,
+            roleKey: current.user.role.name.toLowerCase(),
+          });
+          failure = 'IDENTITY_PROVISIONING_FAILED';
+        }
         const update = await tx.user.updateMany({
           where: {
             id: userId,
@@ -109,7 +127,7 @@ export async function linkManagedIdentity(
     if (error instanceof NotFoundException) throw error;
     await prisma.cognitoProvisioning.updateMany({
       where: { userId, poolId, phase: 'ProvisionIdentity' },
-      data: { lastError: failureCode(error, 'IDENTITY_PROVISIONING_FAILED') },
+      data: { lastError: failureCode(error, failure) },
     });
     return false;
   }

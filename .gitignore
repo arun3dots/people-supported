@@ -65,6 +65,7 @@ yarn-error.log*
 ./generated/*
 packages/db/src/generated
 packages/audit-db/src/generated
+apps/auth-access/src/generated
 cookies.txt
 *dead-letter*.jsonl
 apps/backend/audit-dead-letter.jsonl
