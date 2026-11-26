@@ -45,6 +45,7 @@ export class JwtAuthGuard extends AuthGuard(['cognito-session', 'jwt']) {
     const dbUser = await prisma.user.findUnique({
       where: { id: user.userId },
       select: {
+        authMode: true,
         isActive: true,
         deletedAt: true,
         emailVerified: true,
@@ -58,7 +59,12 @@ export class JwtAuthGuard extends AuthGuard(['cognito-session', 'jwt']) {
     });
 
     // D-03 & D-09: Immediate revocation on deactivation / deletion
-    if (!dbUser || !dbUser.isActive || dbUser.deletedAt !== null) {
+    if (
+      !dbUser ||
+      dbUser.authMode === 'Cognito' ||
+      !dbUser.isActive ||
+      dbUser.deletedAt !== null
+    ) {
       throw new UnauthorizedException('User account is inactive or revoked');
     }
 

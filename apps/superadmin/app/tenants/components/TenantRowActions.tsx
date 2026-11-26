@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   Button,
   DropdownMenu,
@@ -10,13 +12,7 @@ import {
   DropdownMenuTrigger,
   Text,
 } from "@repo/ui/components/ui";
-import {
-  MoreHorizontal,
-  Eye,
-  Settings,
-  History,
-  Copy,
-} from "lucide-react";
+import { MoreHorizontal, Eye, Settings, History, Copy } from "lucide-react";
 import type { Tenant } from "../../../lib/types/tenant";
 
 interface TenantRowActionsProps {
@@ -43,6 +39,14 @@ export function TenantRowActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52 p-1.5 bg-white">
+        {tenant.status === "Active" &&
+          process.env.NEXT_PUBLIC_COGNITO_PROVISIONING_ENABLED === "true" && (
+            <DropdownMenuItem asChild>
+              <Link href={`/tenants/${encodeURIComponent(tenant.id)}/users`}>
+                Manage Cognito users
+              </Link>
+            </DropdownMenuItem>
+          )}
         <DropdownMenuLabel className="text-2xs uppercase tracking-wider text-slate-400 font-bold px-2.5 py-1.5">
           Lifecycle Management
         </DropdownMenuLabel>

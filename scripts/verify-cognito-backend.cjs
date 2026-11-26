@@ -147,6 +147,8 @@ async function main() {
       "test/cognito-compat.e2e-spec.ts",
       "test/cognito-security.e2e-spec.ts",
       "test/cognito-mfa.e2e-spec.ts",
+      "test/managed-accounts.e2e-spec.ts",
+      "test/managed-account-lifecycle.e2e-spec.ts",
     );
   } finally {
     if (

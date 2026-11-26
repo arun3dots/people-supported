@@ -121,6 +121,21 @@ export class MailService {
     );
   }
 
+  async sendManagedAccountVerification(
+    email: string,
+    verificationUrl: string,
+  ): Promise<void> {
+    await this.sendEmail(
+      email,
+      'Verify your Cantra Care invitation',
+      notificationTemplate(
+        'Verify your email address',
+        'Confirm the address used for your Cantra Care account before receiving sign-in instructions.',
+        verificationUrl,
+      ),
+    );
+  }
+
   async sendNotification(
     email: string,
     title: string,
